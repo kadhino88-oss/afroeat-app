@@ -1,0 +1,628 @@
+import React, { useCallback, useMemo } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  StatusBar,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
+import { router, Redirect } from 'expo-router';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import FadeInView from '../../components/FadeInView';
+import { useAuth } from '../../context/AuthContext';
+
+/**
+ * =========================================================
+ * HELPERS
+ * =========================================================
+ */
+
+const normalizeText = (value, fallback = '') => {
+  const normalized = String(value ?? '').trim();
+  return normalized || fallback;
+};
+
+const normalizeRole = (value) => {
+  const normalized = String(value ?? 'client').trim().toLowerCase();
+
+  if (normalized === 'restaurant' || normalized === 'resto') {
+    return 'restaurant';
+  }
+
+  if (
+    normalized === 'livreur' ||
+    normalized === 'driver' ||
+    normalized === 'delivery' ||
+    normalized === 'courier'
+  ) {
+    return 'livreur';
+  }
+
+  if (
+    normalized === 'admin' ||
+    normalized === 'administrator' ||
+    normalized === 'superadmin'
+  ) {
+    return 'admin';
+  }
+
+  return 'client';
+};
+
+const getRoleRedirect = (role) => {
+  const normalizedRole = normalizeRole(role);
+
+  switch (normalizedRole) {
+    case 'admin':
+      return '/admin';
+    case 'restaurant':
+      return '/restaurant/RestaurantDashboard';
+    case 'livreur':
+      return '/livraison';
+    case 'client':
+    default:
+      return null;
+  }
+};
+
+const getDisplayName = (user) => {
+  return (
+    normalizeText(user?.name) ||
+    normalizeText(user?.fullName) ||
+    normalizeText(
+      `${normalizeText(user?.firstName)} ${normalizeText(user?.lastName)}`
+    ) ||
+    normalizeText(user?.firstName) ||
+    normalizeText(user?.prenom) ||
+    'Client AFROEAT'
+  );
+};
+
+/**
+ * =========================================================
+ * SMALL COMPONENTS
+ * =========================================================
+ */
+
+const FeatureCard = ({ icon, title, text }) => (
+  <View style={styles.featureCard}>
+    <View style={styles.featureIconWrap}>
+      <MaterialCommunityIcons name={icon} size={22} color="#1F6F43" />
+    </View>
+    <Text style={styles.featureTitle}>{title}</Text>
+    <Text style={styles.featureText}>{text}</Text>
+  </View>
+);
+
+const QuickCard = ({ icon, title, text, onPress }) => (
+  <Pressable
+    style={({ pressed }) => [styles.quickCard, pressed && styles.buttonPressed]}
+    onPress={onPress}
+  >
+    <Ionicons name={icon} size={22} color="#1F6F43" />
+    <View style={styles.quickCardTextBlock}>
+      <Text style={styles.quickCardTitle}>{title}</Text>
+      <Text style={styles.quickCardText}>{text}</Text>
+    </View>
+    <Ionicons name="chevron-forward" size={18} color="#777777" />
+  </Pressable>
+);
+
+/**
+ * =========================================================
+ * SCREEN
+ * =========================================================
+ * /profile/index
+ * Hub privé du compte client connecté
+ */
+
+export default function ProfileHomeScreen() {
+  const auth = useAuth() || {};
+
+  const isAuthenticated = Boolean(auth.isAuthenticated);
+  const user = auth.user ?? null;
+  const token = auth.token;
+  const loading = Boolean(auth.loading);
+  const currentRole = normalizeRole(auth.role || user?.role);
+
+  const isLoggedIn = Boolean(isAuthenticated || token || user?._id);
+
+  /**
+   * =========================================================
+   * LOADING
+   * =========================================================
+   */
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <ActivityIndicator size="large" color="#D4A017" />
+        <Text style={styles.loaderText}>Chargement du compte...</Text>
+      </View>
+    );
+  }
+
+  /**
+   * =========================================================
+   * AUTH / ROLE GATE
+   * =========================================================
+   */
+
+  if (!isLoggedIn) {
+    return <Redirect href="/auth/role" />;
+  }
+
+  const roleRedirect = getRoleRedirect(currentRole);
+
+  if (roleRedirect) {
+    return <Redirect href={roleRedirect} />;
+  }
+
+  const displayName = useMemo(() => getDisplayName(user), [user]);
+
+  const handleBackToProfileTab = useCallback(() => {
+    router.replace('/(tabs)/profile');
+  }, []);
+
+  const handleOpenRestaurants = useCallback(() => {
+    router.push('/(tabs)/explore');
+  }, []);
+
+  const handleOpenOrders = useCallback(() => {
+    router.push('/(tabs)/orders');
+  }, []);
+
+  const handleOpenProfileInfo = useCallback(() => {
+    router.push('/profile/info');
+  }, []);
+
+  const handleOpenAddress = useCallback(() => {
+    router.push('/profile/address');
+  }, []);
+
+  const handleOpenPayment = useCallback(() => {
+    router.push('/profile/payment');
+  }, []);
+
+  const handleOpenHelp = useCallback(() => {
+    router.push('/profile/help');
+  }, []);
+
+  return (
+    <FadeInView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
+        <View style={styles.topRow}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.backButton,
+              pressed && styles.buttonPressed,
+            ]}
+            onPress={handleBackToProfileTab}
+          >
+            <Ionicons name="arrow-back" size={22} color="#111111" />
+          </Pressable>
+        </View>
+
+        <View style={styles.heroCard}>
+          <View style={styles.heroTopRow}>
+            <View style={styles.brandBadge}>
+              <Text style={styles.brandBadgeText}>AFROEAT</Text>
+            </View>
+
+            <View style={styles.connectedBadge}>
+              <Ionicons
+                name="checkmark-circle-outline"
+                size={14}
+                color="#1F6F43"
+              />
+              <Text style={styles.connectedBadgeText}>Session active</Text>
+            </View>
+          </View>
+
+          <Text style={styles.heroTitle}>Bienvenue {displayName}</Text>
+
+          <Text style={styles.heroSubtitle}>
+            Retrouve ton espace personnel, tes préférences, tes commandes et tes
+            accès rapides dans un bloc client premium séparé.
+          </Text>
+
+          <View style={styles.heroActions}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.primaryButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleOpenRestaurants}
+            >
+              <Ionicons name="restaurant-outline" size={18} color="#111111" />
+              <Text style={styles.primaryButtonText}>Explorer</Text>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.secondaryButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleOpenOrders}
+            >
+              <Ionicons
+                name="receipt-outline"
+                size={18}
+                color="#1E1E1E"
+              />
+              <Text style={styles.secondaryButtonText}>Mes commandes</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Pourquoi AFROEAT</Text>
+
+          <View style={styles.featuresGrid}>
+            <FeatureCard
+              icon="silverware-fork-knife"
+              title="Cuisine ciblée"
+              text="Une vraie plateforme spécialisée dans l’univers africain."
+            />
+            <FeatureCard
+              icon="shield-check-outline"
+              title="Structure premium"
+              text="Client, restaurant, livreur et admin séparés proprement."
+            />
+            <FeatureCard
+              icon="truck-delivery-outline"
+              title="Livraison évolutive"
+              text="Pensée pour du tracking live et une vraie exploitation terrain."
+            />
+            <FeatureCard
+              icon="earth"
+              title="Vision mondiale"
+              text="Une base faite pour la croissance, le branding et la domination marché."
+            />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Accès rapide</Text>
+
+          <View style={styles.quickList}>
+            <QuickCard
+              icon="storefront-outline"
+              title="Restaurants"
+              text="Parcourir les partenaires et leurs univers culinaires."
+              onPress={handleOpenRestaurants}
+            />
+
+            <QuickCard
+              icon="receipt-outline"
+              title="Mes commandes"
+              text="Suivre les commandes en cours et l’historique."
+              onPress={handleOpenOrders}
+            />
+
+            <QuickCard
+              icon="person-circle-outline"
+              title="Mes informations"
+              text="Gérer les informations personnelles et préférences."
+              onPress={handleOpenProfileInfo}
+            />
+
+            <QuickCard
+              icon="location-outline"
+              title="Adresses"
+              text="Gérer les adresses de livraison enregistrées."
+              onPress={handleOpenAddress}
+            />
+
+            <QuickCard
+              icon="card-outline"
+              title="Paiement"
+              text="Configurer les moyens de paiement et préparer le checkout."
+              onPress={handleOpenPayment}
+            />
+
+            <QuickCard
+              icon="help-circle-outline"
+              title="Aide"
+              text="Obtenir de l’assistance et comprendre le fonctionnement d’AFROEAT."
+              onPress={handleOpenHelp}
+            />
+          </View>
+        </View>
+
+        <View style={styles.ctaCard}>
+          <Text style={styles.ctaTitle}>Ton espace AFROEAT est prêt</Text>
+          <Text style={styles.ctaText}>
+            Continue ton parcours, gère tes préférences, prépare les futures
+            commandes et profite d’une navigation premium conçue pour évoluer.
+          </Text>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.primaryButtonFull,
+              pressed && styles.buttonPressed,
+            ]}
+            onPress={handleOpenOrders}
+          >
+            <Ionicons name="arrow-forward-outline" size={18} color="#111111" />
+            <Text style={styles.primaryButtonText}>Continuer mon expérience</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </FadeInView>
+  );
+}
+
+/**
+ * =========================================================
+ * STYLES
+ * =========================================================
+ */
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF8F0',
+  },
+
+  content: {
+    paddingHorizontal: 16,
+    paddingTop: 18,
+    paddingBottom: 60,
+  },
+
+  loader: {
+    flex: 1,
+    backgroundColor: '#FFF8F0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+
+  loaderText: {
+    marginTop: 12,
+    color: '#555555',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+
+  topRow: {
+    marginBottom: 14,
+  },
+
+  backButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+  },
+
+  heroCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 26,
+    padding: 20,
+    marginBottom: 18,
+    elevation: 2,
+  },
+
+  heroTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+
+  brandBadge: {
+    backgroundColor: '#FFF3D8',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+  },
+
+  brandBadgeText: {
+    color: '#8A6500',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 0.6,
+  },
+
+  connectedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8F5ED',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 999,
+  },
+
+  connectedBadgeText: {
+    marginLeft: 6,
+    color: '#1F6F43',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+
+  heroTitle: {
+    fontSize: 30,
+    fontWeight: '900',
+    color: '#111111',
+    lineHeight: 36,
+    marginBottom: 10,
+  },
+
+  heroSubtitle: {
+    color: '#6B655E',
+    fontSize: 14,
+    lineHeight: 21,
+    marginBottom: 18,
+  },
+
+  heroActions: {
+    flexDirection: 'row',
+  },
+
+  primaryButton: {
+    flex: 1,
+    minHeight: 50,
+    backgroundColor: '#D4A017',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginRight: 8,
+  },
+
+  primaryButtonFull: {
+    minHeight: 50,
+    backgroundColor: '#D4A017',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+
+  primaryButtonText: {
+    color: '#111111',
+    fontSize: 14,
+    fontWeight: '900',
+    marginLeft: 8,
+  },
+
+  secondaryButton: {
+    flex: 1,
+    minHeight: 50,
+    backgroundColor: '#F4EEE6',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+
+  secondaryButtonText: {
+    color: '#1E1E1E',
+    fontSize: 14,
+    fontWeight: '900',
+    marginLeft: 8,
+  },
+
+  section: {
+    marginBottom: 18,
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#111111',
+    marginBottom: 12,
+  },
+
+  featuresGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -4,
+  },
+
+  featureCard: {
+    width: '48%',
+    marginHorizontal: '1%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 10,
+    elevation: 2,
+  },
+
+  featureIconWrap: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#F5FBF7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+
+  featureTitle: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#111111',
+    marginBottom: 6,
+  },
+
+  featureText: {
+    color: '#666666',
+    fontSize: 13,
+    lineHeight: 19,
+  },
+
+  quickList: {},
+
+  quickCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 2,
+  },
+
+  quickCardTextBlock: {
+    flex: 1,
+    marginLeft: 12,
+    marginRight: 10,
+  },
+
+  quickCardTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#111111',
+    marginBottom: 4,
+  },
+
+  quickCardText: {
+    color: '#666666',
+    fontSize: 13,
+    lineHeight: 19,
+  },
+
+  ctaCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 18,
+    elevation: 2,
+  },
+
+  ctaTitle: {
+    fontSize: 19,
+    fontWeight: '900',
+    color: '#111111',
+    marginBottom: 8,
+  },
+
+  ctaText: {
+    color: '#6B655E',
+    fontSize: 14,
+    lineHeight: 21,
+    marginBottom: 16,
+  },
+
+  buttonPressed: {
+    opacity: 0.84,
+  },
+});

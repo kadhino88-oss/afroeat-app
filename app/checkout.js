@@ -1,0 +1,1095 @@
+import React, { useMemo, useState, useCallback } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Alert,
+  FlatList,
+  ActivityIndicator,
+  StatusBar,
+  Image,
+  Platform,
+} from 'react-native';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import FadeInView from '../components/FadeInView';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { createOrder } from '../services/orderService';
+
+/**
+ * =========================================================
+ * HELPERS
+ * =========================================================
+ */
+
+const normalizeText = (value, fallback = '') => {
+  const normalized = String(value ?? '').trim();
+  return normalized || fallback;
+};
+
+const normalizeNumber = (value, fallback = 0) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const normalizeArray = (value) => {
+  return Array.isArray(value) ? value : [];
+};
+
+const normalizeRole = (value) => {
+  const role = normalizeText(value, 'client').toLowerCase();
+
+  if (role === 'restaurant' || role === 'resto') return 'restaurant';
+
+  if (
+    role === 'livreur' ||
+    role === 'driver' ||
+    role === 'delivery' ||
+    role === 'courier'
+  ) {
+    return 'livreur';
+  }
+
+  if (
+    role === 'admin' ||
+    role === 'administrator' ||
+    role === 'superadmin' ||
+    role === 'super-admin'
+  ) {
+    return 'admin';
+  }
+
+  return 'client';
+};
+
+const formatPrice = (value, currency = 'EUR') => {
+  const amount = normalizeNumber(value, 0);
+  const safeCurrency = normalizeText(currency, 'EUR').toUpperCase();
+
+  if (safeCurrency === 'USD') return `$${amount.toFixed(2)}`;
+  if (safeCurrency === 'GBP') return `£${amount.toFixed(2)}`;
+  if (safeCurrency === 'XOF' || safeCurrency === 'XAF') {
+    return `${amount.toFixed(0)} ${safeCurrency}`;
+  }
+  if (safeCurrency === 'CAD') return `${amount.toFixed(2)} $CA`;
+
+  return `${amount.toFixed(2)} €`;
+};
+
+const getFallbackImage = () => {
+  return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop';
+};
+
+const getSafeItemId = (item) => {
+  return (
+    item?.menuItem ||
+    item?._id ||
+    item?.id ||
+    item?.menuItemId ||
+    item?.productId ||
+    null
+  );
+};
+
+const buildOrderItemsPayload = (cartItems = []) => {
+  return normalizeArray(cartItems)
+    .map((item) => {
+      const quantity = Math.max(0, normalizeNumber(item?.quantity, 0));
+      const price = Math.max(0, normalizeNumber(item?.price, 0));
+      const menuItemId = getSafeItemId(item);
+
+      if (!menuItemId || quantity <= 0) {
+        return null;
+      }
+
+      return {
+        menuItem: menuItemId,
+        name: normalizeText(item?.name || item?.nom || item?.title, 'Article'),
+        quantity,
+        price,
+        image: normalizeText(item?.image),
+      };
+    })
+    .filter(Boolean);
+};
+
+const getOrderIdFromResponse = (response) => {
+  return (
+    response?.order?._id ||
+    response?.order?.id ||
+    response?._id ||
+    response?.id ||
+    null
+  );
+};
+
+/**
+ * =========================================================
+ * SCREEN
+ * =========================================================
+ */
+
+export default function CheckoutScreen() {
+  const cart = useCart() || {};
+  const auth = useAuth() || {};
+
+  const cartItems = cart.cartItems;
+  const clearCart = cart.clearCart;
+  const totals = cart.totals || {};
+  const getTotalPrice = cart.getTotalPrice;
+  const getRestaurantName = cart.getRestaurantName;
+  const getRestaurantId = cart.getRestaurantId;
+
+  const user = auth.user ?? null;
+  const token = auth.token;
+  const isAuthenticated = Boolean(auth.isAuthenticated);
+  const role = normalizeRole(auth.role || user?.role);
+
+  const [loading, setLoading] = useState(false);
+
+  const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
+  const isClient = role === 'client';
+
+  /**
+   * =========================================================
+   * SAFE DATA
+   * =========================================================
+   */
+
+  const safeCartItems = useMemo(() => {
+    return normalizeArray(cartItems)
+      .map((item) => ({
+        ...item,
+        _safeId: getSafeItemId(item),
+        name: normalizeText(item?.name || item?.nom || item?.title, 'Plat'),
+        image: normalizeText(item?.image, ''),
+        price: Math.max(0, normalizeNumber(item?.price, 0)),
+        quantity: Math.max(0, normalizeNumber(item?.quantity, 0)),
+        currency: normalizeText(item?.currency, 'EUR'),
+        restaurantId:
+          item?.restaurantId ||
+          item?.restaurant?._id ||
+          item?.restaurant ||
+          item?.storeId ||
+          null,
+        restaurantName: normalizeText(
+          item?.restaurantName || item?.restaurant?.name,
+          ''
+        ),
+      }))
+      .filter((item) => item?._safeId && item.quantity > 0);
+  }, [cartItems]);
+
+  const currency = useMemo(() => {
+    return normalizeText(safeCartItems?.[0]?.currency, 'EUR');
+  }, [safeCartItems]);
+
+  const restaurantId = useMemo(() => {
+    if (typeof getRestaurantId === 'function') {
+      return getRestaurantId();
+    }
+
+    return safeCartItems?.[0]?.restaurantId || null;
+  }, [getRestaurantId, safeCartItems]);
+
+  const restaurantName = useMemo(() => {
+    if (typeof getRestaurantName === 'function') {
+      return normalizeText(getRestaurantName(), 'Restaurant');
+    }
+
+    return normalizeText(safeCartItems?.[0]?.restaurantName, 'Restaurant');
+  }, [getRestaurantName, safeCartItems]);
+
+  const deliveryAddress = useMemo(() => {
+    return normalizeText(
+      user?.address ||
+        user?.adresse ||
+        user?.deliveryAddress ||
+        user?.profile?.address,
+      ''
+    );
+  }, [user]);
+
+  const normalizedItems = useMemo(() => {
+    return buildOrderItemsPayload(safeCartItems);
+  }, [safeCartItems]);
+
+  const subtotal = useMemo(() => {
+    if (Number.isFinite(Number(totals?.subtotal))) {
+      return Math.max(0, normalizeNumber(totals.subtotal, 0));
+    }
+
+    return safeCartItems.reduce((sum, item) => {
+      return (
+        sum +
+        Math.max(0, normalizeNumber(item?.price, 0)) *
+          Math.max(0, normalizeNumber(item?.quantity, 0))
+      );
+    }, 0);
+  }, [safeCartItems, totals]);
+
+  const delivery = useMemo(() => {
+    return Math.max(
+      0,
+      normalizeNumber(totals?.delivery, safeCartItems.length ? 2.99 : 0)
+    );
+  }, [totals, safeCartItems.length]);
+
+  const totalPrice = useMemo(() => {
+    if (typeof getTotalPrice === 'function') {
+      return Math.max(0, normalizeNumber(getTotalPrice(), 0));
+    }
+
+    if (Number.isFinite(Number(totals?.total))) {
+      return Math.max(0, normalizeNumber(totals.total, 0));
+    }
+
+    return Math.max(0, subtotal + delivery);
+  }, [delivery, getTotalPrice, subtotal, totals]);
+
+  const totalItems = useMemo(() => {
+    return safeCartItems.reduce((sum, item) => {
+      return sum + Math.max(0, normalizeNumber(item?.quantity, 0));
+    }, 0);
+  }, [safeCartItems]);
+
+  const hasValidAddress = useMemo(() => {
+    return normalizeText(deliveryAddress).length >= 5;
+  }, [deliveryAddress]);
+
+  /**
+   * =========================================================
+   * ACTIONS
+   * =========================================================
+   */
+
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+
+    router.replace('/cart');
+  }, []);
+
+  const handleGoToLogin = useCallback(() => {
+    router.push('/auth/role');
+  }, []);
+
+  const handleGoToExplore = useCallback(() => {
+    router.replace('/(tabs)/explore');
+  }, []);
+
+  const handleGoToProfile = useCallback(() => {
+    router.push('/(tabs)/profile');
+  }, []);
+
+  const handleOrder = useCallback(async () => {
+    if (!isLoggedIn) {
+      Alert.alert(
+        'Connexion requise',
+        'Connecte-toi pour finaliser ta commande.'
+      );
+      router.push('/auth/role');
+      return;
+    }
+
+    if (!isClient) {
+      Alert.alert(
+        'Accès non autorisé',
+        'Seul un compte client peut finaliser une commande.'
+      );
+      return;
+    }
+
+    if (!restaurantId) {
+      Alert.alert('Erreur', 'Restaurant introuvable pour cette commande.');
+      return;
+    }
+
+    if (normalizedItems.length === 0) {
+      Alert.alert('Panier vide', 'Ajoute au moins un article avant de commander.');
+      return;
+    }
+
+    if (!hasValidAddress) {
+      Alert.alert(
+        'Adresse manquante',
+        'Merci d’ajouter une adresse valide dans ton profil.'
+      );
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // ✅ Vérifier que les IDs des items sont des vrais ObjectId MongoDB
+      // (pas des IDs fallback locaux comme "fallback-xxx-1")
+      const isValidMongoId = (id) => /^[a-f\d]{24}$/i.test(String(id || ''));
+
+      const hasFallbackItems = normalizedItems.some(
+        (item) => !isValidMongoId(item?.menuItem)
+      );
+
+      if (hasFallbackItems) {
+        Alert.alert(
+          'Menu non disponible',
+          'Ces plats sont des aperçus de démonstration et ne peuvent pas être commandés. Le restaurateur doit d\'abord ajouter ses vrais plats depuis son dashboard.',
+          [{ text: 'OK' }]
+        );
+        return;
+      }
+
+      // ✅ Payload complet avec tous les champs attendus par le backend
+      const payload = {
+        user: user._id,
+        restaurant: restaurantId,
+        items: normalizedItems,
+        // ✅ totalPrice = items only (le backend recalcule et valide)
+        // Ne pas inclure les frais de livraison ici
+        totalPrice: Number(subtotal.toFixed(2)),
+        deliveryFee: Number(delivery.toFixed(2)),
+        currency,
+        // ✅ Statuts en français comme attendu par le backend
+        status: 'En attente',
+        paymentStatus: 'Non payé',
+        paymentMethod: 'card',
+        deliveryAddress: normalizeText(deliveryAddress),
+        deliveryAddressDetails: {
+          address: normalizeText(deliveryAddress),
+          fullAddress: normalizeText(deliveryAddress),
+        },
+        notes: '',
+      };
+
+      const response = await createOrder(payload, token);
+      const orderId = getOrderIdFromResponse(response);
+
+      if (typeof clearCart === 'function') {
+        await Promise.resolve(clearCart());
+      }
+
+      Alert.alert('Commande créée', 'Ta commande a bien été enregistrée.');
+
+      if (orderId) {
+        router.replace(`/order/${orderId}`);
+        return;
+      }
+
+      router.replace('/(tabs)/orders');
+    } catch (error) {
+      const msg = error?.message || '';
+      const status = error?.status;
+      let title = 'Commande impossible';
+      let body = msg || 'Impossible de finaliser la commande.';
+
+      if (status === 400) {
+        title = 'Données invalides';
+        body = msg || 'Certaines informations sont incorrectes. Vérifie ton panier et ton adresse.';
+      } else if (status === 401 || status === 403) {
+        title = 'Session expirée';
+        body = 'Ta session a expiré. Reconnecte-toi et réessaie.';
+      } else if (
+        msg.toLowerCase().includes('réseau') ||
+        msg.toLowerCase().includes('network') ||
+        msg.toLowerCase().includes('serveur') ||
+        msg.toLowerCase().includes('contacter')
+      ) {
+        title = 'Connexion impossible';
+        body = 'Vérifie ta connexion internet et réessaie.';
+      }
+
+      Alert.alert(title, body);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    clearCart,
+    currency,
+    deliveryAddress,
+    hasValidAddress,
+    isClient,
+    isLoggedIn,
+    normalizedItems,
+    restaurantId,
+    token,
+    totalPrice,
+    user,
+  ]);
+
+  /**
+   * =========================================================
+   * GUEST MODE / NON CLIENT
+   * =========================================================
+   */
+
+  if (!isLoggedIn) {
+    return (
+      <FadeInView style={styles.centeredContainer}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+
+        <View style={styles.guestHeroCard}>
+          <View style={styles.guestBadge}>
+            <Ionicons name="sparkles-outline" size={16} color="#8A6500" />
+            <Text style={styles.guestBadgeText}>Mode invité premium</Text>
+          </View>
+
+          <Ionicons name="lock-closed-outline" size={54} color="#C4B7A6" />
+
+          <Text style={styles.emptyTitle}>Connexion requise pour finaliser</Text>
+
+          <Text style={styles.emptyText}>
+            Ton panier est prêt, mais la connexion est nécessaire pour confirmer
+            l’adresse et enregistrer la commande.
+          </Text>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Se connecter"
+            style={styles.primaryButton}
+            onPress={handleGoToLogin}
+          >
+            <Text style={styles.primaryButtonText}>Se connecter</Text>
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Retour au panier"
+            style={styles.secondaryButton}
+            onPress={handleBack}
+          >
+            <Text style={styles.secondaryButtonText}>Retour au panier</Text>
+          </Pressable>
+        </View>
+      </FadeInView>
+    );
+  }
+
+  if (!isClient) {
+    return (
+      <FadeInView style={styles.centeredContainer}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+
+        <View style={styles.guestHeroCard}>
+          <Ionicons name="shield-outline" size={54} color="#C65D2E" />
+
+          <Text style={styles.emptyTitle}>Checkout réservé au client</Text>
+
+          <Text style={styles.emptyText}>
+            Cet espace de validation de commande appartient uniquement au parcours
+            client AFROEAT.
+          </Text>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Retour au panier"
+            style={styles.primaryButton}
+            onPress={handleBack}
+          >
+            <Text style={styles.primaryButtonText}>Retour au panier</Text>
+          </Pressable>
+        </View>
+      </FadeInView>
+    );
+  }
+
+  /**
+   * =========================================================
+   * RENDER
+   * =========================================================
+   */
+
+  return (
+    <FadeInView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+
+      <View style={styles.header}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Retour"
+          style={({ pressed }) => [
+            styles.backButton,
+            pressed && styles.buttonPressed,
+          ]}
+          onPress={handleBack}
+        >
+          <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
+        </Pressable>
+
+        <Text style={styles.title}>Récapitulatif</Text>
+
+        <View style={styles.headerSpacer} />
+      </View>
+
+      <FlatList
+        data={safeCartItems}
+        keyExtractor={(item, index) =>
+          `${item?._safeId || item?._id || item?.menuItem || item?.id || 'item'}-${index}`
+        }
+        renderItem={({ item }) => {
+          const quantity = Math.max(0, normalizeNumber(item?.quantity, 0));
+          const price = Math.max(0, normalizeNumber(item?.price, 0));
+          const lineTotal = quantity * price;
+          const imageUri = normalizeText(item?.image, getFallbackImage());
+
+          return (
+            <View style={styles.item}>
+              <Image source={{ uri: imageUri }} style={styles.itemImage} />
+
+              <View style={styles.itemLeft}>
+                <Text style={styles.name} numberOfLines={1}>
+                  {item?.name || item?.nom || 'Plat'}
+                </Text>
+                <Text style={styles.details}>
+                  {quantity} x {formatPrice(price, currency)}
+                </Text>
+              </View>
+
+              <Text style={styles.lineTotal}>
+                {formatPrice(lineTotal, currency)}
+              </Text>
+            </View>
+          );
+        }}
+        ListHeaderComponent={
+          <View>
+            {!!restaurantName && safeCartItems.length > 0 && (
+              <View style={styles.infoCard}>
+                <Ionicons name="restaurant-outline" size={18} color="#1F6F43" />
+                <Text style={styles.infoText} numberOfLines={1}>
+                  Commande chez {restaurantName}
+                </Text>
+              </View>
+            )}
+
+            <View style={styles.addressCard}>
+              <View style={styles.addressHeader}>
+                <Ionicons name="location-outline" size={18} color="#D96C2D" />
+                <Text style={styles.addressTitle}>Adresse de livraison</Text>
+              </View>
+
+              <Text
+                style={[
+                  styles.addressText,
+                  !hasValidAddress && styles.addressTextWarning,
+                ]}
+              >
+                {hasValidAddress
+                  ? deliveryAddress
+                  : 'Adresse à compléter dans le profil utilisateur'}
+              </Text>
+
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Voir mon profil"
+                style={styles.addressAction}
+                onPress={handleGoToProfile}
+              >
+                <Text style={styles.addressActionText}>Voir mon profil</Text>
+                <Ionicons name="chevron-forward" size={16} color="#1F6F43" />
+              </Pressable>
+            </View>
+
+            <View style={styles.paymentPreviewCard}>
+              <View style={styles.paymentPreviewHeader}>
+                <Ionicons name="card-outline" size={18} color="#2457C5" />
+                <Text style={styles.paymentPreviewTitle}>Paiement sécurisé</Text>
+              </View>
+              <Text style={styles.paymentPreviewText}>
+                La commande est prête. Le branchement paiement peut se faire
+                ensuite sans toucher au flux principal.
+              </Text>
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyBox}>
+            <Ionicons name="basket-outline" size={52} color="#C4B7A6" />
+            <Text style={styles.emptyTitle}>Ton panier est vide</Text>
+            <Text style={styles.emptyText}>
+              Ajoute au moins un article avant de passer commande.
+            </Text>
+
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Explorer les restaurants"
+              style={styles.primaryButton}
+              onPress={handleGoToExplore}
+            >
+              <Text style={styles.primaryButtonText}>Explorer les restaurants</Text>
+            </Pressable>
+          </View>
+        }
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+      />
+
+      <View style={styles.footer}>
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Articles</Text>
+          <Text style={styles.summaryValue}>{totalItems}</Text>
+        </View>
+
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Sous-total</Text>
+          <Text style={styles.summaryValue}>{formatPrice(subtotal, currency)}</Text>
+        </View>
+
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>Livraison</Text>
+          <Text style={styles.summaryValue}>
+            {delivery === 0 ? 'Gratuite' : formatPrice(delivery, currency)}
+          </Text>
+        </View>
+
+        <View style={styles.totalRow}>
+          <Text style={styles.totalLabel}>Total</Text>
+          <Text style={styles.totalValue}>
+            {formatPrice(totalPrice, currency)}
+          </Text>
+        </View>
+
+        {!hasValidAddress && safeCartItems.length > 0 && (
+          <Pressable
+            onPress={() => router.push('/profile/info')}
+            style={styles.addressWarningBlock}
+          >
+            <Ionicons name="warning-outline" size={16} color="#B04A00" />
+            <Text style={styles.footerHelperText}>
+              Adresse de livraison manquante.{' '}
+              <Text style={styles.footerHelperLink}>
+                Ajouter dans mon profil →
+              </Text>
+            </Text>
+          </Pressable>
+        )}
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Valider la commande"
+          style={({ pressed }) => [
+            styles.button,
+            (loading || safeCartItems.length === 0 || !hasValidAddress) &&
+              styles.buttonDisabled,
+            pressed &&
+              !loading &&
+              safeCartItems.length > 0 &&
+              hasValidAddress &&
+              styles.buttonPressed,
+          ]}
+          onPress={handleOrder}
+          disabled={loading || safeCartItems.length === 0 || !hasValidAddress}
+        >
+          {loading ? (
+            <ActivityIndicator color="#1E1E1E" />
+          ) : (
+            <Text style={styles.buttonText}>Valider la commande</Text>
+          )}
+        </Pressable>
+      </View>
+    </FadeInView>
+  );
+}
+
+/**
+ * =========================================================
+ * STYLES
+ * =========================================================
+ */
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF8F0',
+    paddingTop: 18,
+  },
+
+  centeredContainer: {
+    flex: 1,
+    backgroundColor: '#FFF8F0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+
+  guestHeroCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+
+  guestBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3D8',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    marginBottom: 18,
+  },
+
+  guestBadgeText: {
+    marginLeft: 6,
+    color: '#8A6500',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+
+  header: {
+    paddingHorizontal: 20,
+    paddingBottom: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  backButton: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+  },
+
+  headerSpacer: {
+    width: 42,
+  },
+
+  title: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#1E1E1E',
+  },
+
+  infoCard: {
+    marginHorizontal: 20,
+    marginBottom: 12,
+    backgroundColor: '#E8F5ED',
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D6EAD9',
+  },
+
+  infoText: {
+    marginLeft: 8,
+    color: '#1F6F43',
+    fontWeight: '700',
+    fontSize: 14,
+    flex: 1,
+  },
+
+  addressCard: {
+    marginHorizontal: 20,
+    marginBottom: 14,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000000',
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+  },
+
+  addressHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+
+  addressTitle: {
+    marginLeft: 8,
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#1E1E1E',
+  },
+
+  addressText: {
+    color: '#666666',
+    fontSize: 14,
+    lineHeight: 21,
+  },
+
+  addressTextWarning: {
+    color: '#B63B3B',
+  },
+
+  addressAction: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+  },
+
+  addressActionText: {
+    color: '#1F6F43',
+    fontSize: 14,
+    fontWeight: '800',
+    marginRight: 4,
+  },
+
+  paymentPreviewCard: {
+    marginHorizontal: 20,
+    marginBottom: 14,
+    backgroundColor: '#EEF4FF',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#DBE7FF',
+  },
+
+  paymentPreviewHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+
+  paymentPreviewTitle: {
+    marginLeft: 8,
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#2457C5',
+  },
+
+  paymentPreviewText: {
+    color: '#4F5F88',
+    fontSize: 14,
+    lineHeight: 21,
+  },
+
+  listContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 200,
+    flexGrow: 1,
+  },
+
+  item: {
+    backgroundColor: '#FFFFFF',
+    marginBottom: 12,
+    padding: 14,
+    borderRadius: 14,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+  },
+
+  itemImage: {
+    width: 62,
+    height: 62,
+    borderRadius: 14,
+    backgroundColor: '#F1ECE5',
+    marginRight: 12,
+  },
+
+  itemLeft: {
+    flex: 1,
+    paddingRight: 12,
+  },
+
+  name: {
+    fontWeight: '800',
+    marginBottom: 4,
+    color: '#1E1E1E',
+    fontSize: 15,
+  },
+
+  details: {
+    color: '#666666',
+    fontSize: 13,
+  },
+
+  lineTotal: {
+    fontWeight: '900',
+    color: '#1E1E1E',
+    fontSize: 15,
+  },
+
+  footer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: Platform.OS === 'ios' ? 32 : 28,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    shadowColor: '#000000',
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: -4 },
+    elevation: 8,
+  },
+
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+
+  summaryLabel: {
+    fontSize: 14,
+    color: '#777777',
+    fontWeight: '700',
+  },
+
+  summaryValue: {
+    fontSize: 14,
+    color: '#111111',
+    fontWeight: '800',
+  },
+
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 14,
+    marginTop: 2,
+  },
+
+  totalLabel: {
+    fontSize: 16,
+    color: '#555555',
+    fontWeight: '700',
+  },
+
+  totalValue: {
+    fontSize: 22,
+    fontWeight: '900',
+    color: '#1E1E1E',
+  },
+
+  footerHelperText: {
+    color: '#8A6500',
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 12,
+    fontWeight: '700',
+    flex: 1,
+  },
+
+  footerHelperLink: {
+    color: '#B04A00',
+    textDecorationLine: 'underline',
+    fontWeight: '800',
+  },
+
+  addressWarningBlock: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 6,
+    backgroundColor: '#FFF0E8',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#F5D5C0',
+  },
+
+  button: {
+    backgroundColor: '#D4A017',
+    padding: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 3,
+  },
+
+  buttonDisabled: {
+    opacity: 0.7,
+  },
+
+  buttonText: {
+    fontWeight: '900',
+    color: '#1E1E1E',
+    fontSize: 16,
+  },
+
+  emptyBox: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 24,
+    alignItems: 'center',
+    marginTop: 40,
+    shadowColor: '#000000',
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+
+  emptyTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#1E1E1E',
+    marginTop: 14,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+
+  emptyText: {
+    color: '#777777',
+    fontSize: 15,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 20,
+  },
+
+  primaryButton: {
+    backgroundColor: '#D4A017',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 14,
+  },
+
+  primaryButtonText: {
+    color: '#1E1E1E',
+    fontWeight: '900',
+    fontSize: 14,
+  },
+
+  secondaryButton: {
+    marginTop: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+
+  secondaryButtonText: {
+    color: '#1F6F43',
+    fontWeight: '800',
+    fontSize: 14,
+  },
+
+  buttonPressed: {
+    opacity: 0.82,
+  },
+});

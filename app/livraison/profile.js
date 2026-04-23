@@ -1,0 +1,272 @@
+import React, { useCallback, useMemo, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+  StatusBar,
+  Switch,
+  Alert,
+} from 'react-native';
+import { router, useFocusEffect, Redirect } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+
+import FadeInView from '../../components/FadeInView';
+import { useAuth } from '../../context/AuthContext';
+import { getAssignedOrders } from '../../services/deliveryService';
+
+/**
+ * HELPERS
+ */
+
+const normalizeRole = (v) => String(v || '').trim().toLowerCase();
+const isDriver = (r) =>
+  r === 'livreur' || r === 'driver' || r === 'delivery';
+
+const normalizeNumber = (v, f = 0) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : f;
+};
+
+const normalizeArray = (v) => (Array.isArray(v) ? v : []);
+
+const formatPrice = (v) => `${normalizeNumber(v).toFixed(2)} €`;
+
+/**
+ * SCREEN
+ */
+
+export default function LivraisonProfileScreen() {
+  const auth = useAuth() || {};
+
+  const user = auth.user ?? null;
+  const role = auth.role;
+  const token = auth.token;
+  const isAuthenticated = Boolean(auth.isAuthenticated);
+  const authLoading = Boolean(auth.loading);
+
+  const currentRole = useMemo(
+    () => normalizeRole(role || user?.role),
+    [role, user]
+  );
+
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [online, setOnline] = useState(true);
+
+  /**
+   * FETCH GLOBAL DRIVER DATA
+   */
+
+  const fetchData = useCallback(async () => {
+    if (!token || !isDriver(currentRole)) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const data = await getAssignedOrders(token);
+
+      setOrders(normalizeArray(data));
+    } catch (e) {
+      console.log(e);
+      Alert.alert('Erreur', 'Chargement impossible');
+    } finally {
+      setLoading(false);
+    }
+  }, [token, currentRole]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [fetchData])
+  );
+
+  /**
+   * STATS
+   */
+
+  const stats = useMemo(() => {
+    const delivered = orders.filter((o) => o?.status === 'Livrée');
+
+    const revenue = delivered.reduce(
+      (s, o) => s + normalizeNumber(o?.totalPrice),
+      0
+    );
+
+    const active = orders.filter(
+      (o) => o?.status !== 'Livrée'
+    ).length;
+
+    return {
+      total: delivered.length,
+      revenue,
+      active,
+    };
+  }, [orders]);
+
+  /**
+   * ACTIONS
+   */
+
+  const toggleOnline = () => {
+    setOnline((prev) => !prev);
+
+    Alert.alert(
+      'Statut',
+      !online
+        ? 'Tu es maintenant EN LIGNE'
+        : 'Tu es maintenant HORS LIGNE'
+    );
+  };
+
+  /**
+   * GUARDS
+   */
+
+  if (authLoading || loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#D96C2D" />
+      </View>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Redirect href="/auth/login?role=livreur" />;
+  }
+
+  if (!isDriver(currentRole)) {
+    return <Redirect href="/(tabs)/index" />;
+  }
+
+  /**
+   * RENDER
+   */
+
+  return (
+    <FadeInView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+
+      <View style={styles.content}>
+        {/* HEADER */}
+        <View style={styles.header}>
+          <Text style={styles.name}>
+            {user?.name || 'Livreur'}
+          </Text>
+          <Text style={styles.sub}>
+            {user?.email || ''}
+          </Text>
+        </View>
+
+        {/* ONLINE SWITCH */}
+        <View style={styles.card}>
+          <Text style={styles.label}>Disponibilité</Text>
+
+          <View style={styles.row}>
+            <Text style={styles.status}>
+              {online ? 'En ligne' : 'Hors ligne'}
+            </Text>
+
+            <Switch value={online} onValueChange={toggleOnline} />
+          </View>
+        </View>
+
+        {/* STATS */}
+        <View style={styles.card}>
+          <Text style={styles.label}>Performance</Text>
+
+          <Text>Livraisons : {stats.total}</Text>
+          <Text>Actives : {stats.active}</Text>
+          <Text>Revenus : {formatPrice(stats.revenue)}</Text>
+        </View>
+
+        {/* NAV */}
+        <View style={styles.card}>
+          <Pressable
+            style={styles.nav}
+            onPress={() => router.push('/livraison/livraison-orders')}
+          >
+            <Ionicons name="list-outline" size={20} />
+            <Text style={styles.navText}>Mes livraisons</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.nav}
+            onPress={() => router.push('/livraison/history')}
+          >
+            <Ionicons name="time-outline" size={20} />
+            <Text style={styles.navText}>Historique</Text>
+          </Pressable>
+        </View>
+      </View>
+    </FadeInView>
+  );
+}
+
+/**
+ * STYLES
+ */
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFF8F0' },
+
+  content: {
+    padding: 20,
+  },
+
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  header: {
+    marginBottom: 20,
+  },
+
+  name: {
+    fontSize: 22,
+    fontWeight: '900',
+  },
+
+  sub: {
+    color: '#777',
+  },
+
+  card: {
+    backgroundColor: '#FFF',
+    padding: 16,
+    borderRadius: 14,
+    marginBottom: 14,
+  },
+
+  label: {
+    fontWeight: '800',
+    marginBottom: 10,
+  },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  status: {
+    fontWeight: '700',
+  },
+
+  nav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+
+  navText: {
+    marginLeft: 10,
+    fontWeight: '700',
+  },
+});

@@ -1,0 +1,779 @@
+import React, { useMemo, useCallback } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
+import { router, Redirect } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import FadeInView from '../../components/FadeInView';
+import { useAuth } from '../../context/AuthContext';
+
+/**
+ * =========================================================
+ * ASSETS LOCAUX
+ * =========================================================
+ */
+
+const LOGO_IMAGE = require('../../assets/images/icon.png');
+
+/**
+ * =========================================================
+ * HELPERS
+ * =========================================================
+ */
+
+const normalizeText = (value, fallback = '') => {
+  const normalized = String(value ?? '').trim();
+  return normalized || fallback;
+};
+
+const normalizeRole = (value) => {
+  const normalized = normalizeText(value, 'client').toLowerCase();
+
+  if (
+    normalized === 'restaurant' ||
+    normalized === 'resto' ||
+    normalized === 'partner_restaurant'
+  ) {
+    return 'restaurant';
+  }
+
+  if (
+    normalized === 'livreur' ||
+    normalized === 'driver' ||
+    normalized === 'delivery' ||
+    normalized === 'courier'
+  ) {
+    return 'livreur';
+  }
+
+  if (
+    normalized === 'admin' ||
+    normalized === 'administrator' ||
+    normalized === 'superadmin' ||
+    normalized === 'super-admin' ||
+    normalized === 'ops'
+  ) {
+    return 'admin';
+  }
+
+  return 'client';
+};
+
+const normalizeStatus = (value) => {
+  return normalizeText(value).toLowerCase();
+};
+
+const getDisplayName = (user) => {
+  const fullName = `${normalizeText(user?.firstName)} ${normalizeText(
+    user?.lastName
+  )}`.trim();
+
+  return (
+    normalizeText(user?.name) ||
+    normalizeText(user?.fullName) ||
+    normalizeText(fullName) ||
+    normalizeText(user?.prenom) ||
+    'Mon compte'
+  );
+};
+
+const getDisplayEmail = (user) => {
+  return normalizeText(user?.email);
+};
+
+const getDisplayPhone = (user) => {
+  return normalizeText(user?.phone);
+};
+
+const getDisplayAddress = (user) => {
+  return normalizeText(
+    user?.address ||
+      user?.adresse ||
+      user?.deliveryAddress ||
+      user?.profile?.address
+  );
+};
+
+const getRoleRedirect = (role) => {
+  const normalized = normalizeRole(role);
+
+  if (normalized === 'restaurant') {
+    return '/restaurant/RestaurantDashboard';
+  }
+
+  if (normalized === 'livreur') {
+    return '/livraison';
+  }
+
+  if (normalized === 'admin') {
+    return '/admin';
+  }
+
+  return null;
+};
+
+const getAvatarUri = (user) => {
+  return normalizeText(
+    user?.avatar || user?.photo || user?.profileImage || user?.image
+  );
+};
+
+const getInitials = (user) => {
+  const name = getDisplayName(user);
+
+  if (!name) return 'A';
+
+  const parts = name
+    .split(' ')
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .slice(0, 2);
+
+  if (parts.length === 0) return 'A';
+
+  return parts.map((part) => part[0]?.toUpperCase() || '').join('');
+};
+
+const getAccountStatus = (user, auth) => {
+  return normalizeStatus(
+    user?.status ||
+      user?.approvalStatus ||
+      user?.accountStatus ||
+      user?.clientStatus ||
+      auth?.accountStatus ||
+      'active'
+  );
+};
+
+const getAccountStatusStyle = (status) => {
+  switch (normalizeStatus(status)) {
+    case 'active':
+    case 'approved':
+      return {
+        label: 'Compte actif',
+        bg: '#E8F5ED',
+        text: '#1F6F43',
+        icon: 'checkmark-circle-outline',
+      };
+
+    case 'pending':
+    case 'pending_verification':
+    case 'pending-approval':
+    case 'pending_approval':
+      return {
+        label: 'En attente',
+        bg: '#FFF3D8',
+        text: '#8A6500',
+        icon: 'time-outline',
+      };
+
+    case 'suspended':
+    case 'blocked':
+    case 'disabled':
+      return {
+        label: 'Suspendu',
+        bg: '#FDECEC',
+        text: '#B83232',
+        icon: 'ban-outline',
+      };
+
+    default:
+      return {
+        label: 'Compte client',
+        bg: '#F3ECE4',
+        text: '#555555',
+        icon: 'person-outline',
+      };
+  }
+};
+
+/**
+ * =========================================================
+ * COMPOSANTS UI
+ * =========================================================
+ */
+
+const QuickActionCard = ({ icon, label, onPress }) => (
+  <Pressable
+    style={({ pressed }) => [styles.quickCard, pressed && styles.buttonPressed]}
+    onPress={onPress}
+  >
+    <View style={styles.quickIconWrap}>
+      <Ionicons name={icon} size={24} color="#D4A017" />
+    </View>
+    <Text style={styles.quickText}>{label}</Text>
+  </Pressable>
+);
+
+const MenuRow = ({ icon, label, subtitle, onPress, danger = false }) => (
+  <Pressable
+    style={({ pressed }) => [styles.menuItem, pressed && styles.buttonPressed]}
+    onPress={onPress}
+  >
+    <View style={styles.menuLeft}>
+      <View
+        style={[
+          styles.menuIconWrap,
+          danger && styles.menuIconWrapDanger,
+        ]}
+      >
+        <Ionicons
+          name={icon}
+          size={20}
+          color={danger ? '#B63B3B' : '#1F6F43'}
+        />
+      </View>
+
+      <View style={styles.menuTextWrap}>
+        <Text style={[styles.menuText, danger && styles.menuTextDanger]}>
+          {label}
+        </Text>
+        {subtitle ? (
+          <Text style={styles.menuSubtitle} numberOfLines={2}>
+            {subtitle}
+          </Text>
+        ) : null}
+      </View>
+    </View>
+
+    <Ionicons
+      name="chevron-forward-outline"
+      size={18}
+      color={danger ? '#B63B3B' : '#AAAAAA'}
+    />
+  </Pressable>
+);
+
+/**
+ * =========================================================
+ * COMPOSANT PRINCIPAL
+ * =========================================================
+ */
+
+export default function ProfileScreen() {
+  const auth = useAuth() || {};
+
+  const user = auth.user ?? null;
+  const loading = Boolean(auth.loading);
+  const isAuthenticated = Boolean(auth.isAuthenticated);
+  const logout = auth.logout;
+  const currentRole = normalizeRole(auth.role || user?.role);
+
+  const displayName = useMemo(() => getDisplayName(user), [user]);
+  const displayEmail = useMemo(() => getDisplayEmail(user), [user]);
+  const displayPhone = useMemo(() => getDisplayPhone(user), [user]);
+  const displayAddress = useMemo(() => getDisplayAddress(user), [user]);
+  const avatarUri = useMemo(() => getAvatarUri(user), [user]);
+  const initials = useMemo(() => getInitials(user), [user]);
+  const accountStatus = useMemo(() => getAccountStatus(user, auth), [user, auth]);
+  const statusStyle = useMemo(
+    () => getAccountStatusStyle(accountStatus),
+    [accountStatus]
+  );
+
+  const roleRedirect = useMemo(() => getRoleRedirect(currentRole), [currentRole]);
+
+  const handleLogout = useCallback(async () => {
+    try {
+      if (typeof logout === 'function') {
+        await logout();
+      }
+    } catch (error) {
+      console.log('Erreur logout profile :', error);
+    } finally {
+      router.replace('/auth/role');
+    }
+  }, [logout]);
+
+  const handleGoLogin = useCallback(() => {
+    router.push({
+      pathname: '/auth/login',
+      params: { role: 'client' },
+    });
+  }, []);
+
+  const handleGoRegister = useCallback(() => {
+    router.push('/auth/register-client');
+  }, []);
+
+  /**
+   * =========================================================
+   * STATES
+   * =========================================================
+   */
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FAFAF7" />
+        <ActivityIndicator size="large" color="#D4A017" />
+      </View>
+    );
+  }
+
+  if (isAuthenticated && roleRedirect) {
+    return <Redirect href={roleRedirect} />;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <FadeInView style={styles.container}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FAFAF7" />
+
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <Image source={LOGO_IMAGE} style={styles.logo} resizeMode="contain" />
+          </View>
+
+          <View style={styles.guestCard}>
+            <View style={styles.guestIconWrap}>
+              <Ionicons name="person-circle-outline" size={68} color="#111111" />
+            </View>
+
+            <Text style={styles.guestTitle}>Mon compte client</Text>
+            <Text style={styles.guestText}>
+              Connecte-toi pour accéder à tes commandes, tes adresses, ton profil
+              et toute l’expérience client AFROEAT.
+            </Text>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.primaryGuestButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleGoLogin}
+            >
+              <Text style={styles.primaryGuestButtonText}>Se connecter</Text>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.secondaryGuestButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={handleGoRegister}
+            >
+              <Text style={styles.secondaryGuestButtonText}>Créer un compte</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </FadeInView>
+    );
+  }
+
+  /**
+   * =========================================================
+   * RENDER
+   * =========================================================
+   */
+
+  return (
+    <FadeInView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FAFAF7" />
+
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Image source={LOGO_IMAGE} style={styles.logo} resizeMode="contain" />
+        </View>
+
+        <View style={styles.profileCard}>
+          <View style={styles.avatarContainer}>
+            {avatarUri ? (
+              <Image source={{ uri: avatarUri }} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatarFallback}>
+                <Text style={styles.avatarInitials}>{initials}</Text>
+              </View>
+            )}
+          </View>
+
+          <Text style={styles.profileName}>{displayName}</Text>
+
+          {!!displayEmail && (
+            <Text style={styles.profileEmail}>{displayEmail}</Text>
+          )}
+
+          <View
+            style={[styles.statusBadge, { backgroundColor: statusStyle.bg }]}
+          >
+            <Ionicons name={statusStyle.icon} size={14} color={statusStyle.text} />
+            <Text style={[styles.statusText, { color: statusStyle.text }]}>
+              {statusStyle.label}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.quickActions}>
+          <QuickActionCard
+            icon="receipt-outline"
+            label="Mes commandes"
+            onPress={() => router.push('/(tabs)/orders')}
+          />
+          <QuickActionCard
+            icon="heart-outline"
+            label="Favoris"
+            onPress={() => router.push('/favorites')}
+          />
+          <QuickActionCard
+            icon="location-outline"
+            label="Adresses"
+            onPress={() => router.push('/profile/address')}
+          />
+        </View>
+
+        <View style={styles.menuSection}>
+          <Text style={styles.sectionTitle}>Mon compte</Text>
+
+          <MenuRow
+            icon="person-outline"
+            label="Informations personnelles"
+            subtitle={displayEmail || undefined}
+            onPress={() => router.push('/profile/info')}
+          />
+
+          {!!displayPhone && (
+            <MenuRow
+              icon="call-outline"
+              label="Téléphone"
+              subtitle={displayPhone}
+              onPress={() => router.push('/profile/info')}
+            />
+          )}
+
+          {!!displayAddress && (
+            <MenuRow
+              icon="location-outline"
+              label="Adresse"
+              subtitle={displayAddress}
+              onPress={() => router.push('/profile/address')}
+            />
+          )}
+
+          <MenuRow
+            icon="card-outline"
+            label="Paiement"
+            subtitle="Gérer les moyens de paiement"
+            onPress={() => router.push('/profile/payement')}
+          />
+        </View>
+
+        <View style={styles.menuSection}>
+          <Text style={styles.sectionTitle}>Préférences</Text>
+
+          <MenuRow
+            icon="help-circle-outline"
+            label="Aide & Support"
+            subtitle="Obtenir de l’aide sur ton compte"
+            onPress={() => router.push('/profile/help')}
+          />
+        </View>
+
+        <View style={styles.menuSection}>
+          <MenuRow
+            icon="log-out-outline"
+            label="Se déconnecter"
+            onPress={handleLogout}
+            danger
+          />
+        </View>
+      </ScrollView>
+    </FadeInView>
+  );
+}
+
+/**
+ * =========================================================
+ * STYLES
+ * =========================================================
+ */
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FAFAF7',
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FAFAF7',
+  },
+
+  scrollContent: {
+    paddingBottom: 40,
+  },
+
+  header: {
+    alignItems: 'center',
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+
+  logo: {
+    width: 80,
+    height: 40,
+  },
+
+  guestCard: {
+    marginHorizontal: 16,
+    marginTop: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    paddingVertical: 28,
+    paddingHorizontal: 18,
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+
+  guestIconWrap: {
+    marginBottom: 12,
+  },
+
+  guestTitle: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#111111',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+
+  guestText: {
+    fontSize: 14,
+    lineHeight: 22,
+    color: '#666666',
+    textAlign: 'center',
+    marginBottom: 22,
+  },
+
+  primaryGuestButton: {
+    width: '100%',
+    backgroundColor: '#D4A017',
+    borderRadius: 14,
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+
+  primaryGuestButtonText: {
+    color: '#111111',
+    fontSize: 15,
+    fontWeight: '800',
+  },
+
+  secondaryGuestButton: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    paddingVertical: 15,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+  },
+
+  secondaryGuestButtonText: {
+    color: '#444444',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+
+  profileCard: {
+    alignItems: 'center',
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    marginHorizontal: 16,
+    marginTop: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+
+  avatarContainer: {
+    marginBottom: 12,
+  },
+
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+
+  avatarFallback: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#D4A017',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  avatarInitials: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+
+  profileName: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+
+  profileEmail: {
+    fontSize: 14,
+    color: '#777777',
+    marginBottom: 12,
+  },
+
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+
+  statusText: {
+    fontSize: 13,
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    marginTop: 20,
+  },
+
+  quickCard: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+    marginHorizontal: 5,
+  },
+
+  quickIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFF8E7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+
+  quickText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#333333',
+    textAlign: 'center',
+  },
+
+  menuSection: {
+    marginHorizontal: 16,
+    marginTop: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    overflow: 'hidden',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+
+  sectionTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#AAAAAA',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 6,
+  },
+
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderTopWidth: 1,
+    borderTopColor: '#F2F2F2',
+  },
+
+  menuLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+
+  menuIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: '#E8F5ED',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+
+  menuIconWrapDanger: {
+    backgroundColor: '#FDECEC',
+  },
+
+  menuTextWrap: {
+    flex: 1,
+  },
+
+  menuText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#1A1A1A',
+  },
+
+  menuTextDanger: {
+    color: '#B63B3B',
+  },
+
+  menuSubtitle: {
+    fontSize: 12,
+    color: '#999999',
+    marginTop: 2,
+  },
+
+  buttonPressed: {
+    opacity: 0.7,
+  },
+});
