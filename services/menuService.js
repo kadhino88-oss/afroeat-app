@@ -47,6 +47,7 @@ const normalizeMenuItem = (item) => {
     restaurantId,
     name: normalizeText(item?.name, 'Plat'),
     description: normalizeText(item?.description, 'Aucune description'),
+    story: normalizeText(item?.story, ''),
     image: normalizeText(item?.image),
     category: normalizeText(item?.category, 'Plats principaux'),
     cuisine: normalizeText(item?.cuisine, 'Africaine'),

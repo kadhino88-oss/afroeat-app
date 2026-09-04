@@ -16,7 +16,10 @@ import { router, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
-import { getAllRestaurants } from '../../services/restaurantService';
+import * as Location from 'expo-location';
+import { getAllRestaurants, getNearbyRestaurants } from '../../services/restaurantService';
+import { getAllMenuItems } from '../../services/menuService';
+import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -67,6 +70,37 @@ const CUISINES = [
   'Tunisienne',
   'Épicerie',
   'Boutique',
+];
+
+// Les valeurs CUISINES restent en francais car elles servent de cle de
+// recherche/filtre sur les donnees restaurants (stockees en francais).
+// Cette map ne sert qu'a afficher un libelle traduit a l'ecran.
+const CUISINE_SLUG_BY_LABEL = {
+  Africaine: 'africaine',
+  Sénégalaise: 'senegalaise',
+  Ivoirienne: 'ivoirienne',
+  Camerounaise: 'camerounaise',
+  Congolaise: 'congolaise',
+  Malienne: 'malienne',
+  Marocaine: 'marocaine',
+  Algérienne: 'algerienne',
+  Tunisienne: 'tunisienne',
+  Épicerie: 'epicerie',
+  Boutique: 'boutique',
+};
+
+// Chips "Envie du moment" : chaque humeur est reliee a des mots-cles
+// verifies sur le nom, la description, la categorie et l'histoire du plat.
+// Idee inspiree d'un prototype concurrent regarde avec Kader - mais
+// branchee ici sur les vrais plats des restaurants AFROEAT.
+const MOODS = [
+  { id: 'genereux', label: 'Généreux', emoji: '🍗', keywords: ['poulet', 'grill', 'braise', 'brochette', 'viande', 'boeuf'] },
+  { id: 'epice', label: 'Épicé', emoji: '🌶️', keywords: ['epice', 'piment', 'pili', 'berbere', 'harissa', 'pimente'] },
+  { id: 'traditionnel', label: 'Traditionnel', emoji: '🥘', keywords: ['traditionnel', 'mijote', 'sauce', 'mafe', 'ndole', 'pondu'] },
+  { id: 'riz', label: 'Avec du riz', emoji: '🍚', keywords: ['riz', 'jollof', 'thieboudienne', 'thieb', 'pilau'] },
+  { id: 'plantain', label: 'Plantain', emoji: '🍌', keywords: ['plantain', 'alloco', 'aloco', 'dodo', 'kelewele'] },
+  { id: 'poisson', label: 'Poisson', emoji: '🐟', keywords: ['poisson', 'tilapia', 'crevette', 'fruits de mer', 'thiof'] },
+  { id: 'vegetarien', label: 'Végétarien', emoji: '🥬', keywords: ['vegetarien', 'vegan', 'legumes', 'legumineuse'] },
 ];
 
 /**
@@ -237,6 +271,7 @@ const extractRestaurantsPayload = (data) => {
  */
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const cart = useCart() || {};
   const auth = useAuth() || {};
 
@@ -261,6 +296,8 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [allDishes, setAllDishes] = useState([]);
+  const [selectedMood, setSelectedMood] = useState(null);
 
   const userName = useMemo(() => {
     const fullName = `${normalizeText(user?.firstName)} ${normalizeText(
@@ -311,6 +348,34 @@ export default function HomeScreen() {
     return null;
   }, [authLoading, isAuthenticated, currentRole]);
 
+  // Tente de detecter automatiquement les restaurants africains a
+  // proximite via le GPS (France, Suisse, ou tout autre pays ou l'app est
+  // utilisee) ; si la permission est refusee, le GPS echoue, ou qu'aucun
+  // restaurant n'est trouve a proximite (nouvelle zone encore peu couverte),
+  // on retombe silencieusement sur la liste complete - jamais un ecran vide.
+  const loadNearbyRestaurants = useCallback(async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') return null;
+
+    const position = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Balanced,
+    });
+
+    const nearby = await getNearbyRestaurants({
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      maxDistance: 15,
+      token: tokenRef.current,
+    });
+
+    const extracted = extractRestaurantsPayload(nearby);
+    const safeNearby = extracted
+      .map(normalizeRestaurant)
+      .filter((item) => item?._id);
+
+    return safeNearby.length > 0 ? safeNearby : null;
+  }, []);
+
   const loadRestaurants = useCallback(async (isRefresh = false) => {
     try {
       if (isRefresh) {
@@ -321,11 +386,21 @@ export default function HomeScreen() {
 
       setErrorMessage('');
 
-      const data = await getAllRestaurants(tokenRef.current);
-      const extracted = extractRestaurantsPayload(data);
-      const safeRestaurants = extracted
-        .map(normalizeRestaurant)
-        .filter((item) => item?._id);
+      let safeRestaurants = null;
+
+      try {
+        safeRestaurants = await loadNearbyRestaurants();
+      } catch (geoError) {
+        console.log('Détection de proximité indisponible :', geoError);
+      }
+
+      if (!safeRestaurants) {
+        const data = await getAllRestaurants(tokenRef.current);
+        const extracted = extractRestaurantsPayload(data);
+        safeRestaurants = extracted
+          .map(normalizeRestaurant)
+          .filter((item) => item?._id);
+      }
 
       setRestaurants(safeRestaurants);
     } catch (error) {
@@ -341,13 +416,67 @@ export default function HomeScreen() {
         setLoading(false);
       }
     }
-  }, []);
+  }, [loadNearbyRestaurants]);
 
   useEffect(() => {
     if (!redirectPath) {
       loadRestaurants();
     }
   }, [loadRestaurants, redirectPath]);
+
+  // Charge tous les plats une fois, pour alimenter "Envie du moment".
+  // Echec silencieux : c'est un bonus de decouverte, pas un ecran critique.
+  useEffect(() => {
+    if (redirectPath) return;
+
+    let isMounted = true;
+
+    getAllMenuItems(tokenRef.current)
+      .then((items) => {
+        if (isMounted) setAllDishes(Array.isArray(items) ? items : []);
+      })
+      .catch((error) => {
+        console.log('Erreur chargement plats (Envie du moment) :', error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [redirectPath]);
+
+  const moodDishes = useMemo(() => {
+    if (!selectedMood) return [];
+
+    const mood = MOODS.find((item) => item.id === selectedMood);
+    if (!mood) return [];
+
+    return allDishes
+      .filter((dish) => {
+        if (dish?.available === false) return false;
+
+        const haystack = normalizeSearch(
+          [dish?.name, dish?.description, dish?.category, dish?.story]
+            .filter(Boolean)
+            .join(' ')
+        );
+
+        return mood.keywords.some((keyword) => haystack.includes(keyword));
+      })
+      .slice(0, 10);
+  }, [allDishes, selectedMood]);
+
+  const handleMoodPress = useCallback((moodId) => {
+    setSelectedMood((current) => (current === moodId ? null : moodId));
+  }, []);
+
+  const handleMoodDishPress = useCallback((dish) => {
+    const targetRestaurantId =
+      dish?.restaurant?._id || dish?.restaurantId || dish?.restaurant;
+
+    if (targetRestaurantId) {
+      router.push(`/restaurant/${targetRestaurantId}`);
+    }
+  }, []);
 
   const filteredRestaurants = useMemo(() => {
     const query = normalizeSearch(search);
@@ -449,14 +578,14 @@ export default function HomeScreen() {
                     : styles.statusBadgeTextClosed,
                 ]}
               >
-                {isOpen ? 'Ouvert' : 'Fermé'}
+                {isOpen ? t('home.open') : t('home.closed')}
               </Text>
             </View>
 
             {!!item?.isFeatured && (
               <View style={styles.featuredBadge}>
                 <Ionicons name="flash-outline" size={12} color="#1E1E1E" />
-                <Text style={styles.featuredBadgeText}>Mis en avant</Text>
+                <Text style={styles.featuredBadgeText}>{t('home.featured')}</Text>
               </View>
             )}
           </View>
@@ -533,15 +662,14 @@ export default function HomeScreen() {
                       size={14}
                       color="#D4A017"
                     />
-                    <Text style={styles.heroMiniBadgeText}>AFROEAT premium</Text>
+                    <Text style={styles.heroMiniBadgeText}>{t('home.premiumPartner')}</Text>
                   </View>
 
                   <Text style={styles.heroTitle}>
-                    Découvrez les saveurs africaines près de chez vous
+                    {t('home.heroTitle')}
                   </Text>
                   <Text style={styles.heroSubtitle}>
-                    Restaurants, épiceries et boutiques africaines en quelques
-                    clics.
+                    {t('home.heroSubtitle')}
                   </Text>
 
                   <Pressable
@@ -552,7 +680,7 @@ export default function HomeScreen() {
                     onPress={() => router.push('/(tabs)/explore')}
                   >
                     <Text style={styles.heroButtonText}>
-                      Commander maintenant
+                      {t('home.heroButton')}
                     </Text>
                   </Pressable>
                 </View>
@@ -572,19 +700,19 @@ export default function HomeScreen() {
               <View style={styles.heroStatsRow}>
                 <View style={styles.heroStatCard}>
                   <Text style={styles.heroStatValue}>{restaurants.length}</Text>
-                  <Text style={styles.heroStatLabel}>Partenaires</Text>
+                  <Text style={styles.heroStatLabel}>{t('home.partners')}</Text>
                 </View>
 
                 <View style={styles.heroStatCard}>
                   <Text style={styles.heroStatValue}>{featuredCount}</Text>
-                  <Text style={styles.heroStatLabel}>Premium</Text>
+                  <Text style={styles.heroStatLabel}>{t('home.premium')}</Text>
                 </View>
 
                 <View style={styles.heroStatCard}>
                   <Text style={styles.heroStatValue}>
                     {filteredRestaurants.length}
                   </Text>
-                  <Text style={styles.heroStatLabel}>Résultats</Text>
+                  <Text style={styles.heroStatLabel}>{t('home.results')}</Text>
                 </View>
               </View>
             </View>
@@ -597,7 +725,7 @@ export default function HomeScreen() {
                 style={styles.searchIcon}
               />
               <TextInput
-                placeholder="Rechercher un plat, une boutique, une épicerie..."
+                placeholder={t('home.searchPlaceholder')}
                 placeholderTextColor="#999999"
                 value={search}
                 onChangeText={setSearch}
@@ -613,7 +741,85 @@ export default function HomeScreen() {
               )}
             </View>
 
-            <Text style={styles.sectionTitle}>Explorer AFROEAT</Text>
+            <Text style={styles.sectionTitle}>{t('moods.title')}</Text>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipsContainer}
+            >
+              {MOODS.map((mood) => {
+                const isActive = selectedMood === mood.id;
+
+                return (
+                  <Pressable
+                    key={mood.id}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Plats ${t(`moods.${mood.id}`)}`}
+                    style={({ pressed }) => [
+                      styles.chip,
+                      isActive && styles.chipActive,
+                      pressed && styles.chipPressed,
+                    ]}
+                    onPress={() => handleMoodPress(mood.id)}
+                  >
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isActive && styles.chipTextActive,
+                      ]}
+                    >
+                      {mood.emoji} {t(`moods.${mood.id}`)}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+
+            {!!selectedMood && (
+              moodDishes.length > 0 ? (
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.moodDishesContainer}
+                >
+                  {moodDishes.map((dish) => (
+                    <Pressable
+                      key={dish._id || dish.id}
+                      style={({ pressed }) => [
+                        styles.moodDishCard,
+                        pressed && styles.moodDishCardPressed,
+                      ]}
+                      onPress={() => handleMoodDishPress(dish)}
+                    >
+                      <Image
+                        source={
+                          dish.image
+                            ? { uri: dish.image }
+                            : require('../assets/images/react-logo.png')
+                        }
+                        style={styles.moodDishImage}
+                      />
+                      <Text style={styles.moodDishName} numberOfLines={1}>
+                        {dish.name}
+                      </Text>
+                      <Text style={styles.moodDishRestaurant} numberOfLines={1}>
+                        {dish?.restaurant?.name || 'Restaurant AFROEAT'}
+                      </Text>
+                      <Text style={styles.moodDishPrice}>
+                        {Number(dish.price || 0).toFixed(2)} €
+                      </Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              ) : (
+                <Text style={styles.moodEmptyText}>
+                  {t('moods.empty')}
+                </Text>
+              )
+            )}
+
+            <Text style={styles.sectionTitle}>{t('home.exploreTitle')}</Text>
 
             <ScrollView
               horizontal
@@ -642,10 +848,10 @@ export default function HomeScreen() {
             </ScrollView>
 
             <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>Catégories populaires</Text>
+              <Text style={styles.sectionTitle}>{t('home.popularCategories')}</Text>
               {!!search && (
                 <Pressable onPress={() => setSearch('')}>
-                  <Text style={styles.clearText}>Effacer</Text>
+                  <Text style={styles.clearText}>{t('home.clear')}</Text>
                 </Pressable>
               )}
             </View>
@@ -675,7 +881,7 @@ export default function HomeScreen() {
                         isActive && styles.chipTextActive,
                       ]}
                     >
-                      {item}
+                      {t(`cuisines.${CUISINE_SLUG_BY_LABEL[item] || ''}`, item)}
                     </Text>
                   </Pressable>
                 );
@@ -684,18 +890,18 @@ export default function HomeScreen() {
 
             <View style={styles.offerCard}>
               <View style={styles.offerTextWrapper}>
-                <Text style={styles.offerTitle}>🔥 Offres spéciales AFROEAT</Text>
+                <Text style={styles.offerTitle}>{t('home.offerTitle')}</Text>
                 <Text style={styles.offerSubtitle}>
-                  Livraison offerte sur une sélection de partenaires.
+                  {t('home.offerSubtitle')}
                 </Text>
               </View>
               <Ionicons name="gift-outline" size={32} color="#FFFFFF" />
             </View>
 
             <View style={styles.listHeaderRow}>
-              <Text style={styles.sectionTitle}>Restaurants populaires</Text>
+              <Text style={styles.sectionTitle}>{t('home.popularRestaurants')}</Text>
               <Pressable onPress={() => router.push('/(tabs)/explore')}>
-                <Text style={styles.seeAll}>Voir tout</Text>
+                <Text style={styles.seeAll}>{t('home.seeAll')}</Text>
               </Pressable>
             </View>
 
@@ -712,23 +918,22 @@ export default function HomeScreen() {
             <View style={styles.loaderWrapper}>
               <ActivityIndicator size="large" color="#D4A017" />
               <Text style={styles.loaderText}>
-                Chargement des restaurants...
+                {t('home.loadingRestaurants')}
               </Text>
             </View>
           ) : (
             <View style={styles.emptyContainer}>
               <Ionicons name="restaurant-outline" size={48} color="#C4B7A6" />
-              <Text style={styles.emptyTitle}>Aucun restaurant trouvé</Text>
+              <Text style={styles.emptyTitle}>{t('home.noRestaurantFound')}</Text>
               <Text style={styles.emptyText}>
-                Essaie une autre recherche ou ajoute des partenaires à ton
-                backend.
+                {t('home.emptyText')}
               </Text>
 
               <Pressable
                 style={styles.retryButton}
                 onPress={() => loadRestaurants()}
               >
-                <Text style={styles.retryButtonText}>Réessayer</Text>
+                <Text style={styles.retryButtonText}>{t('home.retry')}</Text>
               </Pressable>
             </View>
           )
@@ -1001,6 +1206,61 @@ const styles = StyleSheet.create({
 
   chipTextActive: {
     color: '#FFFFFF',
+  },
+
+  moodDishesContainer: {
+    paddingBottom: 8,
+    marginBottom: 18,
+  },
+
+  moodDishCard: {
+    width: 132,
+    marginRight: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 10,
+    shadowColor: '#000000',
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+  },
+
+  moodDishCardPressed: {
+    opacity: 0.85,
+  },
+
+  moodDishImage: {
+    width: '100%',
+    height: 84,
+    borderRadius: 12,
+    marginBottom: 8,
+    backgroundColor: '#F3E6D7',
+  },
+
+  moodDishName: {
+    fontWeight: '800',
+    fontSize: 13,
+    color: '#1E1E1E',
+    marginBottom: 2,
+  },
+
+  moodDishRestaurant: {
+    fontSize: 11,
+    color: '#999999',
+    marginBottom: 4,
+  },
+
+  moodDishPrice: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#D96C2D',
+  },
+
+  moodEmptyText: {
+    color: '#999999',
+    fontSize: 13,
+    marginBottom: 18,
   },
 
   offerCard: {

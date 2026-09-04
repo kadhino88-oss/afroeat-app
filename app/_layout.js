@@ -4,7 +4,9 @@ import { StyleSheet, StatusBar } from 'react-native';
 import AppStripeProvider from '../components/AppStripeProvider';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
+import { LanguageProvider } from '../context/LanguageContext';
 import { setupPushNotifications } from '../services/notificationService';
+import '../i18n';
 
 /**
  * =========================================================
@@ -116,13 +118,15 @@ function AppStack() {
 
 export default function RootLayout() {
   return (
-    <AppStripeProvider>
-      <AuthProvider>
-        <CartProvider>
-          <AppStack />
-        </CartProvider>
-      </AuthProvider>
-    </AppStripeProvider>
+    <LanguageProvider>
+      <AppStripeProvider>
+        <AuthProvider>
+          <CartProvider>
+            <AppStack />
+          </CartProvider>
+        </AuthProvider>
+      </AppStripeProvider>
+    </LanguageProvider>
   );
 }
 

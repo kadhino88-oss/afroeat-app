@@ -160,6 +160,7 @@ const formatPrice = (value, currency = 'EUR') => {
 
   if (c === 'USD') return `$${amount.toFixed(2)}`;
   if (c === 'GBP') return `£${amount.toFixed(2)}`;
+  if (c === 'CHF') return `CHF ${amount.toFixed(2)}`;
   if (c === 'XOF' || c === 'XAF') return `${amount.toFixed(0)} ${c}`;
   if (c === 'CAD') return `${amount.toFixed(2)} $CA`;
 

@@ -17,6 +17,7 @@ import { apiGet } from '../../services/apiClient';
 import { API_ENDPOINTS } from '../../constants/api';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -359,6 +360,7 @@ const normalizeMenuItem = (item, restaurant, index = 0) => {
       item?.description || item?.details || item?.summary,
       'Aucune description'
     ),
+    story: normalizeText(item?.story, ''),
     category: normalizeText(
       item?.category ||
         item?.section ||
@@ -422,6 +424,7 @@ const formatPrice = (value, currency = 'EUR') => {
   } catch {
     if (safeCurrency === 'USD') return `$${amount.toFixed(2)}`;
     if (safeCurrency === 'GBP') return `£${amount.toFixed(2)}`;
+  if (safeCurrency === 'CHF') return `CHF ${amount.toFixed(2)}`;
     if (safeCurrency === 'XOF' || safeCurrency === 'XAF') {
       return `${amount.toFixed(0)} ${safeCurrency}`;
     }
@@ -469,6 +472,7 @@ const getMenuItemImageSource = (item, restaurant) => {
  */
 
 export default function RestaurantScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const rawId = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const id = normalizeText(rawId);
@@ -618,22 +622,22 @@ export default function RestaurantScreen() {
       const price = normalizeNumber(item?.price, 0);
 
       if (price <= 0) {
-        Alert.alert('Erreur', 'Prix invalide.');
+        Alert.alert(t('restaurant.error'), t('restaurant.invalidPrice'));
         return;
       }
 
       if (item?.available === false) {
         Alert.alert(
-          'Indisponible',
-          'Cet article n’est pas disponible pour le moment.'
+          t('restaurant.unavailable'),
+          t('restaurant.itemUnavailable')
         );
         return;
       }
 
       if (!restaurant?.isOpen) {
         Alert.alert(
-          'Restaurant fermé',
-          'Ce restaurant est actuellement fermé.'
+          t('restaurant.closedTitle'),
+          t('restaurant.closedBody')
         );
         return;
       }
@@ -664,11 +668,11 @@ export default function RestaurantScreen() {
         };
 
         await Promise.resolve(addToCart(cartItem));
-        Alert.alert('Ajouté au panier', item.name);
+        Alert.alert(t('restaurant.addedToCart'), item.name);
       } catch (error) {
         Alert.alert(
-          'Erreur',
-          error?.message || "Impossible d'ajouter cet article au panier."
+          t('restaurant.error'),
+          error?.message || t('restaurant.addToCartError')
         );
       } finally {
         setAddingId(null);
@@ -751,6 +755,12 @@ export default function RestaurantScreen() {
                 {item.description}
               </Text>
 
+              {!!item.story && (
+                <Text style={styles.storyText} numberOfLines={3}>
+                  📖 {item.story}
+                </Text>
+              )}
+
               <View style={styles.tagsRow}>
                 <Text style={styles.price}>
                   {formatPrice(item.price, restaurant?.currency)}
@@ -758,14 +768,14 @@ export default function RestaurantScreen() {
 
                 {item?.isPopular ? (
                   <View style={styles.tagBadge}>
-                    <Text style={styles.tagBadgeText}>Populaire</Text>
+                    <Text style={styles.tagBadgeText}>{t('restaurant.popular')}</Text>
                   </View>
                 ) : null}
 
                 {item?.isRecommended ? (
                   <View style={styles.tagBadgeSecondary}>
                     <Text style={styles.tagBadgeSecondaryText}>
-                      Recommandé
+                      {t('restaurant.recommended')}
                     </Text>
                   </View>
                 ) : null}
@@ -773,7 +783,7 @@ export default function RestaurantScreen() {
                 {item?.available === false ? (
                   <View style={styles.unavailableBadge}>
                     <Text style={styles.unavailableBadgeText}>
-                      Indisponible
+                      {t('restaurant.unavailable')}
                     </Text>
                   </View>
                 ) : null}
@@ -814,7 +824,7 @@ export default function RestaurantScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="light-content" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement du restaurant...</Text>
+        <Text style={styles.loaderText}>{t('restaurant.loading')}</Text>
       </View>
     );
   }
@@ -824,11 +834,11 @@ export default function RestaurantScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <Text style={styles.errorText}>
-          {errorMessage || 'Erreur de chargement.'}
+          {errorMessage || t('restaurant.loadError')}
         </Text>
 
         <Pressable style={styles.retryBtn} onPress={() => fetchData(false)}>
-          <Text style={styles.retryText}>Réessayer</Text>
+          <Text style={styles.retryText}>{t('restaurant.retry')}</Text>
         </Pressable>
       </View>
     );
@@ -888,7 +898,7 @@ export default function RestaurantScreen() {
         <View style={styles.heroBottomContent}>
           <View style={styles.heroBadge}>
             <Ionicons name="sparkles-outline" size={13} color="#111111" />
-            <Text style={styles.heroBadgeText}>Restaurant premium</Text>
+            <Text style={styles.heroBadgeText}>{t('restaurant.premiumRestaurant')}</Text>
           </View>
 
           <Text style={styles.heroTitle}>{restaurant.name}</Text>
@@ -918,17 +928,17 @@ export default function RestaurantScreen() {
             <View style={styles.quickStatsRow}>
               <View style={styles.quickStatCard}>
                 <Text style={styles.quickStatValue}>{menu.length}</Text>
-                <Text style={styles.quickStatLabel}>Plats</Text>
+                <Text style={styles.quickStatLabel}>{t('restaurant.dishes')}</Text>
               </View>
 
               <View style={styles.quickStatCard}>
                 <Text style={styles.quickStatValue}>{availableItemsCount}</Text>
-                <Text style={styles.quickStatLabel}>Disponibles</Text>
+                <Text style={styles.quickStatLabel}>{t('restaurant.available')}</Text>
               </View>
 
               <View style={styles.quickStatCard}>
                 <Text style={styles.quickStatValue}>{featuredItemsCount}</Text>
-                <Text style={styles.quickStatLabel}>Premium</Text>
+                <Text style={styles.quickStatLabel}>{t('restaurant.premium')}</Text>
               </View>
             </View>
 
@@ -938,7 +948,7 @@ export default function RestaurantScreen() {
                 <Text style={styles.metaText}>
                   {restaurant.cuisine}
                   {restaurant.city ? ` • ${restaurant.city}` : ''}
-                  {!restaurant.isOpen ? ' • Fermé' : ' • Ouvert'}
+                  {!restaurant.isOpen ? ` • ${t('home.closed')}` : ` • ${t('home.open')}`}
                 </Text>
               </View>
 
@@ -952,7 +962,7 @@ export default function RestaurantScreen() {
               <View style={styles.metaRow}>
                 <Ionicons name="card-outline" size={16} color="#245EA8" />
                 <Text style={styles.metaText}>
-                  Frais de livraison : {formatPrice(restaurant.deliveryFee, restaurant.currency)}
+                  {t('restaurant.deliveryFee', { amount: formatPrice(restaurant.deliveryFee, restaurant.currency) })}
                 </Text>
               </View>
 
@@ -963,13 +973,13 @@ export default function RestaurantScreen() {
               )}
             </View>
 
-            <Text style={styles.menuSectionTitle}>Menu</Text>
+            <Text style={styles.menuSectionTitle}>{t('restaurant.menu')}</Text>
 
             {menu.length === 0 ? (
               <View style={styles.emptyState}>
-                <Text style={styles.emptyTitle}>Aucun plat disponible</Text>
+                <Text style={styles.emptyTitle}>{t('restaurant.noDishAvailable')}</Text>
                 <Text style={styles.emptyText}>
-                  Aucun plat exploitable n’a été trouvé.
+                  {t('restaurant.noDishText')}
                 </Text>
               </View>
             ) : null}
@@ -1262,6 +1272,14 @@ const styles = StyleSheet.create({
     marginTop: 6,
     lineHeight: 18,
     fontSize: 13,
+  },
+
+  storyText: {
+    color: '#9A6A3C',
+    fontStyle: 'italic',
+    marginTop: 6,
+    lineHeight: 17,
+    fontSize: 12.5,
   },
 
   tagsRow: {

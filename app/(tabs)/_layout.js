@@ -2,6 +2,8 @@ import React from 'react';
 import { View, ActivityIndicator, StyleSheet, Platform, Image } from 'react-native';
 import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+
 import { useAuth } from '../../context/AuthContext';
 
 /**
@@ -148,6 +150,7 @@ const TabBarLogo = () => {
 
 export default function TabsLayout() {
   const { user, loading, isAuthenticated, role, accountStatus } = useAuth();
+  const { t } = useTranslation();
 
   /**
    * =========================================================
@@ -209,7 +212,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Accueil',
+          title: t('nav.home'),
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
@@ -224,7 +227,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explorer',
+          title: t('nav.explore'),
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'search' : 'search-outline'}
@@ -239,7 +242,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="orders"
         options={{
-          title: 'Commandes',
+          title: t('nav.orders'),
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'receipt' : 'receipt-outline'}
@@ -254,7 +257,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profil',
+          title: t('nav.profile'),
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons
               name={focused ? 'person' : 'person-outline'}

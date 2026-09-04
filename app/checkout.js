@@ -17,6 +17,7 @@ import FadeInView from '../components/FadeInView';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { createOrder } from '../services/orderService';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -37,6 +38,10 @@ const normalizeNumber = (value, fallback = 0) => {
 const normalizeArray = (value) => {
   return Array.isArray(value) ? value : [];
 };
+
+// Montants proposes pour le don "Afro Impact" - le client choisit,
+// rien n'est ajoute par defaut (0 = pas de don).
+const DONATION_OPTIONS = [0, 1, 2, 5];
 
 const normalizeRole = (value) => {
   const role = normalizeText(value, 'client').toLowerCase();
@@ -70,6 +75,7 @@ const formatPrice = (value, currency = 'EUR') => {
 
   if (safeCurrency === 'USD') return `$${amount.toFixed(2)}`;
   if (safeCurrency === 'GBP') return `£${amount.toFixed(2)}`;
+  if (safeCurrency === 'CHF') return `CHF ${amount.toFixed(2)}`;
   if (safeCurrency === 'XOF' || safeCurrency === 'XAF') {
     return `${amount.toFixed(0)} ${safeCurrency}`;
   }
@@ -132,6 +138,7 @@ const getOrderIdFromResponse = (response) => {
  */
 
 export default function CheckoutScreen() {
+  const { t } = useTranslation();
   const cart = useCart() || {};
   const auth = useAuth() || {};
 
@@ -148,6 +155,7 @@ export default function CheckoutScreen() {
   const role = normalizeRole(auth.role || user?.role);
 
   const [loading, setLoading] = useState(false);
+  const [donation, setDonation] = useState(0);
 
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
   const isClient = role === 'client';
@@ -232,8 +240,8 @@ export default function CheckoutScreen() {
   }, [totals, safeCartItems.length]);
 
   const totalPrice = useMemo(() => {
-    return Number((subtotal + delivery).toFixed(2));
-  }, [subtotal, delivery]);
+    return Number((subtotal + delivery + donation).toFixed(2));
+  }, [subtotal, delivery, donation]);
 
   const totalItems = useMemo(() => {
     return safeCartItems.reduce((sum, item) => {
@@ -269,8 +277,8 @@ export default function CheckoutScreen() {
   const handleOrder = useCallback(async () => {
     if (!isLoggedIn) {
       Alert.alert(
-        'Connexion requise',
-        'Connecte-toi pour finaliser ta commande.'
+        t('checkout.alertLoginRequiredTitle'),
+        t('checkout.alertLoginRequiredBody')
       );
       router.push('/auth/role');
       return;
@@ -278,26 +286,26 @@ export default function CheckoutScreen() {
 
     if (!isClient) {
       Alert.alert(
-        'Accès non autorisé',
-        'Seul un compte client peut finaliser une commande.'
+        t('checkout.alertUnauthorizedTitle'),
+        t('checkout.alertUnauthorizedBody')
       );
       return;
     }
 
     if (!restaurantId) {
-      Alert.alert('Erreur', 'Restaurant introuvable pour cette commande.');
+      Alert.alert(t('checkout.error'), t('checkout.alertNoRestaurant'));
       return;
     }
 
     if (normalizedItems.length === 0) {
-      Alert.alert('Panier vide', 'Ajoute au moins un article avant de commander.');
+      Alert.alert(t('checkout.alertEmptyCartTitle'), t('checkout.alertEmptyCartBody'));
       return;
     }
 
     if (!hasValidAddress) {
       Alert.alert(
-        'Adresse manquante',
-        'Merci d’ajouter une adresse valide dans ton profil.'
+        t('checkout.alertMissingAddressTitle'),
+        t('checkout.alertMissingAddressBody')
       );
       return;
     }
@@ -313,8 +321,8 @@ export default function CheckoutScreen() {
 
       if (hasFallbackItems) {
         Alert.alert(
-          'Menu non disponible',
-          "Ces plats sont des aperçus de démonstration et ne peuvent pas être commandés. Le restaurateur doit d'abord ajouter ses vrais plats depuis son dashboard.",
+          t('checkout.alertDemoMenuTitle'),
+          t('checkout.alertDemoMenuBody'),
           [{ text: 'OK' }]
         );
         return;
@@ -326,6 +334,7 @@ export default function CheckoutScreen() {
         items: normalizedItems,
         totalPrice,
         deliveryFee: Number(delivery.toFixed(2)),
+        donationAmount: Number(donation.toFixed(2)),
         currency,
         status: 'En attente',
         paymentStatus: 'Non payé',
@@ -345,7 +354,7 @@ export default function CheckoutScreen() {
         await Promise.resolve(clearCart());
       }
 
-      Alert.alert('Commande créée', 'Ta commande a bien été enregistrée.');
+      Alert.alert(t('checkout.alertOrderCreatedTitle'), t('checkout.alertOrderCreatedBody'));
 
       if (orderId) {
   router.replace({
@@ -363,25 +372,23 @@ export default function CheckoutScreen() {
     } catch (error) {
       const msg = error?.message || '';
       const status = error?.status;
-      let title = 'Commande impossible';
-      let body = msg || 'Impossible de finaliser la commande.';
+      let title = t('checkout.alertOrderFailedTitle');
+      let body = msg || t('checkout.alertOrderFailedBody');
 
       if (status === 400) {
-        title = 'Données invalides';
-        body =
-          msg ||
-          'Certaines informations sont incorrectes. Vérifie ton panier et ton adresse.';
+        title = t('checkout.alertInvalidDataTitle');
+        body = msg || t('checkout.alertInvalidDataBody');
       } else if (status === 401 || status === 403) {
-        title = 'Session expirée';
-        body = 'Ta session a expiré. Reconnecte-toi et réessaie.';
+        title = t('checkout.alertSessionExpiredTitle');
+        body = t('checkout.alertSessionExpiredBody');
       } else if (
         msg.toLowerCase().includes('réseau') ||
         msg.toLowerCase().includes('network') ||
         msg.toLowerCase().includes('serveur') ||
         msg.toLowerCase().includes('contacter')
       ) {
-        title = 'Connexion impossible';
-        body = 'Vérifie ta connexion internet et réessaie.';
+        title = t('checkout.alertConnectionFailedTitle');
+        body = t('checkout.alertConnectionFailedBody');
       }
 
       Alert.alert(title, body);
@@ -393,6 +400,7 @@ export default function CheckoutScreen() {
     currency,
     delivery,
     deliveryAddress,
+    donation,
     hasValidAddress,
     isClient,
     isLoggedIn,
@@ -411,34 +419,33 @@ export default function CheckoutScreen() {
         <View style={styles.guestHeroCard}>
           <View style={styles.guestBadge}>
             <Ionicons name="sparkles-outline" size={16} color="#8A6500" />
-            <Text style={styles.guestBadgeText}>Mode invité premium</Text>
+            <Text style={styles.guestBadgeText}>{t('checkout.guestPremiumTitle')}</Text>
           </View>
 
           <Ionicons name="lock-closed-outline" size={54} color="#C4B7A6" />
 
-          <Text style={styles.emptyTitle}>Connexion requise pour finaliser</Text>
+          <Text style={styles.emptyTitle}>{t('checkout.loginRequired')}</Text>
 
           <Text style={styles.emptyText}>
-            Ton panier est prêt, mais la connexion est nécessaire pour confirmer
-            l’adresse et enregistrer la commande.
+            {t('checkout.guestPremiumText')}
           </Text>
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Se connecter"
+            accessibilityLabel={t('checkout.login')}
             style={styles.primaryButton}
             onPress={handleGoToLogin}
           >
-            <Text style={styles.primaryButtonText}>Se connecter</Text>
+            <Text style={styles.primaryButtonText}>{t('checkout.login')}</Text>
           </Pressable>
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Retour au panier"
+            accessibilityLabel={t('checkout.backToCart')}
             style={styles.secondaryButton}
             onPress={handleBack}
           >
-            <Text style={styles.secondaryButtonText}>Retour au panier</Text>
+            <Text style={styles.secondaryButtonText}>{t('checkout.backToCart')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -453,20 +460,19 @@ export default function CheckoutScreen() {
         <View style={styles.guestHeroCard}>
           <Ionicons name="shield-outline" size={54} color="#C65D2E" />
 
-          <Text style={styles.emptyTitle}>Checkout réservé au client</Text>
+          <Text style={styles.emptyTitle}>{t('checkout.clientOnly')}</Text>
 
           <Text style={styles.emptyText}>
-            Cet espace de validation de commande appartient uniquement au parcours
-            client AFROEAT.
+            {t('checkout.clientOnlyText')}
           </Text>
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Retour au panier"
+            accessibilityLabel={t('checkout.backToCart')}
             style={styles.primaryButton}
             onPress={handleBack}
           >
-            <Text style={styles.primaryButtonText}>Retour au panier</Text>
+            <Text style={styles.primaryButtonText}>{t('checkout.backToCart')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -480,7 +486,7 @@ export default function CheckoutScreen() {
       <View style={styles.header}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Retour"
+          accessibilityLabel={t('checkout.back')}
           style={({ pressed }) => [
             styles.backButton,
             pressed && styles.buttonPressed,
@@ -490,7 +496,7 @@ export default function CheckoutScreen() {
           <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
         </Pressable>
 
-        <Text style={styles.title}>Récapitulatif</Text>
+        <Text style={styles.title}>{t('checkout.summary')}</Text>
 
         <View style={styles.headerSpacer} />
       </View>
@@ -531,7 +537,7 @@ export default function CheckoutScreen() {
               <View style={styles.infoCard}>
                 <Ionicons name="restaurant-outline" size={18} color="#1F6F43" />
                 <Text style={styles.infoText} numberOfLines={1}>
-                  Commande chez {restaurantName}
+                  {t('checkout.orderingAt', { restaurant: restaurantName })}
                 </Text>
               </View>
             )}
@@ -539,7 +545,7 @@ export default function CheckoutScreen() {
             <View style={styles.addressCard}>
               <View style={styles.addressHeader}>
                 <Ionicons name="location-outline" size={18} color="#D96C2D" />
-                <Text style={styles.addressTitle}>Adresse de livraison</Text>
+                <Text style={styles.addressTitle}>{t('checkout.deliveryAddress')}</Text>
               </View>
 
               <Text
@@ -550,16 +556,16 @@ export default function CheckoutScreen() {
               >
                 {hasValidAddress
                   ? deliveryAddress
-                  : 'Adresse à compléter dans le profil utilisateur'}
+                  : t('checkout.addressPlaceholder')}
               </Text>
 
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Voir mon profil"
+                accessibilityLabel={t('checkout.viewProfile')}
                 style={styles.addressAction}
                 onPress={handleGoToProfile}
               >
-                <Text style={styles.addressActionText}>Voir mon profil</Text>
+                <Text style={styles.addressActionText}>{t('checkout.viewProfile')}</Text>
                 <Ionicons name="chevron-forward" size={16} color="#1F6F43" />
               </Pressable>
             </View>
@@ -567,11 +573,10 @@ export default function CheckoutScreen() {
             <View style={styles.paymentPreviewCard}>
               <View style={styles.paymentPreviewHeader}>
                 <Ionicons name="card-outline" size={18} color="#2457C5" />
-                <Text style={styles.paymentPreviewTitle}>Paiement sécurisé</Text>
+                <Text style={styles.paymentPreviewTitle}>{t('checkout.securePayment')}</Text>
               </View>
               <Text style={styles.paymentPreviewText}>
-                La commande est prête. Le branchement paiement peut se faire
-                ensuite sans toucher au flux principal.
+                {t('checkout.paymentPreviewText')}
               </Text>
             </View>
           </View>
@@ -579,18 +584,18 @@ export default function CheckoutScreen() {
         ListEmptyComponent={
           <View style={styles.emptyBox}>
             <Ionicons name="basket-outline" size={52} color="#C4B7A6" />
-            <Text style={styles.emptyTitle}>Ton panier est vide</Text>
+            <Text style={styles.emptyTitle}>{t('checkout.emptyCart')}</Text>
             <Text style={styles.emptyText}>
-              Ajoute au moins un article avant de passer commande.
+              {t('checkout.emptyCartText')}
             </Text>
 
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Explorer les restaurants"
+              accessibilityLabel={t('checkout.exploreRestaurants')}
               style={styles.primaryButton}
               onPress={handleGoToExplore}
             >
-              <Text style={styles.primaryButtonText}>Explorer les restaurants</Text>
+              <Text style={styles.primaryButtonText}>{t('checkout.exploreRestaurants')}</Text>
             </Pressable>
           </View>
         }
@@ -600,24 +605,66 @@ export default function CheckoutScreen() {
 
       <View style={styles.footer}>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Articles</Text>
+          <Text style={styles.summaryLabel}>{t('checkout.items')}</Text>
           <Text style={styles.summaryValue}>{totalItems}</Text>
         </View>
 
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Sous-total</Text>
+          <Text style={styles.summaryLabel}>{t('checkout.subtotal')}</Text>
           <Text style={styles.summaryValue}>{formatPrice(subtotal, currency)}</Text>
         </View>
 
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Livraison</Text>
+          <Text style={styles.summaryLabel}>{t('checkout.delivery')}</Text>
           <Text style={styles.summaryValue}>
-            {delivery === 0 ? 'Gratuite' : formatPrice(delivery, currency)}
+            {delivery === 0 ? t('checkout.free') : formatPrice(delivery, currency)}
           </Text>
         </View>
 
+        {safeCartItems.length > 0 && (
+          <View style={styles.donationCard}>
+            <View style={styles.donationHeader}>
+              <Ionicons name="heart-outline" size={16} color="#1F6F43" />
+              <Text style={styles.donationTitle}>{t('checkout.donationTitle')}</Text>
+            </View>
+            <Text style={styles.donationSubtitle}>
+              {t('checkout.donationSubtitle')}
+            </Text>
+            <View style={styles.donationChipsRow}>
+              {DONATION_OPTIONS.map((option) => {
+                const isActive = donation === option;
+                return (
+                  <Pressable
+                    key={`donation-${option}`}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      option === 0
+                        ? t('checkout.donationNone')
+                        : t('checkout.donationAdd', { amount: formatPrice(option, currency) })
+                    }
+                    onPress={() => setDonation(option)}
+                    style={[
+                      styles.donationChip,
+                      isActive && styles.donationChipActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.donationChipText,
+                        isActive && styles.donationChipTextActive,
+                      ]}
+                    >
+                      {option === 0 ? t('checkout.donationNoneShort') : formatPrice(option, currency)}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        )}
+
         <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Total</Text>
+          <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
           <Text style={styles.totalValue}>{formatPrice(totalPrice, currency)}</Text>
         </View>
 
@@ -628,9 +675,9 @@ export default function CheckoutScreen() {
           >
             <Ionicons name="warning-outline" size={16} color="#B04A00" />
             <Text style={styles.footerHelperText}>
-              Adresse de livraison manquante.{' '}
+              {t('checkout.addressMissing')}{' '}
               <Text style={styles.footerHelperLink}>
-                Ajouter dans mon profil →
+                {t('checkout.addToProfile')}
               </Text>
             </Text>
           </Pressable>
@@ -638,7 +685,7 @@ export default function CheckoutScreen() {
 
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Valider la commande"
+          accessibilityLabel={t('checkout.placeOrder')}
           style={({ pressed }) => [
             styles.button,
             (loading || safeCartItems.length === 0 || !hasValidAddress) &&
@@ -655,7 +702,7 @@ export default function CheckoutScreen() {
           {loading ? (
             <ActivityIndicator color="#1E1E1E" />
           ) : (
-            <Text style={styles.buttonText}>Valider la commande</Text>
+            <Text style={styles.buttonText}>{t('checkout.placeOrder')}</Text>
           )}
         </Pressable>
       </View>
@@ -953,6 +1000,66 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '900',
     color: '#1E1E1E',
+  },
+
+  donationCard: {
+    backgroundColor: '#F1F8F3',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#D9EEDF',
+    padding: 12,
+    marginBottom: 12,
+  },
+
+  donationHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+
+  donationTitle: {
+    marginLeft: 6,
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#1F6F43',
+  },
+
+  donationSubtitle: {
+    color: '#4C6B57',
+    fontSize: 12,
+    lineHeight: 17,
+    marginBottom: 10,
+  },
+
+  donationChipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+
+  donationChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#CBE4D3',
+    marginRight: 8,
+    marginBottom: 6,
+  },
+
+  donationChipActive: {
+    backgroundColor: '#1F6F43',
+    borderColor: '#1F6F43',
+  },
+
+  donationChipText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1F6F43',
+  },
+
+  donationChipTextActive: {
+    color: '#FFFFFF',
   },
 
   footerHelperText: {

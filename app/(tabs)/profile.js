@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,23 @@ import {
   StatusBar,
   ActivityIndicator,
   Image,
+  Modal,
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
+
+const LANGUAGE_FLAGS = {
+  fr: '🇫🇷',
+  en: '🇬🇧',
+  de: '🇩🇪',
+  es: '🇪🇸',
+  it: '🇮🇹',
+  zh: '🇨🇳',
+};
 
 /**
  * =========================================================
@@ -258,6 +270,9 @@ const MenuRow = ({ icon, label, subtitle, onPress, danger = false }) => (
  */
 
 export default function ProfileScreen() {
+  const { t } = useTranslation();
+  const { language, setLanguage, supportedLanguages } = useLanguage();
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -474,6 +489,13 @@ export default function ProfileScreen() {
           <Text style={styles.sectionTitle}>Préférences</Text>
 
           <MenuRow
+            icon="language-outline"
+            label={t('profile.language')}
+            subtitle={t(`languages.${language}`)}
+            onPress={() => setLanguageModalVisible(true)}
+          />
+
+          <MenuRow
             icon="help-circle-outline"
             label="Aide & Support"
             subtitle="Obtenir de l’aide sur ton compte"
@@ -490,6 +512,49 @@ export default function ProfileScreen() {
           />
         </View>
       </ScrollView>
+
+      <Modal
+        visible={languageModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setLanguageModalVisible(false)}
+      >
+        <Pressable
+          style={styles.languageModalOverlay}
+          onPress={() => setLanguageModalVisible(false)}
+        >
+          <Pressable style={styles.languageModalCard} onPress={() => {}}>
+            <Text style={styles.languageModalTitle}>{t('profile.language')}</Text>
+            <Text style={styles.languageModalSubtitle}>
+              {t('profile.languageSubtitle')}
+            </Text>
+
+            {supportedLanguages.map((code) => {
+              const isActive = language === code;
+              return (
+                <Pressable
+                  key={code}
+                  style={[
+                    styles.languageOption,
+                    isActive && styles.languageOptionActive,
+                  ]}
+                  onPress={() => {
+                    setLanguage(code);
+                    setLanguageModalVisible(false);
+                  }}
+                >
+                  <Text style={styles.languageOptionText}>
+                    {LANGUAGE_FLAGS[code]}  {t(`languages.${code}`)}
+                  </Text>
+                  {isActive ? (
+                    <Ionicons name="checkmark" size={18} color="#1F6F43" />
+                  ) : null}
+                </Pressable>
+              );
+            })}
+          </Pressable>
+        </Pressable>
+      </Modal>
     </FadeInView>
   );
 }
@@ -775,5 +840,53 @@ const styles = StyleSheet.create({
 
   buttonPressed: {
     opacity: 0.7,
+  },
+
+  languageModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+
+  languageModalCard: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 20,
+  },
+
+  languageModalTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+
+  languageModalSubtitle: {
+    fontSize: 13,
+    color: '#8A8A8A',
+    marginTop: 4,
+    marginBottom: 14,
+  },
+
+  languageOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+  },
+
+  languageOptionActive: {
+    backgroundColor: '#F1F7F3',
+  },
+
+  languageOptionText: {
+    fontSize: 15,
+    color: '#1A1A1A',
+    fontWeight: '500',
   },
 });
