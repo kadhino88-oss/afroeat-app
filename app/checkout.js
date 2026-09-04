@@ -152,12 +152,6 @@ export default function CheckoutScreen() {
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
   const isClient = role === 'client';
 
-  /**
-   * =========================================================
-   * SAFE DATA
-   * =========================================================
-   */
-
   const safeCartItems = useMemo(() => {
     return normalizeArray(cartItems)
       .map((item) => ({
@@ -238,16 +232,8 @@ export default function CheckoutScreen() {
   }, [totals, safeCartItems.length]);
 
   const totalPrice = useMemo(() => {
-    if (typeof getTotalPrice === 'function') {
-      return Math.max(0, normalizeNumber(getTotalPrice(), 0));
-    }
-
-    if (Number.isFinite(Number(totals?.total))) {
-      return Math.max(0, normalizeNumber(totals.total, 0));
-    }
-
-    return Math.max(0, subtotal + delivery);
-  }, [delivery, getTotalPrice, subtotal, totals]);
+    return Number((subtotal + delivery).toFixed(2));
+  }, [subtotal, delivery]);
 
   const totalItems = useMemo(() => {
     return safeCartItems.reduce((sum, item) => {
@@ -258,12 +244,6 @@ export default function CheckoutScreen() {
   const hasValidAddress = useMemo(() => {
     return normalizeText(deliveryAddress).length >= 5;
   }, [deliveryAddress]);
-
-  /**
-   * =========================================================
-   * ACTIONS
-   * =========================================================
-   */
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -325,8 +305,6 @@ export default function CheckoutScreen() {
     try {
       setLoading(true);
 
-      // ✅ Vérifier que les IDs des items sont des vrais ObjectId MongoDB
-      // (pas des IDs fallback locaux comme "fallback-xxx-1")
       const isValidMongoId = (id) => /^[a-f\d]{24}$/i.test(String(id || ''));
 
       const hasFallbackItems = normalizedItems.some(
@@ -336,23 +314,19 @@ export default function CheckoutScreen() {
       if (hasFallbackItems) {
         Alert.alert(
           'Menu non disponible',
-          'Ces plats sont des aperçus de démonstration et ne peuvent pas être commandés. Le restaurateur doit d\'abord ajouter ses vrais plats depuis son dashboard.',
+          "Ces plats sont des aperçus de démonstration et ne peuvent pas être commandés. Le restaurateur doit d'abord ajouter ses vrais plats depuis son dashboard.",
           [{ text: 'OK' }]
         );
         return;
       }
 
-      // ✅ Payload complet avec tous les champs attendus par le backend
       const payload = {
         user: user._id,
         restaurant: restaurantId,
         items: normalizedItems,
-        // ✅ totalPrice = items only (le backend recalcule et valide)
-        // Ne pas inclure les frais de livraison ici
-        totalPrice: Number(subtotal.toFixed(2)),
+        totalPrice,
         deliveryFee: Number(delivery.toFixed(2)),
         currency,
-        // ✅ Statuts en français comme attendu par le backend
         status: 'En attente',
         paymentStatus: 'Non payé',
         paymentMethod: 'card',
@@ -374,9 +348,16 @@ export default function CheckoutScreen() {
       Alert.alert('Commande créée', 'Ta commande a bien été enregistrée.');
 
       if (orderId) {
-        router.replace(`/order/${orderId}`);
-        return;
-      }
+  router.replace({
+    pathname: '/payment',
+    params: {
+      orderId,
+      amount: String(totalPrice),
+      currency,
+    },
+  });
+  return;
+}
 
       router.replace('/(tabs)/orders');
     } catch (error) {
@@ -387,7 +368,9 @@ export default function CheckoutScreen() {
 
       if (status === 400) {
         title = 'Données invalides';
-        body = msg || 'Certaines informations sont incorrectes. Vérifie ton panier et ton adresse.';
+        body =
+          msg ||
+          'Certaines informations sont incorrectes. Vérifie ton panier et ton adresse.';
       } else if (status === 401 || status === 403) {
         title = 'Session expirée';
         body = 'Ta session a expiré. Reconnecte-toi et réessaie.';
@@ -408,6 +391,7 @@ export default function CheckoutScreen() {
   }, [
     clearCart,
     currency,
+    delivery,
     deliveryAddress,
     hasValidAddress,
     isClient,
@@ -418,12 +402,6 @@ export default function CheckoutScreen() {
     totalPrice,
     user,
   ]);
-
-  /**
-   * =========================================================
-   * GUEST MODE / NON CLIENT
-   * =========================================================
-   */
 
   if (!isLoggedIn) {
     return (
@@ -494,12 +472,6 @@ export default function CheckoutScreen() {
       </FadeInView>
     );
   }
-
-  /**
-   * =========================================================
-   * RENDER
-   * =========================================================
-   */
 
   return (
     <FadeInView style={styles.container}>
@@ -646,9 +618,7 @@ export default function CheckoutScreen() {
 
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>Total</Text>
-          <Text style={styles.totalValue}>
-            {formatPrice(totalPrice, currency)}
-          </Text>
+          <Text style={styles.totalValue}>{formatPrice(totalPrice, currency)}</Text>
         </View>
 
         {!hasValidAddress && safeCartItems.length > 0 && (

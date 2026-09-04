@@ -13,7 +13,11 @@
       "backgroundColor": "#0B0B0F"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bkentreprise.afroeat",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +27,8 @@
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
-      ]
+      ],
+      "package": "com.bkentreprise.afroeat"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -40,6 +45,13 @@
         {
           "merchantIdentifier": "merchant.com.afroeat",
           "enableGooglePay": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#0B0B0F"
         }
       ]
     ],

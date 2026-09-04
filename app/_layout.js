@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StyleSheet, StatusBar } from 'react-native';
-import { AuthProvider } from '../context/AuthContext';
+import { AuthProvider, useAuth } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
+import { setupPushNotifications } from '../services/notificationService';
 
 /**
  * =========================================================
@@ -15,6 +16,35 @@ import { CartProvider } from '../context/CartContext';
  */
 
 function AppStack() {
+  const { isAuthenticated, token } = useAuth();
+
+  /**
+   * =========================================================
+   * NOTIFICATIONS PUSH
+   * =========================================================
+   * Dès qu'un utilisateur est authentifié (login OU session
+   * restaurée au démarrage), on demande la permission
+   * notifications et on synchronise le token Expo avec le
+   * backend. Ne bloque jamais l'app en cas d'échec/refus.
+   */
+  useEffect(() => {
+    if (!isAuthenticated || !token) {
+      return;
+    }
+
+    let isMounted = true;
+
+    setupPushNotifications(token).catch((error) => {
+      if (isMounted) {
+        console.log('Erreur setupPushNotifications :', error);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isAuthenticated, token]);
+
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
