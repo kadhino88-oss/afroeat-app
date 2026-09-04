@@ -47,8 +47,10 @@ export const createPaymentIntent = async (orderId, token) => {
  * Confirme le paiement côté backend après succès Stripe.
  */
 export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
+  // NB : la route backend disponible est /payments/confirm (voir paymentRoutes.js),
+  // il n'existe pas de route /payments/orders/:id/confirm cote serveur.
   return apiPost(
-    API_ENDPOINTS.payments.confirmOrderPayment(orderId),
+    API_ENDPOINTS.payments.confirm,
     { orderId, paymentIntentId },
     token
   );

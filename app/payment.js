@@ -26,8 +26,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
-import { apiPost } from '../services/apiClient';
-import { API_ENDPOINTS } from '../constants/api';
+import { useAfroeatPayment } from '../services/stripeService';
 
 // ─── Helpers ──────────────────────────────────────────────
 const normalizeText  = (v, f = '') => String(v ?? '').trim() || f;
@@ -84,6 +83,8 @@ export default function PaymentScreen() {
   const [step,           setStep]            = useState('select'); // 'select' | 'processing' | 'success' | 'error'
   const [errorMsg,       setErrorMsg]        = useState('');
 
+  const { pay: payWithStripe } = useAfroeatPayment();
+
   useEffect(() => {
     if (!orderId) {
       Alert.alert('Erreur', 'Commande introuvable.', [
@@ -93,58 +94,31 @@ export default function PaymentScreen() {
   }, [orderId]);
 
   const handleCashPayment = useCallback(async () => {
+    // Paiement à la livraison : aucun appel backend n'est nécessaire ici.
+    // La commande reste "En attente" (le restaurant la confirme comme
+    // n'importe quelle commande) et le client règle le livreur en espèces
+    // ou par carte directement à la réception.
     setLoading(true);
     setStep('processing');
-    try {
-      // Confirme la commande avec paiement à la livraison
-      await apiPost(
-        `${API_ENDPOINTS.orders.all}/${orderId}/status`,
-        { status: 'Confirmée', note: 'Paiement à la livraison choisi' },
-        token
-      );
-      setStep('success');
-    } catch (err) {
-      setErrorMsg(err?.message || 'Erreur lors de la confirmation.');
-      setStep('error');
-    } finally {
-      setLoading(false);
-    }
-  }, [orderId, token]);
+    setLoading(false);
+    setStep('success');
+  }, []);
 
   const handleCardPayment = useCallback(async () => {
     setLoading(true);
     setStep('processing');
-    try {
-      // 1. Créer le PaymentIntent côté backend
-      const intentResponse = await apiPost(
-        API_ENDPOINTS.payments.createIntent,
-        { orderId },
-        token
-      );
 
-      if (!intentResponse?.clientSecret) {
-        throw new Error('Impossible d\'initialiser le paiement Stripe.');
-      }
+    const result = await payWithStripe({ orderId, token });
 
-      // 2. Ici tu intégreras @stripe/stripe-react-native
-      // Pour l'instant on simule un succès (à remplacer par confirmPayment)
-      // const { error, paymentIntent } = await confirmPayment(clientSecret, {...});
+    setLoading(false);
 
-      // 3. Confirmer côté backend
-      await apiPost(
-        API_ENDPOINTS.payments.confirm,
-        { orderId, paymentIntentId: intentResponse.paymentIntentId },
-        token
-      );
-
+    if (result.success) {
       setStep('success');
-    } catch (err) {
-      setErrorMsg(err?.message || 'Paiement refusé. Réessaie.');
+    } else {
+      setErrorMsg(result.error || 'Paiement refusé. Réessaie.');
       setStep('error');
-    } finally {
-      setLoading(false);
     }
-  }, [orderId, token]);
+  }, [orderId, token, payWithStripe]);
 
   const handlePay = useCallback(() => {
     if (!orderId) return;

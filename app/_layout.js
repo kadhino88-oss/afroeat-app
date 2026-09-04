@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StyleSheet, StatusBar } from 'react-native';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import { setupPushNotifications } from '../services/notificationService';
+import { STRIPE_PUBLISHABLE_KEY } from '../services/stripeService';
 
 /**
  * =========================================================
@@ -115,11 +117,16 @@ function AppStack() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <AppStack />
-      </CartProvider>
-    </AuthProvider>
+    <StripeProvider
+      publishableKey={STRIPE_PUBLISHABLE_KEY}
+      merchantIdentifier="merchant.com.afroeat"
+    >
+      <AuthProvider>
+        <CartProvider>
+          <AppStack />
+        </CartProvider>
+      </AuthProvider>
+    </StripeProvider>
   );
 }
 
