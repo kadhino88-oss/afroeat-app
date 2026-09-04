@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StyleSheet, StatusBar } from 'react-native';
-import { StripeProvider } from '@stripe/stripe-react-native';
+import AppStripeProvider from '../components/AppStripeProvider';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import { setupPushNotifications } from '../services/notificationService';
-import { STRIPE_PUBLISHABLE_KEY } from '../services/stripeService';
 
 /**
  * =========================================================
@@ -117,16 +116,13 @@ function AppStack() {
 
 export default function RootLayout() {
   return (
-    <StripeProvider
-      publishableKey={STRIPE_PUBLISHABLE_KEY}
-      merchantIdentifier="merchant.com.afroeat"
-    >
+    <AppStripeProvider>
       <AuthProvider>
         <CartProvider>
           <AppStack />
         </CartProvider>
       </AuthProvider>
-    </StripeProvider>
+    </AppStripeProvider>
   );
 }
 
