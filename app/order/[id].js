@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getOrderById, getOrderTracking } from '../../services/orderService';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -281,6 +282,14 @@ const STEPS = [
  */
 
 export default function OrderDetailScreen() {
+  const { t } = useTranslation();
+  const STEPS = [
+    t('order.steps.received'),
+    t('order.steps.confirmed'),
+    t('order.steps.preparing'),
+    t('order.steps.onTheWay'),
+    t('order.steps.delivered'),
+  ];
   const params = useLocalSearchParams();
   const { token, isAuthenticated, user, role, loading: authLoading } =
     useAuth();
@@ -441,7 +450,7 @@ export default function OrderDetailScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement commande...</Text>
+        <Text style={styles.loaderText}>{t('order.loading')}</Text>
       </View>
     );
   }
@@ -462,16 +471,16 @@ export default function OrderDetailScreen() {
 
           <View style={styles.emptyContainer}>
             <Ionicons name="receipt-outline" size={54} color="#C9B8A3" />
-            <Text style={styles.emptyTitle}>Commande introuvable</Text>
+            <Text style={styles.emptyTitle}>{t('order.notFoundTitle')}</Text>
             <Text style={styles.emptyText}>
-              {errorMessage || 'Impossible de charger cette commande.'}
+              {errorMessage || t('order.loadError')}
             </Text>
 
             <Pressable
               style={styles.primaryButton}
               onPress={() => router.replace('/(tabs)/orders')}
             >
-              <Text style={styles.primaryButtonText}>Voir mes commandes</Text>
+              <Text style={styles.primaryButtonText}>{t('order.viewMyOrders')}</Text>
             </Pressable>
           </View>
         </View>
@@ -512,9 +521,9 @@ export default function OrderDetailScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.title}>Suivi commande</Text>
+          <Text style={styles.title}>{t('order.title')}</Text>
           <Text style={styles.subtitle}>
-            Commande #{String(order?._id || '').slice(-6).toUpperCase()}
+            {t('order.orderNumber', { number: String(order?._id || '').slice(-6).toUpperCase() })}
           </Text>
           <Text style={styles.subMeta}>{formatDate(order?.createdAt)}</Text>
         </View>
@@ -532,11 +541,11 @@ export default function OrderDetailScreen() {
               color="#FFFFFF"
               style={styles.statusIcon}
             />
-            <Text style={styles.statusText}>{order?.statusLabel}</Text>
+            <Text style={styles.statusText}>{t(`order.status.${order?.status}`, order?.statusLabel)}</Text>
           </View>
 
           <Text style={styles.restaurantName}>
-            {order?.restaurantName || 'Restaurant AFROEAT'}
+            {order?.restaurantName || t('order.restaurantFallback')}
           </Text>
 
           {!!order?.deliveryAddress && (
@@ -549,7 +558,7 @@ export default function OrderDetailScreen() {
           <View style={styles.metaRow}>
             <View style={styles.metaBadge}>
               <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
-              <Text style={styles.metaBadgeText}>{itemCount} article(s)</Text>
+              <Text style={styles.metaBadgeText}>{t('order.itemsCount', { count: itemCount })}</Text>
             </View>
 
             <View style={styles.metaBadge}>
@@ -562,7 +571,7 @@ export default function OrderDetailScreen() {
             <View style={styles.metaBadge}>
               <Ionicons name="card-outline" size={14} color="#7B61FF" />
               <Text style={styles.metaBadgeText}>
-                {order?.paymentStatus || 'Non payé'}
+                {order?.paymentStatus || t('order.unpaid')}
               </Text>
             </View>
           </View>
@@ -571,24 +580,24 @@ export default function OrderDetailScreen() {
         <View style={styles.liveCard}>
           <View style={styles.liveHeader}>
             <Ionicons name="radio-outline" size={18} color="#2457C5" />
-            <Text style={styles.liveTitle}>Temps réel</Text>
+            <Text style={styles.liveTitle}>{t('order.realtime')}</Text>
           </View>
 
           <View style={styles.liveRow}>
-            <Text style={styles.liveLabel}>Statut tracking</Text>
+            <Text style={styles.liveLabel}>{t('order.trackingStatus')}</Text>
             <Text style={styles.liveValue}>
-              {tracking ? 'Actif' : 'Indisponible'}
+              {tracking ? t('order.active') : t('order.unavailable')}
             </Text>
           </View>
 
           <View style={styles.liveRow}>
-            <Text style={styles.liveLabel}>Position livreur</Text>
+            <Text style={styles.liveLabel}>{t('order.driverPosition')}</Text>
             <Text style={styles.liveValue}>{formatCoordinates(tracking)}</Text>
           </View>
         </View>
 
         <View style={styles.timelineCard}>
-          <Text style={styles.timelineTitle}>Progression</Text>
+          <Text style={styles.timelineTitle}>{t('order.progress')}</Text>
 
           {STEPS.map((label, index) => {
             const isDone =
@@ -623,7 +632,7 @@ export default function OrderDetailScreen() {
                   {isCurrent &&
                     normalizeStatus(order?.status) !== 'cancelled' && (
                       <Text style={styles.timelineStepSubtext}>
-                        Statut actuel de la commande
+                        {t('order.currentStatus')}
                       </Text>
                     )}
                 </View>
@@ -634,13 +643,13 @@ export default function OrderDetailScreen() {
           {normalizeStatus(order?.status) === 'cancelled' && (
             <View style={styles.cancelBox}>
               <Ionicons name="close-circle-outline" size={18} color="#C0392B" />
-              <Text style={styles.cancelText}>Cette commande a été annulée.</Text>
+              <Text style={styles.cancelText}>{t('order.cancelled')}</Text>
             </View>
           )}
         </View>
 
         <View style={styles.itemsCard}>
-          <Text style={styles.itemsTitle}>Articles</Text>
+          <Text style={styles.itemsTitle}>{t('checkout.items')}</Text>
 
           {items.length > 0 ? (
             items.map((item, index) => {
@@ -657,7 +666,7 @@ export default function OrderDetailScreen() {
                     <Text style={styles.itemName}>
                       {normalizeText(item?.name, 'Plat')}
                     </Text>
-                    <Text style={styles.itemQuantity}>Quantité : {quantity}</Text>
+                    <Text style={styles.itemQuantity}>{t('order.quantity', { quantity })}</Text>
                   </View>
 
                   <Text style={styles.itemPrice}>
@@ -667,13 +676,13 @@ export default function OrderDetailScreen() {
               );
             })
           ) : (
-            <Text style={styles.emptyItemsText}>Aucun article à afficher.</Text>
+            <Text style={styles.emptyItemsText}>{t('order.noItems')}</Text>
           )}
         </View>
 
         <View style={styles.totalCard}>
           <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total</Text>
+            <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
             <Text style={styles.totalValue}>
               {formatPrice(total, order?.currency)}
             </Text>

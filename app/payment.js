@@ -27,6 +27,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { useAfroeatPayment } from '../services/stripeService';
+import { useTranslation } from 'react-i18next';
 
 // ─── Helpers ──────────────────────────────────────────────
 const normalizeText  = (v, f = '') => String(v ?? '').trim() || f;
@@ -37,7 +38,9 @@ const formatPrice = (amount, currency = 'EUR') => {
   const cur = normalizeText(currency, 'EUR').toUpperCase();
   if (cur === 'USD') return `$${n.toFixed(2)}`;
   if (cur === 'GBP') return `£${n.toFixed(2)}`;
+  if (cur === 'CHF') return `CHF ${n.toFixed(2)}`;
   if (cur === 'XOF' || cur === 'XAF') return `${n.toFixed(0)} ${cur}`;
+  if (cur === 'CAD') return `${n.toFixed(2)} $CA`;
   return `${n.toFixed(2)} €`;
 };
 
@@ -47,7 +50,9 @@ const PAYMENT_METHODS = [
   { id: 'cash',     label: 'Paiement à la livraison', icon: 'cash-outline',   color: '#1F6F43' },
 ];
 
-const PaymentMethodBtn = ({ method, selected, onPress }) => (
+const PaymentMethodBtn = ({ method, selected, onPress }) => {
+  const { t } = useTranslation();
+  return (
   <Pressable
     style={({ pressed }) => [
       styles.methodBtn,
@@ -60,16 +65,18 @@ const PaymentMethodBtn = ({ method, selected, onPress }) => (
       <Ionicons name={method.icon} size={22} color={method.color} />
     </View>
     <Text style={[styles.methodLabel, selected && styles.methodLabelSelected]}>
-      {method.label}
+      {t(`payment.methods.${method.id}`, method.label)}
     </Text>
     {selected && (
       <Ionicons name="checkmark-circle" size={20} color="#1F6F43" style={styles.methodCheck} />
     )}
   </Pressable>
-);
+  );
+};
 
 // ─── Screen ───────────────────────────────────────────────
 export default function PaymentScreen() {
+  const { t } = useTranslation();
   const params   = useLocalSearchParams();
   const auth     = useAuth() || {};
   const token    = auth.token ?? null;
@@ -87,7 +94,7 @@ export default function PaymentScreen() {
 
   useEffect(() => {
     if (!orderId) {
-      Alert.alert('Erreur', 'Commande introuvable.', [
+      Alert.alert(t('checkout.error'), t('payment.orderNotFoundBody'), [
         { text: 'OK', onPress: () => router.replace('/(tabs)/orders') },
       ]);
     }
@@ -115,7 +122,7 @@ export default function PaymentScreen() {
     if (result.success) {
       setStep('success');
     } else {
-      setErrorMsg(result.error || 'Paiement refusé. Réessaie.');
+      setErrorMsg(result.error || t('payment.paymentRefused'));
       setStep('error');
     }
   }, [orderId, token, payWithStripe]);
@@ -147,15 +154,15 @@ export default function PaymentScreen() {
           <View style={styles.successIcon}>
             <Ionicons name="checkmark-circle" size={72} color="#1F6F43" />
           </View>
-          <Text style={styles.successTitle}>Paiement confirmé ✅</Text>
+          <Text style={styles.successTitle}>{t('payment.successTitle')}</Text>
           <Text style={styles.successText}>
             {selectedMethod === 'cash'
-              ? 'Tu règleras à la livraison. Ta commande est confirmée !'
-              : 'Ton paiement a bien été reçu. Ta commande est confirmée !'}
+              ? t('payment.successCash')
+              : t('payment.successCard')}
           </Text>
           <Text style={styles.successAmount}>{formatPrice(amount, currency)}</Text>
           <Pressable style={styles.primaryBtn} onPress={handleGoToOrders}>
-            <Text style={styles.primaryBtnText}>Suivre ma commande →</Text>
+            <Text style={styles.primaryBtnText}>{t('payment.trackOrder')}</Text>
           </Pressable>
         </View>
       </View>
@@ -169,13 +176,13 @@ export default function PaymentScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.centerCard}>
           <Ionicons name="close-circle" size={72} color="#B63B3B" />
-          <Text style={styles.errorTitle}>Paiement échoué</Text>
+          <Text style={styles.errorTitle}>{t('payment.failedTitle')}</Text>
           <Text style={styles.errorText}>{errorMsg}</Text>
           <Pressable style={styles.primaryBtn} onPress={handleRetry}>
-            <Text style={styles.primaryBtnText}>Réessayer</Text>
+            <Text style={styles.primaryBtnText}>{t('payment.retry')}</Text>
           </Pressable>
           <Pressable style={styles.secondaryBtn} onPress={handleGoToOrders}>
-            <Text style={styles.secondaryBtnText}>Voir mes commandes</Text>
+            <Text style={styles.secondaryBtnText}>{t('order.viewMyOrders')}</Text>
           </Pressable>
         </View>
       </View>
@@ -189,8 +196,8 @@ export default function PaymentScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.centerCard}>
           <ActivityIndicator size="large" color="#D4A017" />
-          <Text style={styles.processingText}>Traitement en cours...</Text>
-          <Text style={styles.processingSubText}>Ne ferme pas l'application.</Text>
+          <Text style={styles.processingText}>{t('payment.processing')}</Text>
+          <Text style={styles.processingSubText}>{t('payment.dontClose')}</Text>
         </View>
       </View>
     );
@@ -209,7 +216,7 @@ export default function PaymentScreen() {
         >
           <Ionicons name="arrow-back" size={22} color="#111" />
         </Pressable>
-        <Text style={styles.headerTitle}>Paiement</Text>
+        <Text style={styles.headerTitle}>{t('payment.title')}</Text>
         <View style={{ width: 42 }} />
       </View>
 
@@ -217,16 +224,16 @@ export default function PaymentScreen() {
 
         {/* Montant */}
         <View style={styles.amountCard}>
-          <Text style={styles.amountLabel}>Montant total</Text>
+          <Text style={styles.amountLabel}>{t('payment.totalAmount')}</Text>
           <Text style={styles.amountValue}>{formatPrice(amount, currency)}</Text>
           <View style={styles.secureBadge}>
             <Ionicons name="lock-closed" size={12} color="#1F6F43" />
-            <Text style={styles.secureBadgeText}>Paiement sécurisé</Text>
+            <Text style={styles.secureBadgeText}>{t('checkout.securePayment')}</Text>
           </View>
         </View>
 
         {/* Méthodes de paiement */}
-        <Text style={styles.sectionTitle}>Choisir une méthode</Text>
+        <Text style={styles.sectionTitle}>{t('payment.chooseMethod')}</Text>
 
         {PAYMENT_METHODS.map((method) => (
           <PaymentMethodBtn
@@ -242,7 +249,7 @@ export default function PaymentScreen() {
           <View style={styles.infoBox}>
             <Ionicons name="information-circle-outline" size={16} color="#245EA8" />
             <Text style={styles.infoText}>
-              Paiement sécurisé via Stripe. Visa, Mastercard, American Express acceptés.
+              {t('payment.cardInfo')}
             </Text>
           </View>
         )}
@@ -251,7 +258,7 @@ export default function PaymentScreen() {
           <View style={[styles.infoBox, styles.infoBoxGreen]}>
             <Ionicons name="information-circle-outline" size={16} color="#1F6F43" />
             <Text style={[styles.infoText, styles.infoTextGreen]}>
-              Tu règles directement au livreur à la réception de ta commande.
+              {t('payment.cashInfo')}
             </Text>
           </View>
         )}
@@ -277,8 +284,8 @@ export default function PaymentScreen() {
                 />
                 <Text style={styles.payBtnText}>
                   {selectedMethod === 'card'
-                    ? `Payer ${formatPrice(amount, currency)}`
-                    : 'Confirmer — Payer à la livraison'}
+                    ? t('payment.payAmount', { amount: formatPrice(amount, currency) })
+                    : t('payment.confirmCash')}
                 </Text>
               </>
             )
@@ -286,7 +293,7 @@ export default function PaymentScreen() {
         </Pressable>
 
         <Text style={styles.legalText}>
-          En confirmant, tu acceptes les conditions générales d'Afroeat.
+          {t('payment.legalText')}
         </Text>
 
       </View>

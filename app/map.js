@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';
 import { getAllRestaurants } from '../services/restaurantService';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -141,6 +142,7 @@ const getRestaurantRoute = (restaurantId) => {
  */
 
 export default function MapScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const isAuthenticated = Boolean(auth.isAuthenticated);
   const authLoading = Boolean(auth.loading);
@@ -284,7 +286,7 @@ export default function MapScreen() {
       <View style={styles.loaderContainer}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement de la carte...</Text>
+        <Text style={styles.loaderText}>{t('map.loading')}</Text>
       </View>
     );
   }
@@ -297,7 +299,7 @@ export default function MapScreen() {
         <View style={styles.topBar}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Retour"
+            accessibilityLabel={t('checkout.back')}
             style={({ pressed }) => [
               styles.topButton,
               pressed && styles.buttonPressed,
@@ -310,22 +312,21 @@ export default function MapScreen() {
 
         <View style={styles.emptyState}>
           <Ionicons name="location-outline" size={56} color="#C9B8A3" />
-          <Text style={styles.emptyTitle}>Localisation indisponible</Text>
+          <Text style={styles.emptyTitle}>{t('map.locationUnavailable')}</Text>
           <Text style={styles.emptyText}>
-            Autorise la localisation pour afficher les restaurants autour de toi
-            et améliorer l’expérience AFROEAT.
+            {t('map.locationUnavailableText')}
           </Text>
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Réessayer le chargement de la carte"
+            accessibilityLabel={t('map.retryLoadingMap')}
             style={({ pressed }) => [
               styles.retryButton,
               pressed && styles.buttonPressed,
             ]}
             onPress={handleRefresh}
           >
-            <Text style={styles.retryButtonText}>Réessayer</Text>
+            <Text style={styles.retryButtonText}>{t('restaurant.retry')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -339,7 +340,7 @@ export default function MapScreen() {
       <View style={styles.topBar}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Retour"
+          accessibilityLabel={t('checkout.back')}
           style={({ pressed }) => [
             styles.topButton,
             pressed && styles.buttonPressed,
@@ -351,7 +352,7 @@ export default function MapScreen() {
 
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Actualiser la carte"
+          accessibilityLabel={t('map.refreshMap')}
           style={({ pressed }) => [
             styles.topButton,
             pressed && !refreshing && styles.buttonPressed,
@@ -368,9 +369,9 @@ export default function MapScreen() {
       </View>
 
       <View style={styles.headerCard}>
-        <Text style={styles.title}>Restaurants autour de toi</Text>
+        <Text style={styles.title}>{t('map.title')}</Text>
         <Text style={styles.subtitle}>
-          Découvre les restaurants africains proches de ta position
+          {t('map.subtitle')}
         </Text>
       </View>
 
@@ -396,7 +397,7 @@ export default function MapScreen() {
                   <Text style={styles.calloutSubtitle}>{restaurant.cuisine}</Text>
                   <Text style={styles.calloutAddress}>{restaurant.address}</Text>
                   <View style={styles.calloutButton}>
-                    <Text style={styles.calloutButtonText}>Voir le menu</Text>
+                    <Text style={styles.calloutButtonText}>{t('map.viewMenu')}</Text>
                   </View>
                 </View>
               </Callout>
@@ -407,17 +408,16 @@ export default function MapScreen() {
         {geoRestaurants.length === 0 && (
           <View style={styles.mapOverlayEmpty}>
             <Ionicons name="storefront-outline" size={42} color="#C9B8A3" />
-            <Text style={styles.mapOverlayTitle}>Aucun restaurant géolocalisé</Text>
+            <Text style={styles.mapOverlayTitle}>{t('map.noGeoRestaurants')}</Text>
             <Text style={styles.mapOverlayText}>
-              Les restaurants sans coordonnées GPS ne peuvent pas encore être
-              affichés sur la carte.
+              {t('map.noGeoRestaurantsText')}
             </Text>
           </View>
         )}
       </View>
 
       <View style={styles.footerInfo}>
-        <Text style={styles.footerTitle}>Restaurants détectés</Text>
+        <Text style={styles.footerTitle}>{t('map.detectedRestaurants')}</Text>
         <Text style={styles.footerValue}>{geoRestaurants.length}</Text>
       </View>
     </FadeInView>

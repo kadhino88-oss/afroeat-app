@@ -11,6 +11,7 @@ import { router, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -107,6 +108,7 @@ const notifications = [
  */
 
 export default function ModalScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const isAuthenticated = Boolean(auth.isAuthenticated);
   const user = auth.user ?? null;
@@ -135,13 +137,13 @@ export default function ModalScreen() {
 
       <View style={styles.topRow}>
         <View style={styles.titleBlock}>
-          <Text style={styles.title}>Notifications</Text>
-          <Text style={styles.subtitle}>Centre d’alertes client AFROEAT</Text>
+          <Text style={styles.title}>{t('notifications.title')}</Text>
+          <Text style={styles.subtitle}>{t('modal.subtitle')}</Text>
         </View>
 
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Fermer les notifications"
+          accessibilityLabel={t('modal.close')}
           style={({ pressed }) => [
             styles.closeButton,
             pressed && styles.buttonPressed,
@@ -159,14 +161,12 @@ export default function ModalScreen() {
         <View style={styles.heroCard}>
           <View style={styles.heroBadge}>
             <Ionicons name="notifications-outline" size={14} color="#A36A00" />
-            <Text style={styles.heroBadgeText}>Notifications premium</Text>
+            <Text style={styles.heroBadgeText}>{t('modal.premiumBadge')}</Text>
           </View>
 
-          <Text style={styles.heroTitle}>Centre de notifications AFROEAT</Text>
+          <Text style={styles.heroTitle}>{t('modal.heroTitle')}</Text>
           <Text style={styles.heroText}>
-            Cet espace est prêt pour accueillir alertes, statut de commandes,
-            promotions, mises à jour de livraison et messages importants sans
-            casser le flux principal du bloc client.
+            {t('modal.heroText')}
           </Text>
         </View>
 

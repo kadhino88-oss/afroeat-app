@@ -18,6 +18,7 @@ import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
 import { getAllRestaurants } from '../../services/restaurantService';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -45,6 +46,19 @@ const FILTERS = [
   'Épicerie',
   'Boutique',
 ];
+
+// Valeurs FILTERS en francais (cles de filtre) ; slug pour affichage traduit.
+const FILTER_SLUG_BY_LABEL = {
+  Tous: 'all',
+  Ivoirienne: 'ivoirienne',
+  Sénégalaise: 'senegalaise',
+  Congolaise: 'congolaise',
+  Africaine: 'africaine',
+  Camerounaise: 'camerounaise',
+  Marocaine: 'marocaine',
+  Épicerie: 'epicerie',
+  Boutique: 'boutique',
+};
 
 /**
  * =========================================================
@@ -213,6 +227,7 @@ const getRestaurantImageSource = (item) => {
  */
 
 export default function ExploreScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const token = auth.token ?? null;
@@ -432,13 +447,12 @@ export default function ExploreScreen() {
             <View style={styles.heroTextBlock}>
               <View style={styles.heroBadge}>
                 <Ionicons name="sparkles-outline" size={14} color="#D4A017" />
-                <Text style={styles.heroBadgeText}>Découverte premium</Text>
+                <Text style={styles.heroBadgeText}>{t('explore.premiumDiscovery')}</Text>
               </View>
 
-              <Text style={styles.title}>Explorer AFROEAT</Text>
+              <Text style={styles.title}>{t('explore.title')}</Text>
               <Text style={styles.subtitle}>
-                Trouve un restaurant, une cuisine ou une adresse et découvre le
-                meilleur de l’univers africain.
+                {t('explore.subtitle')}
               </Text>
             </View>
 
@@ -450,17 +464,17 @@ export default function ExploreScreen() {
           <View style={styles.heroStatsRow}>
             <View style={styles.heroStatCard}>
               <Text style={styles.heroStatValue}>{restaurants.length}</Text>
-              <Text style={styles.heroStatLabel}>Restaurants</Text>
+              <Text style={styles.heroStatLabel}>{t('explore.restaurants')}</Text>
             </View>
 
             <View style={styles.heroStatCard}>
               <Text style={styles.heroStatValue}>{featuredRestaurants}</Text>
-              <Text style={styles.heroStatLabel}>Premium</Text>
+              <Text style={styles.heroStatLabel}>{t('explore.premium')}</Text>
             </View>
 
             <View style={styles.heroStatCard}>
               <Text style={styles.heroStatValue}>{resultCount}</Text>
-              <Text style={styles.heroStatLabel}>Résultats</Text>
+              <Text style={styles.heroStatLabel}>{t('explore.results')}</Text>
             </View>
           </View>
         </View>
@@ -471,7 +485,7 @@ export default function ExploreScreen() {
 
             <TextInput
               style={styles.searchInput}
-              placeholder="Rechercher restaurant ou cuisine..."
+              placeholder={t('explore.searchPlaceholder')}
               placeholderTextColor="#A0A0A0"
               value={query}
               onChangeText={setQuery}
@@ -484,7 +498,7 @@ export default function ExploreScreen() {
             {!!query && (
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Effacer la recherche"
+                accessibilityLabel={t('explore.clearSearch')}
                 onPress={() => setQuery('')}
               >
                 <Ionicons name="close-circle" size={20} color="#A0A0A0" />
@@ -493,7 +507,7 @@ export default function ExploreScreen() {
           </View>
         </View>
 
-        <Text style={styles.sectionTitle}>Filtres rapides</Text>
+        <Text style={styles.sectionTitle}>{t('explore.quickFilters')}</Text>
 
         <FlatList
           data={FILTERS}
@@ -507,7 +521,7 @@ export default function ExploreScreen() {
             return (
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={`Filtrer par ${item}`}
+                accessibilityLabel={t('explore.filterBy', { item: t(`cuisines.${FILTER_SLUG_BY_LABEL[item] || ''}`, item) })}
                 style={({ pressed }) => [
                   styles.filterChip,
                   isActive && styles.filterChipActive,
@@ -521,7 +535,7 @@ export default function ExploreScreen() {
                     isActive && styles.filterChipTextActive,
                   ]}
                 >
-                  {item}
+                  {t(`cuisines.${FILTER_SLUG_BY_LABEL[item] || ''}`, item)}
                 </Text>
               </Pressable>
             );
@@ -530,15 +544,14 @@ export default function ExploreScreen() {
 
         <View style={styles.resultsHeader}>
           <View>
-            <Text style={styles.resultsTitle}>Résultats</Text>
+            <Text style={styles.resultsTitle}>{t('explore.results')}</Text>
             <Text style={styles.resultsSubtitle}>
-              {restaurants.length} partenaire{restaurants.length > 1 ? 's' : ''}{' '}
-              disponible{restaurants.length > 1 ? 's' : ''}
+              {t('explore.resultsSubtitle', { count: restaurants.length })}
             </Text>
           </View>
 
           <Text style={styles.resultsCount}>
-            {resultCount} trouvé{resultCount > 1 ? 's' : ''}
+            {t('explore.resultsCount', { count: resultCount })}
           </Text>
         </View>
 
@@ -579,7 +592,7 @@ export default function ExploreScreen() {
       return (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Ouvrir ${item?.name}`}
+          accessibilityLabel={t('explore.openRestaurant', { name: item?.name })}
           style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
           onPress={() => handleOpenRestaurant(item?._id)}
         >
@@ -589,7 +602,7 @@ export default function ExploreScreen() {
             {!!item?.isFeatured && (
               <View style={styles.featuredBadge}>
                 <Ionicons name="flash-outline" size={12} color="#1E1E1E" />
-                <Text style={styles.featuredBadgeText}>Mis en avant</Text>
+                <Text style={styles.featuredBadgeText}>{t('home.featured')}</Text>
               </View>
             )}
           </View>
@@ -681,7 +694,7 @@ export default function ExploreScreen() {
           loading ? (
             <View style={styles.loaderBox}>
               <ActivityIndicator size="large" color="#D4A017" />
-              <Text style={styles.loaderText}>Chargement des résultats...</Text>
+              <Text style={styles.loaderText}>{t('explore.loadingResults')}</Text>
             </View>
           ) : (
             <View style={styles.emptyState}>
@@ -696,13 +709,13 @@ export default function ExploreScreen() {
               />
               <Text style={styles.emptyTitle}>
                 {showEmptySearchState
-                  ? 'Aucun résultat trouvé'
-                  : 'Aucun restaurant disponible'}
+                  ? t('explore.noResultsTitle')
+                  : t('explore.noRestaurantsTitle')}
               </Text>
               <Text style={styles.emptyText}>
                 {showEmptySearchState
-                  ? 'Essaie un autre mot-clé ou change de filtre.'
-                  : 'Aucun partenaire n’est encore disponible. Recharge la liste ou vérifie le backend.'}
+                  ? t('explore.noResultsText')
+                  : t('explore.noRestaurantsText')}
               </Text>
 
               <Pressable
@@ -713,7 +726,7 @@ export default function ExploreScreen() {
                 onPress={showEmptySearchState ? handleResetFilters : handleRetry}
               >
                 <Text style={styles.resetButtonText}>
-                  {showEmptySearchState ? 'Réinitialiser' : 'Réessayer'}
+                  {showEmptySearchState ? t('explore.reset') : t('explore.retry')}
                 </Text>
               </Pressable>
             </View>

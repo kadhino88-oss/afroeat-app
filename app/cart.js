@@ -15,6 +15,7 @@ import { useAuth } from '../context/AuthContext';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -104,6 +105,7 @@ const getRestaurantRoute = (restaurantId) => {
  */
 
 export default function CartScreen() {
+  const { t } = useTranslation();
   const cart = useCart() || {};
   const auth = useAuth() || {};
 
@@ -279,12 +281,12 @@ export default function CartScreen() {
     }
 
     Alert.alert(
-      'Vider le panier',
-      'Voulez-vous vraiment supprimer tous les articles du panier ?',
+      t('cart.clearCart'),
+      t('cart.clearCartAlertBody'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('cart.cancel'), style: 'cancel' },
         {
-          text: 'Vider',
+          text: t('cart.clear'),
           style: 'destructive',
           onPress: () => clearCart(),
         },
@@ -299,8 +301,8 @@ export default function CartScreen() {
 
     if (!canCheckoutAsCustomer) {
       Alert.alert(
-        'Accès non autorisé',
-        'Seul un compte client peut finaliser une commande dans ce panier.'
+        t('checkout.alertUnauthorizedTitle'),
+        t('cart.unauthorizedBody')
       );
       return;
     }
@@ -366,7 +368,7 @@ export default function CartScreen() {
 
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={`Supprimer ${itemName} du panier`}
+              accessibilityLabel={t('cart.removeItem', { item: itemName })}
               onPress={() => handleRemove(item)}
               style={({ pressed }) => [
                 styles.deleteButton,
@@ -381,7 +383,7 @@ export default function CartScreen() {
             <View style={styles.quantityBox}>
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={`Diminuer la quantité de ${itemName}`}
+                accessibilityLabel={t('cart.decreaseQty', { item: itemName })}
                 onPress={() => handleDecrease(item)}
                 style={({ pressed }) => [
                   styles.quantityButton,
@@ -395,7 +397,7 @@ export default function CartScreen() {
 
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={`Augmenter la quantité de ${itemName}`}
+                accessibilityLabel={t('cart.increaseQty', { item: itemName })}
                 onPress={() => handleIncrease(item)}
                 style={({ pressed }) => [
                   styles.quantityButton,
@@ -429,7 +431,7 @@ export default function CartScreen() {
       <View style={styles.header}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Revenir en arrière"
+          accessibilityLabel={t('cart.back')}
           onPress={handleBack}
           style={({ pressed }) => [
             styles.backButton,
@@ -439,19 +441,19 @@ export default function CartScreen() {
           <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
         </Pressable>
 
-        <Text style={styles.title}>Mon panier</Text>
+        <Text style={styles.title}>{t('cart.title')}</Text>
 
         {safeCartItems.length > 0 ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Vider le panier"
+            accessibilityLabel={t('cart.clearCart')}
             onPress={handleClearCart}
             style={({ pressed }) => [
               styles.clearButton,
               pressed && styles.buttonPressed,
             ]}
           >
-            <Text style={styles.clearButtonText}>Vider</Text>
+            <Text style={styles.clearButtonText}>{t('cart.clear')}</Text>
           </Pressable>
         ) : (
           <View style={styles.headerSpacer} />
@@ -461,7 +463,7 @@ export default function CartScreen() {
       {!!cartRestaurantName && safeCartItems.length > 0 && (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Ouvrir le restaurant ${cartRestaurantName}`}
+          accessibilityLabel={t('cart.openRestaurant', { restaurant: cartRestaurantName })}
           style={({ pressed }) => [
             styles.restaurantBanner,
             pressed && styles.buttonPressed,
@@ -470,7 +472,7 @@ export default function CartScreen() {
         >
           <Ionicons name="restaurant-outline" size={16} color="#1F6F43" />
           <Text style={styles.restaurantBannerText} numberOfLines={1}>
-            Commande chez {cartRestaurantName}
+            {t('checkout.orderingAt', { restaurant: cartRestaurantName })}
           </Text>
           <Ionicons
             name="chevron-forward-outline"
@@ -484,8 +486,7 @@ export default function CartScreen() {
         <View style={styles.guestBanner}>
           <Ionicons name="sparkles-outline" size={16} color="#8A6500" />
           <Text style={styles.guestBannerText}>
-            Mode invité premium : tu peux préparer ton panier maintenant, puis te
-            connecter au moment de finaliser la commande.
+            {t('cart.guestBannerText')}
           </Text>
         </View>
       )}
@@ -494,8 +495,7 @@ export default function CartScreen() {
         <View style={styles.roleWarningBanner}>
           <Ionicons name="shield-outline" size={16} color="#8A2E2E" />
           <Text style={styles.roleWarningText}>
-            Ce panier est réservé au parcours client. Connecte-toi avec un compte
-            client pour finaliser la commande.
+            {t('cart.roleWarningText')}
           </Text>
         </View>
       )}
@@ -511,14 +511,14 @@ export default function CartScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="basket-outline" size={54} color="#C4B7A6" />
-            <Text style={styles.emptyTitle}>Ton panier est vide</Text>
+            <Text style={styles.emptyTitle}>{t('checkout.emptyCart')}</Text>
             <Text style={styles.emptyText}>
-              Ajoute de délicieux plats africains pour commencer ta commande.
+              {t('cart.emptyText')}
             </Text>
 
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Explorer les restaurants"
+              accessibilityLabel={t('checkout.exploreRestaurants')}
               style={({ pressed }) => [
                 styles.exploreButton,
                 pressed && styles.buttonPressed,
@@ -526,7 +526,7 @@ export default function CartScreen() {
               onPress={handleExplore}
             >
               <Text style={styles.exploreButtonText}>
-                Explorer les restaurants
+                {t('checkout.exploreRestaurants')}
               </Text>
             </Pressable>
           </View>
@@ -535,28 +535,28 @@ export default function CartScreen() {
 
       <View style={styles.footer}>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Articles</Text>
+          <Text style={styles.summaryLabel}>{t('checkout.items')}</Text>
           <Text style={styles.summaryValue}>{totalItems}</Text>
         </View>
 
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Sous-total</Text>
+          <Text style={styles.summaryLabel}>{t('checkout.subtotal')}</Text>
           <Text style={styles.summaryValue}>
             {formatPrice(subtotal, cartCurrency)}
           </Text>
         </View>
 
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Livraison</Text>
+          <Text style={styles.summaryLabel}>{t('checkout.delivery')}</Text>
           <Text style={styles.summaryValue}>
             {delivery === 0
-              ? 'Gratuite'
+              ? t('checkout.free')
               : formatPrice(delivery, cartCurrency)}
           </Text>
         </View>
 
         <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Total</Text>
+          <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
           <Text style={styles.totalValue}>
             {formatPrice(safeTotal, cartCurrency)}
           </Text>
@@ -564,13 +564,13 @@ export default function CartScreen() {
 
         {!isLoggedIn && safeCartItems.length > 0 && (
           <Text style={styles.footerHelperText}>
-            La connexion sera demandée avant la validation finale et le paiement.
+            {t('cart.loginHelperText')}
           </Text>
         )}
 
         {isLoggedIn && role !== 'client' && safeCartItems.length > 0 && (
           <Text style={styles.footerHelperTextDanger}>
-            Le checkout est bloqué pour les rôles non clients.
+            {t('cart.roleBlockedText')}
           </Text>
         )}
 
@@ -578,10 +578,10 @@ export default function CartScreen() {
           accessibilityRole="button"
           accessibilityLabel={
             !canCheckoutAsCustomer
-              ? 'Checkout réservé aux clients'
+              ? t('cart.checkoutBlockedLabel')
               : isLoggedIn
-              ? 'Passer à la commande'
-              : 'Se connecter pour commander'
+              ? t('cart.proceedToOrder')
+              : t('cart.loginToOrder')
           }
           style={({ pressed }) => [
             styles.button,
@@ -597,10 +597,10 @@ export default function CartScreen() {
         >
           <Text style={styles.buttonText}>
             {!canCheckoutAsCustomer
-              ? 'Checkout réservé au compte client'
+              ? t('cart.checkoutBlockedButton')
               : isLoggedIn
-              ? 'Commander'
-              : 'Se connecter pour commander'}
+              ? t('cart.orderButton')
+              : t('cart.loginToOrder')}
           </Text>
         </Pressable>
       </View>

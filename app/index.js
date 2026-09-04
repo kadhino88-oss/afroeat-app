@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Redirect } from 'expo-router';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -132,6 +133,7 @@ const getRedirectRoute = (user, roleFromAuth, homeRoute) => {
  */
 
 export default function IndexEntry() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const loading = Boolean(auth.loading);
@@ -164,7 +166,7 @@ export default function IndexEntry() {
 
           <Text style={styles.loaderTitle}>AFROEAT</Text>
           <Text style={styles.loaderSubtitle}>
-            Chargement de l'expérience premium
+            {t('entry.loadingExperience')}
           </Text>
 
           <ActivityIndicator

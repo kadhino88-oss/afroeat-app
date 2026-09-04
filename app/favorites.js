@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, Redirect } from 'expo-router';
 import FadeInView from '../components/FadeInView';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -102,6 +103,7 @@ const normalizeFavorite = (item = {}) => {
  */
 
 export default function FavoritesScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -120,7 +122,7 @@ export default function FavoritesScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement des favoris...</Text>
+        <Text style={styles.loaderText}>{t('favorites.loading')}</Text>
       </View>
     );
   }
@@ -186,10 +188,9 @@ export default function FavoritesScreen() {
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`Ouvrir ${normalizeText(
-          item?.name,
-          'restaurant'
-        )}`}
+        accessibilityLabel={t('explore.openRestaurant', {
+          name: normalizeText(item?.name, 'restaurant'),
+        })}
         style={({ pressed }) => [styles.card, pressed && styles.buttonPressed]}
         onPress={() => handleOpenRestaurant(restaurantId)}
       >
@@ -197,13 +198,13 @@ export default function FavoritesScreen() {
 
         <View style={styles.content}>
           <Text style={styles.name} numberOfLines={1}>
-            {normalizeText(item?.name, 'Restaurant africain')}
+            {normalizeText(item?.name, t('favorites.restaurantFallback'))}
           </Text>
 
           <Text style={styles.desc} numberOfLines={2}>
             {normalizeText(
               item?.description || item?.cuisine,
-              'Cuisine africaine'
+              t('favorites.cuisineFallback')
             )}
           </Text>
         </View>
@@ -220,12 +221,12 @@ export default function FavoritesScreen() {
       <View style={styles.header}>
         <View style={styles.badge}>
           <Ionicons name="heart-outline" size={14} color="#A36A00" />
-          <Text style={styles.badgeText}>Espace client</Text>
+          <Text style={styles.badgeText}>{t('favorites.badge')}</Text>
         </View>
 
-        <Text style={styles.title}>Mes favoris</Text>
+        <Text style={styles.title}>{t('favorites.title')}</Text>
         <Text style={styles.subtitle}>
-          Retrouve rapidement tes restaurants favoris
+          {t('favorites.subtitle')}
         </Text>
       </View>
 
@@ -241,23 +242,22 @@ export default function FavoritesScreen() {
           <View style={styles.emptyContainer}>
             <Ionicons name="heart-outline" size={60} color="#C9B8A3" />
 
-            <Text style={styles.emptyTitle}>Aucun favori pour le moment</Text>
+            <Text style={styles.emptyTitle}>{t('favorites.emptyTitle')}</Text>
 
             <Text style={styles.emptyText}>
-              Tes restaurants favoris apparaîtront ici quand le backend favoris
-              sera branché.
+              {t('favorites.emptyText')}
             </Text>
 
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Explorer les restaurants"
+              accessibilityLabel={t('checkout.exploreRestaurants')}
               style={({ pressed }) => [
                 styles.button,
                 pressed && styles.buttonPressed,
               ]}
               onPress={handleExplore}
             >
-              <Text style={styles.buttonText}>Explorer les restaurants</Text>
+              <Text style={styles.buttonText}>{t('checkout.exploreRestaurants')}</Text>
             </Pressable>
           </View>
         }

@@ -3,8 +3,10 @@ import { View, Text, StyleSheet, Pressable, StatusBar } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';
+import { useTranslation } from 'react-i18next';
 
 export default function MapWebFallback() {
+  const { t } = useTranslation();
   return (
     <FadeInView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
@@ -12,15 +14,14 @@ export default function MapWebFallback() {
       <View style={styles.card}>
         <Ionicons name="map-outline" size={56} color="#D4A017" />
 
-        <Text style={styles.title}>Carte disponible sur mobile</Text>
+        <Text style={styles.title}>{t('mapWeb.title')}</Text>
 
         <Text style={styles.text}>
-          La carte interactive utilise une technologie native mobile. Ouvre
-          AFROEAT sur iPhone avec Expo Go pour accéder à la carte.
+          {t('mapWeb.text')}
         </Text>
 
         <Pressable style={styles.button} onPress={() => router.replace('/(tabs)/explore')}>
-          <Text style={styles.buttonText}>Retour explorer</Text>
+          <Text style={styles.buttonText}>{t('mapWeb.backToExplore')}</Text>
         </Pressable>
       </View>
     </FadeInView>

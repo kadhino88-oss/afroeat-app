@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getMyOrders } from '../../services/orderService';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -242,6 +243,7 @@ const extractOrdersFromResponse = (response) => {
  */
 
 export default function OrdersScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const token = auth.token;
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -365,7 +367,7 @@ export default function OrdersScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement des commandes...</Text>
+        <Text style={styles.loaderText}>{t('orders.loadingOrders')}</Text>
       </View>
     );
   }
@@ -401,17 +403,17 @@ export default function OrdersScreen() {
                 { color: getStatusColor(statusKey) },
               ]}
             >
-              {getStatusLabel(statusKey)}
+              {t(`orders.status.${statusKey}`, getStatusLabel(statusKey))}
             </Text>
           </View>
         </View>
 
         <Text style={styles.restaurantName} numberOfLines={1}>
-          {normalizeText(item?.restaurantName, 'Restaurant')}
+          {normalizeText(item?.restaurantName, t('orders.restaurantFallback'))}
         </Text>
 
         <Text style={styles.date}>
-          {formatDate(item?.createdAt) || 'Date non disponible'}
+          {formatDate(item?.createdAt) || t('orders.dateUnavailable')}
         </Text>
 
         {!!normalizeText(item?.deliveryAddress) && (
@@ -426,8 +428,7 @@ export default function OrdersScreen() {
               {formatPrice(item?.totalPrice, item?.currency)}
             </Text>
             <Text style={styles.metaText}>
-              {Math.max(0, normalizeNumber(item?.itemsCount, 0))} article
-              {normalizeNumber(item?.itemsCount, 0) > 1 ? 's' : ''}
+              {t('orders.items', { count: Math.max(0, normalizeNumber(item?.itemsCount, 0)) })}
             </Text>
           </View>
 
@@ -464,15 +465,15 @@ export default function OrdersScreen() {
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={styles.title}>Mes commandes</Text>
+            <Text style={styles.title}>{t('orders.title')}</Text>
             <Text style={styles.subtitle}>
-              Suis l'historique et l'avancement de tes commandes.
+              {t('orders.subtitle')}
             </Text>
 
             <View style={styles.statsRow}>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.total}</Text>
-                <Text style={styles.statLabel}>Total</Text>
+                <Text style={styles.statLabel}>{t('orders.total')}</Text>
               </View>
 
               <View style={styles.statDivider} />
@@ -481,7 +482,7 @@ export default function OrdersScreen() {
                 <Text style={[styles.statValue, { color: '#D4A017' }]}>
                   {stats.active}
                 </Text>
-                <Text style={styles.statLabel}>En cours</Text>
+                <Text style={styles.statLabel}>{t('orders.active')}</Text>
               </View>
 
               <View style={styles.statDivider} />
@@ -490,7 +491,7 @@ export default function OrdersScreen() {
                 <Text style={[styles.statValue, { color: '#1F6F43' }]}>
                   {stats.delivered}
                 </Text>
-                <Text style={styles.statLabel}>Livrées</Text>
+                <Text style={styles.statLabel}>{t('orders.delivered')}</Text>
               </View>
             </View>
 
@@ -505,10 +506,9 @@ export default function OrdersScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Ionicons name="receipt-outline" size={48} color="#C4B7A6" />
-            <Text style={styles.emptyTitle}>Aucune commande</Text>
+            <Text style={styles.emptyTitle}>{t('orders.empty')}</Text>
             <Text style={styles.emptyText}>
-              Passe ta première commande sur AFROEAT pour retrouver ici ton
-              historique.
+              {t('orders.emptyText')}
             </Text>
             <Pressable
               style={({ pressed }) => [
@@ -517,7 +517,7 @@ export default function OrdersScreen() {
               ]}
               onPress={handleExplore}
             >
-              <Text style={styles.exploreButtonText}>Explorer AFROEAT</Text>
+              <Text style={styles.exploreButtonText}>{t('orders.exploreAfroeat')}</Text>
             </Pressable>
           </View>
         }

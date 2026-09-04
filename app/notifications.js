@@ -19,6 +19,7 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 // ─── Types de notifications ───────────────────────────────
 const NOTIF_TYPES = {
@@ -153,6 +154,7 @@ const NotifItem = ({ item, onPress, onMarkRead }) => {
 
 // ─── Screen ───────────────────────────────────────────────
 export default function NotificationsScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
 
@@ -187,12 +189,12 @@ export default function NotificationsScreen() {
 
   const handleClearAll = useCallback(() => {
     Alert.alert(
-      'Effacer les notifications',
-      'Toutes les notifications seront supprimées.',
+      t('notifications.clearAlertTitle'),
+      t('notifications.clearAlertBody'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('cart.cancel'), style: 'cancel' },
         {
-          text: 'Effacer',
+          text: t('notifications.clearAction'),
           style: 'destructive',
           onPress: () => setNotifications([]),
         },
@@ -222,7 +224,7 @@ export default function NotificationsScreen() {
         </Pressable>
 
         <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>Notifications</Text>
+          <Text style={styles.headerTitle}>{t('notifications.title')}</Text>
           {unreadCount > 0 && (
             <View style={styles.headerBadge}>
               <Text style={styles.headerBadgeText}>{unreadCount}</Text>
@@ -252,7 +254,7 @@ export default function NotificationsScreen() {
             onPress={() => setFilter(f)}
           >
             <Text style={[styles.filterText, filter === f && styles.filterTextActive]}>
-              {f === 'all' ? 'Toutes' : `Non lues (${unreadCount})`}
+              {f === 'all' ? t('notifications.all') : t('notifications.unreadCount', { count: unreadCount })}
             </Text>
           </Pressable>
         ))}
@@ -281,18 +283,18 @@ export default function NotificationsScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Ionicons name="notifications-off-outline" size={56} color="#DDD" />
-            <Text style={styles.emptyTitle}>Aucune notification</Text>
+            <Text style={styles.emptyTitle}>{t('notifications.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
               {filter === 'unread'
-                ? 'Toutes tes notifications ont été lues.'
-                : 'Tu n\'as pas encore de notifications.'}
+                ? t('notifications.emptyUnread')
+                : t('notifications.emptyAll')}
             </Text>
           </View>
         }
         ListFooterComponent={
           displayed.length > 0 ? (
             <Pressable style={styles.clearBtn} onPress={handleClearAll}>
-              <Text style={styles.clearBtnText}>Effacer toutes les notifications</Text>
+              <Text style={styles.clearBtnText}>{t('notifications.clearAll')}</Text>
             </Pressable>
           ) : null
         }
