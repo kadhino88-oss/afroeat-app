@@ -9,7 +9,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
-import MapView, { Marker, Callout } from 'react-native-maps';
+import MapView, { Marker, Callout } from '../components/AppMapView';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';

@@ -9,7 +9,7 @@ import {
   Linking,
   Alert,
 } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker, Polyline } from '../../components/AppMapView';
 import {
   router,
   useFocusEffect,
