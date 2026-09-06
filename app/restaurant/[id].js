@@ -18,6 +18,7 @@ import { API_ENDPOINTS } from '../../constants/api';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -170,7 +171,7 @@ const normalizeRestaurant = (data) => {
     ...data,
     _id: data?._id || data?.id || data?.restaurantId || null,
     id: data?.id || data?._id || data?.restaurantId || null,
-    name: normalizeText(data?.name || data?.title, 'Restaurant'),
+    name: normalizeText(data?.name || data?.title, i18n.t('restaurant.menuScreen.restaurantNameFallback')),
     coverImage: normalizeText(
       data?.coverImage ||
         data?.cover ||
@@ -355,7 +356,7 @@ const normalizeMenuItem = (item, restaurant, index = 0) => {
     ...item,
     _id: id,
     id,
-    name: normalizeText(item?.name || item?.title || item?.label, 'Plat'),
+    name: normalizeText(item?.name || item?.title || item?.label, i18n.t('restaurant.menuScreen.dishFallback')),
     description: normalizeText(
       item?.description || item?.details || item?.summary,
       'Aucune description'
@@ -375,7 +376,7 @@ const normalizeMenuItem = (item, restaurant, index = 0) => {
     ),
     restaurantId,
     restaurant: restaurantId,
-    restaurantName: normalizeText(restaurant?.name, 'Restaurant'),
+    restaurantName: normalizeText(restaurant?.name, i18n.t('restaurant.menuScreen.restaurantNameFallback')),
     quantity: 1,
     available: normalizeBoolean(item?.available, item?.isAvailable !== false),
     isPopular: Boolean(item?.isPopular || item?.popular || item?.featured),
@@ -408,12 +409,23 @@ const formatRating = (value) => {
   return parsed.toFixed(1);
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
+const CATEGORY_SLUG_BY_LABEL = {
+  'Entrées': 'starters',
+  'Plats principaux': 'mainCourses',
+  'Desserts': 'desserts',
+  'Boissons': 'drinks',
+  'Snacks': 'snacks',
+  'Autres': 'other',
+};
+
 const formatPrice = (value, currency = 'EUR') => {
   const amount = normalizeNumber(value, 0);
   const safeCurrency = normalizeText(currency, 'EUR').toUpperCase();
 
   try {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(DATE_LOCALE_MAP[i18n.language] || 'en-US', {
       style: 'currency',
       currency: safeCurrency,
       minimumFractionDigits:
@@ -737,7 +749,11 @@ export default function RestaurantScreen() {
   const renderItem = useCallback(
     ({ item }) => {
       if (item?._type === 'category') {
-        return <Text style={styles.categoryTitle}>{item.title}</Text>;
+        const categorySlug = CATEGORY_SLUG_BY_LABEL[item.title];
+        const categoryLabel = categorySlug
+          ? t(`restaurant.addMenuItem.categories.${categorySlug}`, item.title)
+          : item.title;
+        return <Text style={styles.categoryTitle}>{categoryLabel}</Text>;
       }
 
       const isAdding = addingId === item._id;
@@ -810,7 +826,7 @@ export default function RestaurantScreen() {
         </View>
       );
     },
-    [restaurant, addingId, handleAddToCart]
+    [restaurant, addingId, handleAddToCart, t]
   );
 
   /**
