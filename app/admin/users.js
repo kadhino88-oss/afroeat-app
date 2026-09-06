@@ -22,6 +22,8 @@ import {
   getAdminUsers,
   updateAdminUserStatus,
 } from '../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -98,63 +100,63 @@ const getAccountStatus = (user, auth = {}) => {
   ).toLowerCase();
 };
 
-const getStatusStyle = (status) => {
+const getStatusStyle = (status, t) => {
   switch (normalizeText(status).toLowerCase()) {
     case 'active':
       return {
         bg: '#E8F5ED',
         text: '#1F6F43',
-        label: 'Actif',
+        label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
         bg: '#FDECEC',
         text: '#B83232',
-        label: 'Suspendu',
+        label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
         bg: '#FFF3D8',
         text: '#8A6500',
-        label: 'En attente',
+        label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
         bg: '#EFE9FF',
         text: '#6D4CDB',
-        label: 'Refusé',
+        label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
         bg: '#F4F4F4',
         text: '#555555',
-        label: 'Inconnu',
+        label: t('admin.users.statusUnknownLabel'),
         icon: 'help-circle-outline',
       };
   }
 };
 
-const getRoleLabel = (role) => {
+const getRoleLabel = (role, t) => {
   switch (normalizeText(role).toLowerCase()) {
     case 'client':
-      return 'Client';
+      return t('admin.users.roleClientLabel');
     case 'restaurant':
-      return 'Restaurant';
+      return t('admin.users.roleRestaurantLabel');
     case 'livreur':
     case 'driver':
     case 'delivery':
-      return 'Livreur';
+      return t('admin.users.roleDriverLabel');
     case 'admin':
     case 'administrator':
     case 'superadmin':
     case 'super-admin':
-      return 'Admin';
+      return t('admin.users.roleAdminLabel');
     default:
-      return 'Utilisateur';
+      return t('admin.users.roleDefaultLabel');
   }
 };
 
@@ -198,32 +200,34 @@ const getRoleStyle = (role) => {
   }
 };
 
-const getStatusFilterLabel = (value) => {
+const getStatusFilterLabel = (value, t) => {
   switch (value) {
     case 'pending_verification':
-      return 'En attente';
+      return t('admin.users.statusPendingLabel');
     case 'active':
-      return 'Actif';
+      return t('admin.users.statusActiveLabel');
     case 'suspended':
-      return 'Suspendu';
+      return t('admin.users.statusSuspendedLabel');
     case 'rejected':
-      return 'Refusé';
+      return t('admin.users.statusRejectedLabel');
     default:
       return value;
   }
 };
 
-const getSortLabel = (value) => {
+const getSortLabel = (value, t) => {
   switch (value) {
     case 'oldest':
-      return 'Plus anciens';
+      return t('admin.users.sortOldestLabel');
     case 'name':
-      return 'Nom';
+      return t('admin.users.sortNameLabel');
     case 'recent':
     default:
-      return 'Plus récents';
+      return t('admin.users.sortRecentLabel');
   }
 };
+
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
 
 const formatDateTime = (value) => {
   if (!value) return '—';
@@ -234,7 +238,7 @@ const formatDateTime = (value) => {
     return '—';
   }
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -325,6 +329,7 @@ const StatCard = ({ label, value, icon, tint = '#1F6F43' }) => (
  */
 
 export default function AdminUsersScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const token = auth.token;
@@ -443,7 +448,7 @@ export default function AdminUsersScreen() {
         console.log('Erreur admin users :', error);
 
         const message =
-          error?.message || 'Impossible de charger les utilisateurs.';
+          error?.message || t('admin.users.fetchErrorFallback');
 
         setErrorMessage(message);
         setUsers([]);
@@ -458,7 +463,7 @@ export default function AdminUsersScreen() {
         });
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -473,6 +478,7 @@ export default function AdminUsersScreen() {
       resolvedStatusFilter,
       search,
       activeSort,
+      t,
     ]
   );
 
@@ -526,7 +532,7 @@ export default function AdminUsersScreen() {
   const handleStatusUpdate = useCallback(
     async (userId, nextStatus) => {
       if (!token) {
-        Alert.alert('Erreur', 'Session admin invalide.');
+        Alert.alert(t('common.error'), t('admin.users.invalidSessionAlert'));
         return;
       }
 
@@ -538,7 +544,7 @@ export default function AdminUsersScreen() {
           response?.user || response?.data?.user || null
         );
         const successMessage =
-          response?.message || 'Statut utilisateur mis à jour.';
+          response?.message || t('admin.users.statusUpdatedFallback');
 
         setUsers((prev) =>
           prev.map((item) =>
@@ -552,18 +558,18 @@ export default function AdminUsersScreen() {
           )
         );
 
-        Alert.alert('Succès', successMessage);
+        Alert.alert(t('common.success'), successMessage);
       } catch (error) {
         console.log('Erreur update user status :', error);
         Alert.alert(
-          'Erreur',
-          error?.message || 'Impossible de mettre à jour ce compte.'
+          t('common.error'),
+          error?.message || t('admin.users.updateAccountErrorFallback')
         );
       } finally {
         setUpdatingUserId(null);
       }
     },
-    [token]
+    [token, t]
   );
 
   const confirmToggleStatus = useCallback(
@@ -571,30 +577,33 @@ export default function AdminUsersScreen() {
       const currentUserStatus = normalizeText(item?.accountStatus).toLowerCase();
       const nextStatus =
         currentUserStatus === 'suspended' ? 'active' : 'suspended';
-      const actionLabel = nextStatus === 'active' ? 'réactiver' : 'suspendre';
+      const actionLabel =
+        nextStatus === 'active'
+          ? t('admin.users.reactivateAction')
+          : t('admin.users.suspendAction');
       const identity = normalizeText(
         item?.name,
-        normalizeText(item?.email, 'ce compte')
+        normalizeText(item?.email, t('admin.users.defaultAccountIdentity'))
       );
 
       Alert.alert(
-        'Confirmer',
-        `Veux-tu ${actionLabel} ${identity} ?`,
+        t('admin.users.confirmDialogTitle'),
+        t('admin.users.confirmDialogMessage', { action: actionLabel, identity }),
         [
-          { text: 'Annuler', style: 'cancel' },
+          { text: t('admin.users.cancelAction'), style: 'cancel' },
           {
-            text: 'Confirmer',
+            text: t('admin.users.confirmDialogTitle'),
             onPress: () => handleStatusUpdate(item?._id, nextStatus),
           },
         ]
       );
     },
-    [handleStatusUpdate]
+    [handleStatusUpdate, t]
   );
 
   const openUserDetails = useCallback((item) => {
     if (!item?._id) {
-      Alert.alert('Erreur', 'Utilisateur invalide.');
+      Alert.alert(t('common.error'), t('admin.users.invalidUserAlert'));
       return;
     }
 
@@ -602,7 +611,7 @@ export default function AdminUsersScreen() {
       pathname: '/admin/users-details/[id]',
       params: { id: item._id },
     });
-  }, []);
+  }, [t]);
 
   /**
    * =========================================================
@@ -615,7 +624,7 @@ export default function AdminUsersScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement des utilisateurs...</Text>
+        <Text style={styles.loaderText}>{t('admin.users.loaderText')}</Text>
       </View>
     );
   }
@@ -697,35 +706,34 @@ export default function AdminUsersScreen() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Admin</Text>
-              <Text style={styles.title}>Utilisateurs</Text>
+              <Text style={styles.eyebrow}>{t('admin.dashboard.eyebrow')}</Text>
+              <Text style={styles.title}>{t('admin.common.usersTitle')}</Text>
               <Text style={styles.subtitle}>
-                Supervision premium de tous les comptes de la plateforme :
-                segmentation par rôle, statut, conformité et contrôle rapide.
+                {t('admin.users.subtitle')}
               </Text>
             </View>
 
             <View style={styles.statsRow}>
               <StatCard
-                label="Total"
+                label={t('admin.users.statTotalLabel')}
                 value={stats.total}
                 icon="people-outline"
                 tint="#1F6F43"
               />
               <StatCard
-                label="Actifs"
+                label={t('admin.dashboard.activeLabel')}
                 value={stats.active}
                 icon="checkmark-circle-outline"
                 tint="#1F6F43"
               />
               <StatCard
-                label="Suspendus"
+                label={t('admin.dashboard.suspendedLabel')}
                 value={stats.suspended}
                 icon="ban-outline"
                 tint="#B83232"
               />
               <StatCard
-                label="En attente"
+                label={t('admin.dashboard.pendingLabel')}
                 value={stats.pending}
                 icon="time-outline"
                 tint="#8A6500"
@@ -733,35 +741,35 @@ export default function AdminUsersScreen() {
             </View>
 
             <View style={styles.roleOverviewCard}>
-              <Text style={styles.roleOverviewTitle}>Répartition par rôle</Text>
+              <Text style={styles.roleOverviewTitle}>{t('admin.users.roleBreakdownTitle')}</Text>
 
               <View style={styles.roleOverviewGrid}>
                 <View style={styles.roleOverviewItem}>
                   <Text style={styles.roleOverviewValue}>
                     {roleStats.clients}
                   </Text>
-                  <Text style={styles.roleOverviewLabel}>Clients</Text>
+                  <Text style={styles.roleOverviewLabel}>{t('admin.dashboard.clientsLabel')}</Text>
                 </View>
 
                 <View style={styles.roleOverviewItem}>
                   <Text style={styles.roleOverviewValue}>
                     {roleStats.restaurants}
                   </Text>
-                  <Text style={styles.roleOverviewLabel}>Restaurants</Text>
+                  <Text style={styles.roleOverviewLabel}>{t('admin.common.restaurantsTitle')}</Text>
                 </View>
 
                 <View style={styles.roleOverviewItem}>
                   <Text style={styles.roleOverviewValue}>
                     {roleStats.livreurs}
                   </Text>
-                  <Text style={styles.roleOverviewLabel}>Livreurs</Text>
+                  <Text style={styles.roleOverviewLabel}>{t('admin.common.driversTitle')}</Text>
                 </View>
 
                 <View style={styles.roleOverviewItem}>
                   <Text style={styles.roleOverviewValue}>
                     {roleStats.admins}
                   </Text>
-                  <Text style={styles.roleOverviewLabel}>Admins</Text>
+                  <Text style={styles.roleOverviewLabel}>{t('admin.dashboard.adminsLabel')}</Text>
                 </View>
               </View>
             </View>
@@ -775,7 +783,7 @@ export default function AdminUsersScreen() {
               />
               <TextInput
                 style={styles.searchInput}
-                placeholder="Rechercher nom, email, téléphone..."
+                placeholder={t('admin.users.searchPlaceholder')}
                 placeholderTextColor="#888"
                 value={draftSearch}
                 onChangeText={setDraftSearch}
@@ -794,7 +802,7 @@ export default function AdminUsersScreen() {
               ) : null}
             </View>
 
-            <Text style={styles.filterTitle}>Rôle</Text>
+            <Text style={styles.filterTitle}>{t('admin.users.roleFilterTitle')}</Text>
             <FlatList
               data={ROLE_FILTERS}
               horizontal
@@ -818,14 +826,14 @@ export default function AdminUsersScreen() {
                         isActive && styles.filterChipTextActive,
                       ]}
                     >
-                      {item === 'Tous' ? item : getRoleLabel(item)}
+                      {item === 'Tous' ? t('admin.users.allFilterLabel') : getRoleLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
               }}
             />
 
-            <Text style={styles.filterTitle}>Statut</Text>
+            <Text style={styles.filterTitle}>{t('admin.users.statusFilterTitle')}</Text>
             <FlatList
               data={STATUS_FILTERS}
               horizontal
@@ -850,15 +858,15 @@ export default function AdminUsersScreen() {
                       ]}
                     >
                       {item === 'Tous'
-                        ? item
-                        : getStatusFilterLabel(item)}
+                        ? t('admin.users.allFilterLabel')
+                        : getStatusFilterLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
               }}
             />
 
-            <Text style={styles.filterTitle}>Tri</Text>
+            <Text style={styles.filterTitle}>{t('admin.users.sortFilterTitle')}</Text>
             <FlatList
               data={SORT_OPTIONS}
               horizontal
@@ -882,7 +890,7 @@ export default function AdminUsersScreen() {
                         isActive && styles.filterChipTextActive,
                       ]}
                     >
-                      {getSortLabel(item)}
+                      {getSortLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
@@ -895,7 +903,7 @@ export default function AdminUsersScreen() {
                 onPress={handleApplyFilters}
               >
                 <Text style={styles.applyButtonText}>
-                  Appliquer les filtres
+                  {t('admin.users.applyFiltersButton')}
                 </Text>
               </Pressable>
 
@@ -908,13 +916,13 @@ export default function AdminUsersScreen() {
                   size={16}
                   color="#555"
                 />
-                <Text style={styles.resetButtonText}>Réinitialiser</Text>
+                <Text style={styles.resetButtonText}>{t('admin.users.resetButton')}</Text>
               </Pressable>
             </View>
 
             <View style={styles.resultsCard}>
               <View style={styles.resultsTopRow}>
-                <Text style={styles.resultsTitle}>Résultats</Text>
+                <Text style={styles.resultsTitle}>{t('admin.users.resultsTitle')}</Text>
                 <Text style={styles.resultsCount}>
                   {normalizeNumber(pagination.count, safeUsers.length)} /{' '}
                   {normalizeNumber(pagination.total, safeUsers.length)}
@@ -922,27 +930,29 @@ export default function AdminUsersScreen() {
               </View>
 
               <Text style={styles.resultsText}>
-                Page {normalizeNumber(pagination.page, 1)} sur{' '}
-                {Math.max(normalizeNumber(pagination.pages, 1), 1)}
+                {t('admin.users.resultsPageLabel', {
+                  page: normalizeNumber(pagination.page, 1),
+                  pages: Math.max(normalizeNumber(pagination.pages, 1), 1),
+                })}
               </Text>
 
               {hasActiveFilters ? (
                 <Text style={styles.resultsFiltersText}>
-                  Filtres actifs :
-                  {search ? ` recherche "${search}"` : ''}
+                  {t('admin.users.activeFiltersPrefix')}
+                  {search ? t('admin.users.searchFilterFragment', { search }) : ''}
                   {resolvedRoleFilter
-                    ? ` • rôle ${getRoleLabel(resolvedRoleFilter)}`
+                    ? t('admin.users.roleFilterFragment', { role: getRoleLabel(resolvedRoleFilter, t) })
                     : ''}
                   {resolvedStatusFilter
-                    ? ` • statut ${getStatusFilterLabel(resolvedStatusFilter)}`
+                    ? t('admin.users.statusFilterFragment', { status: getStatusFilterLabel(resolvedStatusFilter, t) })
                     : ''}
                   {activeSort !== 'recent'
-                    ? ` • tri ${getSortLabel(activeSort)}`
+                    ? t('admin.users.sortFilterFragment', { sort: getSortLabel(activeSort, t) })
                     : ''}
                 </Text>
               ) : (
                 <Text style={styles.resultsFiltersText}>
-                  Aucun filtre actif.
+                  {t('admin.users.noActiveFiltersText')}
                 </Text>
               )}
             </View>
@@ -960,7 +970,7 @@ export default function AdminUsersScreen() {
           </View>
         }
         renderItem={({ item }) => {
-          const statusStyle = getStatusStyle(item?.accountStatus);
+          const statusStyle = getStatusStyle(item?.accountStatus, t);
           const roleStyle = getRoleStyle(item?.role);
           const isUpdating = updatingUserId === item?._id;
           const canToggle = !isAdminRole(item?.role);
@@ -970,10 +980,10 @@ export default function AdminUsersScreen() {
               <View style={styles.cardTopRow}>
                 <View style={styles.cardLeft}>
                   <Text style={styles.cardName}>
-                    {normalizeText(item?.name, 'Utilisateur Afroeat')}
+                    {normalizeText(item?.name, t('admin.users.userNameFallback'))}
                   </Text>
                   <Text style={styles.cardSubText}>
-                    {normalizeText(item?.email, 'Email indisponible')}
+                    {normalizeText(item?.email, t('admin.users.emailUnavailableFallback'))}
                   </Text>
                   {!!normalizeText(item?.phone) && (
                     <Text style={styles.cardSubText}>
@@ -1022,7 +1032,7 @@ export default function AdminUsersScreen() {
                       { color: roleStyle.text },
                     ]}
                   >
-                    {getRoleLabel(item?.role)}
+                    {getRoleLabel(item?.role, t)}
                   </Text>
                 </View>
 
@@ -1034,7 +1044,7 @@ export default function AdminUsersScreen() {
                       color="#1F6F43"
                     />
                     <Text style={styles.metaBadgeText}>
-                      Identité vérifiée
+                      {t('admin.users.identityVerifiedLabel')}
                     </Text>
                   </View>
                 ) : null}
@@ -1047,7 +1057,7 @@ export default function AdminUsersScreen() {
                       color="#D96C2D"
                     />
                     <Text style={styles.metaBadgeText}>
-                      Travail autorisé
+                      {t('admin.users.workAuthorizedLabel')}
                     </Text>
                   </View>
                 ) : null}
@@ -1060,7 +1070,7 @@ export default function AdminUsersScreen() {
                       color="#6B655E"
                     />
                     <Text style={styles.metaBadgeText}>
-                      Créé le {formatDateTime(item?.createdAt)}
+                      {t('admin.users.createdOnLabel', { date: formatDateTime(item?.createdAt) })}
                     </Text>
                   </View>
                 ) : null}
@@ -1073,7 +1083,7 @@ export default function AdminUsersScreen() {
                 >
                   <Ionicons name="eye-outline" size={16} color="#1F6F43" />
                   <Text style={styles.secondaryButtonText}>
-                    Voir le détail
+                    {t('admin.users.viewDetailsButton')}
                   </Text>
                 </Pressable>
 
@@ -1102,8 +1112,8 @@ export default function AdminUsersScreen() {
                         />
                         <Text style={styles.actionButtonText}>
                           {item?.accountStatus === 'suspended'
-                            ? 'Réactiver'
-                            : 'Suspendre'}
+                            ? t('admin.users.reactivateButton')
+                            : t('admin.users.suspendButton')}
                         </Text>
                       </>
                     )}
@@ -1111,7 +1121,7 @@ export default function AdminUsersScreen() {
                 ) : (
                   <View style={styles.adminProtectedBox}>
                     <Text style={styles.adminProtectedText}>
-                      Compte admin protégé
+                      {t('admin.users.adminProtectedText')}
                     </Text>
                   </View>
                 )}
@@ -1122,9 +1132,9 @@ export default function AdminUsersScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="people-outline" size={54} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>Aucun utilisateur trouvé</Text>
+            <Text style={styles.emptyTitle}>{t('admin.users.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Essaie avec d’autres filtres ou recharge la page.
+              {t('admin.users.emptyText')}
             </Text>
           </View>
         }
