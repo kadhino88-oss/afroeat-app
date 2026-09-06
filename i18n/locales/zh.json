@@ -141,7 +141,223 @@
   },
   "profile": {
     "language": "语言",
-    "languageSubtitle": "选择应用语言"
+    "languageSubtitle": "选择应用语言",
+    "address": {
+      "noAddress": "暂无保存的地址",
+      "title": "我的地址",
+      "subtitle": "管理您的主要配送地址。",
+      "primaryAddressLabel": "主要地址",
+      "infoText": "（当前版本）：高级地址管理功能将在高级版后端中添加。"
+    },
+    "help": {
+      "topTitle": "帮助与支持",
+      "contactTitle": "联系我们",
+      "supportHours": "周一至周日 8:00–22:00",
+      "emailLabel": "邮箱",
+      "emailSub": "24–48小时",
+      "whatsappLabel": "WhatsApp",
+      "whatsappSub": "快速回复",
+      "diagnosticLabel": "诊断",
+      "diagnosticSub": "技术支持",
+      "emailAlertTitle": "邮箱",
+      "emailAlertBody": "请联系我们：{{email}}",
+      "whatsappAlertTitle": "WhatsApp",
+      "whatsappAlertBody": "请通过WhatsApp联系我们：{{phone}}",
+      "faqTitle": "常见问题",
+      "claimTitle": "投诉或问题反馈",
+      "missingFieldsTitle": "缺少信息",
+      "missingFieldsBody": "请在发送前填写主题和消息。",
+      "messageTooShortTitle": "消息过短",
+      "messageTooShortBody": "请用至少20个字符描述您的问题。",
+      "sentTitle": "消息已发送 ✅",
+      "sentText": "我们的团队将在24–48小时内通过您账号的邮箱地址回复您。",
+      "sendAnother": "发送另一条消息",
+      "categoryLabel": "类别",
+      "categories": {
+        "commande": "🛒 订单",
+        "paiement": "💳 支付",
+        "livraison": "🚴 配送",
+        "compte": "👤 账号",
+        "autre": "💬 其他"
+      },
+      "subjectLabel": "主题",
+      "subjectPlaceholder": "例如：4月22日未收到订单",
+      "messageLabel": "描述您的问题",
+      "messagePlaceholder": "详细描述问题：日期、金额、订单号（如有）...",
+      "sendingText": "发送中...",
+      "submitButton": "提交投诉",
+      "legalText": "联系我们即表示您同意您的数据将按照我们的隐私政策进行处理。",
+      "faqClient": [
+        {
+          "q": "如何下单？",
+          "a": "打开\"探索\"标签，选择一家餐厅，将菜品加入购物车，然后点击\"下单\"。请确保您的个人资料中已填写配送地址。"
+        },
+        {
+          "q": "未收到订单该怎么办？",
+          "a": "请先在\"订单\"标签中查看状态。如果订单已标记为\"已送达\"但您尚未收到，请立即通过此表单联系客服。"
+        },
+        {
+          "q": "如何取消订单？",
+          "a": "只有在下单后2分钟内，且餐厅尚未接单时才可取消。请前往 订单 → 您的订单 → 取消。"
+        },
+        {
+          "q": "我的银行卡已扣款但订单未显示？",
+          "a": "这可能需要长达5分钟。若10分钟后订单仍未显示，请联系客服并提供扣款金额和时间。"
+        },
+        {
+          "q": "如何修改配送地址？",
+          "a": "前往 个人资料 → 我的信息 → 地址。您可以在下单前修改地址。确认后地址无法修改。"
+        },
+        {
+          "q": "如何获得退款？",
+          "a": "退款将在3-5个工作日内处理。请使用下方的投诉表单描述问题，可能会要求提供照片证明。"
+        },
+        {
+          "q": "显示的菜品是否为实时可用状态？",
+          "a": "是的，可用性由餐厅实时更新。如果您下单时某道菜显示不可用，餐厅会联系您提供替代方案。"
+        },
+        {
+          "q": "如何跟踪我的配送？",
+          "a": "在\"订单\"标签中点击您正在进行的订单，即可查看实时状态和骑手在地图上的位置。"
+        }
+      ],
+      "faqRestaurant": [
+        {
+          "q": "如何向菜单添加菜品？",
+          "a": "从您的后台 → 菜单 → 添加菜品。您可以填写名称、描述、价格、分类和照片。"
+        },
+        {
+          "q": "如何开启/关闭我的餐厅？",
+          "a": "在餐厅设置中，\"营业/打烊\"按钮可实时切换您的状态。餐厅关闭时顾客无法下单。"
+        },
+        {
+          "q": "如何查看我的统计数据？",
+          "a": "后台的\"分析\"标签显示营业额、订单量和最畅销的菜品。"
+        },
+        {
+          "q": "如何收取付款？",
+          "a": "付款将每周转入您注册时提供的银行账户。请在 设置 → 支付 中核实您的信息。"
+        }
+      ],
+      "faqLivreur": [
+        {
+          "q": "如何开始配送任务？",
+          "a": "在骑手后台激活\"可用\"状态。您所在区域的可用订单将自动显示。"
+        },
+        {
+          "q": "配送中遇到问题如何上报？",
+          "a": "在当前任务页面点击\"报告问题\"，描述具体情况——我们的团队会尽快联系您。"
+        },
+        {
+          "q": "如何查看我的收入？",
+          "a": "骑手后台 → 收入标签。付款每周结算一次。"
+        }
+      ]
+    },
+    "info": {
+      "notProvided": "未填写",
+      "roleClient": "👤 顾客",
+      "roleRestaurant": "🍽️ 餐厅经营者",
+      "roleLivreur": "🚴 骑手",
+      "roleAdmin": "🛡️ 管理员",
+      "permissionRequiredTitle": "需要权限",
+      "permissionRequiredBody": "Afroeat 需要访问您的相册以更改您的头像。",
+      "cancel": "取消",
+      "settingsButton": "设置",
+      "photoSourceTitle": "头像照片",
+      "photoSourceMessage": "选择来源",
+      "takePhoto": "📷 拍照",
+      "chooseGallery": "🖼️ 从相册选择",
+      "photoUpdatedTitle": "✅ 照片已更新",
+      "photoUpdatedBody": "您的头像已保存。",
+      "uploadErrorTitle": "上传错误",
+      "uploadErrorFallback": "无法上传照片，请重试。",
+      "missingImageUrlError": "响应中缺少图片URL。",
+      "pageTitle": "我的信息",
+      "avatarHint": "点击照片以更改",
+      "deliveryAddressLabel": "配送地址",
+      "addressPlaceholder": "例如：北京市朝阳区某某路12号",
+      "addressNotProvided": "未填写 — 下单需要此信息",
+      "save": "保存",
+      "addressInvalidTitle": "地址无效",
+      "addressInvalidBody": "请输入至少5个字符的地址。",
+      "addressUpdatedTitle": "✅ 地址已更新",
+      "addressUpdatedBody": "您的配送地址已保存。",
+      "addressSaveErrorFallback": "无法保存地址。",
+      "fullNameLabel": "姓名",
+      "accountTypeLabel": "账号类型",
+      "memberSinceLabel": "注册时间",
+      "contactHint": "如需修改姓名、邮箱或电话，请通过\"帮助与支持\"联系客服。"
+    },
+    "payment": {
+      "loaderText": "正在加载支付方式...",
+      "noPaymentMethod": "未保存支付方式",
+      "connectionRequiredTitle": "需要登录",
+      "connectionRequiredBody": "您需要先登录。",
+      "fieldRequiredTitle": "必填字段",
+      "holderNameInvalidBody": "持卡人姓名无效。",
+      "cardTypeInvalidBody": "卡片类型无效。",
+      "cardInvalidTitle": "卡片无效",
+      "cardInvalidBody": "需要提供卡片后4位数字。",
+      "expiryInvalidTitle": "有效期无效",
+      "expiryInvalidBody": "有效期格式必须为 MM/YY。",
+      "successTitle": "成功",
+      "successBody": "支付方式已保存。",
+      "saveErrorTitle": "无法保存",
+      "saveErrorFallback": "无法保存相关信息。",
+      "backAccessibilityLabel": "返回个人资料",
+      "title": "支付",
+      "subtitle": "管理您的 AFROEAT 客户支付方式。此界面已为未来接入 Stripe 做好准备，不会影响客户流程。",
+      "preparationBadge": "支付准备中",
+      "paymentMethodLabel": "支付方式",
+      "expirationMeta": "有效期 {{expiry}}",
+      "noCardMeta": "暂无保存的客户卡片。",
+      "holderNameLabel": "持卡人姓名",
+      "cardTypeLabel": "卡片类型",
+      "cardTypePlaceholder": "Visa / Mastercard",
+      "last4Label": "卡片后4位",
+      "expiryLabel": "有效期",
+      "expiryPlaceholder": "MM/YY",
+      "saveAccessibilityLabel": "保存我的支付方式",
+      "saveButton": "保存我的支付方式",
+      "stripeReadyTitle": "已为 Stripe 做好准备",
+      "stripeReadyText1": "此版本在个人资料端保存了清晰的客户结构。",
+      "stripeReadyText2": "未来可以在不重建界面、路由或客户逻辑的情况下接入 Stripe。"
+    },
+    "home": {
+      "loaderText": "正在加载账号...",
+      "defaultClientName": "AFROEAT 顾客",
+      "sessionActive": "会话已激活",
+      "welcome": "欢迎，{{name}}",
+      "heroSubtitle": "在专属的高级客户空间中查看您的个人空间、偏好设置、订单和快捷入口。",
+      "exploreButton": "探索",
+      "myOrdersButton": "我的订单",
+      "whyTitle": "为什么选择 AFROEAT",
+      "feature1Title": "专注美食",
+      "feature1Text": "一个真正专注于非洲美食世界的平台。",
+      "feature2Title": "高级架构",
+      "feature2Text": "顾客、餐厅、骑手和管理员清晰分离。",
+      "feature3Title": "可扩展配送",
+      "feature3Text": "专为实时跟踪和真实的现场运营而设计。",
+      "feature4Title": "全球视野",
+      "feature4Text": "为增长、品牌建设和市场领先而打造的基础。",
+      "quickAccessTitle": "快捷入口",
+      "quickRestaurantsTitle": "餐厅",
+      "quickRestaurantsText": "浏览合作伙伴及其美食世界。",
+      "quickOrdersTitle": "我的订单",
+      "quickOrdersText": "查看进行中的订单和历史记录。",
+      "quickInfoTitle": "我的信息",
+      "quickInfoText": "管理个人信息和偏好设置。",
+      "quickAddressTitle": "地址",
+      "quickAddressText": "管理已保存的配送地址。",
+      "quickPaymentTitle": "支付",
+      "quickPaymentText": "设置支付方式并准备结账。",
+      "quickHelpTitle": "帮助",
+      "quickHelpText": "获取支持并了解 AFROEAT 的运作方式。",
+      "ctaTitle": "您的 AFROEAT 空间已就绪",
+      "ctaText": "继续您的旅程，管理您的偏好设置，准备未来的订单，享受为持续演进而打造的高级导航体验。",
+      "ctaButton": "继续我的体验"
+    }
   },
   "languages": {
     "fr": "Français",

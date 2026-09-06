@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 
@@ -62,6 +63,7 @@ const getRoleRedirect = (role) => {
  */
 
 export default function ProfileAddressScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -73,7 +75,7 @@ export default function ProfileAddressScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement...</Text>
+        <Text style={styles.loaderText}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -91,7 +93,7 @@ export default function ProfileAddressScreen() {
         user?.adresse ||
         user?.deliveryAddress ||
         user?.profile?.address
-    ) || 'Aucune adresse enregistrée';
+    ) || t('profile.address.noAddress');
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) return router.back();
@@ -110,10 +112,8 @@ export default function ProfileAddressScreen() {
 
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.headerCard}>
-          <Text style={styles.title}>Mes adresses</Text>
-          <Text style={styles.subtitle}>
-            Gère ton adresse de livraison principale.
-          </Text>
+          <Text style={styles.title}>{t('profile.address.title')}</Text>
+          <Text style={styles.subtitle}>{t('profile.address.subtitle')}</Text>
         </View>
 
         <View style={styles.card}>
@@ -122,17 +122,14 @@ export default function ProfileAddressScreen() {
           </View>
 
           <View style={styles.cardContent}>
-            <Text style={styles.label}>Adresse principale</Text>
+            <Text style={styles.label}>{t('profile.address.primaryAddressLabel')}</Text>
             <Text style={styles.value}>{address}</Text>
           </View>
         </View>
 
         <View style={styles.infoBox}>
           <Ionicons name="information-circle-outline" size={18} color="#777" />
-          <Text style={styles.infoText}>
-            (Version actuelle) : la gestion avancée des adresses sera ajoutée
-            côté backend premium.
-          </Text>
+          <Text style={styles.infoText}>{t('profile.address.infoText')}</Text>
         </View>
       </ScrollView>
     </FadeInView>

@@ -12,9 +12,11 @@ import {
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { updateMyProfile } from '../../services/authService';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -123,7 +125,7 @@ const getMaskedCardPreview = (brand, last4) => {
   const safeLast4 = sanitizeLast4(last4);
 
   if (!safeBrand && !safeLast4) {
-    return 'Aucun moyen de paiement enregistré';
+    return i18n.t('profile.payment.noPaymentMethod');
   }
 
   if (!safeBrand) {
@@ -144,6 +146,7 @@ const getMaskedCardPreview = (brand, last4) => {
  */
 
 export default function ProfilePaymentScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -167,7 +170,7 @@ export default function ProfilePaymentScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement du moyen de paiement...</Text>
+        <Text style={styles.loaderText}>{t('profile.payment.loaderText')}</Text>
       </View>
     );
   }
@@ -240,7 +243,7 @@ export default function ProfilePaymentScreen() {
 
   const handleSave = useCallback(async () => {
     if (!isAuthenticated || !token) {
-      Alert.alert('Connexion requise', 'Tu dois être connecté.');
+      Alert.alert(t('profile.payment.connectionRequiredTitle'), t('profile.payment.connectionRequiredBody'));
       return;
     }
 
@@ -250,27 +253,27 @@ export default function ProfilePaymentScreen() {
     const safeExpiry = sanitizeExpiry(expiry);
 
     if (safeHolderName.length < 2) {
-      Alert.alert('Champ requis', 'Le nom du titulaire est invalide.');
+      Alert.alert(t('profile.payment.fieldRequiredTitle'), t('profile.payment.holderNameInvalidBody'));
       return;
     }
 
     if (safeBrand.length < 2) {
-      Alert.alert('Champ requis', 'Le type de carte est invalide.');
+      Alert.alert(t('profile.payment.fieldRequiredTitle'), t('profile.payment.cardTypeInvalidBody'));
       return;
     }
 
     if (safeLast4.length !== 4) {
       Alert.alert(
-        'Carte invalide',
-        'Les 4 derniers chiffres de la carte sont requis.'
+        t('profile.payment.cardInvalidTitle'),
+        t('profile.payment.cardInvalidBody')
       );
       return;
     }
 
     if (!isValidExpiry(safeExpiry)) {
       Alert.alert(
-        'Expiration invalide',
-        'La date d’expiration doit être au format MM/AA.'
+        t('profile.payment.expiryInvalidTitle'),
+        t('profile.payment.expiryInvalidBody')
       );
       return;
     }
@@ -289,12 +292,12 @@ export default function ProfilePaymentScreen() {
 
       await updateMyProfile(payload, token);
 
-      Alert.alert('Succès', 'Le moyen de paiement a bien été enregistré.');
+      Alert.alert(t('profile.payment.successTitle'), t('profile.payment.successBody'));
     } catch (error) {
       console.log('Erreur update payment :', error);
       Alert.alert(
-        'Enregistrement impossible',
-        error?.message || 'Impossible de sauvegarder les informations.'
+        t('profile.payment.saveErrorTitle'),
+        error?.message || t('profile.payment.saveErrorFallback')
       );
     } finally {
       setSaving(false);
@@ -313,7 +316,7 @@ export default function ProfilePaymentScreen() {
         <View style={styles.topRow}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Retour au profil"
+            accessibilityLabel={t('profile.payment.backAccessibilityLabel')}
             style={({ pressed }) => [
               styles.backButton,
               pressed && styles.buttonPressed,
@@ -329,11 +332,8 @@ export default function ProfilePaymentScreen() {
             <Ionicons name="card-outline" size={32} color="#D96C2D" />
           </View>
 
-          <Text style={styles.title}>Paiements</Text>
-          <Text style={styles.subtitle}>
-            Gère ton moyen de paiement client AFROEAT. Cet écran est prêt pour
-            accueillir ensuite un branchement Stripe sans casser le bloc client.
-          </Text>
+          <Text style={styles.title}>{t('profile.payment.title')}</Text>
+          <Text style={styles.subtitle}>{t('profile.payment.subtitle')}</Text>
         </View>
 
         <View style={styles.previewCard}>
@@ -344,26 +344,26 @@ export default function ProfilePaymentScreen() {
                 size={14}
                 color="#2457C5"
               />
-              <Text style={styles.previewBadgeText}>Préparation paiement</Text>
+              <Text style={styles.previewBadgeText}>{t('profile.payment.preparationBadge')}</Text>
             </View>
           </View>
 
-          <Text style={styles.previewTitle}>Moyen de paiement</Text>
+          <Text style={styles.previewTitle}>{t('profile.payment.paymentMethodLabel')}</Text>
           <Text style={styles.previewValue}>{paymentPreview}</Text>
           <Text style={styles.previewMeta}>
             {hasSavedPaymentMethod
-              ? `Expiration ${normalizeText(expiry, '--/--')}`
-              : 'Aucune carte client enregistrée pour le moment.'}
+              ? t('profile.payment.expirationMeta', { expiry: normalizeText(expiry, '--/--') })
+              : t('profile.payment.noCardMeta')}
           </Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.label}>Nom du titulaire</Text>
+          <Text style={styles.label}>{t('profile.payment.holderNameLabel')}</Text>
           <View style={styles.inputWrapper}>
             <Ionicons name="person-outline" size={20} color="#8B8B8B" />
             <TextInput
               style={styles.input}
-              placeholder="Nom du titulaire"
+              placeholder={t('profile.payment.holderNameLabel')}
               placeholderTextColor="#999999"
               value={holderName}
               onChangeText={(value) => setHolderName(sanitizeHolderName(value))}
@@ -374,12 +374,12 @@ export default function ProfilePaymentScreen() {
             />
           </View>
 
-          <Text style={styles.label}>Type de carte</Text>
+          <Text style={styles.label}>{t('profile.payment.cardTypeLabel')}</Text>
           <View style={styles.inputWrapper}>
             <Ionicons name="card-outline" size={20} color="#8B8B8B" />
             <TextInput
               style={styles.input}
-              placeholder="Visa / Mastercard"
+              placeholder={t('profile.payment.cardTypePlaceholder')}
               placeholderTextColor="#999999"
               value={brand}
               onChangeText={(value) => setBrand(sanitizeCardBrand(value))}
@@ -390,7 +390,7 @@ export default function ProfilePaymentScreen() {
             />
           </View>
 
-          <Text style={styles.label}>4 derniers chiffres</Text>
+          <Text style={styles.label}>{t('profile.payment.last4Label')}</Text>
           <View style={styles.inputWrapper}>
             <Ionicons name="keypad-outline" size={20} color="#8B8B8B" />
             <TextInput
@@ -405,12 +405,12 @@ export default function ProfilePaymentScreen() {
             />
           </View>
 
-          <Text style={styles.label}>Expiration</Text>
+          <Text style={styles.label}>{t('profile.payment.expiryLabel')}</Text>
           <View style={styles.inputWrapper}>
             <Ionicons name="calendar-outline" size={20} color="#8B8B8B" />
             <TextInput
               style={styles.input}
-              placeholder="MM/AA"
+              placeholder={t('profile.payment.expiryPlaceholder')}
               placeholderTextColor="#999999"
               value={expiry}
               onChangeText={(value) => setExpiry(sanitizeExpiry(value))}
@@ -422,7 +422,7 @@ export default function ProfilePaymentScreen() {
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Enregistrer mon moyen de paiement"
+            accessibilityLabel={t('profile.payment.saveAccessibilityLabel')}
             style={({ pressed }) => [
               styles.button,
               (!canSave || saving) && styles.buttonDisabled,
@@ -437,7 +437,7 @@ export default function ProfilePaymentScreen() {
               <>
                 <Ionicons name="save-outline" size={18} color="#111111" />
                 <Text style={styles.buttonText}>
-                  Enregistrer mon moyen de paiement
+                  {t('profile.payment.saveButton')}
                 </Text>
               </>
             )}
@@ -445,14 +445,9 @@ export default function ProfilePaymentScreen() {
         </View>
 
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Structure prête pour Stripe</Text>
-          <Text style={styles.infoText}>
-            Cette version enregistre une structure client propre côté profil.
-          </Text>
-          <Text style={styles.infoText}>
-            Le branchement Stripe pourra être ajouté ensuite sans refaire
-            l’écran, les routes ou la logique du bloc client.
-          </Text>
+          <Text style={styles.infoTitle}>{t('profile.payment.stripeReadyTitle')}</Text>
+          <Text style={styles.infoText}>{t('profile.payment.stripeReadyText1')}</Text>
+          <Text style={styles.infoText}>{t('profile.payment.stripeReadyText2')}</Text>
         </View>
       </ScrollView>
     </FadeInView>

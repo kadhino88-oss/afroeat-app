@@ -23,10 +23,12 @@ import {
 import { router, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { apiPut, apiUpload } from '../../services/apiClient';
 import { API_ENDPOINTS } from '../../constants/api';
+import i18n from '../../i18n';
 
 // ─── Helpers ──────────────────────────────────────────────
 const normalizeText = (v, f = '') => String(v ?? '').trim() || f;
@@ -50,39 +52,44 @@ const getDisplayName = (user) =>
   normalizeText(user?.name) ||
   normalizeText(`${user?.firstName || ''} ${user?.lastName || ''}`.trim()) ||
   normalizeText(user?.prenom) ||
-  'Non renseigné';
+  i18n.t('profile.info.notProvided');
 
 const getDisplayRole = (role) => {
   switch (normalizeRole(role)) {
-    case 'restaurant': return '🍽️ Restaurateur';
-    case 'livreur':    return '🚴 Livreur';
-    case 'admin':      return '🛡️ Administrateur';
-    default:           return '👤 Client';
+    case 'restaurant': return i18n.t('profile.info.roleRestaurant');
+    case 'livreur':    return i18n.t('profile.info.roleLivreur');
+    case 'admin':      return i18n.t('profile.info.roleAdmin');
+    default:           return i18n.t('profile.info.roleClient');
   }
 };
 
 // ─── Avatar Component ─────────────────────────────────────
 const AvatarPicker = ({ user, onUploaded }) => {
+  const { t } = useTranslation();
   const [loading,  setLoading]  = useState(false);
   const [localUri, setLocalUri] = useState(null);
 
   const avatarUri = localUri || normalizeText(user?.profileImage || user?.avatar || user?.image);
   const initials  = useMemo(() => {
+    const hasName = Boolean(
+      normalizeText(user?.name) ||
+      normalizeText(`${user?.firstName || ''} ${user?.lastName || ''}`.trim()) ||
+      normalizeText(user?.prenom)
+    );
+    if (!hasName) return '?';
     const name = getDisplayName(user);
-    return name !== 'Non renseigné'
-      ? name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
-      : '?';
+    return name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2);
   }, [user]);
 
   const requestPermission = useCallback(async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert(
-        'Permission requise',
-        'Afroeat a besoin d\'accéder à ta galerie pour modifier ta photo de profil.',
+        t('profile.info.permissionRequiredTitle'),
+        t('profile.info.permissionRequiredBody'),
         [
-          { text: 'Annuler', style: 'cancel' },
-          { text: 'Paramètres', onPress: () => ImagePicker.requestMediaLibraryPermissionsAsync() },
+          { text: t('profile.info.cancel'), style: 'cancel' },
+          { text: t('profile.info.settingsButton'), onPress: () => ImagePicker.requestMediaLibraryPermissionsAsync() },
         ]
       );
       return false;
@@ -95,11 +102,11 @@ const AvatarPicker = ({ user, onUploaded }) => {
     if (!hasPermission) return;
 
     Alert.alert(
-      'Photo de profil',
-      'Choisir une source',
+      t('profile.info.photoSourceTitle'),
+      t('profile.info.photoSourceMessage'),
       [
         {
-          text: '📷 Prendre une photo',
+          text: t('profile.info.takePhoto'),
           onPress: async () => {
             const { status } = await ImagePicker.requestCameraPermissionsAsync();
             if (status !== 'granted') return;
@@ -114,7 +121,7 @@ const AvatarPicker = ({ user, onUploaded }) => {
           },
         },
         {
-          text: '🖼️ Choisir dans la galerie',
+          text: t('profile.info.chooseGallery'),
           onPress: async () => {
             const result = await ImagePicker.launchImageLibraryAsync({
               mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -127,10 +134,10 @@ const AvatarPicker = ({ user, onUploaded }) => {
             }
           },
         },
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('profile.info.cancel'), style: 'cancel' },
       ]
     );
-  }, [requestPermission]);
+  }, [requestPermission, t]);
 
   const uploadImage = useCallback(async (asset) => {
     setLoading(true);
@@ -151,15 +158,15 @@ const AvatarPicker = ({ user, onUploaded }) => {
 
       if (imageUrl) {
         if (typeof onUploaded === 'function') onUploaded(imageUrl);
-        Alert.alert('✅ Photo mise à jour', 'Ta photo de profil a bien été enregistrée.');
+        Alert.alert(t('profile.info.photoUpdatedTitle'), t('profile.info.photoUpdatedBody'));
       } else {
-        throw new Error('URL image manquante dans la réponse.');
+        throw new Error(t('profile.info.missingImageUrlError'));
       }
     } catch (err) {
       setLocalUri(null);
       Alert.alert(
-        'Erreur upload',
-        err?.message || 'Impossible de télécharger la photo. Réessaie.',
+        t('profile.info.uploadErrorTitle'),
+        err?.message || t('profile.info.uploadErrorFallback'),
       );
     } finally {
       setLoading(false);
@@ -191,6 +198,7 @@ const AvatarPicker = ({ user, onUploaded }) => {
 
 // ─── Screen ───────────────────────────────────────────────
 export default function InfoScreen() {
+  const { t, i18n: i18nInstance } = useTranslation();
   const auth        = useAuth() || {};
   const user        = auth.user ?? null;
   const token       = auth.token ?? null;
@@ -238,7 +246,7 @@ export default function InfoScreen() {
   const handleSaveAddress = useCallback(async () => {
     const trimmed = normalizeText(address);
     if (trimmed.length < 5) {
-      Alert.alert('Adresse invalide', 'Saisis une adresse d\'au moins 5 caractères.');
+      Alert.alert(t('profile.info.addressInvalidTitle'), t('profile.info.addressInvalidBody'));
       return;
     }
     setSavingAddress(true);
@@ -248,20 +256,23 @@ export default function InfoScreen() {
         updateUser({ ...user, address: trimmed });
       }
       setEditingAddress(false);
-      Alert.alert('✅ Adresse mise à jour', 'Ton adresse de livraison a bien été enregistrée.');
+      Alert.alert(t('profile.info.addressUpdatedTitle'), t('profile.info.addressUpdatedBody'));
     } catch (err) {
-      Alert.alert('Erreur', err?.message || 'Impossible de sauvegarder l\'adresse.');
+      Alert.alert(t('common.error'), err?.message || t('profile.info.addressSaveErrorFallback'));
     } finally {
       setSavingAddress(false);
     }
-  }, [address, token, user, updateUser]);
+  }, [address, token, user, updateUser, t]);
+
+  const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+  const dateLocale = DATE_LOCALE_MAP[i18nInstance.language] || 'en-US';
 
   const userInfo = [
-    { key: 'name',   label: 'Nom complet',      value: getDisplayName(user),           icon: 'person-outline'   },
-    { key: 'email',  label: 'Email',             value: normalizeText(user?.email, 'Non renseigné'),  icon: 'mail-outline'     },
-    { key: 'phone',  label: 'Téléphone',         value: normalizeText(user?.phone, 'Non renseigné'),  icon: 'call-outline'     },
-    { key: 'role',   label: 'Type de compte',    value: getDisplayRole(user?.role),     icon: 'shield-outline'   },
-    { key: 'since',  label: 'Membre depuis',     value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : 'Non renseigné', icon: 'calendar-outline' },
+    { key: 'name',   label: t('profile.info.fullNameLabel'),      value: getDisplayName(user),           icon: 'person-outline'   },
+    { key: 'email',  label: t('auth.fields.email'),             value: normalizeText(user?.email, t('profile.info.notProvided')),  icon: 'mail-outline'     },
+    { key: 'phone',  label: t('auth.fields.phone'),         value: normalizeText(user?.phone, t('profile.info.notProvided')),  icon: 'call-outline'     },
+    { key: 'role',   label: t('profile.info.accountTypeLabel'),    value: getDisplayRole(user?.role),     icon: 'shield-outline'   },
+    { key: 'since',  label: t('profile.info.memberSinceLabel'),     value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString(dateLocale, { month: 'long', year: 'numeric' }) : t('profile.info.notProvided'), icon: 'calendar-outline' },
   ];
 
   return (
@@ -275,7 +286,7 @@ export default function InfoScreen() {
         >
           <Ionicons name="arrow-back" size={22} color="#111" />
         </Pressable>
-        <Text style={styles.pageTitle}>Mes informations</Text>
+        <Text style={styles.pageTitle}>{t('profile.info.pageTitle')}</Text>
         <View style={{ width: 44 }} />
       </View>
 
@@ -289,7 +300,7 @@ export default function InfoScreen() {
           <AvatarPicker user={user} onUploaded={handlePhotoUploaded} />
           <Text style={styles.avatarName}>{getDisplayName(user)}</Text>
           <Text style={styles.avatarRole}>{getDisplayRole(user?.role)}</Text>
-          <Text style={styles.avatarHint}>Appuie sur la photo pour la modifier</Text>
+          <Text style={styles.avatarHint}>{t('profile.info.avatarHint')}</Text>
         </View>
 
         {/* ── Adresse (éditable) ── */}
@@ -299,13 +310,13 @@ export default function InfoScreen() {
               <Ionicons name="location-outline" size={20} color="#D96C2D" />
             </View>
             <View style={styles.cardContent}>
-              <Text style={styles.cardLabel}>Adresse de livraison</Text>
+              <Text style={styles.cardLabel}>{t('profile.info.deliveryAddressLabel')}</Text>
               {editingAddress ? (
                 <TextInput
                   style={styles.addressInput}
                   value={address}
                   onChangeText={setAddress}
-                  placeholder="Ex: 12 rue des Acacias, Paris 75011"
+                  placeholder={t('profile.info.addressPlaceholder')}
                   placeholderTextColor="#BBB"
                   multiline
                   autoFocus
@@ -314,7 +325,7 @@ export default function InfoScreen() {
                 <Text style={styles.cardValue}>
                   {normalizeText(
                     user?.address || user?.deliveryAddress || user?.adresse,
-                    'Non renseignée — requis pour commander'
+                    t('profile.info.addressNotProvided')
                   )}
                 </Text>
               )}
@@ -336,7 +347,7 @@ export default function InfoScreen() {
                 onPress={() => setEditingAddress(false)}
                 disabled={savingAddress}
               >
-                <Text style={styles.cancelBtnText}>Annuler</Text>
+                <Text style={styles.cancelBtnText}>{t('profile.info.cancel')}</Text>
               </Pressable>
               <Pressable
                 style={[styles.saveBtn, savingAddress && { opacity: 0.6 }]}
@@ -345,7 +356,7 @@ export default function InfoScreen() {
               >
                 {savingAddress
                   ? <ActivityIndicator size="small" color="#111" />
-                  : <Text style={styles.saveBtnText}>Enregistrer</Text>}
+                  : <Text style={styles.saveBtnText}>{t('profile.info.save')}</Text>}
               </Pressable>
             </View>
           )}
@@ -366,9 +377,7 @@ export default function InfoScreen() {
           </View>
         ))}
 
-        <Text style={styles.hint}>
-          Pour modifier ton nom, email ou téléphone, contacte le support depuis Aide & Support.
-        </Text>
+        <Text style={styles.hint}>{t('profile.info.contactHint')}</Text>
       </ScrollView>
     </FadeInView>
   );

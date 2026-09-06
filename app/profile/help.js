@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -42,75 +43,6 @@ const SUPPORT_EMAIL   = 'support@afroeat.com';
 const SUPPORT_WHATSAPP = '+33600000000';
 const SUPPORT_HOURS   = 'Lun–Dim, 8h–22h';
 
-// ─── FAQ DATA ─────────────────────────────────────────────
-const FAQ_CLIENT = [
-  {
-    q: 'Comment passer une commande ?',
-    a: 'Ouvre l\'onglet Explorer, choisis un restaurant, ajoute des plats au panier puis appuie sur "Commander". Assure-toi d\'avoir une adresse de livraison dans ton profil.',
-  },
-  {
-    q: 'Je n\'ai pas reçu ma commande, que faire ?',
-    a: 'Vérifie d\'abord le statut dans l\'onglet Commandes. Si la commande est marquée "livrée" mais que tu ne l\'as pas reçue, contacte le support immédiatement via ce formulaire.',
-  },
-  {
-    q: 'Comment annuler une commande ?',
-    a: 'L\'annulation est possible uniquement dans les 2 minutes suivant la commande, tant que le restaurant ne l\'a pas acceptée. Rends-toi dans Commandes → ta commande → Annuler.',
-  },
-  {
-    q: 'Ma carte bancaire a été débitée mais la commande n\'apparaît pas ?',
-    a: 'Le délai peut aller jusqu\'à 5 minutes. Si après 10 minutes la commande n\'apparaît toujours pas, contacte le support en indiquant le montant et l\'heure du débit.',
-  },
-  {
-    q: 'Comment modifier mon adresse de livraison ?',
-    a: 'Va dans Profil → Mes informations → Adresse. Tu peux modifier l\'adresse avant de passer commande. Les adresses ne peuvent pas être modifiées après validation.',
-  },
-  {
-    q: 'Comment obtenir un remboursement ?',
-    a: 'Les remboursements sont traités sous 3–5 jours ouvrés. Utilise le formulaire de réclamation ci-dessous en décrivant le problème. Un justificatif photo peut être demandé.',
-  },
-  {
-    q: 'Les plats affichés sont-ils disponibles en temps réel ?',
-    a: 'Oui, la disponibilité est mise à jour par le restaurant. Si un plat est marqué indisponible lors de ta commande, le restaurant te contactera pour proposer un remplacement.',
-  },
-  {
-    q: 'Comment suivre ma livraison ?',
-    a: 'Dans l\'onglet Commandes, appuie sur ta commande en cours pour voir le statut en temps réel et la position du livreur sur la carte.',
-  },
-];
-
-const FAQ_RESTAURANT = [
-  {
-    q: 'Comment ajouter des plats à mon menu ?',
-    a: 'Depuis ton Dashboard → Menu → Ajouter un plat. Tu peux renseigner le nom, la description, le prix, la catégorie et une photo.',
-  },
-  {
-    q: 'Comment activer/désactiver mon restaurant ?',
-    a: 'Dans Paramètres restaurant, le bouton "Ouvert/Fermé" change ton statut en temps réel. Les clients ne peuvent pas commander dans un restaurant fermé.',
-  },
-  {
-    q: 'Comment voir mes statistiques ?',
-    a: 'L\'onglet Analyses de ton dashboard affiche le chiffre d\'affaires, les commandes et les plats les plus vendus.',
-  },
-  {
-    q: 'Comment recevoir mes paiements ?',
-    a: 'Les paiements sont virés chaque semaine sur le compte bancaire renseigné lors de ton inscription. Vérifie tes informations dans Paramètres → Paiement.',
-  },
-];
-
-const FAQ_LIVREUR = [
-  {
-    q: 'Comment démarrer une mission de livraison ?',
-    a: 'Active ton statut "Disponible" dans ton dashboard livreur. Les commandes disponibles dans ta zone s\'afficheront automatiquement.',
-  },
-  {
-    q: 'Comment déclarer un problème lors d\'une livraison ?',
-    a: 'Sur la page de la mission active, appuie sur "Signaler un problème". Décris la situation — notre équipe te contactera rapidement.',
-  },
-  {
-    q: 'Comment voir mes gains ?',
-    a: 'Dashboard livreur → Onglet Gains. Les paiements sont effectués chaque semaine.',
-  },
-];
 
 // ─── Composant FAQ Item ────────────────────────────────────
 const FaqItem = ({ item, isLast }) => {
@@ -141,6 +73,7 @@ const FaqItem = ({ item, isLast }) => {
 
 // ─── Screen ───────────────────────────────────────────────
 export default function HelpScreen() {
+  const { t }       = useTranslation();
   const auth        = useAuth() || {};
   const user        = auth.user ?? null;
   const role        = normalizeRole(auth.role || user?.role);
@@ -155,10 +88,10 @@ export default function HelpScreen() {
   const [category, setCategory] = useState('commande');
 
   const faqs = useMemo(() => {
-    if (role === 'restaurant') return FAQ_RESTAURANT;
-    if (role === 'livreur')    return FAQ_LIVREUR;
-    return FAQ_CLIENT;
-  }, [role]);
+    if (role === 'restaurant') return t('profile.help.faqRestaurant', { returnObjects: true });
+    if (role === 'livreur')    return t('profile.help.faqLivreur', { returnObjects: true });
+    return t('profile.help.faqClient', { returnObjects: true });
+  }, [role, t]);
 
   if (loading) return null;
 
@@ -174,24 +107,24 @@ export default function HelpScreen() {
 
   const handleEmail = useCallback(() => {
     Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=Support Afroeat`).catch(() => {
-      Alert.alert('Email', `Contacte-nous à : ${SUPPORT_EMAIL}`);
+      Alert.alert(t('profile.help.emailAlertTitle'), t('profile.help.emailAlertBody', { email: SUPPORT_EMAIL }));
     });
   }, []);
 
   const handleWhatsApp = useCallback(() => {
     const url = `whatsapp://send?phone=${SUPPORT_WHATSAPP.replace(/\D/g, '')}&text=Bonjour Afroeat Support,`;
     Linking.openURL(url).catch(() => {
-      Alert.alert('WhatsApp', `Contacte-nous sur WhatsApp : ${SUPPORT_WHATSAPP}`);
+      Alert.alert(t('profile.help.whatsappAlertTitle'), t('profile.help.whatsappAlertBody', { phone: SUPPORT_WHATSAPP }));
     });
   }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!subject.trim() || !message.trim()) {
-      Alert.alert('Champs manquants', 'Remplis l\'objet et le message avant d\'envoyer.');
+      Alert.alert(t('profile.help.missingFieldsTitle'), t('profile.help.missingFieldsBody'));
       return;
     }
     if (message.trim().length < 20) {
-      Alert.alert('Message trop court', 'Décris ton problème en au moins 20 caractères.');
+      Alert.alert(t('profile.help.messageTooShortTitle'), t('profile.help.messageTooShortBody'));
       return;
     }
     setSending(true);
@@ -203,12 +136,13 @@ export default function HelpScreen() {
     setMessage('');
   }, [subject, message]);
 
+  const categoriesTranslated = t('profile.help.categories', { returnObjects: true });
   const CATEGORIES = [
-    { id: 'commande',   label: '🛒 Commande'   },
-    { id: 'paiement',   label: '💳 Paiement'   },
-    { id: 'livraison',  label: '🚴 Livraison'  },
-    { id: 'compte',     label: '👤 Compte'     },
-    { id: 'autre',      label: '💬 Autre'      },
+    { id: 'commande',   label: categoriesTranslated.commande   },
+    { id: 'paiement',   label: categoriesTranslated.paiement   },
+    { id: 'livraison',  label: categoriesTranslated.livraison  },
+    { id: 'compte',     label: categoriesTranslated.compte     },
+    { id: 'autre',      label: categoriesTranslated.autre      },
   ];
 
   return (
@@ -223,7 +157,7 @@ export default function HelpScreen() {
         >
           <Ionicons name="arrow-back" size={22} color="#111" />
         </Pressable>
-        <Text style={styles.topTitle}>Aide & Support</Text>
+        <Text style={styles.topTitle}>{t('profile.help.topTitle')}</Text>
         <View style={{ width: 42 }} />
       </View>
 
@@ -235,8 +169,8 @@ export default function HelpScreen() {
 
         {/* ── Contact rapide ── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Nous contacter</Text>
-          <Text style={styles.sectionSub}>{SUPPORT_HOURS}</Text>
+          <Text style={styles.sectionTitle}>{t('profile.help.contactTitle')}</Text>
+          <Text style={styles.sectionSub}>{t('profile.help.supportHours')}</Text>
 
           <View style={styles.contactRow}>
             <Pressable
@@ -246,8 +180,8 @@ export default function HelpScreen() {
               <View style={[styles.contactIcon, { backgroundColor: '#EEF4FF' }]}>
                 <Ionicons name="mail-outline" size={22} color="#245EA8" />
               </View>
-              <Text style={styles.contactLabel}>Email</Text>
-              <Text style={styles.contactSub}>24–48h</Text>
+              <Text style={styles.contactLabel}>{t('profile.help.emailLabel')}</Text>
+              <Text style={styles.contactSub}>{t('profile.help.emailSub')}</Text>
             </Pressable>
 
             <Pressable
@@ -257,8 +191,8 @@ export default function HelpScreen() {
               <View style={[styles.contactIcon, { backgroundColor: '#EDFAF1' }]}>
                 <Ionicons name="logo-whatsapp" size={22} color="#1F6F43" />
               </View>
-              <Text style={styles.contactLabel}>WhatsApp</Text>
-              <Text style={styles.contactSub}>Réponse rapide</Text>
+              <Text style={styles.contactLabel}>{t('profile.help.whatsappLabel')}</Text>
+              <Text style={styles.contactSub}>{t('profile.help.whatsappSub')}</Text>
             </Pressable>
 
             <Pressable
@@ -268,15 +202,15 @@ export default function HelpScreen() {
               <View style={[styles.contactIcon, { backgroundColor: '#FFF3D8' }]}>
                 <Ionicons name="construct-outline" size={22} color="#8A6500" />
               </View>
-              <Text style={styles.contactLabel}>Diagnostic</Text>
-              <Text style={styles.contactSub}>Technique</Text>
+              <Text style={styles.contactLabel}>{t('profile.help.diagnosticLabel')}</Text>
+              <Text style={styles.contactSub}>{t('profile.help.diagnosticSub')}</Text>
             </Pressable>
           </View>
         </View>
 
         {/* ── FAQ ── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Questions fréquentes</Text>
+          <Text style={styles.sectionTitle}>{t('profile.help.faqTitle')}</Text>
           <View style={styles.faqCard}>
             {faqs.map((item, i) => (
               <FaqItem key={i} item={item} isLast={i === faqs.length - 1} />
@@ -286,27 +220,25 @@ export default function HelpScreen() {
 
         {/* ── Formulaire réclamation ── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Réclamation ou signalement</Text>
+          <Text style={styles.sectionTitle}>{t('profile.help.claimTitle')}</Text>
 
           {sent ? (
             <View style={styles.sentBox}>
               <Ionicons name="checkmark-circle" size={40} color="#1F6F43" />
-              <Text style={styles.sentTitle}>Message envoyé ✅</Text>
-              <Text style={styles.sentText}>
-                Notre équipe te répondra sous 24–48h à l\'adresse email de ton compte.
-              </Text>
+              <Text style={styles.sentTitle}>{t('profile.help.sentTitle')}</Text>
+              <Text style={styles.sentText}>{t('profile.help.sentText')}</Text>
               <Pressable
                 style={styles.sentBtn}
                 onPress={() => setSent(false)}
               >
-                <Text style={styles.sentBtnText}>Envoyer un autre message</Text>
+                <Text style={styles.sentBtnText}>{t('profile.help.sendAnother')}</Text>
               </Pressable>
             </View>
           ) : (
             <View style={styles.formCard}>
 
               {/* Catégorie */}
-              <Text style={styles.label}>Catégorie</Text>
+              <Text style={styles.label}>{t('profile.help.categoryLabel')}</Text>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -326,23 +258,23 @@ export default function HelpScreen() {
               </ScrollView>
 
               {/* Objet */}
-              <Text style={styles.label}>Objet</Text>
+              <Text style={styles.label}>{t('profile.help.subjectLabel')}</Text>
               <TextInput
                 style={styles.input}
                 value={subject}
                 onChangeText={setSubject}
-                placeholder="Ex: Commande non reçue le 22/04"
+                placeholder={t('profile.help.subjectPlaceholder')}
                 placeholderTextColor="#AAA"
                 maxLength={100}
               />
 
               {/* Message */}
-              <Text style={styles.label}>Décris ton problème</Text>
+              <Text style={styles.label}>{t('profile.help.messageLabel')}</Text>
               <TextInput
                 style={[styles.input, styles.textarea]}
                 value={message}
                 onChangeText={setMessage}
-                placeholder="Décris le problème en détail : date, montant, numéro de commande si disponible..."
+                placeholder={t('profile.help.messagePlaceholder')}
                 placeholderTextColor="#AAA"
                 multiline
                 textAlignVertical="top"
@@ -360,11 +292,11 @@ export default function HelpScreen() {
                 disabled={sending || !subject.trim() || !message.trim()}
               >
                 {sending ? (
-                  <Text style={styles.submitText}>Envoi en cours...</Text>
+                  <Text style={styles.submitText}>{t('profile.help.sendingText')}</Text>
                 ) : (
                   <>
                     <Ionicons name="send" size={16} color="#111" />
-                    <Text style={styles.submitText}>Envoyer la réclamation</Text>
+                    <Text style={styles.submitText}>{t('profile.help.submitButton')}</Text>
                   </>
                 )}
               </Pressable>
@@ -374,9 +306,7 @@ export default function HelpScreen() {
 
         {/* ── Infos légales ── */}
         <View style={styles.legalRow}>
-          <Text style={styles.legalText}>
-            En nous contactant, tu acceptes que tes données soient traitées conformément à notre politique de confidentialité.
-          </Text>
+          <Text style={styles.legalText}>{t('profile.help.legalText')}</Text>
         </View>
 
       </ScrollView>

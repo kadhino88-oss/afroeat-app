@@ -141,7 +141,223 @@
   },
   "profile": {
     "language": "Language",
-    "languageSubtitle": "Choose the app language"
+    "languageSubtitle": "Choose the app language",
+    "address": {
+      "noAddress": "No address saved",
+      "title": "My addresses",
+      "subtitle": "Manage your main delivery address.",
+      "primaryAddressLabel": "Main address",
+      "infoText": "(Current version): advanced address management will be added on the premium backend."
+    },
+    "help": {
+      "topTitle": "Help & Support",
+      "contactTitle": "Contact us",
+      "supportHours": "Mon–Sun, 8am–10pm",
+      "emailLabel": "Email",
+      "emailSub": "24–48h",
+      "whatsappLabel": "WhatsApp",
+      "whatsappSub": "Quick reply",
+      "diagnosticLabel": "Diagnostics",
+      "diagnosticSub": "Technical",
+      "emailAlertTitle": "Email",
+      "emailAlertBody": "Contact us at: {{email}}",
+      "whatsappAlertTitle": "WhatsApp",
+      "whatsappAlertBody": "Contact us on WhatsApp: {{phone}}",
+      "faqTitle": "Frequently asked questions",
+      "claimTitle": "Complaint or report an issue",
+      "missingFieldsTitle": "Missing fields",
+      "missingFieldsBody": "Fill in the subject and message before sending.",
+      "messageTooShortTitle": "Message too short",
+      "messageTooShortBody": "Describe your issue in at least 20 characters.",
+      "sentTitle": "Message sent ✅",
+      "sentText": "Our team will reply within 24–48h to your account's email address.",
+      "sendAnother": "Send another message",
+      "categoryLabel": "Category",
+      "categories": {
+        "commande": "🛒 Order",
+        "paiement": "💳 Payment",
+        "livraison": "🚴 Delivery",
+        "compte": "👤 Account",
+        "autre": "💬 Other"
+      },
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "E.g.: Order not received on 04/22",
+      "messageLabel": "Describe your issue",
+      "messagePlaceholder": "Describe the issue in detail: date, amount, order number if available...",
+      "sendingText": "Sending...",
+      "submitButton": "Send the complaint",
+      "legalText": "By contacting us, you agree that your data will be processed in accordance with our privacy policy.",
+      "faqClient": [
+        {
+          "q": "How do I place an order?",
+          "a": "Open the Explore tab, choose a restaurant, add dishes to your cart, then tap \"Order\". Make sure you have a delivery address in your profile."
+        },
+        {
+          "q": "I haven't received my order, what should I do?",
+          "a": "First check the status in the Orders tab. If the order is marked \"delivered\" but you haven't received it, contact support immediately via this form."
+        },
+        {
+          "q": "How do I cancel an order?",
+          "a": "Cancellation is only possible within 2 minutes of ordering, as long as the restaurant hasn't accepted it yet. Go to Orders → your order → Cancel."
+        },
+        {
+          "q": "My card was charged but the order doesn't show up?",
+          "a": "It can take up to 5 minutes. If after 10 minutes the order still doesn't appear, contact support with the amount and time of the charge."
+        },
+        {
+          "q": "How do I change my delivery address?",
+          "a": "Go to Profile → My info → Address. You can edit the address before placing an order. Addresses cannot be changed after confirmation."
+        },
+        {
+          "q": "How do I get a refund?",
+          "a": "Refunds are processed within 3–5 business days. Use the complaint form below describing the issue. A photo proof may be requested."
+        },
+        {
+          "q": "Are displayed dishes available in real time?",
+          "a": "Yes, availability is updated by the restaurant. If a dish is marked unavailable when you order, the restaurant will contact you to offer a replacement."
+        },
+        {
+          "q": "How do I track my delivery?",
+          "a": "In the Orders tab, tap your ongoing order to see real-time status and the driver's position on the map."
+        }
+      ],
+      "faqRestaurant": [
+        {
+          "q": "How do I add dishes to my menu?",
+          "a": "From your Dashboard → Menu → Add a dish. You can enter the name, description, price, category and a photo."
+        },
+        {
+          "q": "How do I turn my restaurant on/off?",
+          "a": "In Restaurant Settings, the \"Open/Closed\" button changes your status in real time. Customers cannot order from a closed restaurant."
+        },
+        {
+          "q": "How do I see my statistics?",
+          "a": "The Analytics tab on your dashboard shows revenue, orders and best-selling dishes."
+        },
+        {
+          "q": "How do I receive my payments?",
+          "a": "Payments are transferred weekly to the bank account you provided at sign-up. Check your info in Settings → Payment."
+        }
+      ],
+      "faqLivreur": [
+        {
+          "q": "How do I start a delivery mission?",
+          "a": "Turn on your \"Available\" status in your driver dashboard. Available orders in your area will show up automatically."
+        },
+        {
+          "q": "How do I report a problem during a delivery?",
+          "a": "On the active mission page, tap \"Report a problem\". Describe the situation — our team will contact you quickly."
+        },
+        {
+          "q": "How do I see my earnings?",
+          "a": "Driver dashboard → Earnings tab. Payments are made weekly."
+        }
+      ]
+    },
+    "info": {
+      "notProvided": "Not provided",
+      "roleClient": "👤 Customer",
+      "roleRestaurant": "🍽️ Restaurant owner",
+      "roleLivreur": "🚴 Driver",
+      "roleAdmin": "🛡️ Administrator",
+      "permissionRequiredTitle": "Permission required",
+      "permissionRequiredBody": "Afroeat needs access to your gallery to change your profile photo.",
+      "cancel": "Cancel",
+      "settingsButton": "Settings",
+      "photoSourceTitle": "Profile photo",
+      "photoSourceMessage": "Choose a source",
+      "takePhoto": "📷 Take a photo",
+      "chooseGallery": "🖼️ Choose from gallery",
+      "photoUpdatedTitle": "✅ Photo updated",
+      "photoUpdatedBody": "Your profile photo has been saved.",
+      "uploadErrorTitle": "Upload error",
+      "uploadErrorFallback": "Unable to upload the photo. Please try again.",
+      "missingImageUrlError": "Missing image URL in the response.",
+      "pageTitle": "My information",
+      "avatarHint": "Tap the photo to change it",
+      "deliveryAddressLabel": "Delivery address",
+      "addressPlaceholder": "E.g.: 12 Acacia Street, Paris 75011",
+      "addressNotProvided": "Not provided — required to order",
+      "save": "Save",
+      "addressInvalidTitle": "Invalid address",
+      "addressInvalidBody": "Enter an address with at least 5 characters.",
+      "addressUpdatedTitle": "✅ Address updated",
+      "addressUpdatedBody": "Your delivery address has been saved.",
+      "addressSaveErrorFallback": "Unable to save the address.",
+      "fullNameLabel": "Full name",
+      "accountTypeLabel": "Account type",
+      "memberSinceLabel": "Member since",
+      "contactHint": "To change your name, email or phone, contact support from Help & Support."
+    },
+    "payment": {
+      "loaderText": "Loading payment method...",
+      "noPaymentMethod": "No payment method saved",
+      "connectionRequiredTitle": "Login required",
+      "connectionRequiredBody": "You need to be logged in.",
+      "fieldRequiredTitle": "Required field",
+      "holderNameInvalidBody": "The cardholder name is invalid.",
+      "cardTypeInvalidBody": "The card type is invalid.",
+      "cardInvalidTitle": "Invalid card",
+      "cardInvalidBody": "The last 4 digits of the card are required.",
+      "expiryInvalidTitle": "Invalid expiry",
+      "expiryInvalidBody": "The expiry date must be in MM/YY format.",
+      "successTitle": "Success",
+      "successBody": "The payment method has been saved.",
+      "saveErrorTitle": "Unable to save",
+      "saveErrorFallback": "Unable to save the information.",
+      "backAccessibilityLabel": "Back to profile",
+      "title": "Payments",
+      "subtitle": "Manage your AFROEAT customer payment method. This screen is ready for a future Stripe integration without breaking the customer flow.",
+      "preparationBadge": "Payment setup",
+      "paymentMethodLabel": "Payment method",
+      "expirationMeta": "Expiry {{expiry}}",
+      "noCardMeta": "No customer card saved yet.",
+      "holderNameLabel": "Cardholder name",
+      "cardTypeLabel": "Card type",
+      "cardTypePlaceholder": "Visa / Mastercard",
+      "last4Label": "Last 4 digits",
+      "expiryLabel": "Expiry",
+      "expiryPlaceholder": "MM/YY",
+      "saveAccessibilityLabel": "Save my payment method",
+      "saveButton": "Save my payment method",
+      "stripeReadyTitle": "Ready for Stripe",
+      "stripeReadyText1": "This version stores a clean customer structure on the profile side.",
+      "stripeReadyText2": "The Stripe integration can be added later without rebuilding the screen, routes, or customer logic."
+    },
+    "home": {
+      "loaderText": "Loading account...",
+      "defaultClientName": "AFROEAT Customer",
+      "sessionActive": "Session active",
+      "welcome": "Welcome {{name}}",
+      "heroSubtitle": "Find your personal space, preferences, orders and quick access in a dedicated premium customer area.",
+      "exploreButton": "Explore",
+      "myOrdersButton": "My orders",
+      "whyTitle": "Why AFROEAT",
+      "feature1Title": "Focused cuisine",
+      "feature1Text": "A real platform specialized in African cuisine.",
+      "feature2Title": "Premium structure",
+      "feature2Text": "Customer, restaurant, driver and admin cleanly separated.",
+      "feature3Title": "Scalable delivery",
+      "feature3Text": "Built for live tracking and real field operations.",
+      "feature4Title": "Global vision",
+      "feature4Text": "A foundation built for growth, branding and market leadership.",
+      "quickAccessTitle": "Quick access",
+      "quickRestaurantsTitle": "Restaurants",
+      "quickRestaurantsText": "Browse partners and their culinary worlds.",
+      "quickOrdersTitle": "My orders",
+      "quickOrdersText": "Track ongoing orders and history.",
+      "quickInfoTitle": "My information",
+      "quickInfoText": "Manage personal information and preferences.",
+      "quickAddressTitle": "Addresses",
+      "quickAddressText": "Manage saved delivery addresses.",
+      "quickPaymentTitle": "Payment",
+      "quickPaymentText": "Set up payment methods and prepare checkout.",
+      "quickHelpTitle": "Help",
+      "quickHelpText": "Get support and understand how AFROEAT works.",
+      "ctaTitle": "Your AFROEAT space is ready",
+      "ctaText": "Continue your journey, manage your preferences, prepare future orders, and enjoy a premium navigation built to evolve.",
+      "ctaButton": "Continue my experience"
+    }
   },
   "languages": {
     "fr": "Français",

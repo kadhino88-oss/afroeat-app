@@ -10,8 +10,10 @@ import {
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -76,7 +78,7 @@ const getDisplayName = (user) => {
     ) ||
     normalizeText(user?.firstName) ||
     normalizeText(user?.prenom) ||
-    'Client AFROEAT'
+    i18n.t('profile.home.defaultClientName')
   );
 };
 
@@ -119,6 +121,7 @@ const QuickCard = ({ icon, title, text, onPress }) => (
  */
 
 export default function ProfileHomeScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -140,7 +143,7 @@ export default function ProfileHomeScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement du compte...</Text>
+        <Text style={styles.loaderText}>{t('profile.home.loaderText')}</Text>
       </View>
     );
   }
@@ -223,16 +226,13 @@ export default function ProfileHomeScreen() {
                 size={14}
                 color="#1F6F43"
               />
-              <Text style={styles.connectedBadgeText}>Session active</Text>
+              <Text style={styles.connectedBadgeText}>{t('profile.home.sessionActive')}</Text>
             </View>
           </View>
 
-          <Text style={styles.heroTitle}>Bienvenue {displayName}</Text>
+          <Text style={styles.heroTitle}>{t('profile.home.welcome', { name: displayName })}</Text>
 
-          <Text style={styles.heroSubtitle}>
-            Retrouve ton espace personnel, tes préférences, tes commandes et tes
-            accès rapides dans un bloc client premium séparé.
-          </Text>
+          <Text style={styles.heroSubtitle}>{t('profile.home.heroSubtitle')}</Text>
 
           <View style={styles.heroActions}>
             <Pressable
@@ -243,7 +243,7 @@ export default function ProfileHomeScreen() {
               onPress={handleOpenRestaurants}
             >
               <Ionicons name="restaurant-outline" size={18} color="#111111" />
-              <Text style={styles.primaryButtonText}>Explorer</Text>
+              <Text style={styles.primaryButtonText}>{t('profile.home.exploreButton')}</Text>
             </Pressable>
 
             <Pressable
@@ -258,92 +258,89 @@ export default function ProfileHomeScreen() {
                 size={18}
                 color="#1E1E1E"
               />
-              <Text style={styles.secondaryButtonText}>Mes commandes</Text>
+              <Text style={styles.secondaryButtonText}>{t('profile.home.myOrdersButton')}</Text>
             </Pressable>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Pourquoi AFROEAT</Text>
+          <Text style={styles.sectionTitle}>{t('profile.home.whyTitle')}</Text>
 
           <View style={styles.featuresGrid}>
             <FeatureCard
               icon="silverware-fork-knife"
-              title="Cuisine ciblée"
-              text="Une vraie plateforme spécialisée dans l’univers africain."
+              title={t('profile.home.feature1Title')}
+              text={t('profile.home.feature1Text')}
             />
             <FeatureCard
               icon="shield-check-outline"
-              title="Structure premium"
-              text="Client, restaurant, livreur et admin séparés proprement."
+              title={t('profile.home.feature2Title')}
+              text={t('profile.home.feature2Text')}
             />
             <FeatureCard
               icon="truck-delivery-outline"
-              title="Livraison évolutive"
-              text="Pensée pour du tracking live et une vraie exploitation terrain."
+              title={t('profile.home.feature3Title')}
+              text={t('profile.home.feature3Text')}
             />
             <FeatureCard
               icon="earth"
-              title="Vision mondiale"
-              text="Une base faite pour la croissance, le branding et la domination marché."
+              title={t('profile.home.feature4Title')}
+              text={t('profile.home.feature4Text')}
             />
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Accès rapide</Text>
+          <Text style={styles.sectionTitle}>{t('profile.home.quickAccessTitle')}</Text>
 
           <View style={styles.quickList}>
             <QuickCard
               icon="storefront-outline"
-              title="Restaurants"
-              text="Parcourir les partenaires et leurs univers culinaires."
+              title={t('profile.home.quickRestaurantsTitle')}
+              text={t('profile.home.quickRestaurantsText')}
               onPress={handleOpenRestaurants}
             />
 
             <QuickCard
               icon="receipt-outline"
-              title="Mes commandes"
-              text="Suivre les commandes en cours et l’historique."
+              title={t('profile.home.quickOrdersTitle')}
+              text={t('profile.home.quickOrdersText')}
               onPress={handleOpenOrders}
             />
 
             <QuickCard
               icon="person-circle-outline"
-              title="Mes informations"
-              text="Gérer les informations personnelles et préférences."
+              title={t('profile.home.quickInfoTitle')}
+              text={t('profile.home.quickInfoText')}
               onPress={handleOpenProfileInfo}
             />
 
             <QuickCard
               icon="location-outline"
-              title="Adresses"
-              text="Gérer les adresses de livraison enregistrées."
+              title={t('profile.home.quickAddressTitle')}
+              text={t('profile.home.quickAddressText')}
               onPress={handleOpenAddress}
             />
 
             <QuickCard
               icon="card-outline"
-              title="Paiement"
-              text="Configurer les moyens de paiement et préparer le checkout."
+              title={t('profile.home.quickPaymentTitle')}
+              text={t('profile.home.quickPaymentText')}
               onPress={handleOpenPayment}
             />
 
             <QuickCard
               icon="help-circle-outline"
-              title="Aide"
-              text="Obtenir de l’assistance et comprendre le fonctionnement d’AFROEAT."
+              title={t('profile.home.quickHelpTitle')}
+              text={t('profile.home.quickHelpText')}
               onPress={handleOpenHelp}
             />
           </View>
         </View>
 
         <View style={styles.ctaCard}>
-          <Text style={styles.ctaTitle}>Ton espace AFROEAT est prêt</Text>
-          <Text style={styles.ctaText}>
-            Continue ton parcours, gère tes préférences, prépare les futures
-            commandes et profite d’une navigation premium conçue pour évoluer.
-          </Text>
+          <Text style={styles.ctaTitle}>{t('profile.home.ctaTitle')}</Text>
+          <Text style={styles.ctaText}>{t('profile.home.ctaText')}</Text>
 
           <Pressable
             style={({ pressed }) => [
@@ -353,7 +350,7 @@ export default function ProfileHomeScreen() {
             onPress={handleOpenOrders}
           >
             <Ionicons name="arrow-forward-outline" size={18} color="#111111" />
-            <Text style={styles.primaryButtonText}>Continuer mon expérience</Text>
+            <Text style={styles.primaryButtonText}>{t('profile.home.ctaButton')}</Text>
           </Pressable>
         </View>
       </ScrollView>

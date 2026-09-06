@@ -141,7 +141,223 @@
   },
   "profile": {
     "language": "Langue",
-    "languageSubtitle": "Choisis la langue de l'application"
+    "languageSubtitle": "Choisis la langue de l'application",
+    "address": {
+      "noAddress": "Aucune adresse enregistrée",
+      "title": "Mes adresses",
+      "subtitle": "Gère ton adresse de livraison principale.",
+      "primaryAddressLabel": "Adresse principale",
+      "infoText": "(Version actuelle) : la gestion avancée des adresses sera ajoutée côté backend premium."
+    },
+    "help": {
+      "topTitle": "Aide & Support",
+      "contactTitle": "Nous contacter",
+      "supportHours": "Lun–Dim, 8h–22h",
+      "emailLabel": "Email",
+      "emailSub": "24–48h",
+      "whatsappLabel": "WhatsApp",
+      "whatsappSub": "Réponse rapide",
+      "diagnosticLabel": "Diagnostic",
+      "diagnosticSub": "Technique",
+      "emailAlertTitle": "Email",
+      "emailAlertBody": "Contacte-nous à : {{email}}",
+      "whatsappAlertTitle": "WhatsApp",
+      "whatsappAlertBody": "Contacte-nous sur WhatsApp : {{phone}}",
+      "faqTitle": "Questions fréquentes",
+      "claimTitle": "Réclamation ou signalement",
+      "missingFieldsTitle": "Champs manquants",
+      "missingFieldsBody": "Remplis l'objet et le message avant d'envoyer.",
+      "messageTooShortTitle": "Message trop court",
+      "messageTooShortBody": "Décris ton problème en au moins 20 caractères.",
+      "sentTitle": "Message envoyé ✅",
+      "sentText": "Notre équipe te répondra sous 24–48h à l'adresse email de ton compte.",
+      "sendAnother": "Envoyer un autre message",
+      "categoryLabel": "Catégorie",
+      "categories": {
+        "commande": "🛒 Commande",
+        "paiement": "💳 Paiement",
+        "livraison": "🚴 Livraison",
+        "compte": "👤 Compte",
+        "autre": "💬 Autre"
+      },
+      "subjectLabel": "Objet",
+      "subjectPlaceholder": "Ex: Commande non reçue le 22/04",
+      "messageLabel": "Décris ton problème",
+      "messagePlaceholder": "Décris le problème en détail : date, montant, numéro de commande si disponible...",
+      "sendingText": "Envoi en cours...",
+      "submitButton": "Envoyer la réclamation",
+      "legalText": "En nous contactant, tu acceptes que tes données soient traitées conformément à notre politique de confidentialité.",
+      "faqClient": [
+        {
+          "q": "Comment passer une commande ?",
+          "a": "Ouvre l'onglet Explorer, choisis un restaurant, ajoute des plats au panier puis appuie sur \"Commander\". Assure-toi d'avoir une adresse de livraison dans ton profil."
+        },
+        {
+          "q": "Je n'ai pas reçu ma commande, que faire ?",
+          "a": "Vérifie d'abord le statut dans l'onglet Commandes. Si la commande est marquée \"livrée\" mais que tu ne l'as pas reçue, contacte le support immédiatement via ce formulaire."
+        },
+        {
+          "q": "Comment annuler une commande ?",
+          "a": "L'annulation est possible uniquement dans les 2 minutes suivant la commande, tant que le restaurant ne l'a pas acceptée. Rends-toi dans Commandes → ta commande → Annuler."
+        },
+        {
+          "q": "Ma carte bancaire a été débitée mais la commande n'apparaît pas ?",
+          "a": "Le délai peut aller jusqu'à 5 minutes. Si après 10 minutes la commande n'apparaît toujours pas, contacte le support en indiquant le montant et l'heure du débit."
+        },
+        {
+          "q": "Comment modifier mon adresse de livraison ?",
+          "a": "Va dans Profil → Mes informations → Adresse. Tu peux modifier l'adresse avant de passer commande. Les adresses ne peuvent pas être modifiées après validation."
+        },
+        {
+          "q": "Comment obtenir un remboursement ?",
+          "a": "Les remboursements sont traités sous 3–5 jours ouvrés. Utilise le formulaire de réclamation ci-dessous en décrivant le problème. Un justificatif photo peut être demandé."
+        },
+        {
+          "q": "Les plats affichés sont-ils disponibles en temps réel ?",
+          "a": "Oui, la disponibilité est mise à jour par le restaurant. Si un plat est marqué indisponible lors de ta commande, le restaurant te contactera pour proposer un remplacement."
+        },
+        {
+          "q": "Comment suivre ma livraison ?",
+          "a": "Dans l'onglet Commandes, appuie sur ta commande en cours pour voir le statut en temps réel et la position du livreur sur la carte."
+        }
+      ],
+      "faqRestaurant": [
+        {
+          "q": "Comment ajouter des plats à mon menu ?",
+          "a": "Depuis ton Dashboard → Menu → Ajouter un plat. Tu peux renseigner le nom, la description, le prix, la catégorie et une photo."
+        },
+        {
+          "q": "Comment activer/désactiver mon restaurant ?",
+          "a": "Dans Paramètres restaurant, le bouton \"Ouvert/Fermé\" change ton statut en temps réel. Les clients ne peuvent pas commander dans un restaurant fermé."
+        },
+        {
+          "q": "Comment voir mes statistiques ?",
+          "a": "L'onglet Analyses de ton dashboard affiche le chiffre d'affaires, les commandes et les plats les plus vendus."
+        },
+        {
+          "q": "Comment recevoir mes paiements ?",
+          "a": "Les paiements sont virés chaque semaine sur le compte bancaire renseigné lors de ton inscription. Vérifie tes informations dans Paramètres → Paiement."
+        }
+      ],
+      "faqLivreur": [
+        {
+          "q": "Comment démarrer une mission de livraison ?",
+          "a": "Active ton statut \"Disponible\" dans ton dashboard livreur. Les commandes disponibles dans ta zone s'afficheront automatiquement."
+        },
+        {
+          "q": "Comment déclarer un problème lors d'une livraison ?",
+          "a": "Sur la page de la mission active, appuie sur \"Signaler un problème\". Décris la situation — notre équipe te contactera rapidement."
+        },
+        {
+          "q": "Comment voir mes gains ?",
+          "a": "Dashboard livreur → Onglet Gains. Les paiements sont effectués chaque semaine."
+        }
+      ]
+    },
+    "info": {
+      "notProvided": "Non renseigné",
+      "roleClient": "👤 Client",
+      "roleRestaurant": "🍽️ Restaurateur",
+      "roleLivreur": "🚴 Livreur",
+      "roleAdmin": "🛡️ Administrateur",
+      "permissionRequiredTitle": "Permission requise",
+      "permissionRequiredBody": "Afroeat a besoin d'accéder à ta galerie pour modifier ta photo de profil.",
+      "cancel": "Annuler",
+      "settingsButton": "Paramètres",
+      "photoSourceTitle": "Photo de profil",
+      "photoSourceMessage": "Choisir une source",
+      "takePhoto": "📷 Prendre une photo",
+      "chooseGallery": "🖼️ Choisir dans la galerie",
+      "photoUpdatedTitle": "✅ Photo mise à jour",
+      "photoUpdatedBody": "Ta photo de profil a bien été enregistrée.",
+      "uploadErrorTitle": "Erreur upload",
+      "uploadErrorFallback": "Impossible de télécharger la photo. Réessaie.",
+      "missingImageUrlError": "URL image manquante dans la réponse.",
+      "pageTitle": "Mes informations",
+      "avatarHint": "Appuie sur la photo pour la modifier",
+      "deliveryAddressLabel": "Adresse de livraison",
+      "addressPlaceholder": "Ex: 12 rue des Acacias, Paris 75011",
+      "addressNotProvided": "Non renseignée — requis pour commander",
+      "save": "Enregistrer",
+      "addressInvalidTitle": "Adresse invalide",
+      "addressInvalidBody": "Saisis une adresse d'au moins 5 caractères.",
+      "addressUpdatedTitle": "✅ Adresse mise à jour",
+      "addressUpdatedBody": "Ton adresse de livraison a bien été enregistrée.",
+      "addressSaveErrorFallback": "Impossible de sauvegarder l'adresse.",
+      "fullNameLabel": "Nom complet",
+      "accountTypeLabel": "Type de compte",
+      "memberSinceLabel": "Membre depuis",
+      "contactHint": "Pour modifier ton nom, email ou téléphone, contacte le support depuis Aide & Support."
+    },
+    "payment": {
+      "loaderText": "Chargement du moyen de paiement...",
+      "noPaymentMethod": "Aucun moyen de paiement enregistré",
+      "connectionRequiredTitle": "Connexion requise",
+      "connectionRequiredBody": "Tu dois être connecté.",
+      "fieldRequiredTitle": "Champ requis",
+      "holderNameInvalidBody": "Le nom du titulaire est invalide.",
+      "cardTypeInvalidBody": "Le type de carte est invalide.",
+      "cardInvalidTitle": "Carte invalide",
+      "cardInvalidBody": "Les 4 derniers chiffres de la carte sont requis.",
+      "expiryInvalidTitle": "Expiration invalide",
+      "expiryInvalidBody": "La date d'expiration doit être au format MM/AA.",
+      "successTitle": "Succès",
+      "successBody": "Le moyen de paiement a bien été enregistré.",
+      "saveErrorTitle": "Enregistrement impossible",
+      "saveErrorFallback": "Impossible de sauvegarder les informations.",
+      "backAccessibilityLabel": "Retour au profil",
+      "title": "Paiements",
+      "subtitle": "Gère ton moyen de paiement client AFROEAT. Cet écran est prêt pour accueillir ensuite un branchement Stripe sans casser le bloc client.",
+      "preparationBadge": "Préparation paiement",
+      "paymentMethodLabel": "Moyen de paiement",
+      "expirationMeta": "Expiration {{expiry}}",
+      "noCardMeta": "Aucune carte client enregistrée pour le moment.",
+      "holderNameLabel": "Nom du titulaire",
+      "cardTypeLabel": "Type de carte",
+      "cardTypePlaceholder": "Visa / Mastercard",
+      "last4Label": "4 derniers chiffres",
+      "expiryLabel": "Expiration",
+      "expiryPlaceholder": "MM/AA",
+      "saveAccessibilityLabel": "Enregistrer mon moyen de paiement",
+      "saveButton": "Enregistrer mon moyen de paiement",
+      "stripeReadyTitle": "Structure prête pour Stripe",
+      "stripeReadyText1": "Cette version enregistre une structure client propre côté profil.",
+      "stripeReadyText2": "Le branchement Stripe pourra être ajouté ensuite sans refaire l'écran, les routes ou la logique du bloc client."
+    },
+    "home": {
+      "loaderText": "Chargement du compte...",
+      "defaultClientName": "Client AFROEAT",
+      "sessionActive": "Session active",
+      "welcome": "Bienvenue {{name}}",
+      "heroSubtitle": "Retrouve ton espace personnel, tes préférences, tes commandes et tes accès rapides dans un bloc client premium séparé.",
+      "exploreButton": "Explorer",
+      "myOrdersButton": "Mes commandes",
+      "whyTitle": "Pourquoi AFROEAT",
+      "feature1Title": "Cuisine ciblée",
+      "feature1Text": "Une vraie plateforme spécialisée dans l'univers africain.",
+      "feature2Title": "Structure premium",
+      "feature2Text": "Client, restaurant, livreur et admin séparés proprement.",
+      "feature3Title": "Livraison évolutive",
+      "feature3Text": "Pensée pour du tracking live et une vraie exploitation terrain.",
+      "feature4Title": "Vision mondiale",
+      "feature4Text": "Une base faite pour la croissance, le branding et la domination marché.",
+      "quickAccessTitle": "Accès rapide",
+      "quickRestaurantsTitle": "Restaurants",
+      "quickRestaurantsText": "Parcourir les partenaires et leurs univers culinaires.",
+      "quickOrdersTitle": "Mes commandes",
+      "quickOrdersText": "Suivre les commandes en cours et l'historique.",
+      "quickInfoTitle": "Mes informations",
+      "quickInfoText": "Gérer les informations personnelles et préférences.",
+      "quickAddressTitle": "Adresses",
+      "quickAddressText": "Gérer les adresses de livraison enregistrées.",
+      "quickPaymentTitle": "Paiement",
+      "quickPaymentText": "Configurer les moyens de paiement et préparer le checkout.",
+      "quickHelpTitle": "Aide",
+      "quickHelpText": "Obtenir de l'assistance et comprendre le fonctionnement d'AFROEAT.",
+      "ctaTitle": "Ton espace AFROEAT est prêt",
+      "ctaText": "Continue ton parcours, gère tes préférences, prépare les futures commandes et profite d'une navigation premium conçue pour évoluer.",
+      "ctaButton": "Continuer mon expérience"
+    }
   },
   "languages": {
     "fr": "Français",
