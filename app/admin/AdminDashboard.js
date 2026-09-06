@@ -19,6 +19,8 @@ import {
   getAdminDashboard,
   getAdminOpsOverview,
 } from '../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -63,6 +65,8 @@ const getAccountStatus = (user, auth) => {
   );
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateTime = (value) => {
   if (!value) return '—';
 
@@ -72,7 +76,7 @@ const formatDateTime = (value) => {
     return '—';
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -81,7 +85,7 @@ const formatDateTime = (value) => {
   });
 };
 
-const getHealthStyle = (status) => {
+const getHealthStyle = (status, t) => {
   const normalized = normalizeStatus(status);
 
   if (normalized === 'healthy') {
@@ -89,9 +93,9 @@ const getHealthStyle = (status) => {
       bg: '#E8F5ED',
       text: '#1F6F43',
       border: '#CFE8D8',
-      label: 'Healthy',
+      label: t('admin.dashboard.healthyLabel'),
       icon: 'checkmark-circle',
-      description: 'La plateforme fonctionne dans une zone stable.',
+      description: t('admin.dashboard.healthyDescription'),
     };
   }
 
@@ -100,9 +104,9 @@ const getHealthStyle = (status) => {
       bg: '#FFF3D8',
       text: '#8A6500',
       border: '#F4D89B',
-      label: 'Warning',
+      label: t('admin.dashboard.warningLabel'),
       icon: 'warning',
-      description: 'Quelques indicateurs demandent une vigilance renforcée.',
+      description: t('admin.dashboard.warningDescription'),
     };
   }
 
@@ -111,9 +115,9 @@ const getHealthStyle = (status) => {
       bg: '#FDECEC',
       text: '#B83232',
       border: '#F3C7C7',
-      label: 'Critical',
+      label: t('admin.dashboard.criticalLabel'),
       icon: 'alert-circle',
-      description: 'Des signaux critiques nécessitent une action rapide.',
+      description: t('admin.dashboard.criticalDescription'),
     };
   }
 
@@ -121,13 +125,13 @@ const getHealthStyle = (status) => {
     bg: '#F4F4F4',
     text: '#555555',
     border: '#E5E5E5',
-    label: 'Unknown',
+    label: t('admin.dashboard.unknownLabel'),
     icon: 'help-circle-outline',
-    description: 'État système non déterminé.',
+    description: t('admin.dashboard.unknownDescription'),
   };
 };
 
-const getFlagStyle = (level) => {
+const getFlagStyle = (level, t) => {
   const normalized = normalizeStatus(level);
 
   if (normalized === 'critical') {
@@ -136,7 +140,7 @@ const getFlagStyle = (level) => {
       text: '#B83232',
       border: '#F3C7C7',
       icon: 'alert-circle',
-      label: 'Critique',
+      label: t('admin.dashboard.flagCriticalLabel'),
     };
   }
 
@@ -146,7 +150,7 @@ const getFlagStyle = (level) => {
       text: '#8A6500',
       border: '#F4D89B',
       icon: 'warning',
-      label: 'Alerte',
+      label: t('admin.dashboard.flagWarningLabel'),
     };
   }
 
@@ -155,7 +159,7 @@ const getFlagStyle = (level) => {
     text: '#334155',
     border: '#D9E0F2',
     icon: 'information-circle',
-    label: 'Info',
+    label: t('admin.dashboard.flagInfoLabel'),
   };
 };
 
@@ -197,143 +201,143 @@ const normalizeOpsPayload = (payload) => {
   };
 };
 
-const buildQuickStats = ({ users = {}, restaurants = {}, orders = {}, ops = {} }) => [
+const buildQuickStats = ({ users = {}, restaurants = {}, orders = {}, ops = {} }, t) => [
   {
     key: 'users-total',
-    label: 'Utilisateurs',
+    label: t('admin.common.usersTitle'),
     value: normalizeNumber(users.total),
     icon: 'people-outline',
     tint: '#1F6F43',
   },
   {
     key: 'restaurants-total',
-    label: 'Restaurants',
+    label: t('admin.common.restaurantsTitle'),
     value: normalizeNumber(restaurants.total),
     icon: 'storefront-outline',
     tint: '#8A6500',
   },
   {
     key: 'drivers-total',
-    label: 'Livreurs',
+    label: t('admin.common.driversTitle'),
     value: normalizeNumber(users.drivers),
     icon: 'bicycle-outline',
     tint: '#7C3AED',
   },
   {
     key: 'orders-total',
-    label: 'Commandes',
+    label: t('admin.common.ordersTitle'),
     value: normalizeNumber(orders.total),
     icon: 'receipt-outline',
     tint: '#B45309',
   },
   {
     key: 'users-active',
-    label: 'Comptes actifs',
+    label: t('admin.dashboard.activeAccountsLabel'),
     value: normalizeNumber(users.active),
     icon: 'checkmark-done-outline',
     tint: '#15803D',
   },
   {
     key: 'orders-unassigned',
-    label: 'Sans livreur',
+    label: t('admin.dashboard.unassignedLabel'),
     value: normalizeNumber(ops?.orders?.unassignedOrders),
     icon: 'alert-circle-outline',
     tint: '#B83232',
   },
 ];
 
-const buildUserStats = (users = {}) => [
-  { key: 'users-active', label: 'Actifs', value: normalizeNumber(users.active) },
-  { key: 'users-pending', label: 'En attente', value: normalizeNumber(users.pending) },
-  { key: 'users-suspended', label: 'Suspendus', value: normalizeNumber(users.suspended) },
-  { key: 'users-admins', label: 'Admins', value: normalizeNumber(users.admins) },
-  { key: 'users-clients', label: 'Clients', value: normalizeNumber(users.clients) },
-  { key: 'users-restaurants', label: 'Comptes resto', value: normalizeNumber(users.restaurants) },
+const buildUserStats = (users = {}, t) => [
+  { key: 'users-active', label: t('admin.dashboard.activeLabel'), value: normalizeNumber(users.active) },
+  { key: 'users-pending', label: t('admin.dashboard.pendingLabel'), value: normalizeNumber(users.pending) },
+  { key: 'users-suspended', label: t('admin.dashboard.suspendedLabel'), value: normalizeNumber(users.suspended) },
+  { key: 'users-admins', label: t('admin.dashboard.adminsLabel'), value: normalizeNumber(users.admins) },
+  { key: 'users-clients', label: t('admin.dashboard.clientsLabel'), value: normalizeNumber(users.clients) },
+  { key: 'users-restaurants', label: t('admin.dashboard.restaurantAccountsLabel'), value: normalizeNumber(users.restaurants) },
 ];
 
-const buildOrderStats = (orders = {}, ops = {}) => [
-  { key: 'orders-pending', label: 'En attente', value: normalizeNumber(orders.pending) },
-  { key: 'orders-delivering', label: 'En livraison', value: normalizeNumber(orders.delivering) },
-  { key: 'orders-delivered', label: 'Livrées', value: normalizeNumber(orders.delivered) },
-  { key: 'orders-cancelled', label: 'Annulées', value: normalizeNumber(orders.cancelled) },
-  { key: 'orders-unassigned', label: 'Sans livreur', value: normalizeNumber(ops?.orders?.unassignedOrders) },
-  { key: 'orders-unpaid', label: 'Impayées', value: normalizeNumber(ops?.orders?.unpaidOrders) },
+const buildOrderStats = (orders = {}, ops = {}, t) => [
+  { key: 'orders-pending', label: t('admin.dashboard.pendingLabel'), value: normalizeNumber(orders.pending) },
+  { key: 'orders-delivering', label: t('order.status.on_the_way'), value: normalizeNumber(orders.delivering) },
+  { key: 'orders-delivered', label: t('order.status.delivered'), value: normalizeNumber(orders.delivered) },
+  { key: 'orders-cancelled', label: t('order.status.cancelled'), value: normalizeNumber(orders.cancelled) },
+  { key: 'orders-unassigned', label: t('admin.dashboard.unassignedLabel'), value: normalizeNumber(ops?.orders?.unassignedOrders) },
+  { key: 'orders-unpaid', label: t('admin.dashboard.unpaidLabel'), value: normalizeNumber(ops?.orders?.unpaidOrders) },
 ];
 
-const buildOpsHighlights = (ops = {}) => [
+const buildOpsHighlights = (ops = {}, t) => [
   {
     key: 'ops-new-users',
-    label: 'Nouveaux comptes (7j)',
+    label: t('admin.dashboard.newAccounts7dLabel'),
     value: normalizeNumber(ops?.entities?.newUsers7d),
     icon: 'person-add-outline',
   },
   {
     key: 'ops-new-restaurants',
-    label: 'Nouveaux restaurants (7j)',
+    label: t('admin.dashboard.newRestaurants7dLabel'),
     value: normalizeNumber(ops?.entities?.newRestaurants7d),
     icon: 'add-circle-outline',
   },
   {
     key: 'ops-new-orders-24h',
-    label: 'Nouvelles commandes (24h)',
+    label: t('admin.dashboard.newOrders24hLabel'),
     value: normalizeNumber(ops?.orders?.newOrders24h),
     icon: 'time-outline',
   },
   {
     key: 'ops-audit-24h',
-    label: 'Logs admin (24h)',
+    label: t('admin.dashboard.adminLogs24hLabel'),
     value: normalizeNumber(ops?.audit?.recentAuditLogs24h),
     icon: 'document-text-outline',
   },
 ];
 
-const navigationItems = [
+const buildNavigationItems = (t) => [
   {
     key: 'hub',
-    title: 'Hub admin',
-    text: 'Entrée centrale du bloc admin.',
+    title: t('admin.dashboard.navHubTitle'),
+    text: t('admin.dashboard.navHubText'),
     icon: <Ionicons name="grid-outline" size={22} color="#1F6F43" />,
     route: '/admin',
   },
   {
     key: 'users',
-    title: 'Utilisateurs',
-    text: 'Voir, filtrer et gérer tous les comptes.',
+    title: t('admin.common.usersTitle'),
+    text: t('admin.dashboard.navUsersText'),
     icon: <Ionicons name="people-outline" size={22} color="#1F6F43" />,
     route: '/admin/users',
   },
   {
     key: 'restaurants',
-    title: 'Restaurants',
-    text: 'Superviser les partenaires restaurants.',
+    title: t('admin.common.restaurantsTitle'),
+    text: t('admin.dashboard.navRestaurantsText'),
     icon: <Ionicons name="storefront-outline" size={22} color="#1F6F43" />,
     route: '/admin/restaurants',
   },
   {
     key: 'drivers',
-    title: 'Livreurs',
-    text: 'Contrôler l’activité et les statuts livreurs.',
+    title: t('admin.common.driversTitle'),
+    text: t('admin.dashboard.navDriversText'),
     icon: <Ionicons name="bicycle-outline" size={22} color="#1F6F43" />,
     route: '/admin/drivers',
   },
   {
     key: 'orders',
-    title: 'Commandes',
-    text: 'Voir le flux complet des commandes.',
+    title: t('admin.common.ordersTitle'),
+    text: t('admin.dashboard.navOrdersText'),
     icon: <Ionicons name="receipt-outline" size={22} color="#1F6F43" />,
     route: '/admin/orders',
   },
   {
     key: 'audit-logs',
-    title: 'Audit Logs',
-    text: 'Tracer les actions sensibles de l’administration.',
+    title: t('admin.dashboard.navAuditTitle'),
+    text: t('admin.dashboard.navAuditText'),
     icon: <Ionicons name="document-text-outline" size={22} color="#1F6F43" />,
     route: '/admin/audit-logs',
   },
   {
     key: 'live-ops',
-    title: 'Live Ops / Health',
-    text: 'Surveiller l’état opérationnel de la plateforme.',
+    title: t('admin.dashboard.navLiveOpsTitle'),
+    text: t('admin.dashboard.navLiveOpsText'),
     icon: (
       <MaterialCommunityIcons
         name="chart-timeline-variant"
@@ -345,8 +349,8 @@ const navigationItems = [
   },
   {
     key: 'analytics',
-    title: 'Analytics',
-    text: 'Lire la performance business et les signaux de croissance.',
+    title: t('admin.dashboard.navAnalyticsTitle'),
+    text: t('admin.dashboard.navAnalyticsText'),
     icon: <Ionicons name="stats-chart-outline" size={22} color="#1F6F43" />,
     route: '/admin/analytics',
   },
@@ -401,6 +405,7 @@ const HighlightCard = ({ label, value, iconName }) => (
  */
 
 export default function AdminDashboardScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const token = auth.token;
@@ -456,21 +461,21 @@ export default function AdminDashboardScreen() {
         console.log('Erreur dashboard admin :', error);
 
         const message =
-          error?.message || 'Impossible de charger le dashboard admin.';
+          error?.message || t('admin.dashboard.fetchErrorFallback');
 
         setErrorMessage(message);
         setDashboard(null);
         setOps(null);
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
         setRefreshing(false);
       }
     },
-    [hasValidSession, token, currentRole]
+    [hasValidSession, token, currentRole, t]
   );
 
   useFocusEffect(
@@ -485,18 +490,19 @@ export default function AdminDashboardScreen() {
   const system = ops?.system || {};
 
   const healthStyle = useMemo(
-    () => getHealthStyle(system?.healthStatus),
-    [system]
+    () => getHealthStyle(system?.healthStatus, t),
+    [system, t]
   );
 
   const quickStats = useMemo(
-    () => buildQuickStats({ users, restaurants, orders, ops }),
-    [users, restaurants, orders, ops]
+    () => buildQuickStats({ users, restaurants, orders, ops }, t),
+    [users, restaurants, orders, ops, t]
   );
 
-  const userStats = useMemo(() => buildUserStats(users), [users]);
-  const orderStats = useMemo(() => buildOrderStats(orders, ops), [orders, ops]);
-  const opsHighlights = useMemo(() => buildOpsHighlights(ops), [ops]);
+  const userStats = useMemo(() => buildUserStats(users, t), [users, t]);
+  const orderStats = useMemo(() => buildOrderStats(orders, ops, t), [orders, ops, t]);
+  const opsHighlights = useMemo(() => buildOpsHighlights(ops, t), [ops, t]);
+  const navItems = useMemo(() => buildNavigationItems(t), [t]);
   const healthFlags = Array.isArray(system?.flags) ? system.flags : [];
 
   /**
@@ -510,7 +516,7 @@ export default function AdminDashboardScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement du centre admin...</Text>
+        <Text style={styles.loaderText}>{t('admin.dashboard.loaderText')}</Text>
       </View>
     );
   }
@@ -557,9 +563,9 @@ export default function AdminDashboardScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
-          <Text style={styles.emptyTitle}>Dashboard indisponible</Text>
+          <Text style={styles.emptyTitle}>{t('admin.dashboard.emptyTitle')}</Text>
           <Text style={styles.emptyText}>
-            {errorMessage || 'Impossible de charger les données du centre admin.'}
+            {errorMessage || t('admin.dashboard.emptyTextFallback')}
           </Text>
 
           <Pressable
@@ -575,7 +581,7 @@ export default function AdminDashboardScreen() {
             ) : (
               <>
                 <Ionicons name="refresh-outline" size={18} color="#FFFFFF" />
-                <Text style={styles.retryButtonText}>Réessayer</Text>
+                <Text style={styles.retryButtonText}>{t('restaurant.retry')}</Text>
               </>
             )}
           </Pressable>
@@ -612,7 +618,7 @@ export default function AdminDashboardScreen() {
                 size={14}
                 color="#1F6F43"
               />
-              <Text style={styles.adminPillText}>Zone sécurisée admin</Text>
+              <Text style={styles.adminPillText}>{t('admin.dashboard.securePillText')}</Text>
             </View>
           </View>
 
@@ -634,27 +640,25 @@ export default function AdminDashboardScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Admin</Text>
-          <Text style={styles.title}>Centre de contrôle</Text>
+          <Text style={styles.eyebrow}>{t('admin.dashboard.eyebrow')}</Text>
+          <Text style={styles.title}>{t('admin.dashboard.title')}</Text>
           <Text style={styles.subtitle}>
-            Pilote les utilisateurs, partenaires, livreurs, commandes et l’état
-            global de la plateforme.
+            {t('admin.dashboard.subtitle')}
           </Text>
         </View>
 
         <View style={styles.heroCard}>
           <View style={styles.heroLeft}>
-            <Text style={styles.heroTitle}>Vue d’ensemble opérationnelle</Text>
+            <Text style={styles.heroTitle}>{t('admin.dashboard.heroTitle')}</Text>
             <Text style={styles.heroText}>
-              Un espace central pour surveiller AFROEAT, contrôler les comptes,
-              anticiper les incidents et sécuriser l’exploitation.
+              {t('admin.dashboard.heroText')}
             </Text>
 
             <View style={styles.heroMetaRow}>
               <View style={styles.heroMetaItem}>
                 <Ionicons name="time-outline" size={15} color="#7A7268" />
                 <Text style={styles.heroMetaText}>
-                  Généré le {formatDateTime(system?.generatedAt)}
+                  {t('admin.dashboard.generatedOnLabel', { date: formatDateTime(system?.generatedAt) })}
                 </Text>
               </View>
             </View>
@@ -689,7 +693,7 @@ export default function AdminDashboardScreen() {
             <View style={styles.healthCardTitleWrap}>
               <Ionicons name={healthStyle.icon} size={18} color={healthStyle.text} />
               <Text style={[styles.healthCardTitle, { color: healthStyle.text }]}>
-                État système : {healthStyle.label}
+                {t('admin.dashboard.systemStateLabel', { label: healthStyle.label })}
               </Text>
             </View>
           </View>
@@ -698,11 +702,11 @@ export default function AdminDashboardScreen() {
           </Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Alertes de supervision</Text>
+        <Text style={styles.sectionTitle}>{t('admin.dashboard.alertsSectionTitle')}</Text>
         {healthFlags.length > 0 ? (
           <View style={styles.flagList}>
             {healthFlags.map((flag, index) => {
-              const flagStyle = getFlagStyle(flag?.level);
+              const flagStyle = getFlagStyle(flag?.level, t);
 
               return (
                 <View
@@ -733,7 +737,7 @@ export default function AdminDashboardScreen() {
                   </View>
 
                   <Text style={[styles.flagMessage, { color: flagStyle.text }]}>
-                    {normalizeText(flag?.message, 'Signal opérationnel détecté.')}
+                    {normalizeText(flag?.message, t('admin.dashboard.flagMessageFallback'))}
                   </Text>
                 </View>
               );
@@ -747,12 +751,12 @@ export default function AdminDashboardScreen() {
               color="#1F6F43"
             />
             <Text style={styles.cleanStateText}>
-              Aucun signal critique remonté pour le moment.
+              {t('admin.dashboard.noSignalText')}
             </Text>
           </View>
         )}
 
-        <Text style={styles.sectionTitle}>Indicateurs plateforme</Text>
+        <Text style={styles.sectionTitle}>{t('admin.dashboard.platformIndicatorsTitle')}</Text>
         <View style={styles.grid}>
           {quickStats.map((item) => (
             <StatCard
@@ -765,7 +769,7 @@ export default function AdminDashboardScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Utilisateurs</Text>
+        <Text style={styles.sectionTitle}>{t('admin.common.usersTitle')}</Text>
         <View style={styles.compactGrid}>
           {userStats.map((item) => (
             <CompactStatCard
@@ -776,7 +780,7 @@ export default function AdminDashboardScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Commandes</Text>
+        <Text style={styles.sectionTitle}>{t('admin.common.ordersTitle')}</Text>
         <View style={styles.compactGrid}>
           {orderStats.map((item) => (
             <CompactStatCard
@@ -787,7 +791,7 @@ export default function AdminDashboardScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Highlights ops</Text>
+        <Text style={styles.sectionTitle}>{t('admin.dashboard.opsHighlightsTitle')}</Text>
         <View style={styles.highlightGrid}>
           {opsHighlights.map((item) => (
             <HighlightCard
@@ -799,9 +803,9 @@ export default function AdminDashboardScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Navigation admin</Text>
+        <Text style={styles.sectionTitle}>{t('admin.dashboard.adminNavTitle')}</Text>
         <View style={styles.navList}>
-          {navigationItems.map((item) => (
+          {navItems.map((item) => (
             <Pressable
               key={item.key}
               style={({ pressed }) => [
