@@ -1352,6 +1352,36 @@
       "driverNameFallback": "Repartidor Afroeat",
       "fetchErrorFallback": "Error de carga",
       "updateStatusErrorFallback": "No se pudo modificar el estado"
+    },
+    "orders": {
+      "fetchErrorFallback": "No se pudieron cargar los pedidos.",
+      "loaderText": "Cargando pedidos...",
+      "restrictedTitle": "Acceso reservado a administradores",
+      "restrictedText": "Inicia sesión con una cuenta de administrador.",
+      "subtitle": "Supervisa todos los pedidos de la plataforma, los pagos, los flujos de entrega y las situaciones críticas.",
+      "controlCenterTitle": "Orders Control Center",
+      "controlCenterText": "Este módulo es la base premium de supervisión de AFROEAT: flujo de pedidos, entrega en vivo, pagos sensibles y control operativo en tiempo real.",
+      "statUnpaidLabel": "Impagos",
+      "liveTripsQuickText": "Detecta pedidos en entrega y los flujos de campo.",
+      "sensitivePaymentsQuickTitle": "Pagos sensibles",
+      "sensitivePaymentsQuickText": "Filtra al instante los pedidos impagos.",
+      "statusFilterTitle": "Estado del pedido",
+      "paymentFilterTitle": "Pago",
+      "statusFilterQuoteFragment": " estado \"{{status}}\"",
+      "paymentFilterQuoteFragment": " • pago \"{{payment}}\"",
+      "restaurantNameFallback": "Restaurante Afroeat",
+      "customerLabel": "Cliente: {{name}}",
+      "driverLabel": "Repartidor: {{name}}",
+      "driverUnassignedLabel": "Repartidor: sin asignar",
+      "createdOnLabel": "Creado el: {{date}}",
+      "addressLabel": "Dirección: {{address}}",
+      "itemCountLabel": "{{count}} artículo(s)",
+      "emptyTitle": "No se encontró ningún pedido",
+      "emptyText": "Prueba con otro filtro o recarga la página.",
+      "invalidOrderAlert": "Pedido no válido.",
+      "paymentPaidLabel": "Pagado",
+      "paymentUnpaidLabel": "Impago",
+      "paymentRefundedLabel": "Reembolsado"
     }
   }
 }

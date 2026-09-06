@@ -15,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getAdminOrders } from '../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 const STATUS_FILTERS = [
   'Toutes',
@@ -70,6 +72,30 @@ const formatPrice = (value, currency = 'EUR') => {
   return `${amount.toFixed(2)} €`;
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
+const ORDER_STATUS_SLUG = {
+  'En attente': 'order.status.pending',
+  'Confirmée': 'order.status.confirmed',
+  'En préparation': 'order.status.preparing',
+  'En livraison': 'order.status.on_the_way',
+  'Livrée': 'order.status.delivered',
+  'Annulée': 'order.status.cancelled',
+};
+
+const getStatusFilterLabel = (item, t) => {
+  if (item === 'Toutes') return t('livraison.filtersAll');
+  const key = ORDER_STATUS_SLUG[item];
+  return key ? t(key) : item;
+};
+
+const getPaymentFilterLabel = (item, t) => {
+  if (item === 'Tous') return t('admin.users.allFilterLabel');
+  if (item === 'paid' || item === 'Payé') return t('admin.orders.paymentPaidLabel');
+  if (item === 'unpaid' || item === 'Non payé') return t('admin.orders.paymentUnpaidLabel');
+  return item;
+};
+
 const formatDateValue = (value) => {
   if (!value) return '—';
 
@@ -79,7 +105,7 @@ const formatDateValue = (value) => {
     return '—';
   }
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -87,15 +113,15 @@ const formatDateValue = (value) => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -105,22 +131,22 @@ const formatDateTime = (value) => {
   });
 };
 
-const getPaymentLabel = (value) => {
+const getPaymentLabel = (value, t) => {
   const normalized = normalizeText(value).toLowerCase();
 
   if (normalized === 'paid' || normalized === 'payé') {
-    return 'Payé';
+    return t('admin.orders.paymentPaidLabel');
   }
 
   if (normalized === 'unpaid' || normalized === 'non payé') {
-    return 'Non payé';
+    return t('admin.orders.paymentUnpaidLabel');
   }
 
   if (normalized === 'refunded' || normalized === 'remboursé') {
-    return 'Remboursé';
+    return t('admin.orders.paymentRefundedLabel');
   }
 
-  return normalizeText(value, 'Inconnu');
+  return normalizeText(value, t('admin.users.statusUnknownLabel'));
 };
 
 const getPaymentStyle = (value) => {
@@ -226,7 +252,7 @@ const normalizeOrder = (order) => {
     ),
     restaurantName: normalizeText(
       restaurant?.name || order?.restaurantName,
-      'Restaurant Afroeat'
+      i18n.t('admin.orders.restaurantNameFallback')
     ),
     restaurantCuisine: normalizeText(restaurant?.cuisine),
     customerName: normalizeText(customer?.name || customer?.fullName),
@@ -267,6 +293,7 @@ const QuickActionCard = ({ iconName, tint, title, text, onPress }) => (
  */
 
 export default function AdminOrdersScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const token = auth.token;
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -379,7 +406,7 @@ export default function AdminOrdersScreen() {
         console.log('Erreur admin orders :', error);
 
         const message =
-          error?.message || 'Impossible de charger les commandes.';
+          error?.message || t('admin.orders.fetchErrorFallback');
 
         setErrorMessage(message);
 
@@ -389,7 +416,7 @@ export default function AdminOrdersScreen() {
         }
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -403,6 +430,7 @@ export default function AdminOrdersScreen() {
       resolvedStatusFilter,
       resolvedPaymentFilter,
       resetPagination,
+      t,
     ]
   );
 
@@ -445,11 +473,11 @@ export default function AdminOrdersScreen() {
 
   const liveRefreshLabel = useMemo(() => {
     if (!lastLiveRefresh) {
-      return 'En attente du premier refresh live';
+      return t('admin.ops.liveRefreshWaiting');
     }
 
-    return `Dernier refresh live : ${formatDateTime(lastLiveRefresh)}`;
-  }, [lastLiveRefresh]);
+    return t('admin.ops.liveRefreshLabel', { date: formatDateTime(lastLiveRefresh) });
+  }, [lastLiveRefresh, t]);
 
   const handleResetFilters = useCallback(() => {
     setActiveStatus('Toutes');
@@ -458,7 +486,7 @@ export default function AdminOrdersScreen() {
 
   const openOrderDetails = useCallback((item) => {
     if (!item?._id) {
-      Alert.alert('Erreur', 'Commande invalide.');
+      Alert.alert(t('common.error'), t('admin.orders.invalidOrderAlert'));
       return;
     }
 
@@ -466,7 +494,7 @@ export default function AdminOrdersScreen() {
       pathname: '/admin/orders-details/[id]',
       params: { id: item._id },
     });
-  }, []);
+  }, [t]);
 
   /**
    * =========================================================
@@ -479,7 +507,7 @@ export default function AdminOrdersScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement des commandes...</Text>
+        <Text style={styles.loaderText}>{t('admin.orders.loaderText')}</Text>
       </View>
     );
   }
@@ -494,9 +522,9 @@ export default function AdminOrdersScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="shield-outline" size={54} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Accès réservé à l’admin</Text>
+          <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
           <Text style={styles.emptyText}>
-            Connecte-toi avec un compte administrateur.
+            {t('admin.orders.restrictedText')}
           </Text>
         </View>
       </FadeInView>
@@ -551,11 +579,10 @@ export default function AdminOrdersScreen() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Admin</Text>
-              <Text style={styles.title}>Commandes</Text>
+              <Text style={styles.eyebrow}>{t('admin.dashboard.eyebrow')}</Text>
+              <Text style={styles.title}>{t('admin.common.ordersTitle')}</Text>
               <Text style={styles.subtitle}>
-                Supervise toutes les commandes de la plateforme, les paiements,
-                les flux de livraison et les situations critiques.
+                {t('admin.orders.subtitle')}
               </Text>
             </View>
 
@@ -563,7 +590,7 @@ export default function AdminOrdersScreen() {
               <View style={styles.liveMonitorHeader}>
                 <View style={styles.liveMonitorTitleWrap}>
                   <Ionicons name="radio-outline" size={18} color="#245EA8" />
-                  <Text style={styles.liveMonitorTitle}>Orders Control Center</Text>
+                  <Text style={styles.liveMonitorTitle}>{t('admin.orders.controlCenterTitle')}</Text>
                 </View>
 
                 <View style={styles.liveBadge}>
@@ -572,9 +599,7 @@ export default function AdminOrdersScreen() {
               </View>
 
               <Text style={styles.liveMonitorText}>
-                Ce module est la base premium de supervision AFROEAT :
-                flux commandes, livraison live, paiements sensibles et contrôle
-                opérationnel en temps réel.
+                {t('admin.orders.controlCenterText')}
               </Text>
 
               <Text style={styles.liveMonitorSubText}>{liveRefreshLabel}</Text>
@@ -582,37 +607,37 @@ export default function AdminOrdersScreen() {
 
             <View style={styles.statsRow}>
               <StatCard
-                label="Total"
+                label={t('admin.users.statTotalLabel')}
                 value={stats.total}
                 iconName="receipt-outline"
                 tint="#1F6F43"
               />
               <StatCard
-                label="En attente"
+                label={t('admin.dashboard.pendingLabel')}
                 value={stats.pending}
                 iconName="time-outline"
                 tint="#D96C2D"
               />
               <StatCard
-                label="En livraison"
+                label={t('order.status.on_the_way')}
                 value={stats.delivering}
                 iconName="bicycle-outline"
                 tint="#245EA8"
               />
               <StatCard
-                label="Livrées"
+                label={t('order.status.delivered')}
                 value={stats.delivered}
                 iconName="checkmark-circle-outline"
                 tint="#1F6F43"
               />
               <StatCard
-                label="Non payées"
+                label={t('admin.orders.statUnpaidLabel')}
                 value={stats.unpaid}
                 iconName="card-outline"
                 tint="#B83232"
               />
               <StatCard
-                label="Sans livreur"
+                label={t('admin.dashboard.unassignedLabel')}
                 value={stats.unassigned}
                 iconName="person-remove-outline"
                 tint="#7C3AED"
@@ -623,20 +648,20 @@ export default function AdminOrdersScreen() {
               <QuickActionCard
                 iconName="bicycle-outline"
                 tint="#245EA8"
-                title="Courses live"
-                text="Repère les commandes en livraison et les flux terrain."
+                title={t('admin.ops.liveTripsLabel')}
+                text={t('admin.orders.liveTripsQuickText')}
                 onPress={() => setActiveStatus('En livraison')}
               />
               <QuickActionCard
                 iconName="card-outline"
                 tint="#B83232"
-                title="Paiements sensibles"
-                text="Filtre immédiatement les commandes non payées."
+                title={t('admin.orders.sensitivePaymentsQuickTitle')}
+                text={t('admin.orders.sensitivePaymentsQuickText')}
                 onPress={() => setActivePaymentStatus('Non payé')}
               />
             </View>
 
-            <Text style={styles.filterTitle}>Statut de commande</Text>
+            <Text style={styles.filterTitle}>{t('admin.orders.statusFilterTitle')}</Text>
             <FlatList
               data={STATUS_FILTERS}
               horizontal
@@ -657,14 +682,14 @@ export default function AdminOrdersScreen() {
                         isActive && styles.filterChipTextActive,
                       ]}
                     >
-                      {item}
+                      {getStatusFilterLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
               }}
             />
 
-            <Text style={styles.filterTitle}>Paiement</Text>
+            <Text style={styles.filterTitle}>{t('admin.orders.paymentFilterTitle')}</Text>
             <FlatList
               data={PAYMENT_FILTERS}
               horizontal
@@ -685,11 +710,7 @@ export default function AdminOrdersScreen() {
                         isActive && styles.filterChipTextActive,
                       ]}
                     >
-                      {item === 'paid'
-                        ? 'Payé'
-                        : item === 'unpaid'
-                        ? 'Non payé'
-                        : item}
+                      {getPaymentFilterLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
@@ -701,18 +722,18 @@ export default function AdminOrdersScreen() {
                 style={styles.applyButton}
                 onPress={() => fetchOrders(true, false)}
               >
-                <Text style={styles.applyButtonText}>Appliquer</Text>
+                <Text style={styles.applyButtonText}>{t('admin.restaurants.applyButton')}</Text>
               </Pressable>
 
               <Pressable style={styles.resetButton} onPress={handleResetFilters}>
                 <Ionicons name="refresh-circle-outline" size={16} color="#555" />
-                <Text style={styles.resetButtonText}>Réinitialiser</Text>
+                <Text style={styles.resetButtonText}>{t('admin.users.resetButton')}</Text>
               </Pressable>
             </View>
 
             <View style={styles.resultsCard}>
               <View style={styles.resultsTopRow}>
-                <Text style={styles.resultsTitle}>Résultats</Text>
+                <Text style={styles.resultsTitle}>{t('admin.users.resultsTitle')}</Text>
                 <Text style={styles.resultsCount}>
                   {normalizeNumber(pagination.count, orders.length)} /{' '}
                   {normalizeNumber(pagination.total, orders.length)}
@@ -720,21 +741,25 @@ export default function AdminOrdersScreen() {
               </View>
 
               <Text style={styles.resultsText}>
-                Page {normalizeNumber(pagination.page, 1)} sur{' '}
-                {Math.max(normalizeNumber(pagination.pages, 1), 1)}
+                {t('admin.users.resultsPageLabel', {
+                  page: normalizeNumber(pagination.page, 1),
+                  pages: Math.max(normalizeNumber(pagination.pages, 1), 1),
+                })}
               </Text>
 
               {hasActiveFilters ? (
                 <Text style={styles.resultsFiltersText}>
-                  Filtres actifs :
-                  {resolvedStatusFilter ? ` statut "${resolvedStatusFilter}"` : ''}
+                  {t('admin.users.activeFiltersPrefix')}
+                  {resolvedStatusFilter
+                    ? t('admin.orders.statusFilterQuoteFragment', { status: getStatusFilterLabel(resolvedStatusFilter, t) })
+                    : ''}
                   {resolvedPaymentFilter
-                    ? ` • paiement "${getPaymentLabel(resolvedPaymentFilter)}"`
+                    ? t('admin.orders.paymentFilterQuoteFragment', { payment: getPaymentLabel(resolvedPaymentFilter, t) })
                     : ''}
                 </Text>
               ) : (
                 <Text style={styles.resultsFiltersText}>
-                  Aucun filtre actif.
+                  {t('admin.users.noActiveFiltersText')}
                 </Text>
               )}
             </View>
@@ -761,38 +786,38 @@ export default function AdminOrdersScreen() {
               <View style={styles.cardTopRow}>
                 <View style={styles.cardLeft}>
                   <Text style={styles.cardTitle}>
-                    {normalizeText(item?.restaurantName, 'Restaurant Afroeat')}
+                    {normalizeText(item?.restaurantName, t('admin.orders.restaurantNameFallback'))}
                   </Text>
 
                   <Text style={styles.cardMeta}>
-                    Commande #{orderCode || '------'}
+                    {t('livraison.history.orderReference', { ref: orderCode || '------' })}
                   </Text>
 
                   {!!normalizeText(item?.customerName) && (
                     <Text style={styles.cardMeta}>
-                      Client : {normalizeText(item?.customerName)}
+                      {t('admin.orders.customerLabel', { name: normalizeText(item?.customerName) })}
                     </Text>
                   )}
 
                   {hasDriver ? (
                     <Text style={styles.cardMeta}>
-                      Livreur : {normalizeText(item?.driverName)}
+                      {t('admin.orders.driverLabel', { name: normalizeText(item?.driverName) })}
                     </Text>
                   ) : (
                     <Text style={[styles.cardMeta, styles.cardMetaAlert]}>
-                      Livreur : non assigné
+                      {t('admin.orders.driverUnassignedLabel')}
                     </Text>
                   )}
 
                   {!!item?.createdAt && (
                     <Text style={styles.cardMeta}>
-                      Créée le : {formatDateValue(item?.createdAt)}
+                      {t('admin.orders.createdOnLabel', { date: formatDateValue(item?.createdAt) })}
                     </Text>
                   )}
 
                   {!!item?.deliveryAddress && (
                     <Text style={styles.cardMeta} numberOfLines={2}>
-                      Adresse : {normalizeText(item?.deliveryAddress)}
+                      {t('admin.orders.addressLabel', { address: normalizeText(item?.deliveryAddress) })}
                     </Text>
                   )}
                 </View>
@@ -808,7 +833,7 @@ export default function AdminOrdersScreen() {
                   <Text
                     style={[styles.statusBadgeText, { color: statusStyle.text }]}
                   >
-                    {normalizeText(item?.status, 'En attente')}
+                    {t(ORDER_STATUS_SLUG[item?.status] || 'order.status.pending')}
                   </Text>
                 </View>
               </View>
@@ -835,7 +860,7 @@ export default function AdminOrdersScreen() {
                       { color: paymentStyle.text },
                     ]}
                   >
-                    {getPaymentLabel(item?.paymentStatus)}
+                    {getPaymentLabel(item?.paymentStatus, t)}
                   </Text>
                 </View>
 
@@ -852,7 +877,7 @@ export default function AdminOrdersScreen() {
                   <View style={styles.metaBadge}>
                     <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
                     <Text style={styles.metaBadgeText}>
-                      {normalizeNumber(item?.itemCount)} article(s)
+                      {t('admin.orders.itemCountLabel', { count: normalizeNumber(item?.itemCount) })}
                     </Text>
                   </View>
                 )}
@@ -861,7 +886,7 @@ export default function AdminOrdersScreen() {
               <View style={styles.footerRow}>
                 <View style={styles.footerBadge}>
                   <Ionicons name="eye-outline" size={15} color="#1F6F43" />
-                  <Text style={styles.footerBadgeText}>Voir le détail</Text>
+                  <Text style={styles.footerBadgeText}>{t('admin.users.viewDetailsButton')}</Text>
                 </View>
 
                 <Ionicons name="chevron-forward" size={18} color="#777" />
@@ -872,9 +897,9 @@ export default function AdminOrdersScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="receipt-outline" size={54} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>Aucune commande trouvée</Text>
+            <Text style={styles.emptyTitle}>{t('admin.orders.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Essaie avec un autre filtre ou recharge la page.
+              {t('admin.orders.emptyText')}
             </Text>
           </View>
         }

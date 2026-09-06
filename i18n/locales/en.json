@@ -1352,6 +1352,36 @@
       "driverNameFallback": "Afroeat Driver",
       "fetchErrorFallback": "Loading error",
       "updateStatusErrorFallback": "Unable to change the status"
+    },
+    "orders": {
+      "fetchErrorFallback": "Unable to load orders.",
+      "loaderText": "Loading orders...",
+      "restrictedTitle": "Restricted to admins",
+      "restrictedText": "Sign in with an administrator account.",
+      "subtitle": "Oversee all platform orders, payments, delivery flows, and critical situations.",
+      "controlCenterTitle": "Orders Control Center",
+      "controlCenterText": "This module is AFROEAT's premium supervision base: order flow, live delivery, sensitive payments, and real-time operational control.",
+      "statUnpaidLabel": "Unpaid",
+      "liveTripsQuickText": "Spot orders in delivery and field flows.",
+      "sensitivePaymentsQuickTitle": "Sensitive payments",
+      "sensitivePaymentsQuickText": "Instantly filter unpaid orders.",
+      "statusFilterTitle": "Order status",
+      "paymentFilterTitle": "Payment",
+      "statusFilterQuoteFragment": " status \"{{status}}\"",
+      "paymentFilterQuoteFragment": " • payment \"{{payment}}\"",
+      "restaurantNameFallback": "Afroeat Restaurant",
+      "customerLabel": "Customer: {{name}}",
+      "driverLabel": "Driver: {{name}}",
+      "driverUnassignedLabel": "Driver: unassigned",
+      "createdOnLabel": "Created on: {{date}}",
+      "addressLabel": "Address: {{address}}",
+      "itemCountLabel": "{{count}} item(s)",
+      "emptyTitle": "No order found",
+      "emptyText": "Try a different filter or reload the page.",
+      "invalidOrderAlert": "Invalid order.",
+      "paymentPaidLabel": "Paid",
+      "paymentUnpaidLabel": "Unpaid",
+      "paymentRefundedLabel": "Refunded"
     }
   }
 }

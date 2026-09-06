@@ -1352,6 +1352,36 @@
       "driverNameFallback": "Afroeat-Fahrer",
       "fetchErrorFallback": "Ladefehler",
       "updateStatusErrorFallback": "Der Status konnte nicht geändert werden"
+    },
+    "orders": {
+      "fetchErrorFallback": "Bestellungen konnten nicht geladen werden.",
+      "loaderText": "Bestellungen werden geladen...",
+      "restrictedTitle": "Nur für Admins",
+      "restrictedText": "Melde dich mit einem Administratorkonto an.",
+      "subtitle": "Überwache alle Bestellungen der Plattform, Zahlungen, Lieferabläufe und kritische Situationen.",
+      "controlCenterTitle": "Orders Control Center",
+      "controlCenterText": "Dieses Modul ist die Premium-Überwachungsbasis von AFROEAT: Bestellfluss, Live-Lieferung, sensible Zahlungen und operative Echtzeitkontrolle.",
+      "statUnpaidLabel": "Unbezahlt",
+      "liveTripsQuickText": "Erkenne Bestellungen in Lieferung und Feldabläufe.",
+      "sensitivePaymentsQuickTitle": "Sensible Zahlungen",
+      "sensitivePaymentsQuickText": "Filtere sofort unbezahlte Bestellungen.",
+      "statusFilterTitle": "Bestellstatus",
+      "paymentFilterTitle": "Zahlung",
+      "statusFilterQuoteFragment": " Status \"{{status}}\"",
+      "paymentFilterQuoteFragment": " • Zahlung \"{{payment}}\"",
+      "restaurantNameFallback": "Afroeat-Restaurant",
+      "customerLabel": "Kunde: {{name}}",
+      "driverLabel": "Fahrer: {{name}}",
+      "driverUnassignedLabel": "Fahrer: nicht zugewiesen",
+      "createdOnLabel": "Erstellt am: {{date}}",
+      "addressLabel": "Adresse: {{address}}",
+      "itemCountLabel": "{{count}} Artikel",
+      "emptyTitle": "Keine Bestellung gefunden",
+      "emptyText": "Versuche einen anderen Filter oder lade die Seite neu.",
+      "invalidOrderAlert": "Ungültige Bestellung.",
+      "paymentPaidLabel": "Bezahlt",
+      "paymentUnpaidLabel": "Unbezahlt",
+      "paymentRefundedLabel": "Erstattet"
     }
   }
 }

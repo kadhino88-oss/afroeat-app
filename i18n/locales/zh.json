@@ -1352,6 +1352,36 @@
       "driverNameFallback": "Afroeat 配送员",
       "fetchErrorFallback": "加载错误",
       "updateStatusErrorFallback": "无法修改状态"
+    },
+    "orders": {
+      "fetchErrorFallback": "无法加载订单。",
+      "loaderText": "正在加载订单...",
+      "restrictedTitle": "仅限管理员访问",
+      "restrictedText": "请使用管理员账户登录。",
+      "subtitle": "监督平台上的所有订单、支付、配送流程以及关键情况。",
+      "controlCenterTitle": "订单控制中心",
+      "controlCenterText": "该模块是 AFROEAT 高级监管的基础：订单流程、实时配送、敏感支付及实时运营控制。",
+      "statUnpaidLabel": "未支付",
+      "liveTripsQuickText": "识别正在配送的订单和现场流程。",
+      "sensitivePaymentsQuickTitle": "敏感支付",
+      "sensitivePaymentsQuickText": "立即筛选未支付的订单。",
+      "statusFilterTitle": "订单状态",
+      "paymentFilterTitle": "支付",
+      "statusFilterQuoteFragment": " 状态 \"{{status}}\"",
+      "paymentFilterQuoteFragment": " • 支付 \"{{payment}}\"",
+      "restaurantNameFallback": "Afroeat 餐厅",
+      "customerLabel": "客户：{{name}}",
+      "driverLabel": "配送员：{{name}}",
+      "driverUnassignedLabel": "配送员：未分配",
+      "createdOnLabel": "创建于：{{date}}",
+      "addressLabel": "地址：{{address}}",
+      "itemCountLabel": "{{count}} 件商品",
+      "emptyTitle": "未找到订单",
+      "emptyText": "请尝试其他筛选条件或重新加载页面。",
+      "invalidOrderAlert": "无效订单。",
+      "paymentPaidLabel": "已支付",
+      "paymentUnpaidLabel": "未支付",
+      "paymentRefundedLabel": "已退款"
     }
   }
 }
