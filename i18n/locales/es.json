@@ -1347,6 +1347,11 @@
       "emptyTitle": "No se encontró ningún restaurante",
       "emptyText": "Prueba con otra búsqueda o recarga la página.",
       "invalidRestaurantAlert": "Restaurante no válido."
+    },
+    "drivers": {
+      "driverNameFallback": "Repartidor Afroeat",
+      "fetchErrorFallback": "Error de carga",
+      "updateStatusErrorFallback": "No se pudo modificar el estado"
     }
   }
 }

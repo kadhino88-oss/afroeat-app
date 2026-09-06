@@ -1347,6 +1347,11 @@
       "emptyTitle": "Nessun ristorante trovato",
       "emptyText": "Prova con un'altra ricerca o ricarica la pagina.",
       "invalidRestaurantAlert": "Ristorante non valido."
+    },
+    "drivers": {
+      "driverNameFallback": "Fattorino Afroeat",
+      "fetchErrorFallback": "Errore di caricamento",
+      "updateStatusErrorFallback": "Impossibile modificare lo stato"
     }
   }
 }

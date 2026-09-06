@@ -1347,6 +1347,11 @@
       "emptyTitle": "未找到餐厅",
       "emptyText": "请尝试其他搜索条件或重新加载页面。",
       "invalidRestaurantAlert": "无效的餐厅。"
+    },
+    "drivers": {
+      "driverNameFallback": "Afroeat 配送员",
+      "fetchErrorFallback": "加载错误",
+      "updateStatusErrorFallback": "无法修改状态"
     }
   }
 }

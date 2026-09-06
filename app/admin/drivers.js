@@ -20,6 +20,8 @@ import {
   getAdminDrivers,
   updateAdminUserStatus,
 } from '../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -71,12 +73,14 @@ const isAdminRole = (role) =>
 const isDriverRole = (role) =>
   ['livreur', 'driver', 'delivery'].includes(role);
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateValue = (value) => {
   if (!value) return '—';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '—';
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -84,25 +88,25 @@ const formatDateValue = (value) => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return 'Date indisponible';
+  if (Number.isNaN(date.getTime())) return i18n.t('admin.ops.dateUnavailable');
 
-  return date.toLocaleString('fr-FR');
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR');
 };
 
-const getStatusStyle = (status) => {
+const getStatusStyle = (status, t) => {
   switch (String(status).toLowerCase()) {
     case 'active':
-      return { bg: '#E8F5ED', text: '#1F6F43', label: 'Actif', icon: 'checkmark-circle-outline' };
+      return { bg: '#E8F5ED', text: '#1F6F43', label: t('admin.users.statusActiveLabel'), icon: 'checkmark-circle-outline' };
     case 'suspended':
-      return { bg: '#FDECEC', text: '#B83232', label: 'Suspendu', icon: 'ban-outline' };
+      return { bg: '#FDECEC', text: '#B83232', label: t('admin.users.statusSuspendedLabel'), icon: 'ban-outline' };
     case 'pending_verification':
-      return { bg: '#FFF3D8', text: '#8A6500', label: 'En attente', icon: 'time-outline' };
+      return { bg: '#FFF3D8', text: '#8A6500', label: t('admin.users.statusPendingLabel'), icon: 'time-outline' };
     case 'rejected':
-      return { bg: '#EFE9FF', text: '#6D4CDB', label: 'Refusé', icon: 'close-circle-outline' };
+      return { bg: '#EFE9FF', text: '#6D4CDB', label: t('admin.users.statusRejectedLabel'), icon: 'close-circle-outline' };
     default:
-      return { bg: '#F4F4F4', text: '#555', label: 'Inconnu', icon: 'help-circle-outline' };
+      return { bg: '#F4F4F4', text: '#555', label: t('admin.users.statusUnknownLabel'), icon: 'help-circle-outline' };
   }
 };
 
@@ -120,7 +124,7 @@ const normalizeDriver = (driver) => {
     name: normalizeText(
       driver.name ||
         `${normalizeText(driver.firstName)} ${normalizeText(driver.lastName)}`.trim(),
-      'Livreur Afroeat'
+      i18n.t('admin.drivers.driverNameFallback')
     ),
     email: normalizeText(driver.email),
     phone: normalizeText(driver.phone),
@@ -147,6 +151,7 @@ const normalizeDriver = (driver) => {
  */
 
 export default function AdminDriversScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const token = auth.token;
@@ -208,14 +213,14 @@ export default function AdminDriversScreen() {
         });
       } catch (error) {
         console.log(error);
-        setErrorMessage(error?.message || 'Erreur chargement');
+        setErrorMessage(error?.message || t('admin.drivers.fetchErrorFallback'));
       } finally {
         setLoading(false);
         setRefreshing(false);
         setInitialLoaded(true);
       }
     },
-    [token, search, activeStatus, canAccess]
+    [token, search, activeStatus, canAccess, t]
   );
 
   useFocusEffect(useCallback(() => { fetchDrivers(); }, [fetchDrivers]));
@@ -246,11 +251,11 @@ export default function AdminDriversScreen() {
         )
       );
     } catch (e) {
-      Alert.alert('Erreur', 'Impossible de modifier le statut');
+      Alert.alert(t('common.error'), t('admin.drivers.updateStatusErrorFallback'));
     } finally {
       setUpdatingDriverId(null);
     }
-  }, [token]);
+  }, [token, t]);
 
   /**
    * =========================================================
@@ -290,7 +295,7 @@ export default function AdminDriversScreen() {
           />
         }
         renderItem={({ item }) => {
-          const status = getStatusStyle(item.accountStatus);
+          const status = getStatusStyle(item.accountStatus, t);
 
           return (
             <View style={styles.card}>
@@ -304,8 +309,8 @@ export default function AdminDriversScreen() {
               <Pressable onPress={() => toggleStatus(item)}>
                 <Text style={styles.action}>
                   {item.accountStatus === 'suspended'
-                    ? 'Réactiver'
-                    : 'Suspendre'}
+                    ? t('admin.users.reactivateButton')
+                    : t('admin.users.suspendButton')}
                 </Text>
               </Pressable>
             </View>

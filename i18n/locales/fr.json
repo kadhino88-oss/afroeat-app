@@ -1347,6 +1347,11 @@
       "emptyTitle": "Aucun restaurant trouvé",
       "emptyText": "Essaie avec une autre recherche ou recharge la page.",
       "invalidRestaurantAlert": "Restaurant invalide."
+    },
+    "drivers": {
+      "driverNameFallback": "Livreur Afroeat",
+      "fetchErrorFallback": "Erreur chargement",
+      "updateStatusErrorFallback": "Impossible de modifier le statut"
     }
   }
 }

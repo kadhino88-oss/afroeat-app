@@ -1347,6 +1347,11 @@
       "emptyTitle": "No restaurant found",
       "emptyText": "Try a different search or reload the page.",
       "invalidRestaurantAlert": "Invalid restaurant."
+    },
+    "drivers": {
+      "driverNameFallback": "Afroeat Driver",
+      "fetchErrorFallback": "Loading error",
+      "updateStatusErrorFallback": "Unable to change the status"
     }
   }
 }
