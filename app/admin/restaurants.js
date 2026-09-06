@@ -17,6 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getAdminRestaurants } from '../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -76,6 +78,8 @@ const getAccountStatus = (user, auth) => {
   );
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateValue = (value) => {
   if (!value) return '—';
 
@@ -85,7 +89,7 @@ const formatDateValue = (value) => {
     return '—';
   }
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -93,15 +97,15 @@ const formatDateValue = (value) => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -111,15 +115,15 @@ const formatDateTime = (value) => {
   });
 };
 
-const getSortLabel = (value) => {
+const getSortLabel = (value, t) => {
   switch (value) {
     case 'oldest':
-      return 'Plus anciens';
+      return t('admin.users.sortOldestLabel');
     case 'name':
-      return 'Nom';
+      return t('admin.users.sortNameLabel');
     case 'recent':
     default:
-      return 'Plus récents';
+      return t('admin.users.sortRecentLabel');
   }
 };
 
@@ -149,8 +153,8 @@ const normalizeRestaurant = (item) => {
     ...item,
     _id: item?._id || item?.id || null,
     id: item?.id || item?._id || null,
-    name: normalizeText(item?.name, 'Restaurant'),
-    cuisine: normalizeText(item?.cuisine, 'Cuisine non définie'),
+    name: normalizeText(item?.name, i18n.t('restaurant.menuScreen.restaurantNameFallback')),
+    cuisine: normalizeText(item?.cuisine, i18n.t('admin.restaurants.cuisineUndefinedFallback')),
     address: normalizeText(item?.address),
     city: normalizeText(item?.city || item?.addressCity),
     country: normalizeText(item?.country || item?.addressCountry),
@@ -238,6 +242,7 @@ const QuickActionCard = ({ iconName, tint, title, text, onPress }) => (
  */
 
 export default function AdminRestaurantsScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const token = auth.token;
@@ -324,7 +329,7 @@ export default function AdminRestaurantsScreen() {
         console.log('Erreur admin restaurants :', error);
 
         const message =
-          error?.message || 'Impossible de charger les restaurants.';
+          error?.message || t('admin.restaurants.fetchErrorFallback');
 
         setErrorMessage(message);
 
@@ -334,7 +339,7 @@ export default function AdminRestaurantsScreen() {
         }
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -342,7 +347,7 @@ export default function AdminRestaurantsScreen() {
         setInitialLoaded(true);
       }
     },
-    [canAccess, token, search, sort]
+    [canAccess, token, search, sort, t]
   );
 
   useFocusEffect(
@@ -380,11 +385,11 @@ export default function AdminRestaurantsScreen() {
 
   const liveRefreshLabel = useMemo(() => {
     if (!lastLiveRefresh) {
-      return 'En attente du premier refresh live';
+      return t('admin.ops.liveRefreshWaiting');
     }
 
-    return `Dernier refresh live : ${formatDateTime(lastLiveRefresh)}`;
-  }, [lastLiveRefresh]);
+    return t('admin.ops.liveRefreshLabel', { date: formatDateTime(lastLiveRefresh) });
+  }, [lastLiveRefresh, t]);
 
   const handleApplyFilters = useCallback(() => {
     setSearch(normalizeText(draftSearch));
@@ -398,7 +403,7 @@ export default function AdminRestaurantsScreen() {
 
   const openRestaurantDetails = useCallback((item) => {
     if (!item?._id) {
-      Alert.alert('Erreur', 'Restaurant invalide.');
+      Alert.alert(t('common.error'), t('admin.restaurants.invalidRestaurantAlert'));
       return;
     }
 
@@ -406,7 +411,7 @@ export default function AdminRestaurantsScreen() {
       pathname: '/admin/restaurant-details/[id]',
       params: { id: item._id },
     });
-  }, []);
+  }, [t]);
 
   /**
    * =========================================================
@@ -419,7 +424,7 @@ export default function AdminRestaurantsScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement des restaurants...</Text>
+        <Text style={styles.loaderText}>{t('admin.restaurants.loaderText')}</Text>
       </View>
     );
   }
@@ -502,11 +507,10 @@ export default function AdminRestaurantsScreen() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Admin</Text>
-              <Text style={styles.title}>Restaurants</Text>
+              <Text style={styles.eyebrow}>{t('admin.dashboard.eyebrow')}</Text>
+              <Text style={styles.title}>{t('admin.common.restaurantsTitle')}</Text>
               <Text style={styles.subtitle}>
-                Consulte, filtre et supervise tous les établissements partenaires,
-                leur conformité commerciale et leur qualité d’exploitation.
+                {t('admin.restaurants.subtitle')}
               </Text>
             </View>
 
@@ -515,7 +519,7 @@ export default function AdminRestaurantsScreen() {
                 <View style={styles.liveMonitorTitleWrap}>
                   <Ionicons name="radio-outline" size={18} color="#245EA8" />
                   <Text style={styles.liveMonitorTitle}>
-                    Restaurant Control Center
+                    {t('admin.restaurants.controlCenterTitle')}
                   </Text>
                 </View>
 
@@ -525,9 +529,7 @@ export default function AdminRestaurantsScreen() {
               </View>
 
               <Text style={styles.liveMonitorText}>
-                Cette vue admin est la base premium AFROEAT pour superviser les
-                restaurants, les owners, la couverture catalogue, la qualité des
-                fiches et la structure business.
+                {t('admin.restaurants.controlCenterText')}
               </Text>
 
               <Text style={styles.liveMonitorSubText}>{liveRefreshLabel}</Text>
@@ -535,37 +537,37 @@ export default function AdminRestaurantsScreen() {
 
             <View style={styles.statsRow}>
               <StatCard
-                label="Total"
+                label={t('admin.users.statTotalLabel')}
                 value={stats.total}
                 iconName="storefront-outline"
                 tint="#1F6F43"
               />
               <StatCard
-                label="Avec owner"
+                label={t('admin.restaurants.statWithOwnerLabel')}
                 value={stats.withOwner}
                 iconName="person-outline"
                 tint="#245EA8"
               />
               <StatCard
-                label="Avec adresse"
+                label={t('admin.restaurants.statWithAddressLabel')}
                 value={stats.withAddress}
                 iconName="location-outline"
                 tint="#D96C2D"
               />
               <StatCard
-                label="Avec cuisine"
+                label={t('admin.restaurants.statWithCuisineLabel')}
                 value={stats.withCuisine}
                 iconName="restaurant-outline"
                 tint="#8A6500"
               />
               <StatCard
-                label="Ouverts"
+                label={t('admin.restaurants.statOpenLabel')}
                 value={stats.open}
                 iconName="checkmark-circle-outline"
                 tint="#1F6F43"
               />
               <StatCard
-                label="Mis en avant"
+                label={t('admin.restaurants.statFeaturedLabel')}
                 value={stats.featured}
                 iconName="flash-outline"
                 tint="#7C3AED"
@@ -576,15 +578,15 @@ export default function AdminRestaurantsScreen() {
               <QuickActionCard
                 iconName="star-outline"
                 tint="#7C3AED"
-                title="Premium shortlist"
-                text="Trie par nom pour un contrôle rapide de la vitrine restaurants."
+                title={t('admin.restaurants.premiumShortlistTitle')}
+                text={t('admin.restaurants.premiumShortlistText')}
                 onPress={() => setSort('name')}
               />
               <QuickActionCard
                 iconName="search-outline"
                 tint="#245EA8"
-                title="Audit rapide"
-                text="Lance une recherche ciblée owner, cuisine, ville ou adresse."
+                title={t('admin.restaurants.quickAuditTitle')}
+                text={t('admin.restaurants.quickAuditText')}
                 onPress={handleApplyFilters}
               />
             </View>
@@ -598,7 +600,7 @@ export default function AdminRestaurantsScreen() {
               />
               <TextInput
                 style={styles.searchInput}
-                placeholder="Rechercher nom, cuisine, ville, adresse..."
+                placeholder={t('admin.restaurants.searchPlaceholder')}
                 placeholderTextColor="#888"
                 value={draftSearch}
                 onChangeText={setDraftSearch}
@@ -617,7 +619,7 @@ export default function AdminRestaurantsScreen() {
               ) : null}
             </View>
 
-            <Text style={styles.filterTitle}>Tri</Text>
+            <Text style={styles.filterTitle}>{t('admin.users.sortFilterTitle')}</Text>
             <FlatList
               data={SORT_OPTIONS}
               horizontal
@@ -641,7 +643,7 @@ export default function AdminRestaurantsScreen() {
                         isActive && styles.filterChipTextActive,
                       ]}
                     >
-                      {getSortLabel(item)}
+                      {getSortLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
@@ -650,7 +652,7 @@ export default function AdminRestaurantsScreen() {
 
             <View style={styles.actionsRow}>
               <Pressable style={styles.applyButton} onPress={handleApplyFilters}>
-                <Text style={styles.applyButtonText}>Appliquer</Text>
+                <Text style={styles.applyButtonText}>{t('admin.restaurants.applyButton')}</Text>
               </Pressable>
 
               <Pressable style={styles.resetButton} onPress={handleResetFilters}>
@@ -659,13 +661,13 @@ export default function AdminRestaurantsScreen() {
                   size={16}
                   color="#555"
                 />
-                <Text style={styles.resetButtonText}>Réinitialiser</Text>
+                <Text style={styles.resetButtonText}>{t('admin.users.resetButton')}</Text>
               </Pressable>
             </View>
 
             <View style={styles.resultsCard}>
               <View style={styles.resultsTopRow}>
-                <Text style={styles.resultsTitle}>Résultats</Text>
+                <Text style={styles.resultsTitle}>{t('admin.users.resultsTitle')}</Text>
                 <Text style={styles.resultsCount}>
                   {normalizeNumber(pagination.count, restaurants.length)} /{' '}
                   {normalizeNumber(pagination.total, restaurants.length)}
@@ -673,19 +675,21 @@ export default function AdminRestaurantsScreen() {
               </View>
 
               <Text style={styles.resultsText}>
-                Page {normalizeNumber(pagination.page, 1)} sur{' '}
-                {Math.max(normalizeNumber(pagination.pages, 1), 1)}
+                {t('admin.users.resultsPageLabel', {
+                  page: normalizeNumber(pagination.page, 1),
+                  pages: Math.max(normalizeNumber(pagination.pages, 1), 1),
+                })}
               </Text>
 
               {hasActiveFilters ? (
                 <Text style={styles.resultsFiltersText}>
-                  Filtres actifs :
-                  {search ? ` recherche "${search}"` : ''}
-                  {sort !== 'recent' ? ` • tri ${getSortLabel(sort)}` : ''}
+                  {t('admin.users.activeFiltersPrefix')}
+                  {search ? t('admin.users.searchFilterFragment', { search }) : ''}
+                  {sort !== 'recent' ? t('admin.users.sortFilterFragment', { sort: getSortLabel(sort, t) }) : ''}
                 </Text>
               ) : (
                 <Text style={styles.resultsFiltersText}>
-                  Aucun filtre actif.
+                  {t('admin.users.noActiveFiltersText')}
                 </Text>
               )}
             </View>
@@ -704,8 +708,8 @@ export default function AdminRestaurantsScreen() {
         }
         renderItem={({ item }) => {
           const openBadgeStyle = item?.isOpen
-            ? { bg: '#E8F5ED', text: '#1F6F43', label: 'Ouvert' }
-            : { bg: '#FDECEC', text: '#B83232', label: 'Fermé' };
+            ? { bg: '#E8F5ED', text: '#1F6F43', label: t('restaurant.profile.openLabel') }
+            : { bg: '#FDECEC', text: '#B83232', label: t('restaurant.profile.closedLabel') };
 
           return (
             <Pressable
@@ -715,10 +719,10 @@ export default function AdminRestaurantsScreen() {
               <View style={styles.cardTopRow}>
                 <View style={styles.cardTopLeft}>
                   <Text style={styles.cardTitle}>
-                    {normalizeText(item?.name, 'Restaurant')}
+                    {normalizeText(item?.name, t('restaurant.menuScreen.restaurantNameFallback'))}
                   </Text>
                   <Text style={styles.cardMeta}>
-                    {normalizeText(item?.cuisine, 'Cuisine non définie')}
+                    {normalizeText(item?.cuisine, t('admin.restaurants.cuisineUndefinedFallback'))}
                   </Text>
                 </View>
 
@@ -769,7 +773,7 @@ export default function AdminRestaurantsScreen() {
                 <View style={styles.infoRow}>
                   <Ionicons name="person-outline" size={15} color="#6B655E" />
                   <Text style={styles.infoText}>
-                    Propriétaire : {normalizeText(item?.ownerName)}
+                    {t('admin.restaurants.ownerLabel', { name: normalizeText(item?.ownerName) })}
                     {!!normalizeText(item?.ownerEmail)
                       ? ` • ${normalizeText(item?.ownerEmail)}`
                       : ''}
@@ -785,7 +789,7 @@ export default function AdminRestaurantsScreen() {
                     color="#6B655E"
                   />
                   <Text style={styles.infoText}>
-                    Créé le {formatDateValue(item?.createdAt)}
+                    {t('admin.users.createdOnLabel', { date: formatDateValue(item?.createdAt) })}
                   </Text>
                 </View>
               )}
@@ -804,7 +808,7 @@ export default function AdminRestaurantsScreen() {
                   <View style={styles.metaBadge}>
                     <Ionicons name="book-outline" size={14} color="#245EA8" />
                     <Text style={styles.metaBadgeText}>
-                      {item.menuCount} menu(s)
+                      {t('admin.restaurants.menuCountLabel', { count: item.menuCount })}
                     </Text>
                   </View>
                 ) : null}
@@ -817,7 +821,7 @@ export default function AdminRestaurantsScreen() {
                       color="#1F6F43"
                     />
                     <Text style={styles.metaBadgeText}>
-                      {item.ordersCount} commande(s)
+                      {t('admin.restaurants.ordersCountLabel', { count: item.ordersCount })}
                     </Text>
                   </View>
                 ) : null}
@@ -825,7 +829,7 @@ export default function AdminRestaurantsScreen() {
                 {item?.isFeatured ? (
                   <View style={styles.metaBadge}>
                     <Ionicons name="flash-outline" size={14} color="#7C3AED" />
-                    <Text style={styles.metaBadgeText}>Premium</Text>
+                    <Text style={styles.metaBadgeText}>{t('restaurant.premium')}</Text>
                   </View>
                 ) : null}
               </View>
@@ -837,12 +841,12 @@ export default function AdminRestaurantsScreen() {
                     size={15}
                     color="#1F6F43"
                   />
-                  <Text style={styles.footerBadgeText}>Voir le détail</Text>
+                  <Text style={styles.footerBadgeText}>{t('admin.users.viewDetailsButton')}</Text>
                 </View>
 
                 {!!item?.updatedAt && (
                   <Text style={styles.footerText}>
-                    Maj : {formatDateValue(item?.updatedAt)}
+                    {t('admin.restaurants.updatedOnLabel', { date: formatDateValue(item?.updatedAt) })}
                   </Text>
                 )}
               </View>
@@ -852,9 +856,9 @@ export default function AdminRestaurantsScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="storefront-outline" size={54} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>Aucun restaurant trouvé</Text>
+            <Text style={styles.emptyTitle}>{t('admin.restaurants.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Essaie avec une autre recherche ou recharge la page.
+              {t('admin.restaurants.emptyText')}
             </Text>
           </View>
         }

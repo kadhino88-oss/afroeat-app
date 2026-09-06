@@ -1321,6 +1321,32 @@
       "reactivateAction": "重新启用",
       "suspendAction": "暂停",
       "defaultAccountIdentity": "此账户"
+    },
+    "restaurants": {
+      "fetchErrorFallback": "无法加载餐厅。",
+      "loaderText": "正在加载餐厅...",
+      "subtitle": "查看、筛选并监督所有合作商户，及其商业合规性与运营质量。",
+      "controlCenterTitle": "餐厅控制中心",
+      "controlCenterText": "此管理视图是 AFROEAT 用于监督餐厅、商户、目录覆盖、信息质量与业务结构的高级基础。",
+      "statWithOwnerLabel": "有负责人",
+      "statWithAddressLabel": "有地址",
+      "statWithCuisineLabel": "有菜系",
+      "statOpenLabel": "营业中",
+      "statFeaturedLabel": "已推荐",
+      "premiumShortlistTitle": "精选名单",
+      "premiumShortlistText": "按名称排序，快速查看餐厅展示。",
+      "quickAuditTitle": "快速审核",
+      "quickAuditText": "按负责人、菜系、城市或地址进行定向搜索。",
+      "searchPlaceholder": "搜索名称、菜系、城市、地址...",
+      "applyButton": "应用",
+      "cuisineUndefinedFallback": "菜系未设置",
+      "ownerLabel": "负责人：{{name}}",
+      "menuCountLabel": "{{count}} 个菜单",
+      "ordersCountLabel": "{{count}} 个订单",
+      "updatedOnLabel": "更新时间：{{date}}",
+      "emptyTitle": "未找到餐厅",
+      "emptyText": "请尝试其他搜索条件或重新加载页面。",
+      "invalidRestaurantAlert": "无效的餐厅。"
     }
   }
 }

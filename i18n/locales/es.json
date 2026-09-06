@@ -1321,6 +1321,32 @@
       "reactivateAction": "reactivar",
       "suspendAction": "suspender",
       "defaultAccountIdentity": "esta cuenta"
+    },
+    "restaurants": {
+      "fetchErrorFallback": "No se pudieron cargar los restaurantes.",
+      "loaderText": "Cargando restaurantes...",
+      "subtitle": "Consulta, filtra y supervisa todos los establecimientos socios, su cumplimiento comercial y su calidad operativa.",
+      "controlCenterTitle": "Restaurant Control Center",
+      "controlCenterText": "Esta vista de administración es la base premium de AFROEAT para supervisar restaurantes, propietarios, cobertura de catálogo, calidad de las fichas y estructura de negocio.",
+      "statWithOwnerLabel": "Con propietario",
+      "statWithAddressLabel": "Con dirección",
+      "statWithCuisineLabel": "Con cocina",
+      "statOpenLabel": "Abiertos",
+      "statFeaturedLabel": "Destacados",
+      "premiumShortlistTitle": "Lista premium",
+      "premiumShortlistText": "Ordena por nombre para un control rápido de la vitrina de restaurantes.",
+      "quickAuditTitle": "Auditoría rápida",
+      "quickAuditText": "Realiza una búsqueda específica por propietario, cocina, ciudad o dirección.",
+      "searchPlaceholder": "Buscar nombre, cocina, ciudad, dirección...",
+      "applyButton": "Aplicar",
+      "cuisineUndefinedFallback": "Cocina no definida",
+      "ownerLabel": "Propietario: {{name}}",
+      "menuCountLabel": "{{count}} menú(s)",
+      "ordersCountLabel": "{{count}} pedido(s)",
+      "updatedOnLabel": "Actualizado: {{date}}",
+      "emptyTitle": "No se encontró ningún restaurante",
+      "emptyText": "Prueba con otra búsqueda o recarga la página.",
+      "invalidRestaurantAlert": "Restaurante no válido."
     }
   }
 }
