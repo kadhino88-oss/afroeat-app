@@ -12,10 +12,12 @@ import {
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { apiGet } from '../../services/apiClient';
 import { API_ENDPOINTS } from '../../constants/api';
+import i18n from '../../i18n';
 
 const STATUS_FILTERS = [
   'Toutes',
@@ -26,6 +28,16 @@ const STATUS_FILTERS = [
   'Livrée',
   'Annulée',
 ];
+
+const STATUS_FILTER_SLUG = {
+  'Toutes': 'livraison.filtersAll',
+  'En attente': 'order.status.pending',
+  'Confirmée': 'order.status.confirmed',
+  'En préparation': 'order.status.preparing',
+  'En livraison': 'order.status.on_the_way',
+  'Livrée': 'order.status.delivered',
+  'Annulée': 'order.status.cancelled',
+};
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
@@ -60,7 +72,7 @@ const normalizeOrder = (order = {}) => ({
   status: normalizeText(order?.status, 'En attente'),
   totalPrice: normalizeNumber(order?.totalPrice, 0),
   currency: normalizeText(order?.currency, 'EUR'),
-  customerName: normalizeText(order?.user?.name || order?.customerName, 'Client'),
+  customerName: normalizeText(order?.user?.name || order?.customerName, i18n.t('restaurant.orders.customerFallback')),
   deliveryPersonName: normalizeText(
     order?.deliveryPerson?.name || order?.deliveryPersonName,
     ''
@@ -83,12 +95,14 @@ const formatPrice = (value, currency = 'EUR') => {
   return `${amount.toFixed(2)} €`;
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDate = (value) => {
   if (!value) return '—';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '—';
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -113,6 +127,7 @@ const getStatusStyle = (status) => {
 };
 
 export default function RestaurantOrders() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const role = normalizeRole(auth.role || user?.role);
@@ -158,7 +173,7 @@ export default function RestaurantOrders() {
       setRestaurant({
         ...safeRestaurant,
         _id: restaurantId,
-        name: normalizeText(safeRestaurant?.name, 'Restaurant'),
+        name: normalizeText(safeRestaurant?.name, t('restaurant.menuScreen.restaurantNameFallback')),
       });
 
       setOrders(
@@ -169,15 +184,15 @@ export default function RestaurantOrders() {
     } catch (error) {
       console.log('Erreur restaurant orders :', error);
       Alert.alert(
-        'Erreur',
-        error?.message || 'Impossible de charger les commandes.'
+        t('common.error'),
+        error?.message || t('restaurant.orders.errorLoadBody')
       );
       setOrders([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [role, token]);
+  }, [role, token, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -243,37 +258,37 @@ export default function RestaurantOrders() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Restaurant</Text>
-              <Text style={styles.title}>Commandes</Text>
+              <Text style={styles.eyebrow}>{t('restaurant.settings.eyebrow')}</Text>
+              <Text style={styles.title}>{t('restaurant.orders.title')}</Text>
               <Text style={styles.subtitle}>
-                Suivi opérationnel des commandes de {restaurant?.name || 'ton restaurant'}.
+                {t('restaurant.orders.subtitleWithName', { name: restaurant?.name || t('restaurant.orders.restaurantFallbackPossessive') })}
               </Text>
             </View>
 
             <View style={styles.statsRow}>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.total}</Text>
-                <Text style={styles.statLabel}>Total</Text>
+                <Text style={styles.statLabel}>{t('restaurant.menuScreen.totalLabel')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.pending}</Text>
-                <Text style={styles.statLabel}>En attente</Text>
+                <Text style={styles.statLabel}>{t('order.status.pending')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.preparing}</Text>
-                <Text style={styles.statLabel}>Préparation</Text>
+                <Text style={styles.statLabel}>{t('restaurant.orders.preparingStatLabel')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.delivering}</Text>
-                <Text style={styles.statLabel}>Livraison</Text>
+                <Text style={styles.statLabel}>{t('restaurant.orders.deliveringStatLabel')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.delivered}</Text>
-                <Text style={styles.statLabel}>Livrées</Text>
+                <Text style={styles.statLabel}>{t('restaurant.orders.deliveredStatLabel')}</Text>
               </View>
             </View>
 
-            <Text style={styles.filterTitle}>Filtrer par statut</Text>
+            <Text style={styles.filterTitle}>{t('restaurant.orders.filterTitle')}</Text>
             <FlatList
               data={STATUS_FILTERS}
               horizontal
@@ -294,7 +309,7 @@ export default function RestaurantOrders() {
                         active && styles.filterChipTextActive,
                       ]}
                     >
-                      {item}
+                      {t(STATUS_FILTER_SLUG[item] || 'livraison.filtersAll', item)}
                     </Text>
                   </Pressable>
                 );
@@ -310,15 +325,15 @@ export default function RestaurantOrders() {
               <View style={styles.cardTopRow}>
                 <View style={styles.cardLeft}>
                   <Text style={styles.cardTitle}>
-                    Commande #{String(item?._id || '').slice(-6).toUpperCase()}
+                    {t('livraison.history.orderReference', { ref: String(item?._id || '').slice(-6).toUpperCase() })}
                   </Text>
-                  <Text style={styles.cardMeta}>Client : {item.customerName}</Text>
+                  <Text style={styles.cardMeta}>{t('restaurant.orders.customerLabel', { name: item.customerName })}</Text>
                   <Text style={styles.cardMeta}>
-                    Créée le : {formatDate(item.createdAt)}
+                    {t('restaurant.orders.createdOnLabel', { date: formatDate(item.createdAt) })}
                   </Text>
                   {!!item?.deliveryPersonName && (
                     <Text style={styles.cardMeta}>
-                      Livreur : {item.deliveryPersonName}
+                      {t('restaurant.orders.driverLabel', { name: item.deliveryPersonName })}
                     </Text>
                   )}
                 </View>
@@ -326,7 +341,7 @@ export default function RestaurantOrders() {
                 <View style={[styles.badge, { backgroundColor: statusStyle.bg }]}>
                   <Ionicons name={statusStyle.icon} size={13} color={statusStyle.text} />
                   <Text style={[styles.badgeText, { color: statusStyle.text }]}>
-                    {item?.status}
+                    {t(STATUS_FILTER_SLUG[item?.status] || 'order.status.pending', item?.status || '')}
                   </Text>
                 </View>
               </View>
@@ -342,7 +357,7 @@ export default function RestaurantOrders() {
                 <View style={styles.metaBadge}>
                   <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
                   <Text style={styles.metaBadgeText}>
-                    {normalizeNumber(item?.itemCount)} article(s)
+                    {t('livraison.itemsCount', { count: normalizeNumber(item?.itemCount) })}
                   </Text>
                 </View>
               </View>
@@ -352,9 +367,9 @@ export default function RestaurantOrders() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="receipt-outline" size={54} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>Aucune commande</Text>
+            <Text style={styles.emptyTitle}>{t('restaurant.orders.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Aucune commande ne correspond au filtre sélectionné.
+              {t('restaurant.orders.emptyText')}
             </Text>
           </View>
         }

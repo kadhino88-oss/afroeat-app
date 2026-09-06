@@ -12,11 +12,13 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../../components/FadeInView';
 import { useAuth } from '../../../context/AuthContext';
 import { apiGet } from '../../../services/apiClient';
 import { API_ENDPOINTS } from '../../../constants/api';
+import i18n from '../../../i18n';
 
 const LIVE_REFRESH_MS = 15000;
 
@@ -86,17 +88,21 @@ const normalizeStatus = (status) => {
   return 'pending';
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('livraison.history.dateUnavailable');
   const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? 'Date indisponible' : d.toLocaleString('fr-FR');
+  return Number.isNaN(d.getTime())
+    ? i18n.t('livraison.history.dateUnavailable')
+    : d.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'en-US');
 };
 
 const formatPrice = (value, currency = 'EUR') => {
   const amount = normalizeNumber(value, 0);
 
   try {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat(DATE_LOCALE_MAP[i18n.language] || 'en-US', {
       style: 'currency',
       currency: normalizeText(currency, 'EUR'),
       minimumFractionDigits: 2,
@@ -117,7 +123,7 @@ const getCustomerName = (order) =>
       order?.client?.name ||
       order?.deliveryAddress?.fullName ||
       order?.shippingAddress?.fullName,
-    'Client non renseigné'
+    i18n.t('restaurant.orderDetails.customerNameFallback')
   );
 
 const getCustomerPhone = (order) =>
@@ -175,7 +181,7 @@ const normalizeOrderItem = (item, index = 0) => {
       item?.menuItem?.name ||
       item?.product?.name ||
       item?.productName,
-    `Article ${index + 1}`
+    i18n.t('restaurant.orderDetails.articleFallback', { index: index + 1 })
   );
 
   const note = normalizeText(
@@ -264,6 +270,15 @@ const getPricing = (order, items) => {
  * ================= STATUS UI =================
  */
 
+const STATUS_SLUG_TO_ORDER_KEY = {
+  delivered: 'delivered',
+  delivery: 'on_the_way',
+  preparing: 'preparing',
+  confirmed: 'confirmed',
+  cancelled: 'cancelled',
+  pending: 'pending',
+};
+
 const getStatusStyle = (status) => {
   const s = normalizeStatus(status);
 
@@ -273,7 +288,7 @@ const getStatusStyle = (status) => {
         bg: '#E8F5ED',
         text: '#1F6F43',
         border: '#CFE8D8',
-        label: 'Livrée',
+        slug: s,
         icon: 'checkmark-circle-outline',
       };
 
@@ -282,7 +297,7 @@ const getStatusStyle = (status) => {
         bg: '#EAF3FF',
         text: '#245EA8',
         border: '#CFE1FF',
-        label: 'En livraison',
+        slug: s,
         icon: 'bicycle-outline',
       };
 
@@ -291,7 +306,7 @@ const getStatusStyle = (status) => {
         bg: '#FFF3D8',
         text: '#8A6500',
         border: '#F4DEAA',
-        label: 'En préparation',
+        slug: s,
         icon: 'restaurant-outline',
       };
 
@@ -300,7 +315,7 @@ const getStatusStyle = (status) => {
         bg: '#EFE9FF',
         text: '#6D4CDB',
         border: '#DDD1FF',
-        label: 'Confirmée',
+        slug: s,
         icon: 'checkmark-done-outline',
       };
 
@@ -309,7 +324,7 @@ const getStatusStyle = (status) => {
         bg: '#FDECEC',
         text: '#B83232',
         border: '#F7CFCF',
-        label: 'Annulée',
+        slug: s,
         icon: 'close-circle-outline',
       };
 
@@ -318,7 +333,7 @@ const getStatusStyle = (status) => {
         bg: '#FFF0E8',
         text: '#D96C2D',
         border: '#FFD9C6',
-        label: 'En attente',
+        slug: 'pending',
         icon: 'time-outline',
       };
   }
@@ -329,6 +344,7 @@ const getStatusStyle = (status) => {
  */
 
 export default function RestaurantOrderDetailsScreen() {
+  const { t } = useTranslation();
   const { token, isAuthenticated } = useAuth();
   const params = useLocalSearchParams();
   const orderId = Array.isArray(params?.id) ? params.id[0] : params?.id;
@@ -364,7 +380,7 @@ export default function RestaurantOrderDetailsScreen() {
         );
 
         if (!found) {
-          throw new Error('Commande introuvable');
+          throw new Error(t('restaurant.orderDetails.notFoundTitle'));
         }
 
         if (isMountedRef.current) {
@@ -374,7 +390,7 @@ export default function RestaurantOrderDetailsScreen() {
         console.log('RestaurantOrderDetailsScreen fetchOrder error:', error);
 
         if (manual) {
-          Alert.alert('Erreur', error?.message || 'Impossible de rafraîchir la commande.');
+          Alert.alert(t('common.error'), error?.message || t('restaurant.orderDetails.errorRefreshBody'));
         }
       } finally {
         if (isMountedRef.current) {
@@ -383,7 +399,7 @@ export default function RestaurantOrderDetailsScreen() {
         }
       }
     },
-    [token, isAuthenticated, orderId]
+    [token, isAuthenticated, orderId, t]
   );
 
   useFocusEffect(
@@ -416,6 +432,10 @@ export default function RestaurantOrderDetailsScreen() {
   const pricing = useMemo(() => getPricing(order, items), [order, items]);
 
   const status = useMemo(() => getStatusStyle(order?.status), [order]);
+  const statusLabel = useMemo(
+    () => t(`order.status.${STATUS_SLUG_TO_ORDER_KEY[status.slug] || 'pending'}`),
+    [status, t]
+  );
 
   const customerName = useMemo(() => getCustomerName(order), [order]);
   const customerPhone = useMemo(() => getCustomerPhone(order), [order]);
@@ -431,7 +451,7 @@ export default function RestaurantOrderDetailsScreen() {
     return (
       <View style={styles.loader}>
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement de la commande...</Text>
+        <Text style={styles.loaderText}>{t('restaurant.orderDetails.loaderText')}</Text>
       </View>
     );
   }
@@ -440,13 +460,13 @@ export default function RestaurantOrderDetailsScreen() {
     return (
       <View style={styles.emptyState}>
         <Ionicons name="receipt-outline" size={52} color="#B8B8B8" />
-        <Text style={styles.emptyTitle}>Commande introuvable</Text>
+        <Text style={styles.emptyTitle}>{t('restaurant.orderDetails.notFoundTitle')}</Text>
         <Text style={styles.emptyText}>
-          Cette commande est indisponible ou n’existe plus dans la liste actuelle.
+          {t('restaurant.orderDetails.notFoundText')}
         </Text>
 
         <Pressable style={styles.primaryButton} onPress={() => router.back()}>
-          <Text style={styles.primaryButtonText}>Retour</Text>
+          <Text style={styles.primaryButtonText}>{t('livraison.tracking.backButton')}</Text>
         </Pressable>
       </View>
     );
@@ -475,8 +495,8 @@ export default function RestaurantOrderDetailsScreen() {
           </Pressable>
 
           <View style={styles.headerTextWrap}>
-            <Text style={styles.title}>Détail commande</Text>
-            <Text style={styles.subtitle}>Réf. {orderCode}</Text>
+            <Text style={styles.title}>{t('restaurant.orderDetails.detailTitle')}</Text>
+            <Text style={styles.subtitle}>{t('restaurant.orderDetails.refLabel', { ref: orderCode })}</Text>
           </View>
         </View>
 
@@ -492,23 +512,23 @@ export default function RestaurantOrderDetailsScreen() {
             ]}
           >
             <Ionicons name={status.icon} size={16} color={status.text} />
-            <Text style={[styles.badgeText, { color: status.text }]}>{status.label}</Text>
+            <Text style={[styles.badgeText, { color: status.text }]}>{statusLabel}</Text>
           </View>
 
           <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>Créée le</Text>
+            <Text style={styles.metaLabel}>{t('restaurant.orderDetails.createdAtLabel')}</Text>
             <Text style={styles.metaValue}>{createdAtLabel}</Text>
           </View>
 
           <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>Statut brut</Text>
+            <Text style={styles.metaLabel}>{t('restaurant.orderDetails.rawStatusLabel')}</Text>
             <Text style={styles.metaValue}>{normalizeText(order?.status, '—')}</Text>
           </View>
         </View>
 
         {/* CLIENT */}
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Client</Text>
+          <Text style={styles.sectionTitle}>{t('restaurant.orderDetails.clientSectionTitle')}</Text>
 
           <View style={styles.infoRow}>
             <Ionicons name="person-outline" size={18} color="#1F6F43" />
@@ -537,16 +557,16 @@ export default function RestaurantOrderDetailsScreen() {
         {/* ITEMS */}
         <View style={styles.card}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Articles</Text>
+            <Text style={styles.sectionTitle}>{t('restaurant.orderDetails.itemsSectionTitle')}</Text>
             <Text style={styles.sectionCount}>
-              {items.length} {items.length > 1 ? 'articles' : 'article'}
+              {t('livraison.itemsCount', { count: items.length })}
             </Text>
           </View>
 
           {items.length === 0 ? (
             <View style={styles.emptyItemsBox}>
               <Ionicons name="restaurant-outline" size={24} color="#C2C2C2" />
-              <Text style={styles.emptyItemsText}>Aucun article trouvé pour cette commande.</Text>
+              <Text style={styles.emptyItemsText}>{t('restaurant.orderDetails.noItemsFound')}</Text>
             </View>
           ) : (
             items.map((item, index) => (
@@ -560,7 +580,7 @@ export default function RestaurantOrderDetailsScreen() {
                 <View style={styles.itemTopRow}>
                   <View style={styles.itemNameWrap}>
                     <Text style={styles.itemName}>{item.name}</Text>
-                    {!!item.note && <Text style={styles.itemNote}>Note : {item.note}</Text>}
+                    {!!item.note && <Text style={styles.itemNote}>{t('restaurant.orderDetails.noteLabel', { note: item.note })}</Text>}
                   </View>
 
                   <View style={styles.qtyBadge}>
@@ -570,7 +590,7 @@ export default function RestaurantOrderDetailsScreen() {
 
                 <View style={styles.itemBottomRow}>
                   <Text style={styles.itemUnitPrice}>
-                    {formatPrice(item.unitPrice, currency)} / unité
+                    {t('restaurant.orderDetails.unitPriceSuffix', { price: formatPrice(item.unitPrice, currency) })}
                   </Text>
                   <Text style={styles.itemTotalPrice}>
                     {formatPrice(item.totalPrice, currency)}
@@ -583,31 +603,31 @@ export default function RestaurantOrderDetailsScreen() {
 
         {/* TOTALS */}
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Résumé paiement</Text>
+          <Text style={styles.sectionTitle}>{t('restaurant.orderDetails.paymentSummaryTitle')}</Text>
 
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Sous-total</Text>
+            <Text style={styles.priceLabel}>{t('restaurant.orderDetails.subtotalLabel')}</Text>
             <Text style={styles.priceValue}>{formatPrice(pricing.subtotal, currency)}</Text>
           </View>
 
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Livraison</Text>
+            <Text style={styles.priceLabel}>{t('restaurant.orders.deliveringStatLabel')}</Text>
             <Text style={styles.priceValue}>{formatPrice(pricing.deliveryFee, currency)}</Text>
           </View>
 
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Frais de service</Text>
+            <Text style={styles.priceLabel}>{t('restaurant.orderDetails.serviceFeeLabel')}</Text>
             <Text style={styles.priceValue}>{formatPrice(pricing.serviceFee, currency)}</Text>
           </View>
 
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Taxes</Text>
+            <Text style={styles.priceLabel}>{t('restaurant.orderDetails.taxesLabel')}</Text>
             <Text style={styles.priceValue}>{formatPrice(pricing.tax, currency)}</Text>
           </View>
 
           {pricing.discount > 0 && (
             <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Remise</Text>
+              <Text style={styles.priceLabel}>{t('restaurant.orderDetails.discountLabel')}</Text>
               <Text style={[styles.priceValue, styles.discountValue]}>
                 - {formatPrice(pricing.discount, currency)}
               </Text>
@@ -617,7 +637,7 @@ export default function RestaurantOrderDetailsScreen() {
           <View style={styles.divider} />
 
           <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total</Text>
+            <Text style={styles.totalLabel}>{t('restaurant.menuScreen.totalLabel')}</Text>
             <Text style={styles.totalValue}>{formatPrice(pricing.total, currency)}</Text>
           </View>
         </View>
