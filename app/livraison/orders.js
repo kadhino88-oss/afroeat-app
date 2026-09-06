@@ -12,8 +12,10 @@ import {
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
+import i18n from '../../i18n';
 import {
   getAssignedOrders,
   getDeliveryStats,
@@ -30,6 +32,14 @@ const FILTERS = [
   'En livraison',
   'Livrée',
 ];
+
+const FILTER_SLUG_BY_LABEL = {
+  'Toutes': 'filtersAll',
+  'Confirmée': 'status.confirmed',
+  'En préparation': 'status.preparing',
+  'En livraison': 'status.delivering',
+  'Livrée': 'status.delivered',
+};
 
 /**
  * HELPERS
@@ -61,11 +71,13 @@ const formatPrice = (v, c = 'EUR') => {
   return `${a.toFixed(2)} €`;
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDate = (v) => {
   if (!v) return '--';
   const d = new Date(v);
   if (Number.isNaN(d.getTime())) return '--';
-  return d.toLocaleString('fr-FR', {
+  return d.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'en-US', {
     day: '2-digit',
     month: 'short',
     hour: '2-digit',
@@ -84,6 +96,7 @@ const getItemsCount = (items = []) =>
  */
 
 export default function LivraisonOrdersScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -120,7 +133,7 @@ export default function LivraisonOrdersScreen() {
       setOrders(normalizeArray(data));
     } catch (e) {
       console.log(e);
-      if (manual) Alert.alert('Erreur', 'Chargement impossible');
+      if (manual) Alert.alert(t('common.error'), t('livraison.loadErrorBody'));
       setOrders([]);
     } finally {
       setLoading(false);
@@ -203,15 +216,15 @@ export default function LivraisonOrdersScreen() {
         onRefresh={() => fetchOrders(true)}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={styles.title}>Mes livraisons</Text>
+            <Text style={styles.title}>{t('livraison.ordersTitle')}</Text>
 
             <View style={styles.stats}>
-              <Text>{stats.total} assignées</Text>
-              <Text>{stats.delivering} en cours</Text>
+              <Text>{t('livraison.assignedCount', { count: stats.total })}</Text>
+              <Text>{t('livraison.inProgressCount', { count: stats.delivering })}</Text>
             </View>
 
             <View style={styles.summary}>
-              <Text>{totalItems} articles</Text>
+              <Text>{t('livraison.itemsCount', { count: totalItems })}</Text>
               <Text>{formatPrice(totalAmount)}</Text>
             </View>
 
@@ -234,7 +247,7 @@ export default function LivraisonOrdersScreen() {
                         : styles.filterText
                     }
                   >
-                    {item}
+                    {t(`livraison.${FILTER_SLUG_BY_LABEL[item]}`, item)}
                   </Text>
                 </Pressable>
               )}
@@ -249,7 +262,7 @@ export default function LivraisonOrdersScreen() {
             }
           >
             <Text style={styles.cardTitle}>
-              {normalizeText(item.restaurantName, 'Restaurant')}
+              {normalizeText(item.restaurantName, t('livraison.restaurantFallback'))}
             </Text>
 
             <Text style={styles.cardSub}>
@@ -257,7 +270,7 @@ export default function LivraisonOrdersScreen() {
             </Text>
 
             <Text>
-              {getItemsCount(item.items)} articles •{' '}
+              {t('livraison.itemsCount', { count: getItemsCount(item.items) })} •{' '}
               {formatPrice(item.totalPrice)}
             </Text>
 
@@ -268,7 +281,7 @@ export default function LivraisonOrdersScreen() {
         )}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text>Aucune livraison</Text>
+            <Text>{t('livraison.noDeliveries')}</Text>
           </View>
         }
       />

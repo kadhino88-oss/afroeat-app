@@ -17,6 +17,7 @@ import {
   Redirect,
 } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
@@ -26,6 +27,7 @@ import {
   calculateETA,
   formatEtaLabel,
 } from '../../services/deliveryService';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -101,7 +103,7 @@ const normalizeOrderResponse = (data) => {
     status: normalizeStatus(order?.status || 'En attente'),
     restaurantName: normalizeText(
       order?.restaurantName || order?.restaurant?.name,
-      'Restaurant AFROEAT'
+      i18n.t('livraison.tracking.restaurantFallback')
     ),
     deliveryAddress: normalizeText(order?.deliveryAddress),
     totalPrice: normalizeNumber(order?.totalPrice, 0),
@@ -128,22 +130,33 @@ const formatPrice = (value, currency = 'EUR') => {
   return `${amount.toFixed(2)} €`;
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('livraison.history.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('livraison.history.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   });
+};
+
+const DELIVERY_STATUS_SLUG = {
+  'En attente': 'order.status.pending',
+  'Confirmée': 'livraison.status.confirmed',
+  'En préparation': 'livraison.status.preparing',
+  'En livraison': 'livraison.status.delivering',
+  'Livrée': 'livraison.status.delivered',
+  'Annulée': 'order.status.cancelled',
 };
 
 const getStatusTone = (status) => {
@@ -207,42 +220,42 @@ const getStatusProgress = (status) => {
   }
 };
 
-const getDriverInsight = ({ status, distance, etaMinutes }) => {
+const getDriverInsight = ({ status, distance, etaMinutes, t }) => {
   if (status === 'Livrée') {
-    return 'Livraison terminée avec succès.';
+    return t('livraison.tracking.insightDelivered');
   }
 
   if (status === 'Annulée') {
-    return 'Mission arrêtée. Vérifie les détails de la commande.';
+    return t('livraison.tracking.insightCancelled');
   }
 
   if (distance === null) {
-    return 'Tracking actif. Position GPS en attente ou indisponible.';
+    return t('livraison.tracking.insightNoGps');
   }
 
   if (distance < 0.4) {
-    return 'Le livreur est presque arrivé. Prépare la remise client.';
+    return t('livraison.tracking.insightAlmostArrived');
   }
 
   if (distance < 1.2) {
-    return 'Livraison imminente. Dernière ligne droite.';
+    return t('livraison.tracking.insightImminent');
   }
 
   if (distance < 3) {
-    return `Trajet fluide. Arrivée estimée dans ${etaMinutes} min.`;
+    return t('livraison.tracking.insightSmooth', { minutes: etaMinutes });
   }
 
   if (distance < 6) {
-    return 'Mission en cours avec marge de progression optimale.';
+    return t('livraison.tracking.insightOnTrack');
   }
 
-  return 'Trajet encore long. Le tracking reste surveillé en temps réel.';
+  return t('livraison.tracking.insightLongTrip');
 };
 
-const getSmartEta = (distance) => {
+const getSmartEta = (distance, t) => {
   if (distance === null) {
     return {
-      label: 'Indisponible',
+      label: t('livraison.tracking.etaUnavailable'),
       minutes: null,
     };
   }
@@ -319,6 +332,7 @@ const getItemsCount = (items) => {
  */
 
 export default function OrderTrackingScreen() {
+  const { t, i18n: i18nInstance } = useTranslation();
   const params = useLocalSearchParams();
   const auth = useAuth() || {};
 
@@ -366,8 +380,8 @@ export default function OrderTrackingScreen() {
   }, [driver, customer]);
 
   const smartEta = useMemo(() => {
-    return getSmartEta(distance);
-  }, [distance]);
+    return getSmartEta(distance, t);
+  }, [distance, t, i18nInstance.language]);
 
   const progress = useMemo(() => {
     if (safeOrder?.status === 'En livraison' && distance !== null) {
@@ -395,17 +409,18 @@ export default function OrderTrackingScreen() {
       status: safeOrder?.status,
       distance,
       etaMinutes: smartEta?.minutes,
+      t,
     });
-  }, [safeOrder, distance, smartEta]);
+  }, [safeOrder, distance, smartEta, t, i18nInstance.language]);
 
   const statusTone = useMemo(() => {
     return getStatusTone(safeOrder?.status);
   }, [safeOrder]);
 
   const driverLocationLabel = useMemo(() => {
-    if (!driver) return 'Position GPS non disponible';
+    if (!driver) return t('livraison.tracking.gpsUnavailable');
     return `${driver.lat.toFixed(5)}, ${driver.lng.toFixed(5)}`;
-  }, [driver]);
+  }, [driver, t]);
 
   const handleGoBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -453,7 +468,7 @@ export default function OrderTrackingScreen() {
         const normalized = normalizeOrderResponse(data);
 
         if (!normalized?._id) {
-          throw new Error('Tracking commande introuvable.');
+          throw new Error(t('livraison.tracking.notFoundError'));
         }
 
         setOrder(normalized);
@@ -461,13 +476,13 @@ export default function OrderTrackingScreen() {
         console.log('Erreur tracking livraison :', error);
 
         const message =
-          error?.message || 'Impossible de charger le tracking de la commande.';
+          error?.message || t('livraison.tracking.errorFetchDefault');
 
         setErrorMessage(message);
         setOrder(null);
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -513,8 +528,8 @@ export default function OrderTrackingScreen() {
   const handleOpenExternalNavigation = useCallback(async () => {
     if (!customer) {
       Alert.alert(
-        'Navigation indisponible',
-        'La destination client n’est pas disponible.'
+        t('livraison.tracking.navUnavailableTitle'),
+        t('livraison.tracking.navUnavailableBody')
       );
       return;
     }
@@ -525,17 +540,17 @@ export default function OrderTrackingScreen() {
       const supported = await Linking.canOpenURL(googleMapsUrl);
 
       if (!supported) {
-        throw new Error('Aucune application de navigation disponible.');
+        throw new Error(t('livraison.tracking.navAppUnavailable'));
       }
 
       await Linking.openURL(googleMapsUrl);
     } catch (error) {
       Alert.alert(
-        'Navigation indisponible',
-        error?.message || 'Impossible d’ouvrir la navigation.'
+        t('livraison.tracking.navUnavailableTitle'),
+        error?.message || t('livraison.tracking.navOpenErrorFallback')
       );
     }
-  }, [customer]);
+  }, [customer, t]);
 
   /**
    * =========================================================
@@ -548,7 +563,7 @@ export default function OrderTrackingScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#F7F8FA" />
         <ActivityIndicator size="large" color="#D96C2D" />
-        <Text style={styles.loaderText}>Chargement du tracking premium...</Text>
+        <Text style={styles.loaderText}>{t('livraison.tracking.loadingTitle')}</Text>
       </View>
     );
   }
@@ -580,21 +595,21 @@ export default function OrderTrackingScreen() {
             size={56}
             color="#C7CED6"
           />
-          <Text style={styles.fallbackTitle}>Tracking indisponible</Text>
+          <Text style={styles.fallbackTitle}>{t('livraison.tracking.fallbackTitle')}</Text>
           <Text style={styles.fallbackText}>
-            {errorMessage || 'Impossible de récupérer les données de livraison.'}
+            {errorMessage || t('livraison.tracking.fallbackTextDefault')}
           </Text>
 
           <View style={styles.fallbackActions}>
             <Pressable style={styles.secondaryButton} onPress={handleGoBack}>
-              <Text style={styles.secondaryButtonText}>Retour</Text>
+              <Text style={styles.secondaryButtonText}>{t('livraison.tracking.backButton')}</Text>
             </Pressable>
 
             <Pressable
               style={styles.primaryButton}
               onPress={() => fetchOrder(true)}
             >
-              <Text style={styles.primaryButtonText}>Réessayer</Text>
+              <Text style={styles.primaryButtonText}>{t('livraison.tracking.retryButton')}</Text>
             </Pressable>
           </View>
         </View>
@@ -638,8 +653,8 @@ export default function OrderTrackingScreen() {
               latitude: driver.lat,
               longitude: driver.lng,
             }}
-            title="Livreur AFROEAT"
-            description="Position livreur en temps réel"
+            title={t('livraison.tracking.markerDriverTitle')}
+            description={t('livraison.tracking.markerDriverDescription')}
             pinColor="#D96C2D"
           />
         )}
@@ -650,8 +665,8 @@ export default function OrderTrackingScreen() {
               latitude: customer.lat,
               longitude: customer.lng,
             }}
-            title="Destination client"
-            description={safeOrder?.deliveryAddress || 'Adresse client'}
+            title={t('livraison.tracking.markerCustomerTitle')}
+            description={safeOrder?.deliveryAddress || t('livraison.tracking.markerCustomerDescriptionFallback')}
             pinColor="#1F8F4C"
           />
         )}
@@ -678,9 +693,9 @@ export default function OrderTrackingScreen() {
       <View style={styles.bottomPanel}>
         <View style={styles.headerRow}>
           <View style={styles.headerTextBlock}>
-            <Text style={styles.panelTitle}>AFROEAT Live Tracking</Text>
+            <Text style={styles.panelTitle}>{t('livraison.tracking.panelTitle')}</Text>
             <Text style={styles.panelSubtitle}>
-              Commande #{String(safeOrder?._id || '').slice(-6).toUpperCase()}
+              {t('livraison.history.orderReference', { ref: String(safeOrder?._id || '').slice(-6).toUpperCase() })}
             </Text>
           </View>
 
@@ -691,26 +706,26 @@ export default function OrderTrackingScreen() {
               color={statusTone.text}
             />
             <Text style={[styles.statusBadgeText, { color: statusTone.text }]}>
-              {normalizeText(safeOrder?.status, 'En attente')}
+              {t(DELIVERY_STATUS_SLUG[safeOrder?.status] || 'order.status.pending', safeOrder?.status || '')}
             </Text>
           </View>
         </View>
 
         <View style={styles.metricsRow}>
           <View style={styles.metricCard}>
-            <Text style={styles.metricLabel}>Distance</Text>
+            <Text style={styles.metricLabel}>{t('livraison.tracking.distanceLabel')}</Text>
             <Text style={styles.metricValue}>
               {distance !== null ? `${distance} km` : '--'}
             </Text>
           </View>
 
           <View style={styles.metricCard}>
-            <Text style={styles.metricLabel}>ETA smart</Text>
+            <Text style={styles.metricLabel}>{t('livraison.tracking.etaSmartLabel')}</Text>
             <Text style={styles.metricValue}>{smartEta.label}</Text>
           </View>
 
           <View style={styles.metricCard}>
-            <Text style={styles.metricLabel}>Progression</Text>
+            <Text style={styles.metricLabel}>{t('livraison.tracking.progressLabel')}</Text>
             <Text style={styles.metricValue}>{Math.round(progress)}%</Text>
           </View>
         </View>
@@ -726,26 +741,26 @@ export default function OrderTrackingScreen() {
 
         <View style={styles.metaGrid}>
           <View style={styles.metaItem}>
-            <Text style={styles.metaLabel}>Restaurant</Text>
+            <Text style={styles.metaLabel}>{t('livraison.tracking.restaurantLabel')}</Text>
             <Text style={styles.metaValue} numberOfLines={1}>
               {safeOrder.restaurantName}
             </Text>
           </View>
 
           <View style={styles.metaItem}>
-            <Text style={styles.metaLabel}>Montant</Text>
+            <Text style={styles.metaLabel}>{t('livraison.tracking.amountLabel')}</Text>
             <Text style={styles.metaValue}>
               {formatPrice(safeOrder.totalPrice, safeOrder.currency)}
             </Text>
           </View>
 
           <View style={styles.metaItem}>
-            <Text style={styles.metaLabel}>Articles</Text>
+            <Text style={styles.metaLabel}>{t('livraison.history.articlesLabel')}</Text>
             <Text style={styles.metaValue}>{itemCount}</Text>
           </View>
 
           <View style={styles.metaItem}>
-            <Text style={styles.metaLabel}>Dernière maj</Text>
+            <Text style={styles.metaLabel}>{t('livraison.tracking.lastUpdateLabel')}</Text>
             <Text style={styles.metaValue} numberOfLines={1}>
               {formatDateTime(safeOrder.updatedAt || safeOrder.createdAt)}
             </Text>
@@ -755,15 +770,15 @@ export default function OrderTrackingScreen() {
         <View style={styles.locationBox}>
           <View style={styles.locationRow}>
             <Ionicons name="navigate-outline" size={15} color="#245EA8" />
-            <Text style={styles.locationLabel}>Position livreur</Text>
+            <Text style={styles.locationLabel}>{t('livraison.tracking.driverPositionLabel')}</Text>
             <Text style={styles.locationValue}>{driverLocationLabel}</Text>
           </View>
 
           <View style={styles.locationRow}>
             <Ionicons name="location-outline" size={15} color="#1F8F4C" />
-            <Text style={styles.locationLabel}>Destination</Text>
+            <Text style={styles.locationLabel}>{t('livraison.tracking.destinationLabel')}</Text>
             <Text style={styles.locationValue} numberOfLines={1}>
-              {normalizeText(safeOrder.deliveryAddress, 'Adresse indisponible')}
+              {normalizeText(safeOrder.deliveryAddress, t('livraison.tracking.addressUnavailable'))}
             </Text>
           </View>
         </View>
@@ -771,7 +786,7 @@ export default function OrderTrackingScreen() {
         <View style={styles.actionsRow}>
           <Pressable style={styles.secondaryButton} onPress={fitMapToMarkers}>
             <Ionicons name="expand-outline" size={18} color="#245EA8" />
-            <Text style={styles.secondaryButtonText}>Recentrer</Text>
+            <Text style={styles.secondaryButtonText}>{t('livraison.tracking.recenterButton')}</Text>
           </Pressable>
 
           <Pressable
@@ -779,7 +794,7 @@ export default function OrderTrackingScreen() {
             onPress={handleOpenExternalNavigation}
           >
             <Ionicons name="navigate" size={18} color="#111111" />
-            <Text style={styles.primaryButtonText}>Ouvrir GPS</Text>
+            <Text style={styles.primaryButtonText}>{t('livraison.tracking.openGpsButton')}</Text>
           </Pressable>
         </View>
       </View>

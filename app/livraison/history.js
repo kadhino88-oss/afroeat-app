@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getAssignedOrders } from '../../services/deliveryService';
+import i18n from '../../i18n';
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value || '').trim();
@@ -40,16 +42,18 @@ const formatPrice = (value, currency = 'EUR') => {
   return `${amount.toFixed(2)} €`;
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDate = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('livraison.history.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('livraison.history.dateUnavailable');
   }
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'en-US', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
@@ -57,15 +61,15 @@ const formatDate = (value) => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('livraison.history.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('livraison.history.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'en-US', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -97,6 +101,7 @@ const getSafeCurrency = (orders = []) => {
 
 export default function LivraisonHistoryScreen() {
   const { token, isAuthenticated, role, user } = useAuth();
+  const { t } = useTranslation();
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -141,8 +146,8 @@ export default function LivraisonHistoryScreen() {
       } catch (error) {
         console.log('Erreur récupération historique livraisons :', error);
         Alert.alert(
-          'Erreur',
-          error?.message || 'Impossible de charger l’historique des livraisons.'
+          t('common.error'),
+          error?.message || t('livraison.history.loadErrorFallback')
         );
         setOrders([]);
       } finally {
@@ -184,7 +189,7 @@ export default function LivraisonHistoryScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D96C2D" />
-        <Text style={styles.loaderText}>Chargement de l’historique...</Text>
+        <Text style={styles.loaderText}>{t('livraison.history.loaderText')}</Text>
       </View>
     );
   }
@@ -195,16 +200,16 @@ export default function LivraisonHistoryScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="time-outline" size={54} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Accès réservé au livreur</Text>
+          <Text style={styles.emptyTitle}>{t('livraison.history.restrictedAccessTitle')}</Text>
           <Text style={styles.emptyText}>
-            Connecte-toi avec un compte livreur pour consulter l’historique.
+            {t('livraison.history.restrictedAccessText')}
           </Text>
 
           <Pressable
             style={styles.emptyButton}
             onPress={() => router.replace('/auth/role')}
           >
-            <Text style={styles.emptyButtonText}>Retour à la connexion</Text>
+            <Text style={styles.emptyButtonText}>{t('livraison.history.backToLogin')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -246,30 +251,29 @@ export default function LivraisonHistoryScreen() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Espace livraison</Text>
-              <Text style={styles.title}>Historique des livraisons</Text>
+              <Text style={styles.eyebrow}>{t('livraison.history.eyebrow')}</Text>
+              <Text style={styles.title}>{t('livraison.history.title')}</Text>
               <Text style={styles.subtitle}>
-                Retrouve toutes les commandes que tu as déjà livrées, avec leur
-                montant, leur date et le détail complet.
+                {t('livraison.history.subtitle')}
               </Text>
             </View>
 
             <View style={styles.statsRow}>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{totalDelivered}</Text>
-                <Text style={styles.statLabel}>Livrées</Text>
+                <Text style={styles.statLabel}>{t('livraison.history.deliveredLabel')}</Text>
               </View>
 
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{totalItems}</Text>
-                <Text style={styles.statLabel}>Articles</Text>
+                <Text style={styles.statLabel}>{t('livraison.history.articlesLabel')}</Text>
               </View>
 
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>
                   {formatPrice(totalRevenue, historyCurrency)}
                 </Text>
-                <Text style={styles.statLabel}>Montant total</Text>
+                <Text style={styles.statLabel}>{t('livraison.history.totalAmountLabel')}</Text>
               </View>
             </View>
           </View>
@@ -294,10 +298,10 @@ export default function LivraisonHistoryScreen() {
               <View style={styles.cardTopRow}>
                 <View style={styles.orderMainInfo}>
                   <Text style={styles.orderTitle}>
-                    {normalizeText(item?.restaurant?.name, 'Restaurant Afroeat')}
+                    {normalizeText(item?.restaurant?.name, t('livraison.history.restaurantFallback'))}
                   </Text>
                   <Text style={styles.orderSubTitle}>
-                    Commande #{orderReference || '------'}
+                    {t('livraison.history.orderReference', { ref: orderReference || '------' })}
                   </Text>
                 </View>
 
@@ -313,7 +317,7 @@ export default function LivraisonHistoryScreen() {
                       { color: deliveredStyle.text },
                     ]}
                   >
-                    Livrée
+                    {t('livraison.status.delivered')}
                   </Text>
                 </View>
               </View>
@@ -321,7 +325,7 @@ export default function LivraisonHistoryScreen() {
               <View style={styles.metaRow}>
                 <View style={styles.metaBadge}>
                   <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
-                  <Text style={styles.metaBadgeText}>{itemCount} article(s)</Text>
+                  <Text style={styles.metaBadgeText}>{t('livraison.itemsCount', { count: itemCount })}</Text>
                 </View>
 
                 <View style={styles.metaBadge}>
@@ -351,7 +355,7 @@ export default function LivraisonHistoryScreen() {
               <View style={styles.infoRow}>
                 <Ionicons name="time-outline" size={15} color="#777" />
                 <Text style={styles.infoText}>
-                  Livrée le {formatDateTime(item?.updatedAt || item?.createdAt)}
+                  {t('livraison.history.deliveredOnLabel', { date: formatDateTime(item?.updatedAt || item?.createdAt) })}
                 </Text>
               </View>
 
@@ -365,7 +369,7 @@ export default function LivraisonHistoryScreen() {
               )}
 
               <View style={styles.footerRow}>
-                <Text style={styles.detailsText}>Voir le détail</Text>
+                <Text style={styles.detailsText}>{t('livraison.history.viewDetails')}</Text>
                 <Ionicons name="chevron-forward" size={18} color="#777" />
               </View>
             </Pressable>
@@ -374,9 +378,9 @@ export default function LivraisonHistoryScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="time-outline" size={54} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>Aucune livraison terminée</Text>
+            <Text style={styles.emptyTitle}>{t('livraison.history.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Ton historique apparaîtra ici dès que tu auras livré des commandes.
+              {t('livraison.history.emptyText')}
             </Text>
           </View>
         }

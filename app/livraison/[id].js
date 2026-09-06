@@ -16,6 +16,7 @@ import {
   Redirect,
 } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
@@ -50,11 +51,19 @@ const formatPrice = (v, c = 'EUR') => {
   return `${a.toFixed(2)} €`;
 };
 
+const DELIVERY_STATUS_SLUG = {
+  'Confirmée': 'confirmed',
+  'En préparation': 'preparing',
+  'En livraison': 'delivering',
+  'Livrée': 'delivered',
+};
+
 /**
  * SCREEN
  */
 
 export default function LivraisonOrderDetailsScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const auth = useAuth() || {};
 
@@ -98,7 +107,7 @@ export default function LivraisonOrderDetailsScreen() {
       setOrder(data?._id ? data : null);
     } catch (e) {
       console.log(e);
-      if (manual) Alert.alert('Erreur', 'Chargement impossible');
+      if (manual) Alert.alert(t('common.error'), t('livraison.profile.errorLoadBody'));
       setOrder(null);
     } finally {
       setLoading(false);
@@ -147,7 +156,7 @@ export default function LivraisonOrderDetailsScreen() {
         status: updated?.status || nextStatus,
       }));
     } catch (e) {
-      Alert.alert('Erreur', 'Mise à jour impossible');
+      Alert.alert(t('common.error'), t('livraison.orderDetail.errorUpdateBody'));
     } finally {
       setUpdating(false);
     }
@@ -182,7 +191,7 @@ export default function LivraisonOrderDetailsScreen() {
   if (!order) {
     return (
       <View style={styles.center}>
-        <Text>Commande introuvable</Text>
+        <Text>{t('livraison.orderDetail.notFound')}</Text>
       </View>
     );
   }
@@ -219,8 +228,8 @@ export default function LivraisonOrderDetailsScreen() {
         </Text>
 
         <View style={styles.card}>
-          <Text>{order.status}</Text>
-          <Text>{itemsCount} articles</Text>
+          <Text>{t(`livraison.status.${DELIVERY_STATUS_SLUG[order.status] || 'confirmed'}`, order.status)}</Text>
+          <Text>{t('livraison.itemsCount', { count: itemsCount })}</Text>
           <Text>{formatPrice(order.totalPrice)}</Text>
         </View>
 
@@ -238,7 +247,7 @@ export default function LivraisonOrderDetailsScreen() {
             router.push(`/livraison/OrderTracking?orderId=${order._id}`)
           }
         >
-          <Text style={styles.buttonText}>Tracking</Text>
+          <Text style={styles.buttonText}>{t('livraison.orderDetail.trackingButton')}</Text>
         </Pressable>
 
         {canDriverUpdateStatus(order.status) && nextStatus && (
@@ -246,7 +255,7 @@ export default function LivraisonOrderDetailsScreen() {
             {updating ? (
               <ActivityIndicator />
             ) : (
-              <Text style={styles.primaryText}>{nextStatus}</Text>
+              <Text style={styles.primaryText}>{t(`livraison.status.${DELIVERY_STATUS_SLUG[nextStatus] || 'confirmed'}`, nextStatus)}</Text>
             )}
           </Pressable>
         )}

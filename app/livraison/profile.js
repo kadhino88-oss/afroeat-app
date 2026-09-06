@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
@@ -38,6 +39,7 @@ const formatPrice = (v) => `${normalizeNumber(v).toFixed(2)} €`;
  */
 
 export default function LivraisonProfileScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -73,7 +75,7 @@ export default function LivraisonProfileScreen() {
       setOrders(normalizeArray(data));
     } catch (e) {
       console.log(e);
-      Alert.alert('Erreur', 'Chargement impossible');
+      Alert.alert(t('common.error'), t('livraison.profile.errorLoadBody'));
     } finally {
       setLoading(false);
     }
@@ -116,10 +118,10 @@ export default function LivraisonProfileScreen() {
     setOnline((prev) => !prev);
 
     Alert.alert(
-      'Statut',
+      t('livraison.profile.statusTitle'),
       !online
-        ? 'Tu es maintenant EN LIGNE'
-        : 'Tu es maintenant HORS LIGNE'
+        ? t('livraison.profile.onlineNowMessage')
+        : t('livraison.profile.offlineNowMessage')
     );
   };
 
@@ -155,7 +157,7 @@ export default function LivraisonProfileScreen() {
         {/* HEADER */}
         <View style={styles.header}>
           <Text style={styles.name}>
-            {user?.name || 'Livreur'}
+            {user?.name || t('livraison.profile.defaultName')}
           </Text>
           <Text style={styles.sub}>
             {user?.email || ''}
@@ -164,11 +166,11 @@ export default function LivraisonProfileScreen() {
 
         {/* ONLINE SWITCH */}
         <View style={styles.card}>
-          <Text style={styles.label}>Disponibilité</Text>
+          <Text style={styles.label}>{t('livraison.profile.availabilityLabel')}</Text>
 
           <View style={styles.row}>
             <Text style={styles.status}>
-              {online ? 'En ligne' : 'Hors ligne'}
+              {online ? t('livraison.profile.onlineStatus') : t('livraison.profile.offlineStatus')}
             </Text>
 
             <Switch value={online} onValueChange={toggleOnline} />
@@ -177,11 +179,11 @@ export default function LivraisonProfileScreen() {
 
         {/* STATS */}
         <View style={styles.card}>
-          <Text style={styles.label}>Performance</Text>
+          <Text style={styles.label}>{t('livraison.profile.performanceLabel')}</Text>
 
-          <Text>Livraisons : {stats.total}</Text>
-          <Text>Actives : {stats.active}</Text>
-          <Text>Revenus : {formatPrice(stats.revenue)}</Text>
+          <Text>{t('livraison.profile.deliveriesCountLabel', { count: stats.total })}</Text>
+          <Text>{t('livraison.profile.activeCountLabel', { count: stats.active })}</Text>
+          <Text>{t('livraison.profile.revenueLabel', { amount: formatPrice(stats.revenue) })}</Text>
         </View>
 
         {/* NAV */}
@@ -191,7 +193,7 @@ export default function LivraisonProfileScreen() {
             onPress={() => router.push('/livraison/livraison-orders')}
           >
             <Ionicons name="list-outline" size={20} />
-            <Text style={styles.navText}>Mes livraisons</Text>
+            <Text style={styles.navText}>{t('livraison.profile.myDeliveriesNav')}</Text>
           </Pressable>
 
           <Pressable
@@ -199,7 +201,7 @@ export default function LivraisonProfileScreen() {
             onPress={() => router.push('/livraison/history')}
           >
             <Ionicons name="time-outline" size={20} />
-            <Text style={styles.navText}>Historique</Text>
+            <Text style={styles.navText}>{t('livraison.profile.historyNav')}</Text>
           </Pressable>
         </View>
       </View>

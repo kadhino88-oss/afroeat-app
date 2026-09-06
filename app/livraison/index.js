@@ -13,6 +13,7 @@ import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -69,11 +70,19 @@ const formatPrice = (v, c = 'EUR') => {
 const getItemsCount = (items = []) =>
   items.reduce((sum, i) => sum + normalizeNumber(i?.quantity), 0);
 
+const DELIVERY_STATUS_SLUG = {
+  'Confirmée': 'confirmed',
+  'En préparation': 'preparing',
+  'En livraison': 'delivering',
+  'Livrée': 'delivered',
+};
+
 /**
  * SCREEN
  */
 
 export default function LivreurDashboardScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -215,7 +224,7 @@ export default function LivreurDashboardScreen() {
         )
       );
     } catch (e) {
-      Alert.alert('Erreur', 'Mise à jour impossible');
+      Alert.alert(t('livraison.updateErrorTitle'), t('livraison.updateErrorBody'));
     } finally {
       setUpdatingId(null);
     }
@@ -271,7 +280,7 @@ export default function LivreurDashboardScreen() {
           return (
             <View style={styles.card}>
               <Text style={styles.title}>
-                {item.restaurantName || 'Restaurant'}
+                {item.restaurantName || t('livraison.restaurantFallback')}
               </Text>
 
               <Text style={styles.subtitle}>
@@ -280,11 +289,11 @@ export default function LivreurDashboardScreen() {
 
               <Text>{formatPrice(item.totalPrice)}</Text>
 
-              <Text>{getItemsCount(item.items)} articles</Text>
+              <Text>{t('livraison.itemsCount', { count: getItemsCount(item.items) })}</Text>
 
               <View style={styles.row}>
                 <Pressable onPress={() => router.push(`/livraison/${item._id}`)}>
-                  <Text style={styles.link}>Détails</Text>
+                  <Text style={styles.link}>{t('livraison.detailsLink')}</Text>
                 </Pressable>
 
                 {canUpdate && next && (
@@ -292,7 +301,9 @@ export default function LivreurDashboardScreen() {
                     {updatingId === item._id ? (
                       <ActivityIndicator />
                     ) : (
-                      <Text style={styles.primary}>{next}</Text>
+                      <Text style={styles.primary}>
+                        {t(`livraison.status.${DELIVERY_STATUS_SLUG[next] || 'confirmed'}`, next)}
+                      </Text>
                     )}
                   </Pressable>
                 )}

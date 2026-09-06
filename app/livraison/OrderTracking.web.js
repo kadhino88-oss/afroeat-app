@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable, StatusBar } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 
 /**
@@ -17,6 +18,7 @@ import FadeInView from '../../components/FadeInView';
  * =========================================================
  */
 export default function OrderTrackingWebFallback() {
+  const { t } = useTranslation();
   return (
     <FadeInView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
@@ -24,19 +26,17 @@ export default function OrderTrackingWebFallback() {
       <View style={styles.card}>
         <Ionicons name="map-outline" size={56} color="#D4A017" />
 
-        <Text style={styles.title}>Suivi livreur disponible sur mobile</Text>
+        <Text style={styles.title}>{t('livraison.trackingWeb.title')}</Text>
 
         <Text style={styles.text}>
-          Le suivi GPS en temps reel utilise une technologie native mobile.
-          Ouvre AFROEAT avec Expo Go sur ton telephone pour suivre ta
-          livraison sur la carte.
+          {t('livraison.trackingWeb.text')}
         </Text>
 
         <Pressable
           style={styles.button}
           onPress={() => router.replace('/livraison/orders')}
         >
-          <Text style={styles.buttonText}>Retour aux courses</Text>
+          <Text style={styles.buttonText}>{t('livraison.trackingWeb.backButton')}</Text>
         </Pressable>
       </View>
     </FadeInView>
