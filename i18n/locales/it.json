@@ -1133,5 +1133,42 @@
       "openGpsButton": "Apri GPS",
       "restaurantFallback": "Ristorante AFROEAT"
     }
+  },
+  "admin": {
+    "common": {
+      "dashboardTitle": "Dashboard",
+      "opsTitle": "Ops / Salute",
+      "opsShort": "Ops",
+      "usersTitle": "Utenti",
+      "restaurantsTitle": "Ristoranti",
+      "driversTitle": "Fattorini",
+      "ordersTitle": "Ordini",
+      "auditTitle": "Log di audit",
+      "auditShort": "Audit"
+    },
+    "index": {
+      "loaderText": "Caricamento centro di controllo...",
+      "eyebrow": "Area admin privata",
+      "title": "Centro di supervisione AFROEAT",
+      "subtitleWelcome": "Benvenuto/a {{name}}. Da qui gestisci l'intera piattaforma: supervisione strategica, controllo operativo, governance, sicurezza e crescita.",
+      "adminFallbackName": "Admin AFROEAT",
+      "heroStatUsers": "Utenti",
+      "heroStatRestaurants": "Ristoranti",
+      "heroStatDrivers": "Fattorini",
+      "heroStatOrders": "Ordini",
+      "heroStatOps": "Ops",
+      "heroStatAudit": "Audit",
+      "quickAccessTitle": "Accesso rapido",
+      "controlSpacesTitle": "Aree di controllo",
+      "dashboardSubtitle": "Panoramica strategica dell'intera piattaforma",
+      "opsSubtitle": "Monitoraggio sul campo, incidenti, flussi critici e intervento",
+      "usersSubtitle": "Account clienti, stati, coerenza e moderazione globale",
+      "restaurantsSubtitle": "Rete di partner, validazione, conformità e visibilità",
+      "driversSubtitle": "Flotta, disponibilità, attività, missioni e performance",
+      "ordersSubtitle": "Visione globale di ordini, incidenti, SLA e qualità",
+      "auditSubtitle": "Tracciabilità, sicurezza, controllo delle azioni sensibili",
+      "bottomTitle": "Architettura admin livello DIO",
+      "bottomText": "Questo punto d'ingresso centralizza la supervisione di AFROEAT con una logica compartimentata, un controllo premium dei blocchi critici e una base pronta per un'operatività reale, industriale e mondiale."
+    }
   }
 }

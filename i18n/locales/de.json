@@ -1133,5 +1133,42 @@
       "openGpsButton": "GPS öffnen",
       "restaurantFallback": "AFROEAT Restaurant"
     }
+  },
+  "admin": {
+    "common": {
+      "dashboardTitle": "Dashboard",
+      "opsTitle": "Ops / Health",
+      "opsShort": "Ops",
+      "usersTitle": "Benutzer",
+      "restaurantsTitle": "Restaurants",
+      "driversTitle": "Fahrer",
+      "ordersTitle": "Bestellungen",
+      "auditTitle": "Audit-Protokolle",
+      "auditShort": "Audit"
+    },
+    "index": {
+      "loaderText": "Kontrollzentrum wird geladen...",
+      "eyebrow": "Privater Admin-Bereich",
+      "title": "AFROEAT Aufsichtszentrum",
+      "subtitleWelcome": "Willkommen {{name}}. Von hier aus steuerst du die gesamte Plattform: strategische Aufsicht, operative Kontrolle, Governance, Sicherheit und Wachstum.",
+      "adminFallbackName": "AFROEAT Admin",
+      "heroStatUsers": "Benutzer",
+      "heroStatRestaurants": "Restaurants",
+      "heroStatDrivers": "Fahrer",
+      "heroStatOrders": "Bestellungen",
+      "heroStatOps": "Ops",
+      "heroStatAudit": "Audit",
+      "quickAccessTitle": "Schnellzugriff",
+      "controlSpacesTitle": "Kontrollbereiche",
+      "dashboardSubtitle": "Strategischer Überblick über die gesamte Plattform",
+      "opsSubtitle": "Feldüberwachung, Vorfälle, kritische Abläufe und Eingriffe",
+      "usersSubtitle": "Kundenkonten, Status, Konsistenz und globale Moderation",
+      "restaurantsSubtitle": "Partnernetzwerk, Validierung, Compliance und Sichtbarkeit",
+      "driversSubtitle": "Flotte, Verfügbarkeit, Aktivität, Einsätze und Leistung",
+      "ordersSubtitle": "Globale Sicht auf Bestellungen, Vorfälle, SLA und Qualität",
+      "auditSubtitle": "Rückverfolgbarkeit, Sicherheit, Kontrolle sensibler Aktionen",
+      "bottomTitle": "Admin-Architektur auf GOTT-Niveau",
+      "bottomText": "Dieser Einstiegspunkt zentralisiert die AFROEAT-Aufsicht mit einer abgeschotteten Logik, einer Premium-Kontrolle kritischer Blöcke und einer Basis, die für einen echten, industriellen, weltweiten Betrieb bereit ist."
+    }
   }
 }

@@ -1133,5 +1133,42 @@
       "openGpsButton": "Abrir GPS",
       "restaurantFallback": "Restaurante AFROEAT"
     }
+  },
+  "admin": {
+    "common": {
+      "dashboardTitle": "Dashboard",
+      "opsTitle": "Ops / Salud",
+      "opsShort": "Ops",
+      "usersTitle": "Usuarios",
+      "restaurantsTitle": "Restaurantes",
+      "driversTitle": "Repartidores",
+      "ordersTitle": "Pedidos",
+      "auditTitle": "Registros de auditoría",
+      "auditShort": "Auditoría"
+    },
+    "index": {
+      "loaderText": "Cargando centro de control...",
+      "eyebrow": "Zona de administración privada",
+      "title": "Centro de supervisión AFROEAT",
+      "subtitleWelcome": "Bienvenido/a {{name}}. Desde aquí gestionas toda la plataforma: supervisión estratégica, control operativo, gobernanza, seguridad y crecimiento.",
+      "adminFallbackName": "Admin AFROEAT",
+      "heroStatUsers": "Usuarios",
+      "heroStatRestaurants": "Restaurantes",
+      "heroStatDrivers": "Repartidores",
+      "heroStatOrders": "Pedidos",
+      "heroStatOps": "Ops",
+      "heroStatAudit": "Auditoría",
+      "quickAccessTitle": "Acceso rápido",
+      "controlSpacesTitle": "Áreas de control",
+      "dashboardSubtitle": "Visión general estratégica de toda la plataforma",
+      "opsSubtitle": "Supervisión de campo, incidentes, flujos críticos e intervención",
+      "usersSubtitle": "Cuentas de clientes, estados, coherencia y moderación global",
+      "restaurantsSubtitle": "Red de socios, validación, cumplimiento y visibilidad",
+      "driversSubtitle": "Flota, disponibilidad, actividad, misiones y rendimiento",
+      "ordersSubtitle": "Visión global de pedidos, incidentes, SLA y calidad",
+      "auditSubtitle": "Trazabilidad, seguridad, control de acciones sensibles",
+      "bottomTitle": "Arquitectura de administración nivel DIOS",
+      "bottomText": "Este punto de entrada centraliza la supervisión de AFROEAT con una lógica compartimentada, un control premium de los bloques críticos y una base lista para una operación real, industrial y mundial."
+    }
   }
 }

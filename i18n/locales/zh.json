@@ -1133,5 +1133,42 @@
       "openGpsButton": "打开 GPS",
       "restaurantFallback": "AFROEAT 餐厅"
     }
+  },
+  "admin": {
+    "common": {
+      "dashboardTitle": "仪表盘",
+      "opsTitle": "运营 / 健康状况",
+      "opsShort": "运营",
+      "usersTitle": "用户",
+      "restaurantsTitle": "餐厅",
+      "driversTitle": "配送员",
+      "ordersTitle": "订单",
+      "auditTitle": "审计日志",
+      "auditShort": "审计"
+    },
+    "index": {
+      "loaderText": "正在加载控制中心...",
+      "eyebrow": "管理员专属区域",
+      "title": "AFROEAT 监管中心",
+      "subtitleWelcome": "欢迎，{{name}}。在这里你可以管理整个平台：战略监管、运营控制、治理、安全与增长。",
+      "adminFallbackName": "AFROEAT 管理员",
+      "heroStatUsers": "用户",
+      "heroStatRestaurants": "餐厅",
+      "heroStatDrivers": "配送员",
+      "heroStatOrders": "订单",
+      "heroStatOps": "运营",
+      "heroStatAudit": "审计",
+      "quickAccessTitle": "快捷入口",
+      "controlSpacesTitle": "控制区域",
+      "dashboardSubtitle": "整个平台的战略概览",
+      "opsSubtitle": "现场监控、事件处理、关键流程与干预",
+      "usersSubtitle": "客户账户、状态、一致性与全局管理",
+      "restaurantsSubtitle": "合作伙伴网络、审核、合规与可见性",
+      "driversSubtitle": "车队、可用性、活动、任务与绩效",
+      "ordersSubtitle": "订单、事件、SLA 与质量的全局视图",
+      "auditSubtitle": "可追溯性、安全性、敏感操作控制",
+      "bottomTitle": "顶级管理架构",
+      "bottomText": "该入口以分区化逻辑集中管理 AFROEAT 的监管工作，对关键模块进行高级控制，并为真正的工业化全球运营打下基础。"
+    }
   }
 }

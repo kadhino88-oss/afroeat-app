@@ -1133,5 +1133,42 @@
       "openGpsButton": "Open GPS",
       "restaurantFallback": "AFROEAT Restaurant"
     }
+  },
+  "admin": {
+    "common": {
+      "dashboardTitle": "Dashboard",
+      "opsTitle": "Ops / Health",
+      "opsShort": "Ops",
+      "usersTitle": "Users",
+      "restaurantsTitle": "Restaurants",
+      "driversTitle": "Drivers",
+      "ordersTitle": "Orders",
+      "auditTitle": "Audit logs",
+      "auditShort": "Audit"
+    },
+    "index": {
+      "loaderText": "Loading control center...",
+      "eyebrow": "Private admin area",
+      "title": "AFROEAT Supervision Center",
+      "subtitleWelcome": "Welcome {{name}}. From here you run the entire platform: strategic oversight, operational control, governance, security, and growth.",
+      "adminFallbackName": "AFROEAT Admin",
+      "heroStatUsers": "Users",
+      "heroStatRestaurants": "Restaurants",
+      "heroStatDrivers": "Drivers",
+      "heroStatOrders": "Orders",
+      "heroStatOps": "Ops",
+      "heroStatAudit": "Audit",
+      "quickAccessTitle": "Quick access",
+      "controlSpacesTitle": "Control areas",
+      "dashboardSubtitle": "Strategic overview of the entire platform",
+      "opsSubtitle": "Field monitoring, incidents, critical flows and intervention",
+      "usersSubtitle": "Customer accounts, statuses, consistency and global moderation",
+      "restaurantsSubtitle": "Partner network, validation, compliance and visibility",
+      "driversSubtitle": "Fleet, availability, activity, missions and performance",
+      "ordersSubtitle": "Global view of orders, incidents, SLA and quality",
+      "auditSubtitle": "Traceability, security, control of sensitive actions",
+      "bottomTitle": "GOD-level admin architecture",
+      "bottomText": "This entry point centralizes AFROEAT supervision with a compartmentalized logic, premium control of critical blocks, and a foundation ready for real, industrial, worldwide operation."
+    }
   }
 }

@@ -13,6 +13,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -58,106 +59,6 @@ const getAccountStatus = (user, auth) => {
  * =========================================================
  */
 
-const ADMIN_SECTIONS = [
-  {
-    key: 'dashboard',
-    title: 'Dashboard',
-    subtitle: 'Vue d’ensemble stratégique de toute la plateforme',
-    iconType: 'ionicons',
-    iconName: 'grid-outline',
-    accent: '#5A32A3',
-    soft: '#F1EAFE',
-    route: '/admin/AdminDashboard',
-  },
-  {
-    key: 'ops',
-    title: 'Ops / Health',
-    subtitle: 'Supervision terrain, incidents, flux critiques et intervention',
-    iconType: 'ionicons',
-    iconName: 'pulse-outline',
-    accent: '#D96C2D',
-    soft: '#FFF0E8',
-    route: '/admin/ops',
-  },
-  {
-    key: 'users',
-    title: 'Utilisateurs',
-    subtitle: 'Comptes clients, statuts, cohérence et modération globale',
-    iconType: 'ionicons',
-    iconName: 'people-outline',
-    accent: '#1F6F43',
-    soft: '#E8F5ED',
-    route: '/admin/users',
-  },
-  {
-    key: 'restaurants',
-    title: 'Restaurants',
-    subtitle: 'Réseau partenaire, validation, conformité et visibilité',
-    iconType: 'material',
-    iconName: 'storefront-outline',
-    accent: '#D4A017',
-    soft: '#FFF3D8',
-    route: '/admin/restaurants',
-  },
-  {
-    key: 'drivers',
-    title: 'Livreurs',
-    subtitle: 'Flotte, disponibilité, activité, missions et performance',
-    iconType: 'ionicons',
-    iconName: 'bicycle-outline',
-    accent: '#246BFD',
-    soft: '#EAF1FF',
-    route: '/admin/drivers',
-  },
-  {
-    key: 'orders',
-    title: 'Commandes',
-    subtitle: 'Vision globale des commandes, incidents, SLA et qualité',
-    iconType: 'ionicons',
-    iconName: 'receipt-outline',
-    accent: '#111111',
-    soft: '#F2F2F2',
-    route: '/admin/orders',
-  },
-  {
-    key: 'audit',
-    title: 'Audit logs',
-    subtitle: 'Traçabilité, sécurité, contrôle des actions sensibles',
-    iconType: 'ionicons',
-    iconName: 'shield-checkmark-outline',
-    accent: '#8A2D3B',
-    soft: '#FCECEF',
-    route: '/admin/audit-logs',
-  },
-];
-
-const QUICK_ACTIONS = [
-  {
-    key: 'dashboard',
-    label: 'Dashboard',
-    icon: 'grid-outline',
-    route: '/admin/AdminDashboard',
-  },
-  {
-    key: 'ops',
-    label: 'Ops',
-    icon: 'pulse-outline',
-    route: '/admin/ops',
-  },
-  {
-    key: 'orders',
-    label: 'Commandes',
-    icon: 'receipt-outline',
-    route: '/admin/orders',
-  },
-  {
-    key: 'audit',
-    label: 'Audit',
-    icon: 'shield-checkmark-outline',
-    route: '/admin/audit-logs',
-  },
-];
-
 /**
  * =========================================================
  * SCREEN
@@ -165,6 +66,7 @@ const QUICK_ACTIONS = [
  */
 
 export default function AdminIndexScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -184,8 +86,108 @@ export default function AdminIndexScreen() {
   const hasValidSession = Boolean(isAuthenticated && token);
 
   const adminName = useMemo(() => {
-    return normalizeText(user?.name, 'Admin AFROEAT');
-  }, [user]);
+    return normalizeText(user?.name, t('admin.index.adminFallbackName'));
+  }, [user, t]);
+
+  const adminSections = useMemo(() => ([
+    {
+      key: 'dashboard',
+      title: t('admin.common.dashboardTitle'),
+      subtitle: t('admin.index.dashboardSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'grid-outline',
+      accent: '#5A32A3',
+      soft: '#F1EAFE',
+      route: '/admin/AdminDashboard',
+    },
+    {
+      key: 'ops',
+      title: t('admin.common.opsTitle'),
+      subtitle: t('admin.index.opsSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'pulse-outline',
+      accent: '#D96C2D',
+      soft: '#FFF0E8',
+      route: '/admin/ops',
+    },
+    {
+      key: 'users',
+      title: t('admin.common.usersTitle'),
+      subtitle: t('admin.index.usersSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'people-outline',
+      accent: '#1F6F43',
+      soft: '#E8F5ED',
+      route: '/admin/users',
+    },
+    {
+      key: 'restaurants',
+      title: t('admin.common.restaurantsTitle'),
+      subtitle: t('admin.index.restaurantsSubtitle'),
+      iconType: 'material',
+      iconName: 'storefront-outline',
+      accent: '#D4A017',
+      soft: '#FFF3D8',
+      route: '/admin/restaurants',
+    },
+    {
+      key: 'drivers',
+      title: t('admin.common.driversTitle'),
+      subtitle: t('admin.index.driversSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'bicycle-outline',
+      accent: '#246BFD',
+      soft: '#EAF1FF',
+      route: '/admin/drivers',
+    },
+    {
+      key: 'orders',
+      title: t('admin.common.ordersTitle'),
+      subtitle: t('admin.index.ordersSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'receipt-outline',
+      accent: '#111111',
+      soft: '#F2F2F2',
+      route: '/admin/orders',
+    },
+    {
+      key: 'audit',
+      title: t('admin.common.auditTitle'),
+      subtitle: t('admin.index.auditSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'shield-checkmark-outline',
+      accent: '#8A2D3B',
+      soft: '#FCECEF',
+      route: '/admin/audit-logs',
+    },
+  ]), [t]);
+
+  const quickActions = useMemo(() => ([
+    {
+      key: 'dashboard',
+      label: t('admin.common.dashboardTitle'),
+      icon: 'grid-outline',
+      route: '/admin/AdminDashboard',
+    },
+    {
+      key: 'ops',
+      label: t('admin.common.opsShort'),
+      icon: 'pulse-outline',
+      route: '/admin/ops',
+    },
+    {
+      key: 'orders',
+      label: t('admin.common.ordersTitle'),
+      icon: 'receipt-outline',
+      route: '/admin/orders',
+    },
+    {
+      key: 'audit',
+      label: t('admin.common.auditShort'),
+      icon: 'shield-checkmark-outline',
+      route: '/admin/audit-logs',
+    },
+  ]), [t]);
 
   const handleNavigate = useCallback((route) => {
     if (!route) return;
@@ -223,7 +225,7 @@ export default function AdminIndexScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#F7F4FB" />
         <ActivityIndicator size="large" color="#5A32A3" />
-        <Text style={styles.loaderText}>Chargement du centre de contrôle...</Text>
+        <Text style={styles.loaderText}>{t('admin.index.loaderText')}</Text>
       </View>
     );
   }
@@ -279,12 +281,10 @@ export default function AdminIndexScreen() {
         <View style={styles.heroCard}>
           <View style={styles.heroTop}>
             <View style={styles.heroTextWrap}>
-              <Text style={styles.eyebrow}>Bloc admin privé</Text>
-              <Text style={styles.title}>Centre de supervision AFROEAT</Text>
+              <Text style={styles.eyebrow}>{t('admin.index.eyebrow')}</Text>
+              <Text style={styles.title}>{t('admin.index.title')}</Text>
               <Text style={styles.subtitle}>
-                Bienvenue {adminName}. Tu pilotes ici toute la plateforme :
-                supervision stratégique, contrôle opérationnel, gouvernance,
-                sécurité et croissance.
+                {t('admin.index.subtitleWelcome', { name: adminName })}
               </Text>
             </View>
 
@@ -299,31 +299,31 @@ export default function AdminIndexScreen() {
 
           <View style={styles.heroStatsRow}>
             <View style={styles.heroStatPill}>
-              <Text style={styles.heroStatText}>Users</Text>
+              <Text style={styles.heroStatText}>{t('admin.index.heroStatUsers')}</Text>
             </View>
             <View style={styles.heroStatPill}>
-              <Text style={styles.heroStatText}>Restaurants</Text>
+              <Text style={styles.heroStatText}>{t('admin.index.heroStatRestaurants')}</Text>
             </View>
             <View style={styles.heroStatPill}>
-              <Text style={styles.heroStatText}>Drivers</Text>
+              <Text style={styles.heroStatText}>{t('admin.index.heroStatDrivers')}</Text>
             </View>
             <View style={styles.heroStatPill}>
-              <Text style={styles.heroStatText}>Orders</Text>
+              <Text style={styles.heroStatText}>{t('admin.index.heroStatOrders')}</Text>
             </View>
             <View style={styles.heroStatPill}>
-              <Text style={styles.heroStatText}>Ops</Text>
+              <Text style={styles.heroStatText}>{t('admin.index.heroStatOps')}</Text>
             </View>
             <View style={styles.heroStatPill}>
-              <Text style={styles.heroStatText}>Audit</Text>
+              <Text style={styles.heroStatText}>{t('admin.index.heroStatAudit')}</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Accès rapide</Text>
+          <Text style={styles.sectionTitle}>{t('admin.index.quickAccessTitle')}</Text>
 
           <View style={styles.quickActions}>
-            {QUICK_ACTIONS.map((item) => (
+            {quickActions.map((item) => (
               <Pressable
                 key={item.key}
                 style={styles.quickCard}
@@ -337,9 +337,9 @@ export default function AdminIndexScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Espaces de contrôle</Text>
+          <Text style={styles.sectionTitle}>{t('admin.index.controlSpacesTitle')}</Text>
 
-          {ADMIN_SECTIONS.map((item) => (
+          {adminSections.map((item) => (
             <Pressable
               key={item.key}
               style={styles.card}
@@ -369,11 +369,9 @@ export default function AdminIndexScreen() {
         </View>
 
         <View style={styles.bottomPanel}>
-          <Text style={styles.bottomTitle}>Architecture admin niveau DIEU</Text>
+          <Text style={styles.bottomTitle}>{t('admin.index.bottomTitle')}</Text>
           <Text style={styles.bottomText}>
-            Ce point d’entrée centralise la supervision AFROEAT avec une logique
-            cloisonnée, un contrôle premium des blocs critiques et une base
-            prête pour une exploitation réelle, industrielle et mondiale.
+            {t('admin.index.bottomText')}
           </Text>
         </View>
       </ScrollView>
