@@ -1,6 +1,7 @@
 // app/admin/restaurant-details/[id].jsx
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
@@ -21,8 +22,18 @@ import {
   getAdminRestaurantById,
   updateAdminUserStatus,
 } from '../../../services/adminService';
+import i18n from '../../../i18n';
 
 const LIVE_REFRESH_MS = 15000;
+
+const DATE_LOCALE_MAP = {
+  fr: 'fr-FR',
+  en: 'en-US',
+  de: 'de-DE',
+  es: 'es-ES',
+  it: 'it-IT',
+  zh: 'zh-CN',
+};
 
 /**
  * =========================================================
@@ -105,15 +116,15 @@ const formatPrice = (value, currency = 'EUR') => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -124,67 +135,67 @@ const formatDateTime = (value) => {
 };
 
 const formatDate = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
   });
 };
 
-const getOwnerStatusStyle = (status) => {
+const getOwnerStatusStyle = (status, t) => {
   switch (normalizeText(status).toLowerCase()) {
     case 'active':
       return {
         bg: '#E8F5ED',
         text: '#1F6F43',
-        label: 'Actif',
+        label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
         bg: '#FDECEC',
         text: '#B83232',
-        label: 'Suspendu',
+        label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
         bg: '#FFF3D8',
         text: '#8A6500',
-        label: 'En attente',
+        label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
         bg: '#EFE9FF',
         text: '#6D4CDB',
-        label: 'Refusé',
+        label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
         bg: '#F4F4F4',
         text: '#555555',
-        label: normalizeText(status, 'Inconnu'),
+        label: normalizeText(status, t('admin.users.statusUnknownLabel')),
         icon: 'help-circle-outline',
       };
   }
 };
 
-const getVerificationStyle = (value) => {
+const getVerificationStyle = (value, t) => {
   if (value === true) {
     return {
       bg: '#E8F5ED',
       text: '#1F6F43',
-      label: 'Oui',
+      label: t('admin.userDetails.yesLabel'),
       icon: 'checkmark-circle-outline',
     };
   }
@@ -192,12 +203,12 @@ const getVerificationStyle = (value) => {
   return {
     bg: '#FFF3D8',
     text: '#8A6500',
-    label: 'Non',
+    label: t('admin.userDetails.noLabel'),
     icon: 'warning-outline',
   };
 };
 
-const getOperationalRiskStyle = (restaurant) => {
+const getOperationalRiskStyle = (restaurant, t) => {
   const hasOwner = Boolean(restaurant?.owner?._id);
   const menuCount = normalizeNumber(restaurant?.menuCount, 0);
   const hasAddress = Boolean(normalizeText(restaurant?.address));
@@ -207,7 +218,7 @@ const getOperationalRiskStyle = (restaurant) => {
     return {
       bg: '#FDECEC',
       text: '#B83232',
-      label: 'Élevé',
+      label: t('admin.restaurantDetails.riskHighLabel'),
       icon: 'alert-circle-outline',
     };
   }
@@ -216,7 +227,7 @@ const getOperationalRiskStyle = (restaurant) => {
     return {
       bg: '#FFF3D8',
       text: '#8A6500',
-      label: 'Moyen',
+      label: t('admin.restaurantDetails.riskMediumLabel'),
       icon: 'warning-outline',
     };
   }
@@ -224,7 +235,7 @@ const getOperationalRiskStyle = (restaurant) => {
   return {
     bg: '#E8F5ED',
     text: '#1F6F43',
-    label: 'Faible',
+    label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
   };
 };
@@ -247,7 +258,7 @@ const normalizeRestaurantResponse = (payload) => {
           ...raw.owner,
           _id: raw.owner?._id || raw.owner?.id || null,
           id: raw.owner?.id || raw.owner?._id || null,
-          name: normalizeText(raw.owner?.name, 'Propriétaire non renseigné'),
+          name: normalizeText(raw.owner?.name, i18n.t('admin.restaurantDetails.ownerNameFallback')),
           email: normalizeText(raw.owner?.email),
           phone: normalizeText(raw.owner?.phone),
           role: normalizeRole(raw.owner?.role || 'restaurant'),
@@ -272,8 +283,8 @@ const normalizeRestaurantResponse = (payload) => {
         ...item,
         _id: item?._id || item?.id || null,
         id: item?.id || item?._id || null,
-        name: normalizeText(item?.name || item?.title, 'Article'),
-        category: normalizeText(item?.category, 'Catégorie'),
+        name: normalizeText(item?.name || item?.title, i18n.t('admin.restaurantDetails.menuItemNameFallback')),
+        category: normalizeText(item?.category, i18n.t('admin.restaurantDetails.menuItemCategoryFallback')),
         price: normalizeNumber(item?.price, 0),
         isAvailable:
           item?.isAvailable !== undefined
@@ -329,8 +340,8 @@ const normalizeRestaurantResponse = (payload) => {
     ...raw,
     _id: raw?._id || raw?.id || null,
     id: raw?.id || raw?._id || null,
-    name: normalizeText(raw?.name, 'Restaurant'),
-    cuisine: normalizeText(raw?.cuisine, 'Cuisine non renseignée'),
+    name: normalizeText(raw?.name, i18n.t('restaurant.menuScreen.restaurantNameFallback')),
+    cuisine: normalizeText(raw?.cuisine, i18n.t('admin.restaurantDetails.cuisineFallback')),
     address: normalizeText(raw?.address),
     city: normalizeText(raw?.city),
     country: normalizeText(raw?.country),
@@ -401,6 +412,7 @@ const Badge = ({ label, bg, text, icon }) => (
  */
 
 export default function AdminRestaurantDetailsScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const auth = useAuth() || {};
 
@@ -423,20 +435,20 @@ export default function AdminRestaurantDetailsScreen() {
   const canAccess = Boolean(isAuthenticated && token && isAdminRole(currentRole));
 
   const ownerStatusStyle = useMemo(() => {
-    return getOwnerStatusStyle(restaurant?.owner?.accountStatus);
-  }, [restaurant]);
+    return getOwnerStatusStyle(restaurant?.owner?.accountStatus, t);
+  }, [restaurant, t]);
 
   const ownerIdentityStyle = useMemo(() => {
-    return getVerificationStyle(Boolean(restaurant?.owner?.isIdentityVerified));
-  }, [restaurant]);
+    return getVerificationStyle(Boolean(restaurant?.owner?.isIdentityVerified), t);
+  }, [restaurant, t]);
 
   const ownerWorkStyle = useMemo(() => {
-    return getVerificationStyle(Boolean(restaurant?.owner?.isWorkAuthorized));
-  }, [restaurant]);
+    return getVerificationStyle(Boolean(restaurant?.owner?.isWorkAuthorized), t);
+  }, [restaurant, t]);
 
   const operationalRiskStyle = useMemo(() => {
-    return getOperationalRiskStyle(restaurant);
-  }, [restaurant]);
+    return getOperationalRiskStyle(restaurant, t);
+  }, [restaurant, t]);
 
   const handleGoBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -453,8 +465,8 @@ export default function AdminRestaurantDetailsScreen() {
         setRestaurant(null);
         setErrorMessage(
           !restaurantId
-            ? 'Restaurant invalide.'
-            : 'Session admin invalide.'
+            ? t('admin.restaurants.invalidRestaurantAlert')
+            : t('admin.users.invalidSessionAlert')
         );
         setLoading(false);
         setRefreshing(false);
@@ -475,7 +487,7 @@ export default function AdminRestaurantDetailsScreen() {
         const safeRestaurant = normalizeRestaurantResponse(result);
 
         if (!safeRestaurant?._id) {
-          throw new Error('Impossible de charger ce restaurant.');
+          throw new Error(t('admin.restaurantDetails.fetchErrorFallback'));
         }
 
         setRestaurant(safeRestaurant);
@@ -484,7 +496,7 @@ export default function AdminRestaurantDetailsScreen() {
         console.log('Erreur détail restaurant admin :', error);
 
         const message =
-          error?.message || 'Impossible de charger ce restaurant.';
+          error?.message || t('admin.restaurantDetails.fetchErrorFallback');
 
         if (!silent) {
           setRestaurant(null);
@@ -493,7 +505,7 @@ export default function AdminRestaurantDetailsScreen() {
         setErrorMessage(message);
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -501,7 +513,7 @@ export default function AdminRestaurantDetailsScreen() {
         setInitialLoaded(true);
       }
     },
-    [isAuthenticated, token, restaurantId, currentRole]
+    [isAuthenticated, token, restaurantId, currentRole, t]
   );
 
   useFocusEffect(
@@ -586,73 +598,73 @@ export default function AdminRestaurantDetailsScreen() {
       {
         key: 'currency',
         value: normalizeText(restaurant?.currency, 'EUR'),
-        label: 'Devise',
+        label: t('restaurant.profile.currencyLabel'),
         accent: '#245EA8',
         icon: 'cash-outline',
       },
       {
         key: 'deliveryFee',
         value: formatPrice(restaurant?.deliveryFee, restaurant?.currency || 'EUR'),
-        label: 'Livraison',
+        label: t('restaurant.profile.deliveryLabel'),
         accent: '#D96C2D',
         icon: 'car-outline',
       },
       {
         key: 'ownerStatus',
         value: ownerStatusStyle.label,
-        label: 'Owner status',
+        label: t('admin.restaurantDetails.ownerStatusFlagLabel'),
         accent: ownerStatusStyle.text,
         icon: ownerStatusStyle.icon,
       },
       {
         key: 'hasOwner',
-        value: restaurant?.owner?._id ? 'Oui' : 'Non',
-        label: 'Owner lié',
+        value: restaurant?.owner?._id ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
+        label: t('admin.restaurantDetails.hasOwnerFlagLabel'),
         accent: restaurant?.owner?._id ? '#1F6F43' : '#B83232',
         icon: 'person-outline',
       },
       {
         key: 'menuCount',
         value: String(menus.length),
-        label: 'Éléments menu',
+        label: t('admin.restaurantDetails.menuCountFlagLabel'),
         accent: '#7C3AED',
         icon: 'list-outline',
       },
       {
         key: 'categoriesCount',
         value: String(categories.length),
-        label: 'Catégories',
+        label: t('admin.restaurantDetails.categoriesLabel'),
         accent: '#8A6500',
         icon: 'grid-outline',
       },
       {
         key: 'risk',
         value: operationalRiskStyle.label,
-        label: 'Risque ops',
+        label: t('admin.restaurantDetails.riskOpsFlagLabel'),
         accent: operationalRiskStyle.text,
         icon: operationalRiskStyle.icon,
       },
       {
         key: 'isOpen',
-        value: restaurant?.isOpen ? 'Ouvert' : 'Fermé',
-        label: 'État',
+        value: restaurant?.isOpen ? t('restaurant.profile.openLabel') : t('restaurant.profile.closedLabel'),
+        label: t('admin.restaurantDetails.stateFlagLabel'),
         accent: restaurant?.isOpen ? '#1F6F43' : '#B83232',
         icon: restaurant?.isOpen ? 'checkmark-circle-outline' : 'close-circle-outline',
       },
     ];
-  }, [restaurant, ownerStatusStyle, menus, categories, operationalRiskStyle]);
+  }, [restaurant, ownerStatusStyle, menus, categories, operationalRiskStyle, t]);
 
   const liveRefreshLabel = useMemo(() => {
     if (!lastLiveRefresh) {
-      return 'En attente du premier refresh live';
+      return t('admin.ops.liveRefreshWaiting');
     }
 
-    return `Dernier refresh live : ${formatDateTime(lastLiveRefresh)}`;
-  }, [lastLiveRefresh]);
+    return t('admin.ops.liveRefreshLabel', { date: formatDateTime(lastLiveRefresh) });
+  }, [lastLiveRefresh, t]);
 
   const handleToggleOwnerStatus = useCallback(() => {
     if (!restaurant?.owner?._id || !token) {
-      Alert.alert('Erreur', 'Action impossible sur ce propriétaire.');
+      Alert.alert(t('common.error'), t('admin.restaurantDetails.actionImpossibleOwnerAlert'));
       return;
     }
 
@@ -660,19 +672,19 @@ export default function AdminRestaurantDetailsScreen() {
       restaurant?.owner?.accountStatus
     ).toLowerCase();
     const nextStatus = currentOwnerStatus === 'suspended' ? 'active' : 'suspended';
-    const actionLabel = nextStatus === 'active' ? 'réactiver' : 'suspendre';
+    const actionLabel = nextStatus === 'active' ? t('admin.users.reactivateAction') : t('admin.users.suspendAction');
     const ownerName = normalizeText(
       restaurant?.owner?.name,
-      normalizeText(restaurant?.owner?.email, 'ce propriétaire')
+      normalizeText(restaurant?.owner?.email, t('admin.restaurantDetails.defaultOwnerIdentity'))
     );
 
     Alert.alert(
-      'Confirmer',
-      `Veux-tu ${actionLabel} ${ownerName} ?`,
+      t('admin.users.confirmDialogTitle'),
+      t('admin.users.confirmDialogMessage', { action: actionLabel, identity: ownerName }),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('admin.users.cancelAction'), style: 'cancel' },
         {
-          text: 'Confirmer',
+          text: t('admin.users.confirmDialogTitle'),
           onPress: async () => {
             try {
               setUpdatingOwner(true);
@@ -704,14 +716,14 @@ export default function AdminRestaurantDetailsScreen() {
               });
 
               Alert.alert(
-                'Succès',
-                response?.message || 'Statut du propriétaire mis à jour.'
+                t('common.success'),
+                response?.message || t('admin.restaurantDetails.ownerStatusUpdatedFallback')
               );
             } catch (error) {
               console.log('Erreur update owner restaurant :', error);
               Alert.alert(
-                'Erreur',
-                error?.message || 'Impossible de modifier le statut du propriétaire.'
+                t('common.error'),
+                error?.message || t('admin.restaurantDetails.ownerUpdateErrorFallback')
               );
             } finally {
               setUpdatingOwner(false);
@@ -720,7 +732,7 @@ export default function AdminRestaurantDetailsScreen() {
         },
       ]
     );
-  }, [restaurant, token]);
+  }, [restaurant, token, t]);
 
   /**
    * =========================================================
@@ -733,7 +745,7 @@ export default function AdminRestaurantDetailsScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement du restaurant...</Text>
+        <Text style={styles.loaderText}>{t('admin.restaurantDetails.loaderText')}</Text>
       </View>
     );
   }
@@ -772,11 +784,11 @@ export default function AdminRestaurantDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Restaurant introuvable</Text>
-          <Text style={styles.emptyText}>Identifiant restaurant manquant.</Text>
+          <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
+          <Text style={styles.emptyText}>{t('admin.restaurantDetails.missingIdText')}</Text>
 
           <Pressable style={styles.primaryButton} onPress={handleGoBack}>
-            <Text style={styles.primaryButtonText}>Retour</Text>
+            <Text style={styles.primaryButtonText}>{t('admin.userDetails.backButton')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -789,9 +801,9 @@ export default function AdminRestaurantDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Restaurant introuvable</Text>
+          <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
-            {errorMessage || 'Impossible de récupérer les informations de ce restaurant.'}
+            {errorMessage || t('admin.restaurantDetails.fetchErrorEmptyText')}
           </Text>
 
           <Pressable
@@ -805,13 +817,13 @@ export default function AdminRestaurantDetailsScreen() {
             {refreshing ? (
               <ActivityIndicator size="small" color="#111111" />
             ) : (
-              <Text style={styles.primaryButtonText}>Réessayer</Text>
+              <Text style={styles.primaryButtonText}>{t('restaurant.retry')}</Text>
             )}
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
             <Ionicons name="arrow-back" size={16} color="#1F6F43" />
-            <Text style={styles.backLinkText}>Retour aux restaurants</Text>
+            <Text style={styles.backLinkText}>{t('admin.restaurantDetails.backToListButton')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -851,13 +863,12 @@ export default function AdminRestaurantDetailsScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Admin</Text>
+          <Text style={styles.eyebrow}>{t('admin.restaurantDetails.eyebrow')}</Text>
           <Text style={styles.title}>
-            {normalizeText(restaurant?.name, 'Restaurant')}
+            {normalizeText(restaurant?.name, t('restaurant.menuScreen.restaurantNameFallback'))}
           </Text>
           <Text style={styles.subtitle}>
-            Vue détaillée du partenaire restaurant, de son propriétaire, de son offre,
-            de sa structure et de son niveau d’exploitation.
+            {t('admin.restaurantDetails.subtitleHeader')}
           </Text>
         </View>
 
@@ -865,7 +876,7 @@ export default function AdminRestaurantDetailsScreen() {
           <View style={styles.liveMonitorHeader}>
             <View style={styles.liveMonitorTitleWrap}>
               <Ionicons name="radio-outline" size={18} color="#245EA8" />
-              <Text style={styles.liveMonitorTitle}>Restaurant Intelligence Panel</Text>
+              <Text style={styles.liveMonitorTitle}>{t('admin.restaurantDetails.liveMonitorTitle')}</Text>
             </View>
 
             <View style={styles.liveBadge}>
@@ -874,8 +885,7 @@ export default function AdminRestaurantDetailsScreen() {
           </View>
 
           <Text style={styles.liveMonitorText}>
-            Cette fiche premium sert de base de contrôle AFROEAT pour la qualité business,
-            la conformité owner, la structure catalogue et la montée en gamme des partenaires.
+            {t('admin.restaurantDetails.liveMonitorText')}
           </Text>
 
           <Text style={styles.liveMonitorSubText}>{liveRefreshLabel}</Text>
@@ -884,19 +894,19 @@ export default function AdminRestaurantDetailsScreen() {
         <View style={styles.heroCard}>
           <View style={styles.heroLeft}>
             <Text style={styles.heroTitle}>
-              {normalizeText(restaurant?.name, 'Restaurant AFROEAT')}
+              {normalizeText(restaurant?.name, t('admin.restaurantDetails.heroNameFallback'))}
             </Text>
             <Text style={styles.heroText}>
-              {normalizeText(restaurant?.cuisine, 'Cuisine non renseignée')}
+              {normalizeText(restaurant?.cuisine, t('admin.restaurantDetails.cuisineFallback'))}
             </Text>
             <Text style={styles.heroSubText}>
-              {normalizeText(locationLine, 'Localisation non renseignée')}
+              {normalizeText(locationLine, t('admin.restaurantDetails.locationFallback'))}
             </Text>
           </View>
 
           <View style={styles.heroBadges}>
             <Badge
-              label="Partenaire"
+              label={t('admin.restaurantDetails.partnerBadgeLabel')}
               bg="#E8F5ED"
               text="#1F6F43"
               icon="storefront-outline"
@@ -910,7 +920,7 @@ export default function AdminRestaurantDetailsScreen() {
             />
 
             <Badge
-              label={`Risque ${operationalRiskStyle.label}`}
+              label={t('admin.restaurantDetails.riskBadgeLabel', { level: operationalRiskStyle.label })}
               bg={operationalRiskStyle.bg}
               text={operationalRiskStyle.text}
               icon={operationalRiskStyle.icon}
@@ -918,56 +928,56 @@ export default function AdminRestaurantDetailsScreen() {
           </View>
         </View>
 
-        <InfoCard title="Informations générales">
+        <InfoCard title={t('admin.userDetails.generalInfoTitle')}>
           <MetaRow
             icon="storefront-outline"
-            label="Nom"
-            value={normalizeText(restaurant?.name, 'Non renseigné')}
+            label={t('restaurant.profile.nameLabel')}
+            value={normalizeText(restaurant?.name, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="restaurant-outline"
-            label="Cuisine"
-            value={normalizeText(restaurant?.cuisine, 'Non renseigné')}
+            label={t('restaurant.profile.cuisineLabel')}
+            value={normalizeText(restaurant?.cuisine, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="location-outline"
-            label="Adresse"
-            value={normalizeText(restaurant?.address, 'Non renseigné')}
+            label={t('restaurant.profile.addressLabel')}
+            value={normalizeText(restaurant?.address, t('profile.info.notProvided'))}
             multiline
           />
           <MetaRow
             icon="business-outline"
-            label="Ville"
-            value={normalizeText(restaurant?.city, 'Non renseigné')}
+            label={t('restaurant.profile.cityLabel')}
+            value={normalizeText(restaurant?.city, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="earth-outline"
-            label="Pays"
-            value={normalizeText(restaurant?.country, 'Non renseigné')}
+            label={t('restaurant.profile.countryLabel')}
+            value={normalizeText(restaurant?.country, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="cash-outline"
-            label="Devise"
+            label={t('restaurant.profile.currencyLabel')}
             value={normalizeText(restaurant?.currency, 'EUR')}
           />
           <MetaRow
             icon="car-outline"
-            label="Livraison"
+            label={t('restaurant.profile.deliveryLabel')}
             value={formatPrice(restaurant?.deliveryFee, restaurant?.currency || 'EUR')}
           />
           <MetaRow
             icon="star-outline"
-            label="Note"
+            label={t('restaurant.analytics.ratingLabel')}
             value={
               restaurant?.rating > 0
                 ? Number(restaurant.rating).toFixed(1)
-                : 'Non renseignée'
+                : t('admin.restaurantDetails.ratingUnavailable')
             }
           />
           <MetaRow
             icon="time-outline"
-            label="Ouvert"
-            value={restaurant?.isOpen ? 'Oui' : 'Non'}
+            label={t('restaurant.profile.openLabel')}
+            value={restaurant?.isOpen ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
             valueStyle={{
               color: restaurant?.isOpen ? '#1F6F43' : '#B83232',
               fontWeight: '900',
@@ -975,40 +985,40 @@ export default function AdminRestaurantDetailsScreen() {
           />
         </InfoCard>
 
-        <InfoCard title="Performance / exploitation">
+        <InfoCard title={t('admin.restaurantDetails.performanceTitle')}>
           <View style={styles.statsGrid}>
             <StatBox
-              label="CA estimé"
+              label={t('admin.restaurantDetails.revenueLabel')}
               value={formatPrice(restaurant?.revenue, restaurant?.currency || 'EUR')}
               accent="#1F6F43"
               icon="cash-outline"
             />
             <StatBox
-              label="Commandes"
+              label={t('admin.restaurantDetails.ordersLabel')}
               value={String(restaurant?.totalOrders || 0)}
               accent="#245EA8"
               icon="receipt-outline"
             />
             <StatBox
-              label="Livrées"
+              label={t('admin.restaurantDetails.deliveredLabel')}
               value={String(restaurant?.deliveredOrders || 0)}
               accent="#1F6F43"
               icon="checkmark-circle-outline"
             />
             <StatBox
-              label="Annulées"
+              label={t('admin.restaurantDetails.cancelledLabel')}
               value={String(restaurant?.cancelledOrders || 0)}
               accent="#B83232"
               icon="close-circle-outline"
             />
             <StatBox
-              label="En cours"
+              label={t('admin.restaurantDetails.pendingLabel')}
               value={String(restaurant?.pendingOrders || 0)}
               accent="#8A6500"
               icon="time-outline"
             />
             <StatBox
-              label="Menu moyen"
+              label={t('admin.restaurantDetails.avgMenuPriceLabel')}
               value={formatPrice(averageMenuPrice, restaurant?.currency || 'EUR')}
               accent="#6D4CDB"
               icon="analytics-outline"
@@ -1016,90 +1026,90 @@ export default function AdminRestaurantDetailsScreen() {
           </View>
         </InfoCard>
 
-        <InfoCard title="Menu / offre commerciale">
+        <InfoCard title={t('admin.restaurantDetails.menuOfferTitle')}>
           <MetaRow
             icon="list-outline"
-            label="Éléments"
+            label={t('admin.restaurantDetails.itemsLabel')}
             value={String(menus.length)}
           />
           <MetaRow
             icon="grid-outline"
-            label="Catégories"
-            value={categories.length > 0 ? categories.join(', ') : 'Non renseigné'}
+            label={t('admin.restaurantDetails.categoriesLabel')}
+            value={categories.length > 0 ? categories.join(', ') : t('profile.info.notProvided')}
             multiline
           />
           <MetaRow
             icon="trending-down-outline"
-            label="Prix mini"
+            label={t('admin.restaurantDetails.minPriceLabel')}
             value={formatPrice(cheapestMenuPrice, restaurant?.currency || 'EUR')}
           />
           <MetaRow
             icon="trending-up-outline"
-            label="Prix maxi"
+            label={t('admin.restaurantDetails.maxPriceLabel')}
             value={formatPrice(highestMenuPrice, restaurant?.currency || 'EUR')}
           />
           <MetaRow
             icon="analytics-outline"
-            label="Prix moyen"
+            label={t('admin.restaurantDetails.avgPriceLabel')}
             value={formatPrice(averageMenuPrice, restaurant?.currency || 'EUR')}
           />
           <MetaRow
             icon="checkmark-done-outline"
-            label="Disponibles"
+            label={t('admin.restaurantDetails.availableLabel')}
             value={String(menuAvailabilityStats.availableCount)}
           />
           <MetaRow
             icon="remove-circle-outline"
-            label="Indisponibles"
+            label={t('admin.restaurantDetails.unavailableLabel')}
             value={String(menuAvailabilityStats.unavailableCount)}
           />
         </InfoCard>
 
-        <InfoCard title="Propriétaire">
+        <InfoCard title={t('admin.restaurantDetails.ownerSectionTitle')}>
           <MetaRow
             icon="person-circle-outline"
-            label="Nom"
-            value={normalizeText(restaurant?.owner?.name, 'Non renseigné')}
+            label={t('restaurant.profile.nameLabel')}
+            value={normalizeText(restaurant?.owner?.name, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(restaurant?.owner?.email, 'Non renseigné')}
+            label={t('admin.userDetails.emailFieldLabel')}
+            value={normalizeText(restaurant?.owner?.email, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="call-outline"
-            label="Téléphone"
-            value={normalizeText(restaurant?.owner?.phone, 'Non renseigné')}
+            label={t('admin.userDetails.phoneFieldLabel')}
+            value={normalizeText(restaurant?.owner?.phone, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="id-card-outline"
-            label="Rôle"
+            label={t('admin.userDetails.roleFieldLabel')}
             value={normalizeText(restaurant?.owner?.role, 'restaurant')}
           />
           <MetaRow
             icon="shield-checkmark-outline"
-            label="Statut"
+            label={t('restaurant.profile.statusLabel')}
             value={ownerStatusStyle.label}
             valueStyle={{ color: ownerStatusStyle.text, fontWeight: '900' }}
           />
           <MetaRow
             icon="shield-outline"
-            label="Identité"
+            label={t('admin.restaurantDetails.identityFieldLabel')}
             value={ownerIdentityStyle.label}
             valueStyle={{ color: ownerIdentityStyle.text, fontWeight: '900' }}
           />
           <MetaRow
             icon="briefcase-outline"
-            label="Travail"
+            label={t('admin.restaurantDetails.workFieldLabel')}
             value={ownerWorkStyle.label}
             valueStyle={{ color: ownerWorkStyle.text, fontWeight: '900' }}
           />
         </InfoCard>
 
         <View style={styles.actionsCard}>
-          <Text style={styles.actionsTitle}>Action admin</Text>
+          <Text style={styles.actionsTitle}>{t('admin.restaurantDetails.adminActionTitle')}</Text>
           <Text style={styles.actionsSubtitle}>
-            Suspension ou réactivation du compte propriétaire du restaurant.
+            {t('admin.restaurantDetails.adminActionSubtitle')}
           </Text>
 
           <Pressable
@@ -1128,15 +1138,15 @@ export default function AdminRestaurantDetailsScreen() {
                 />
                 <Text style={styles.ownerActionButtonText}>
                   {restaurant?.owner?.accountStatus === 'suspended'
-                    ? 'Réactiver le propriétaire'
-                    : 'Suspendre le propriétaire'}
+                    ? t('admin.restaurantDetails.reactivateOwnerButton')
+                    : t('admin.restaurantDetails.suspendOwnerButton')}
                 </Text>
               </>
             )}
           </Pressable>
         </View>
 
-        <InfoCard title="Indicateurs admin">
+        <InfoCard title={t('admin.restaurantDetails.adminIndicatorsTitle')}>
           <View style={styles.flagGrid}>
             {technicalFlags.map((flag) => (
               <View key={flag.key} style={styles.flagBox}>
@@ -1152,26 +1162,26 @@ export default function AdminRestaurantDetailsScreen() {
           </View>
         </InfoCard>
 
-        <InfoCard title="Technique">
+        <InfoCard title={t('admin.restaurantDetails.technicalTitle')}>
           <MetaRow
             icon="finger-print-outline"
-            label="ID"
-            value={normalizeText(restaurant?._id, 'Non renseigné')}
+            label={t('admin.restaurantDetails.idFieldLabel')}
+            value={normalizeText(restaurant?._id, t('profile.info.notProvided'))}
             multiline
           />
           <MetaRow
             icon="calendar-outline"
-            label="Créé le"
+            label={t('admin.userDetails.createdOnFieldLabel')}
             value={formatDateTime(restaurant?.createdAt)}
           />
           <MetaRow
             icon="refresh-outline"
-            label="Mis à jour"
+            label={t('admin.restaurantDetails.updatedFieldLabel')}
             value={formatDateTime(restaurant?.updatedAt)}
           />
           <MetaRow
             icon="time-outline"
-            label="Date courte"
+            label={t('admin.restaurantDetails.shortDateFieldLabel')}
             value={formatDate(restaurant?.createdAt)}
           />
         </InfoCard>
