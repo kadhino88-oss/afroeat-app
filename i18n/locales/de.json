@@ -1382,6 +1382,28 @@
       "paymentPaidLabel": "Bezahlt",
       "paymentUnpaidLabel": "Unbezahlt",
       "paymentRefundedLabel": "Erstattet"
+    },
+    "auditLogs": {
+      "actionFallback": "Admin-Aktion",
+      "targetTypeUserLabel": "Benutzer",
+      "targetTypeOrderLabel": "Bestellung",
+      "targetTypeSystemLabel": "System",
+      "targetTypeOtherLabel": "Sonstiges",
+      "adminUnknownFallback": "Unbekannter Admin",
+      "fetchErrorFallback": "Admin-Protokolle konnten nicht geladen werden.",
+      "invalidLogAlert": "Ungültiges Protokoll.",
+      "loaderText": "Admin-Protokolle werden geladen...",
+      "title": "Admin-Protokolle",
+      "subtitle": "Verfolge sensible Aktionen im Verwaltungsbereich.",
+      "targetTypeFilterTitle": "Zieltyp",
+      "searchPlaceholder": "Aktion, Ziel, Details suchen...",
+      "targetFilterFragment": " • Ziel {{target}}",
+      "adminLabel": "Admin: {{name}}",
+      "targetLabel": "Ziel: {{target}}",
+      "agentCapturedLabel": "Agent erfasst",
+      "targetIdLabel": "Target ID",
+      "emptyTitle": "Kein Protokoll gefunden",
+      "emptyText": "Verfolgte Admin-Aktionen erscheinen hier."
     }
   }
 }

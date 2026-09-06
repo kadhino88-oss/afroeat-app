@@ -1382,6 +1382,28 @@
       "paymentPaidLabel": "Pagado",
       "paymentUnpaidLabel": "Impago",
       "paymentRefundedLabel": "Reembolsado"
+    },
+    "auditLogs": {
+      "actionFallback": "Acción admin",
+      "targetTypeUserLabel": "Usuario",
+      "targetTypeOrderLabel": "Pedido",
+      "targetTypeSystemLabel": "Sistema",
+      "targetTypeOtherLabel": "Otro",
+      "adminUnknownFallback": "Admin desconocido",
+      "fetchErrorFallback": "No se pudieron cargar los registros de administración.",
+      "invalidLogAlert": "Registro no válido.",
+      "loaderText": "Cargando registros de administración...",
+      "title": "Registros de administración",
+      "subtitle": "Rastrea las acciones sensibles realizadas en el área de administración.",
+      "targetTypeFilterTitle": "Tipo de objetivo",
+      "searchPlaceholder": "Buscar acción, objetivo, detalles...",
+      "targetFilterFragment": " • objetivo {{target}}",
+      "adminLabel": "Admin: {{name}}",
+      "targetLabel": "Objetivo: {{target}}",
+      "agentCapturedLabel": "Agente capturado",
+      "targetIdLabel": "Target ID",
+      "emptyTitle": "No se encontró ningún registro",
+      "emptyText": "Las acciones de administración rastreadas aparecerán aquí."
     }
   }
 }

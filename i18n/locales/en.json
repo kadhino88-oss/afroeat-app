@@ -1382,6 +1382,28 @@
       "paymentPaidLabel": "Paid",
       "paymentUnpaidLabel": "Unpaid",
       "paymentRefundedLabel": "Refunded"
+    },
+    "auditLogs": {
+      "actionFallback": "Admin action",
+      "targetTypeUserLabel": "User",
+      "targetTypeOrderLabel": "Order",
+      "targetTypeSystemLabel": "System",
+      "targetTypeOtherLabel": "Other",
+      "adminUnknownFallback": "Unknown admin",
+      "fetchErrorFallback": "Unable to load admin logs.",
+      "invalidLogAlert": "Invalid log.",
+      "loaderText": "Loading admin logs...",
+      "title": "Admin logs",
+      "subtitle": "Track sensitive actions performed in the administration area.",
+      "targetTypeFilterTitle": "Target type",
+      "searchPlaceholder": "Search action, target, details...",
+      "targetFilterFragment": " • target {{target}}",
+      "adminLabel": "Admin: {{name}}",
+      "targetLabel": "Target: {{target}}",
+      "agentCapturedLabel": "Agent captured",
+      "targetIdLabel": "Target ID",
+      "emptyTitle": "No log found",
+      "emptyText": "Tracked admin actions will appear here."
     }
   }
 }

@@ -17,6 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getAdminAuditLogs } from '../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -89,16 +91,18 @@ const getAccountStatus = (user, auth) => {
   );
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -110,7 +114,7 @@ const formatDateTime = (value) => {
 const formatActionLabel = (value) => {
   const raw = normalizeText(value);
 
-  if (!raw) return 'Action admin';
+  if (!raw) return i18n.t('admin.auditLogs.actionFallback');
 
   return raw
     .replace(/_/g, ' ')
@@ -119,22 +123,22 @@ const formatActionLabel = (value) => {
     .replace(/^./, (char) => char.toUpperCase());
 };
 
-const getTargetTypeLabel = (value) => {
+const getTargetTypeLabel = (value, t) => {
   switch (normalizeText(value).toLowerCase()) {
     case 'user':
-      return 'Utilisateur';
+      return t('admin.auditLogs.targetTypeUserLabel');
     case 'restaurant':
-      return 'Restaurant';
+      return t('admin.users.roleRestaurantLabel');
     case 'driver':
-      return 'Livreur';
+      return t('admin.users.roleDriverLabel');
     case 'order':
-      return 'Commande';
+      return t('admin.auditLogs.targetTypeOrderLabel');
     case 'system':
-      return 'Système';
+      return t('admin.auditLogs.targetTypeSystemLabel');
     case 'other':
-      return 'Autre';
+      return t('admin.auditLogs.targetTypeOtherLabel');
     default:
-      return normalizeText(value, 'Autre');
+      return normalizeText(value, t('admin.auditLogs.targetTypeOtherLabel'));
   }
 };
 
@@ -155,13 +159,13 @@ const getTargetTypeStyle = (value) => {
   }
 };
 
-const getSortLabel = (value) => {
+const getSortLabel = (value, t) => {
   switch (normalizeText(value).toLowerCase()) {
     case 'oldest':
-      return 'Plus anciens';
+      return t('admin.users.sortOldestLabel');
     case 'recent':
     default:
-      return 'Plus récents';
+      return t('admin.users.sortRecentLabel');
   }
 };
 
@@ -179,7 +183,7 @@ const normalizeAuditItem = (item) => {
     userAgent: normalizeText(item?.userAgent),
     createdAt: item?.createdAt || null,
     admin: {
-      name: normalizeText(item?.admin?.name, 'Admin inconnu'),
+      name: normalizeText(item?.admin?.name, i18n.t('admin.auditLogs.adminUnknownFallback')),
       email: normalizeText(item?.admin?.email),
     },
   };
@@ -228,6 +232,7 @@ const StatCard = ({ label, value }) => (
  */
 
 export default function AdminAuditLogsScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const token = auth.token;
@@ -310,14 +315,14 @@ export default function AdminAuditLogsScreen() {
         console.log('Erreur audit logs admin :', error);
 
         const message =
-          error?.message || 'Impossible de charger les journaux admin.';
+          error?.message || t('admin.auditLogs.fetchErrorFallback');
 
         setErrorMessage(message);
         setLogs([]);
         setPagination(DEFAULT_PAGINATION);
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -325,7 +330,7 @@ export default function AdminAuditLogsScreen() {
         setInitialLoaded(true);
       }
     },
-    [canAccess, token, search, resolvedTargetType, activeSort]
+    [canAccess, token, search, resolvedTargetType, activeSort, t]
   );
 
   useFocusEffect(
@@ -369,7 +374,7 @@ export default function AdminAuditLogsScreen() {
 
   const openAuditLogDetails = useCallback((item) => {
     if (!item?._id) {
-      Alert.alert('Erreur', 'Journal invalide.');
+      Alert.alert(t('common.error'), t('admin.auditLogs.invalidLogAlert'));
       return;
     }
 
@@ -377,7 +382,7 @@ export default function AdminAuditLogsScreen() {
       pathname: '/admin/audit-log-details/[id]',
       params: { id: item._id },
     });
-  }, []);
+  }, [t]);
 
   /**
    * =========================================================
@@ -390,7 +395,7 @@ export default function AdminAuditLogsScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement des journaux admin...</Text>
+        <Text style={styles.loaderText}>{t('admin.auditLogs.loaderText')}</Text>
       </View>
     );
   }
@@ -473,18 +478,18 @@ export default function AdminAuditLogsScreen() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Admin</Text>
-              <Text style={styles.title}>Journaux admin</Text>
+              <Text style={styles.eyebrow}>{t('admin.dashboard.eyebrow')}</Text>
+              <Text style={styles.title}>{t('admin.auditLogs.title')}</Text>
               <Text style={styles.subtitle}>
-                Suis les actions sensibles réalisées dans l’espace administration.
+                {t('admin.auditLogs.subtitle')}
               </Text>
             </View>
 
             <View style={styles.statsRow}>
-              <StatCard label="Total" value={stats.total} />
-              <StatCard label="Users" value={stats.users} />
-              <StatCard label="Restaurants" value={stats.restaurants} />
-              <StatCard label="Orders" value={stats.orders} />
+              <StatCard label={t('admin.users.statTotalLabel')} value={stats.total} />
+              <StatCard label={t('admin.common.usersTitle')} value={stats.users} />
+              <StatCard label={t('admin.common.restaurantsTitle')} value={stats.restaurants} />
+              <StatCard label={t('admin.common.ordersTitle')} value={stats.orders} />
             </View>
 
             <View style={styles.searchWrap}>
@@ -496,7 +501,7 @@ export default function AdminAuditLogsScreen() {
               />
               <TextInput
                 style={styles.searchInput}
-                placeholder="Rechercher action, cible, détails..."
+                placeholder={t('admin.auditLogs.searchPlaceholder')}
                 placeholderTextColor="#888888"
                 value={draftSearch}
                 onChangeText={setDraftSearch}
@@ -515,7 +520,7 @@ export default function AdminAuditLogsScreen() {
               ) : null}
             </View>
 
-            <Text style={styles.filterTitle}>Type de cible</Text>
+            <Text style={styles.filterTitle}>{t('admin.auditLogs.targetTypeFilterTitle')}</Text>
             <FlatList
               data={TARGET_TYPE_FILTERS}
               horizontal
@@ -536,14 +541,14 @@ export default function AdminAuditLogsScreen() {
                         isActive && styles.filterChipTextActive,
                       ]}
                     >
-                      {item === 'Tous' ? item : getTargetTypeLabel(item)}
+                      {item === 'Tous' ? t('admin.users.allFilterLabel') : getTargetTypeLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
               }}
             />
 
-            <Text style={styles.filterTitle}>Tri</Text>
+            <Text style={styles.filterTitle}>{t('admin.users.sortFilterTitle')}</Text>
             <FlatList
               data={SORT_FILTERS}
               horizontal
@@ -564,7 +569,7 @@ export default function AdminAuditLogsScreen() {
                         isActive && styles.filterChipTextActive,
                       ]}
                     >
-                      {getSortLabel(item)}
+                      {getSortLabel(item, t)}
                     </Text>
                   </Pressable>
                 );
@@ -573,18 +578,18 @@ export default function AdminAuditLogsScreen() {
 
             <View style={styles.actionsRow}>
               <Pressable style={styles.applyButton} onPress={handleApplyFilters}>
-                <Text style={styles.applyButtonText}>Appliquer</Text>
+                <Text style={styles.applyButtonText}>{t('admin.restaurants.applyButton')}</Text>
               </Pressable>
 
               <Pressable style={styles.resetButton} onPress={handleResetFilters}>
                 <Ionicons name="refresh-circle-outline" size={16} color="#555555" />
-                <Text style={styles.resetButtonText}>Réinitialiser</Text>
+                <Text style={styles.resetButtonText}>{t('admin.users.resetButton')}</Text>
               </Pressable>
             </View>
 
             <View style={styles.resultsCard}>
               <View style={styles.resultsTopRow}>
-                <Text style={styles.resultsTitle}>Résultats</Text>
+                <Text style={styles.resultsTitle}>{t('admin.users.resultsTitle')}</Text>
                 <Text style={styles.resultsCount}>
                   {normalizeNumber(pagination.count, logs.length)} /{' '}
                   {normalizeNumber(pagination.total, logs.length)}
@@ -592,24 +597,26 @@ export default function AdminAuditLogsScreen() {
               </View>
 
               <Text style={styles.resultsText}>
-                Page {normalizeNumber(pagination.page, 1)} sur{' '}
-                {Math.max(normalizeNumber(pagination.pages, 1), 1)}
+                {t('admin.users.resultsPageLabel', {
+                  page: normalizeNumber(pagination.page, 1),
+                  pages: Math.max(normalizeNumber(pagination.pages, 1), 1),
+                })}
               </Text>
 
               {hasActiveFilters ? (
                 <Text style={styles.resultsFiltersText}>
-                  Filtres actifs :
-                  {search ? ` recherche "${search}"` : ''}
+                  {t('admin.users.activeFiltersPrefix')}
+                  {search ? t('admin.users.searchFilterFragment', { search }) : ''}
                   {resolvedTargetType
-                    ? ` • cible ${getTargetTypeLabel(resolvedTargetType)}`
+                    ? t('admin.auditLogs.targetFilterFragment', { target: getTargetTypeLabel(resolvedTargetType, t) })
                     : ''}
                   {activeSort !== 'recent'
-                    ? ` • tri ${getSortLabel(activeSort)}`
+                    ? t('admin.users.sortFilterFragment', { sort: getSortLabel(activeSort, t) })
                     : ''}
                 </Text>
               ) : (
                 <Text style={styles.resultsFiltersText}>
-                  Aucun filtre actif.
+                  {t('admin.users.noActiveFiltersText')}
                 </Text>
               )}
             </View>
@@ -637,7 +644,7 @@ export default function AdminAuditLogsScreen() {
                   </Text>
 
                   <Text style={styles.cardMeta}>
-                    Admin : {normalizeText(item?.admin?.name, 'Admin inconnu')}
+                    {t('admin.auditLogs.adminLabel', { name: normalizeText(item?.admin?.name, t('admin.auditLogs.adminUnknownFallback')) })}
                     {!!normalizeText(item?.admin?.email)
                       ? ` • ${normalizeText(item?.admin?.email)}`
                       : ''}
@@ -656,13 +663,13 @@ export default function AdminAuditLogsScreen() {
                       { color: targetTypeStyle.text },
                     ]}
                   >
-                    {getTargetTypeLabel(item?.targetType)}
+                    {getTargetTypeLabel(item?.targetType, t)}
                   </Text>
                 </View>
               </View>
 
               <Text style={styles.cardMeta}>
-                Cible : {getTargetTypeLabel(item?.targetType)}
+                {t('admin.auditLogs.targetLabel', { target: getTargetTypeLabel(item?.targetType, t) })}
                 {normalizeText(item?.targetLabel)
                   ? ` • ${normalizeText(item?.targetLabel)}`
                   : ''}
@@ -689,7 +696,7 @@ export default function AdminAuditLogsScreen() {
                       size={14}
                       color="#6B655E"
                     />
-                    <Text style={styles.metaBadgeText}>Agent capturé</Text>
+                    <Text style={styles.metaBadgeText}>{t('admin.auditLogs.agentCapturedLabel')}</Text>
                   </View>
                 )}
 
@@ -700,7 +707,7 @@ export default function AdminAuditLogsScreen() {
                       size={14}
                       color="#7C3AED"
                     />
-                    <Text style={styles.metaBadgeText}>Target ID</Text>
+                    <Text style={styles.metaBadgeText}>{t('admin.auditLogs.targetIdLabel')}</Text>
                   </View>
                 )}
               </View>
@@ -708,7 +715,7 @@ export default function AdminAuditLogsScreen() {
               <View style={styles.footerRow}>
                 <Text style={styles.footerText}>{formatDateTime(item?.createdAt)}</Text>
                 <View style={styles.footerRight}>
-                  <Text style={styles.footerActionText}>Voir le détail</Text>
+                  <Text style={styles.footerActionText}>{t('admin.users.viewDetailsButton')}</Text>
                   <Ionicons name="document-text-outline" size={18} color="#777777" />
                 </View>
               </View>
@@ -718,9 +725,9 @@ export default function AdminAuditLogsScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="document-text-outline" size={54} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>Aucun journal trouvé</Text>
+            <Text style={styles.emptyTitle}>{t('admin.auditLogs.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Les actions admin tracées apparaîtront ici.
+              {t('admin.auditLogs.emptyText')}
             </Text>
           </View>
         }

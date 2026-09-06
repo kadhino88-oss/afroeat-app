@@ -1382,6 +1382,28 @@
       "paymentPaidLabel": "Payé",
       "paymentUnpaidLabel": "Non payé",
       "paymentRefundedLabel": "Remboursé"
+    },
+    "auditLogs": {
+      "actionFallback": "Action admin",
+      "targetTypeUserLabel": "Utilisateur",
+      "targetTypeOrderLabel": "Commande",
+      "targetTypeSystemLabel": "Système",
+      "targetTypeOtherLabel": "Autre",
+      "adminUnknownFallback": "Admin inconnu",
+      "fetchErrorFallback": "Impossible de charger les journaux admin.",
+      "invalidLogAlert": "Journal invalide.",
+      "loaderText": "Chargement des journaux admin...",
+      "title": "Journaux admin",
+      "subtitle": "Suis les actions sensibles réalisées dans l’espace administration.",
+      "targetTypeFilterTitle": "Type de cible",
+      "searchPlaceholder": "Rechercher action, cible, détails...",
+      "targetFilterFragment": " • cible {{target}}",
+      "adminLabel": "Admin : {{name}}",
+      "targetLabel": "Cible : {{target}}",
+      "agentCapturedLabel": "Agent capturé",
+      "targetIdLabel": "Target ID",
+      "emptyTitle": "Aucun journal trouvé",
+      "emptyText": "Les actions admin tracées apparaîtront ici."
     }
   }
 }

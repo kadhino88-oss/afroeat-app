@@ -1382,6 +1382,28 @@
       "paymentPaidLabel": "已支付",
       "paymentUnpaidLabel": "未支付",
       "paymentRefundedLabel": "已退款"
+    },
+    "auditLogs": {
+      "actionFallback": "管理员操作",
+      "targetTypeUserLabel": "用户",
+      "targetTypeOrderLabel": "订单",
+      "targetTypeSystemLabel": "系统",
+      "targetTypeOtherLabel": "其他",
+      "adminUnknownFallback": "未知管理员",
+      "fetchErrorFallback": "无法加载管理日志。",
+      "invalidLogAlert": "无效日志。",
+      "loaderText": "正在加载管理日志...",
+      "title": "管理日志",
+      "subtitle": "追踪在管理区域执行的敏感操作。",
+      "targetTypeFilterTitle": "目标类型",
+      "searchPlaceholder": "搜索操作、目标、详情...",
+      "targetFilterFragment": " • 目标 {{target}}",
+      "adminLabel": "管理员：{{name}}",
+      "targetLabel": "目标：{{target}}",
+      "agentCapturedLabel": "已捕获代理信息",
+      "targetIdLabel": "Target ID",
+      "emptyTitle": "未找到日志",
+      "emptyText": "追踪到的管理操作将显示在这里。"
     }
   }
 }
