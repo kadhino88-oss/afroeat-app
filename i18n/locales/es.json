@@ -1404,6 +1404,31 @@
       "targetIdLabel": "Target ID",
       "emptyTitle": "No se encontró ningún registro",
       "emptyText": "Las acciones de administración rastreadas aparecerán aquí."
+    },
+    "userDetails": {
+      "loaderText": "Cargando usuario...",
+      "fetchErrorFallback": "No se pudo cargar este usuario.",
+      "actionImpossibleAlert": "Acción no posible.",
+      "title": "Detalle del usuario",
+      "generalInfoTitle": "Información general",
+      "complianceProfileTitle": "Cumplimiento y perfil",
+      "traceabilityTitle": "Trazabilidad",
+      "emailFieldLabel": "Correo",
+      "phoneFieldLabel": "Teléfono",
+      "roleFieldLabel": "Rol",
+      "accountStatusFieldLabel": "Estado de la cuenta",
+      "yesLabel": "Sí",
+      "noLabel": "No",
+      "zoneFieldLabel": "Zona",
+      "addressFieldLabel": "Dirección",
+      "createdOnFieldLabel": "Creado el",
+      "lastUpdatedFieldLabel": "Última actualización",
+      "idFieldLabel": "Identificador",
+      "reactivateAccountButton": "Reactivar cuenta",
+      "suspendAccountButton": "Suspender cuenta",
+      "notFoundTitle": "Usuario no encontrado",
+      "missingIdText": "Falta el identificador del usuario.",
+      "backButton": "Volver"
     }
   }
 }

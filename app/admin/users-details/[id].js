@@ -21,6 +21,8 @@ import {
   getAdminUserById,
   updateAdminUserStatus,
 } from '../../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../../i18n';
 
 /**
  * =========================================================
@@ -98,8 +100,8 @@ const normalizeUserResponse = (payload) => {
     ...raw,
     _id: raw?._id || raw?.id || null,
     id: raw?.id || raw?._id || null,
-    name: normalizeText(raw?.name, 'Utilisateur AFROEAT'),
-    email: normalizeText(raw?.email, 'Email indisponible'),
+    name: normalizeText(raw?.name, i18n.t('admin.users.userNameFallback')),
+    email: normalizeText(raw?.email, i18n.t('admin.users.emailUnavailableFallback')),
     phone: normalizeText(raw?.phone),
     role:
       normalizedRoleValue === 'driver' || normalizedRoleValue === 'delivery'
@@ -119,6 +121,8 @@ const normalizeUserResponse = (payload) => {
   };
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateTime = (value) => {
   if (!value) return '—';
 
@@ -128,7 +132,7 @@ const formatDateTime = (value) => {
     return '—';
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -137,46 +141,46 @@ const formatDateTime = (value) => {
   });
 };
 
-const getRoleLabel = (role) => {
+const getRoleLabel = (role, t) => {
   switch (normalizeRole(role)) {
     case 'client':
-      return 'Client';
+      return t('admin.users.roleClientLabel');
     case 'restaurant':
-      return 'Restaurant';
+      return t('admin.users.roleRestaurantLabel');
     case 'livreur':
-      return 'Livreur';
+      return t('admin.users.roleDriverLabel');
     case 'admin':
     case 'administrator':
     case 'superadmin':
     case 'super-admin':
-      return 'Admin';
+      return t('admin.users.roleAdminLabel');
     default:
-      return 'Utilisateur';
+      return t('admin.users.roleDefaultLabel');
   }
 };
 
-const getRoleStyle = (role) => {
+const getRoleStyle = (role, t) => {
   switch (normalizeRole(role)) {
     case 'client':
       return {
         bg: '#EEF2FF',
         text: '#245EA8',
         icon: 'person-outline',
-        label: 'Client',
+        label: t('admin.users.roleClientLabel'),
       };
     case 'restaurant':
       return {
         bg: '#FFF2E8',
         text: '#C05621',
         icon: 'storefront-outline',
-        label: 'Restaurant',
+        label: t('admin.users.roleRestaurantLabel'),
       };
     case 'livreur':
       return {
         bg: '#F3E8FF',
         text: '#7C3AED',
         icon: 'bicycle-outline',
-        label: 'Livreur',
+        label: t('admin.users.roleDriverLabel'),
       };
     case 'admin':
     case 'administrator':
@@ -186,53 +190,53 @@ const getRoleStyle = (role) => {
         bg: '#E8F5ED',
         text: '#1F6F43',
         icon: 'shield-checkmark-outline',
-        label: 'Admin',
+        label: t('admin.users.roleAdminLabel'),
       };
     default:
       return {
         bg: '#F4F4F4',
         text: '#555555',
         icon: 'person-circle-outline',
-        label: 'Utilisateur',
+        label: t('admin.users.roleDefaultLabel'),
       };
   }
 };
 
-const getStatusStyle = (status) => {
+const getStatusStyle = (status, t) => {
   switch (normalizeText(status).toLowerCase()) {
     case 'active':
       return {
         bg: '#E8F5ED',
         text: '#1F6F43',
-        label: 'Actif',
+        label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
         bg: '#FDECEC',
         text: '#B83232',
-        label: 'Suspendu',
+        label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
         bg: '#FFF3D8',
         text: '#8A6500',
-        label: 'En attente',
+        label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
         bg: '#EFE9FF',
         text: '#6D4CDB',
-        label: 'Refusé',
+        label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
         bg: '#F4F4F4',
         text: '#555555',
-        label: 'Inconnu',
+        label: t('admin.users.statusUnknownLabel'),
         icon: 'help-circle-outline',
       };
   }
@@ -255,6 +259,7 @@ const InfoRow = ({ icon, label, value, iconColor = '#6B655E' }) => (
  */
 
 export default function AdminUserDetailsScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const userId = getSafeParam(params?.id);
 
@@ -281,8 +286,8 @@ export default function AdminUserDetailsScreen() {
 
   const canAccess = Boolean(isAuthenticated && token && isAdminRole(currentRole));
 
-  const roleStyle = useMemo(() => getRoleStyle(user?.role), [user]);
-  const statusStyle = useMemo(() => getStatusStyle(user?.accountStatus), [user]);
+  const roleStyle = useMemo(() => getRoleStyle(user?.role, t), [user, t]);
+  const statusStyle = useMemo(() => getStatusStyle(user?.accountStatus, t), [user, t]);
 
   const fetchUser = useCallback(
     async (manual = false) => {
@@ -306,7 +311,7 @@ export default function AdminUserDetailsScreen() {
         const normalized = normalizeUserResponse(data);
 
         if (!normalized?._id) {
-          throw new Error('Utilisateur introuvable.');
+          throw new Error(t('admin.userDetails.notFoundTitle'));
         }
 
         setUser(normalized);
@@ -314,13 +319,13 @@ export default function AdminUserDetailsScreen() {
         console.log('Erreur chargement détail utilisateur :', error);
         setUser(null);
         setErrorMessage(
-          error?.message || 'Impossible de charger cet utilisateur.'
+          error?.message || t('admin.userDetails.fetchErrorFallback')
         );
 
         if (manual) {
           Alert.alert(
-            'Erreur',
-            error?.message || 'Impossible de charger cet utilisateur.'
+            t('common.error'),
+            error?.message || t('admin.userDetails.fetchErrorFallback')
           );
         }
       } finally {
@@ -328,7 +333,7 @@ export default function AdminUserDetailsScreen() {
         setRefreshing(false);
       }
     },
-    [canAccess, userId, token]
+    [canAccess, userId, token, t]
   );
 
   useFocusEffect(
@@ -348,22 +353,25 @@ export default function AdminUserDetailsScreen() {
 
   const toggleStatus = useCallback(async () => {
     if (!token || !user?._id) {
-      Alert.alert('Erreur', 'Action impossible.');
+      Alert.alert(t('common.error'), t('admin.userDetails.actionImpossibleAlert'));
       return;
     }
 
     const nextStatus =
       user.accountStatus === 'suspended' ? 'active' : 'suspended';
-    const actionLabel = nextStatus === 'active' ? 'réactiver' : 'suspendre';
-    const identity = normalizeText(user?.name, user?.email || 'ce compte');
+    const actionLabel =
+      nextStatus === 'active'
+        ? t('admin.users.reactivateAction')
+        : t('admin.users.suspendAction');
+    const identity = normalizeText(user?.name, user?.email || t('admin.users.defaultAccountIdentity'));
 
     Alert.alert(
-      'Confirmer',
-      `Veux-tu ${actionLabel} ${identity} ?`,
+      t('admin.users.confirmDialogTitle'),
+      t('admin.users.confirmDialogMessage', { action: actionLabel, identity }),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('admin.users.cancelAction'), style: 'cancel' },
         {
-          text: 'Confirmer',
+          text: t('admin.users.confirmDialogTitle'),
           onPress: async () => {
             try {
               setUpdating(true);
@@ -378,14 +386,14 @@ export default function AdminUserDetailsScreen() {
               }));
 
               Alert.alert(
-                'Succès',
-                res?.message || 'Statut utilisateur mis à jour.'
+                t('common.success'),
+                res?.message || t('admin.users.statusUpdatedFallback')
               );
             } catch (error) {
               console.log('Erreur mise à jour utilisateur :', error);
               Alert.alert(
-                'Erreur',
-                error?.message || 'Action impossible.'
+                t('common.error'),
+                error?.message || t('admin.userDetails.actionImpossibleAlert')
               );
             } finally {
               setUpdating(false);
@@ -394,7 +402,7 @@ export default function AdminUserDetailsScreen() {
         },
       ]
     );
-  }, [token, user]);
+  }, [token, user, t]);
 
   /**
    * =========================================================
@@ -407,7 +415,7 @@ export default function AdminUserDetailsScreen() {
       <View style={styles.center}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement utilisateur...</Text>
+        <Text style={styles.loaderText}>{t('admin.userDetails.loaderText')}</Text>
       </View>
     );
   }
@@ -452,10 +460,10 @@ export default function AdminUserDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Utilisateur introuvable</Text>
-          <Text style={styles.emptyText}>Identifiant utilisateur manquant.</Text>
+          <Text style={styles.emptyTitle}>{t('admin.userDetails.notFoundTitle')}</Text>
+          <Text style={styles.emptyText}>{t('admin.userDetails.missingIdText')}</Text>
           <Pressable style={styles.primaryButton} onPress={handleGoBack}>
-            <Text style={styles.primaryButtonText}>Retour</Text>
+            <Text style={styles.primaryButtonText}>{t('admin.userDetails.backButton')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -468,12 +476,12 @@ export default function AdminUserDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="person-circle-outline" size={54} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Utilisateur introuvable</Text>
+          <Text style={styles.emptyTitle}>{t('admin.userDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
-            {errorMessage || 'Impossible de charger cet utilisateur.'}
+            {errorMessage || t('admin.userDetails.fetchErrorFallback')}
           </Text>
           <Pressable style={styles.primaryButton} onPress={() => fetchUser(true)}>
-            <Text style={styles.primaryButtonText}>Réessayer</Text>
+            <Text style={styles.primaryButtonText}>{t('restaurant.retry')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -500,7 +508,7 @@ export default function AdminUserDetailsScreen() {
             <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
           </Pressable>
 
-          <Text style={styles.title}>Détail utilisateur</Text>
+          <Text style={styles.title}>{t('admin.userDetails.title')}</Text>
         </View>
 
         <View style={styles.heroCard}>
@@ -509,17 +517,17 @@ export default function AdminUserDetailsScreen() {
           </View>
 
           <Text style={styles.name}>
-            {normalizeText(user?.name, 'Utilisateur AFROEAT')}
+            {normalizeText(user?.name, t('admin.users.userNameFallback'))}
           </Text>
           <Text style={styles.email}>
-            {normalizeText(user?.email, 'Email indisponible')}
+            {normalizeText(user?.email, t('admin.users.emailUnavailableFallback'))}
           </Text>
 
           <View style={styles.badgesRow}>
             <View style={[styles.badge, { backgroundColor: roleStyle.bg }]}>
               <Ionicons name={roleStyle.icon} size={13} color={roleStyle.text} />
               <Text style={[styles.badgeText, { color: roleStyle.text }]}>
-                {getRoleLabel(user?.role)}
+                {getRoleLabel(user?.role, t)}
               </Text>
             </View>
 
@@ -537,50 +545,50 @@ export default function AdminUserDetailsScreen() {
         </View>
 
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Informations générales</Text>
+          <Text style={styles.sectionTitle}>{t('admin.userDetails.generalInfoTitle')}</Text>
 
           <InfoRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(user?.email, 'Email indisponible')}
+            label={t('admin.userDetails.emailFieldLabel')}
+            value={normalizeText(user?.email, t('admin.users.emailUnavailableFallback'))}
           />
           <InfoRow
             icon="call-outline"
-            label="Téléphone"
-            value={normalizeText(user?.phone, 'Non renseigné')}
+            label={t('admin.userDetails.phoneFieldLabel')}
+            value={normalizeText(user?.phone, t('profile.info.notProvided'))}
           />
           <InfoRow
             icon="person-outline"
-            label="Rôle"
-            value={getRoleLabel(user?.role)}
+            label={t('admin.userDetails.roleFieldLabel')}
+            value={getRoleLabel(user?.role, t)}
           />
           <InfoRow
             icon="shield-checkmark-outline"
-            label="Statut du compte"
+            label={t('admin.userDetails.accountStatusFieldLabel')}
             value={statusStyle.label}
             iconColor={statusStyle.text}
           />
         </View>
 
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Conformité & profil</Text>
+          <Text style={styles.sectionTitle}>{t('admin.userDetails.complianceProfileTitle')}</Text>
 
           <InfoRow
             icon="id-card-outline"
-            label="Identité vérifiée"
-            value={user?.isIdentityVerified ? 'Oui' : 'Non'}
+            label={t('admin.users.identityVerifiedLabel')}
+            value={user?.isIdentityVerified ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
             iconColor={user?.isIdentityVerified ? '#1F6F43' : '#8A6500'}
           />
           <InfoRow
             icon="briefcase-outline"
-            label="Travail autorisé"
-            value={user?.isWorkAuthorized ? 'Oui' : 'Non'}
+            label={t('admin.users.workAuthorizedLabel')}
+            value={user?.isWorkAuthorized ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
             iconColor={user?.isWorkAuthorized ? '#1F6F43' : '#8A6500'}
           />
           {(normalizeText(user?.city) || normalizeText(user?.country)) ? (
             <InfoRow
               icon="earth-outline"
-              label="Zone"
+              label={t('admin.userDetails.zoneFieldLabel')}
               value={[normalizeText(user?.city), normalizeText(user?.country)]
                 .filter(Boolean)
                 .join(', ')}
@@ -589,28 +597,28 @@ export default function AdminUserDetailsScreen() {
           {!!normalizeText(user?.address) && (
             <InfoRow
               icon="location-outline"
-              label="Adresse"
+              label={t('admin.userDetails.addressFieldLabel')}
               value={normalizeText(user?.address)}
             />
           )}
         </View>
 
         <View style={styles.sectionCard}>
-          <Text style={styles.sectionTitle}>Traçabilité</Text>
+          <Text style={styles.sectionTitle}>{t('admin.userDetails.traceabilityTitle')}</Text>
 
           <InfoRow
             icon="calendar-outline"
-            label="Créé le"
+            label={t('admin.userDetails.createdOnFieldLabel')}
             value={formatDateTime(user?.createdAt)}
           />
           <InfoRow
             icon="refresh-outline"
-            label="Dernière mise à jour"
+            label={t('admin.userDetails.lastUpdatedFieldLabel')}
             value={formatDateTime(user?.updatedAt || user?.createdAt)}
           />
           <InfoRow
             icon="finger-print-outline"
-            label="Identifiant"
+            label={t('admin.userDetails.idFieldLabel')}
             value={normalizeText(user?._id, '—')}
           />
         </View>
@@ -639,8 +647,8 @@ export default function AdminUserDetailsScreen() {
                 />
                 <Text style={styles.primaryButtonText}>
                   {user?.accountStatus === 'suspended'
-                    ? 'Réactiver le compte'
-                    : 'Suspendre le compte'}
+                    ? t('admin.userDetails.reactivateAccountButton')
+                    : t('admin.userDetails.suspendAccountButton')}
                 </Text>
               </>
             )}
@@ -652,7 +660,7 @@ export default function AdminUserDetailsScreen() {
               size={18}
               color="#1F6F43"
             />
-            <Text style={styles.protectedText}>Compte admin protégé</Text>
+            <Text style={styles.protectedText}>{t('admin.users.adminProtectedText')}</Text>
           </View>
         )}
       </ScrollView>

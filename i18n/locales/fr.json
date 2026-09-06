@@ -1404,6 +1404,31 @@
       "targetIdLabel": "Target ID",
       "emptyTitle": "Aucun journal trouvé",
       "emptyText": "Les actions admin tracées apparaîtront ici."
+    },
+    "userDetails": {
+      "loaderText": "Chargement utilisateur...",
+      "fetchErrorFallback": "Impossible de charger cet utilisateur.",
+      "actionImpossibleAlert": "Action impossible.",
+      "title": "Détail utilisateur",
+      "generalInfoTitle": "Informations générales",
+      "complianceProfileTitle": "Conformité & profil",
+      "traceabilityTitle": "Traçabilité",
+      "emailFieldLabel": "Email",
+      "phoneFieldLabel": "Téléphone",
+      "roleFieldLabel": "Rôle",
+      "accountStatusFieldLabel": "Statut du compte",
+      "yesLabel": "Oui",
+      "noLabel": "Non",
+      "zoneFieldLabel": "Zone",
+      "addressFieldLabel": "Adresse",
+      "createdOnFieldLabel": "Créé le",
+      "lastUpdatedFieldLabel": "Dernière mise à jour",
+      "idFieldLabel": "Identifiant",
+      "reactivateAccountButton": "Réactiver le compte",
+      "suspendAccountButton": "Suspendre le compte",
+      "notFoundTitle": "Utilisateur introuvable",
+      "missingIdText": "Identifiant utilisateur manquant.",
+      "backButton": "Retour"
     }
   }
 }

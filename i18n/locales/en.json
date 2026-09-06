@@ -1404,6 +1404,31 @@
       "targetIdLabel": "Target ID",
       "emptyTitle": "No log found",
       "emptyText": "Tracked admin actions will appear here."
+    },
+    "userDetails": {
+      "loaderText": "Loading user...",
+      "fetchErrorFallback": "Unable to load this user.",
+      "actionImpossibleAlert": "Action not possible.",
+      "title": "User details",
+      "generalInfoTitle": "General information",
+      "complianceProfileTitle": "Compliance & profile",
+      "traceabilityTitle": "Traceability",
+      "emailFieldLabel": "Email",
+      "phoneFieldLabel": "Phone",
+      "roleFieldLabel": "Role",
+      "accountStatusFieldLabel": "Account status",
+      "yesLabel": "Yes",
+      "noLabel": "No",
+      "zoneFieldLabel": "Zone",
+      "addressFieldLabel": "Address",
+      "createdOnFieldLabel": "Created on",
+      "lastUpdatedFieldLabel": "Last updated",
+      "idFieldLabel": "ID",
+      "reactivateAccountButton": "Reactivate account",
+      "suspendAccountButton": "Suspend account",
+      "notFoundTitle": "User not found",
+      "missingIdText": "Missing user ID.",
+      "backButton": "Back"
     }
   }
 }

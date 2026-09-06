@@ -1404,6 +1404,31 @@
       "targetIdLabel": "Target ID",
       "emptyTitle": "Nessun log trovato",
       "emptyText": "Le azioni admin tracciate appariranno qui."
+    },
+    "userDetails": {
+      "loaderText": "Caricamento utente...",
+      "fetchErrorFallback": "Impossibile caricare questo utente.",
+      "actionImpossibleAlert": "Azione non possibile.",
+      "title": "Dettaglio utente",
+      "generalInfoTitle": "Informazioni generali",
+      "complianceProfileTitle": "Conformità e profilo",
+      "traceabilityTitle": "Tracciabilità",
+      "emailFieldLabel": "Email",
+      "phoneFieldLabel": "Telefono",
+      "roleFieldLabel": "Ruolo",
+      "accountStatusFieldLabel": "Stato dell'account",
+      "yesLabel": "Sì",
+      "noLabel": "No",
+      "zoneFieldLabel": "Zona",
+      "addressFieldLabel": "Indirizzo",
+      "createdOnFieldLabel": "Creato il",
+      "lastUpdatedFieldLabel": "Ultimo aggiornamento",
+      "idFieldLabel": "Identificativo",
+      "reactivateAccountButton": "Riattiva account",
+      "suspendAccountButton": "Sospendi account",
+      "notFoundTitle": "Utente non trovato",
+      "missingIdText": "Identificativo utente mancante.",
+      "backButton": "Indietro"
     }
   }
 }

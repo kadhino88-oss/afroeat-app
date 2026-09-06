@@ -1404,6 +1404,31 @@
       "targetIdLabel": "Target ID",
       "emptyTitle": "Kein Protokoll gefunden",
       "emptyText": "Verfolgte Admin-Aktionen erscheinen hier."
+    },
+    "userDetails": {
+      "loaderText": "Benutzer wird geladen...",
+      "fetchErrorFallback": "Dieser Benutzer konnte nicht geladen werden.",
+      "actionImpossibleAlert": "Aktion nicht möglich.",
+      "title": "Benutzerdetails",
+      "generalInfoTitle": "Allgemeine Informationen",
+      "complianceProfileTitle": "Compliance & Profil",
+      "traceabilityTitle": "Nachverfolgbarkeit",
+      "emailFieldLabel": "E-Mail",
+      "phoneFieldLabel": "Telefon",
+      "roleFieldLabel": "Rolle",
+      "accountStatusFieldLabel": "Kontostatus",
+      "yesLabel": "Ja",
+      "noLabel": "Nein",
+      "zoneFieldLabel": "Zone",
+      "addressFieldLabel": "Adresse",
+      "createdOnFieldLabel": "Erstellt am",
+      "lastUpdatedFieldLabel": "Zuletzt aktualisiert",
+      "idFieldLabel": "Kennung",
+      "reactivateAccountButton": "Konto reaktivieren",
+      "suspendAccountButton": "Konto sperren",
+      "notFoundTitle": "Benutzer nicht gefunden",
+      "missingIdText": "Fehlende Benutzerkennung.",
+      "backButton": "Zurück"
     }
   }
 }

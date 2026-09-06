@@ -1404,6 +1404,31 @@
       "targetIdLabel": "Target ID",
       "emptyTitle": "未找到日志",
       "emptyText": "追踪到的管理操作将显示在这里。"
+    },
+    "userDetails": {
+      "loaderText": "正在加载用户...",
+      "fetchErrorFallback": "无法加载此用户。",
+      "actionImpossibleAlert": "无法执行该操作。",
+      "title": "用户详情",
+      "generalInfoTitle": "基本信息",
+      "complianceProfileTitle": "合规与资料",
+      "traceabilityTitle": "可追溯性",
+      "emailFieldLabel": "邮箱",
+      "phoneFieldLabel": "电话",
+      "roleFieldLabel": "角色",
+      "accountStatusFieldLabel": "账户状态",
+      "yesLabel": "是",
+      "noLabel": "否",
+      "zoneFieldLabel": "区域",
+      "addressFieldLabel": "地址",
+      "createdOnFieldLabel": "创建于",
+      "lastUpdatedFieldLabel": "最近更新",
+      "idFieldLabel": "标识符",
+      "reactivateAccountButton": "重新启用账户",
+      "suspendAccountButton": "暂停账户",
+      "notFoundTitle": "未找到用户",
+      "missingIdText": "缺少用户标识符。",
+      "backButton": "返回"
     }
   }
 }
