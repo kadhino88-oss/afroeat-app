@@ -16,6 +16,8 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getAdminOpsOverview } from '../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 
 /**
  * =========================================================
@@ -64,16 +66,18 @@ const getAccountStatus = (user, auth) => {
   );
 };
 
+const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -83,7 +87,7 @@ const formatDateTime = (value) => {
   });
 };
 
-const getHealthStyle = (status) => {
+const getHealthStyle = (status, t) => {
   const normalized = normalizeStatus(status);
 
   if (normalized === 'healthy') {
@@ -91,10 +95,9 @@ const getHealthStyle = (status) => {
       bg: '#E8F5ED',
       text: '#1F6F43',
       border: '#CFE8D8',
-      label: 'Healthy',
+      label: t('admin.dashboard.healthyLabel'),
       icon: 'checkmark-circle',
-      description:
-        'La plateforme reste stable et exploitable sans friction majeure.',
+      description: t('admin.ops.healthyDescription'),
     };
   }
 
@@ -103,10 +106,9 @@ const getHealthStyle = (status) => {
       bg: '#FFF3D8',
       text: '#8A6500',
       border: '#F4D89B',
-      label: 'Warning',
+      label: t('admin.dashboard.warningLabel'),
       icon: 'warning',
-      description:
-        'Des signaux faibles demandent une surveillance renforcée.',
+      description: t('admin.ops.warningDescription'),
     };
   }
 
@@ -115,10 +117,9 @@ const getHealthStyle = (status) => {
       bg: '#FDECEC',
       text: '#B83232',
       border: '#F3C7C7',
-      label: 'Critical',
+      label: t('admin.dashboard.criticalLabel'),
       icon: 'alert-circle',
-      description:
-        'Des signaux critiques nécessitent une intervention rapide.',
+      description: t('admin.ops.criticalDescription'),
     };
   }
 
@@ -126,13 +127,13 @@ const getHealthStyle = (status) => {
     bg: '#F4F4F4',
     text: '#555555',
     border: '#E5E5E5',
-    label: 'Unknown',
+    label: t('admin.dashboard.unknownLabel'),
     icon: 'help-circle-outline',
-    description: 'État système non déterminé.',
+    description: t('admin.dashboard.unknownDescription'),
   };
 };
 
-const getFlagStyle = (level) => {
+const getFlagStyle = (level, t) => {
   const normalized = normalizeStatus(level);
 
   if (normalized === 'critical') {
@@ -141,7 +142,7 @@ const getFlagStyle = (level) => {
       text: '#B83232',
       border: '#F3C7C7',
       icon: 'alert-circle',
-      label: 'Critique',
+      label: t('admin.dashboard.flagCriticalLabel'),
     };
   }
 
@@ -151,7 +152,7 @@ const getFlagStyle = (level) => {
       text: '#8A6500',
       border: '#F4D89B',
       icon: 'warning',
-      label: 'Alerte',
+      label: t('admin.dashboard.flagWarningLabel'),
     };
   }
 
@@ -160,7 +161,7 @@ const getFlagStyle = (level) => {
     text: '#334155',
     border: '#D9E0F2',
     icon: 'information-circle',
-    label: 'Info',
+    label: t('admin.dashboard.flagInfoLabel'),
   };
 };
 
@@ -252,6 +253,7 @@ const MetricStripCard = ({ title, items }) => (
  */
 
 export default function AdminOpsScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const token = auth.token;
@@ -304,7 +306,7 @@ export default function AdminOpsScreen() {
         console.log('Erreur admin ops :', error);
 
         const message =
-          error?.message || 'Impossible de charger les indicateurs ops.';
+          error?.message || t('admin.ops.fetchErrorFallback');
 
         setErrorMessage(message);
 
@@ -313,7 +315,7 @@ export default function AdminOpsScreen() {
         }
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -321,7 +323,7 @@ export default function AdminOpsScreen() {
         setInitialLoaded(true);
       }
     },
-    [hasValidSession, currentRole, token]
+    [hasValidSession, currentRole, token, t]
   );
 
   useFocusEffect(
@@ -377,8 +379,8 @@ export default function AdminOpsScreen() {
   const audit = ops?.audit || {};
 
   const healthStyle = useMemo(() => {
-    return getHealthStyle(system?.healthStatus);
-  }, [system]);
+    return getHealthStyle(system?.healthStatus, t);
+  }, [system, t]);
 
   const healthFlags = useMemo(() => {
     return Array.isArray(system?.flags) ? system.flags : [];
@@ -388,189 +390,189 @@ export default function AdminOpsScreen() {
     () => [
       {
         key: 'total-users',
-        label: 'Utilisateurs',
+        label: t('admin.common.usersTitle'),
         value: entities.totalUsers,
         iconName: 'people-outline',
         tint: '#1F6F43',
       },
       {
         key: 'total-restaurants',
-        label: 'Restaurants',
+        label: t('admin.common.restaurantsTitle'),
         value: entities.totalRestaurants,
         iconName: 'storefront-outline',
         tint: '#D96C2D',
       },
       {
         key: 'total-drivers',
-        label: 'Livreurs',
+        label: t('admin.common.driversTitle'),
         value: entities.totalDrivers,
         iconName: 'bicycle-outline',
         tint: '#7C3AED',
       },
       {
         key: 'active-users',
-        label: 'Actifs',
+        label: t('admin.dashboard.activeLabel'),
         value: entities.activeUsers,
         iconName: 'checkmark-done-outline',
         tint: '#15803D',
       },
     ],
-    [entities]
+    [entities, t]
   );
 
   const riskStats = useMemo(
     () => [
       {
         key: 'pending-users',
-        label: 'En attente',
+        label: t('admin.dashboard.pendingLabel'),
         value: entities.pendingUsers,
         iconName: 'time-outline',
         tint: '#8A6500',
       },
       {
         key: 'suspended-users',
-        label: 'Suspendus',
+        label: t('admin.dashboard.suspendedLabel'),
         value: entities.suspendedUsers,
         iconName: 'ban-outline',
         tint: '#B83232',
       },
       {
         key: 'active-restaurants',
-        label: 'Restos actifs',
+        label: t('admin.ops.activeRestaurantsLabel'),
         value: entities.activeRestaurantsOwners,
         iconName: 'restaurant-outline',
         tint: '#245EA8',
       },
       {
         key: 'active-drivers',
-        label: 'Livreurs actifs',
+        label: t('admin.ops.activeDriversLabel'),
         value: entities.activeDriversAccounts,
         iconName: 'navigate-outline',
         tint: '#1F6F43',
       },
     ],
-    [entities]
+    [entities, t]
   );
 
   const orderFlowStats = useMemo(
     () => [
       {
         key: 'total-orders',
-        label: 'Total commandes',
+        label: t('admin.ops.totalOrdersLabel'),
         value: orders.totalOrders,
         iconName: 'receipt-outline',
         tint: '#1F6F43',
       },
       {
         key: 'pending-orders',
-        label: 'En attente',
+        label: t('admin.dashboard.pendingLabel'),
         value: orders.pendingOrders,
         iconName: 'hourglass-outline',
         tint: '#D96C2D',
       },
       {
         key: 'preparing-orders',
-        label: 'Préparation',
+        label: t('order.status.preparing'),
         value: orders.preparingOrders,
         iconName: 'restaurant-outline',
         tint: '#8A6500',
       },
       {
         key: 'delivering-orders',
-        label: 'Livraison',
+        label: t('order.status.on_the_way'),
         value: orders.deliveringOrders,
         iconName: 'bicycle-outline',
         tint: '#245EA8',
       },
       {
         key: 'delivered-orders',
-        label: 'Livrées',
+        label: t('order.status.delivered'),
         value: orders.deliveredOrders,
         iconName: 'checkmark-circle-outline',
         tint: '#1F6F43',
       },
       {
         key: 'cancelled-orders',
-        label: 'Annulées',
+        label: t('order.status.cancelled'),
         value: orders.cancelledOrders,
         iconName: 'close-circle-outline',
         tint: '#B83232',
       },
     ],
-    [orders]
+    [orders, t]
   );
 
   const highlights = useMemo(
     () => [
       {
         key: 'new-users-7d',
-        label: 'Nouveaux comptes (7j)',
+        label: t('admin.dashboard.newAccounts7dLabel'),
         value: entities.newUsers7d,
         iconName: 'person-add-outline',
         tint: '#1F6F43',
       },
       {
         key: 'new-restaurants-7d',
-        label: 'Nouveaux restaurants (7j)',
+        label: t('admin.dashboard.newRestaurants7dLabel'),
         value: entities.newRestaurants7d,
         iconName: 'add-circle-outline',
         tint: '#D96C2D',
       },
       {
         key: 'new-orders-24h',
-        label: 'Nouvelles commandes (24h)',
+        label: t('admin.dashboard.newOrders24hLabel'),
         value: orders.newOrders24h,
         iconName: 'time-outline',
         tint: '#245EA8',
       },
       {
         key: 'audit-logs-24h',
-        label: 'Logs admin (24h)',
+        label: t('admin.dashboard.adminLogs24hLabel'),
         value: audit.recentAuditLogs24h || audit.recentAuditLogs,
         iconName: 'document-text-outline',
         tint: '#7C3AED',
       },
     ],
-    [entities, orders, audit]
+    [entities, orders, audit, t]
   );
 
   const liveOverviewMetrics = useMemo(
     () => [
       {
         key: 'unassigned',
-        label: 'Sans livreur',
+        label: t('admin.dashboard.unassignedLabel'),
         value: orders.unassignedOrders,
         tint: '#B83232',
       },
       {
         key: 'unpaid',
-        label: 'Non payées',
+        label: t('admin.dashboard.unpaidLabel'),
         value: orders.unpaidOrders,
         tint: '#8A6500',
       },
       {
         key: 'delivering',
-        label: 'Courses live',
+        label: t('admin.ops.liveTripsLabel'),
         value: orders.deliveringOrders,
         tint: '#245EA8',
       },
       {
         key: 'audit24h',
-        label: 'Audit 24h',
+        label: t('admin.ops.audit24hLabel'),
         value: audit.recentAuditLogs24h || audit.recentAuditLogs,
         tint: '#7C3AED',
       },
     ],
-    [orders, audit]
+    [orders, audit, t]
   );
 
   const liveRefreshLabel = useMemo(() => {
     if (!lastLiveRefresh) {
-      return 'En attente du premier refresh live';
+      return t('admin.ops.liveRefreshWaiting');
     }
 
-    return `Dernier refresh live : ${formatDateTime(lastLiveRefresh)}`;
-  }, [lastLiveRefresh]);
+    return t('admin.ops.liveRefreshLabel', { date: formatDateTime(lastLiveRefresh) });
+  }, [lastLiveRefresh, t]);
 
   /**
    * =========================================================
@@ -583,7 +585,7 @@ export default function AdminOpsScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement des indicateurs ops...</Text>
+        <Text style={styles.loaderText}>{t('admin.ops.loaderText')}</Text>
       </View>
     );
   }
@@ -630,10 +632,9 @@ export default function AdminOpsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
-          <Text style={styles.emptyTitle}>Ops indisponible</Text>
+          <Text style={styles.emptyTitle}>{t('admin.ops.emptyTitle')}</Text>
           <Text style={styles.emptyText}>
-            {errorMessage ||
-              'Impossible de charger les indicateurs d’exploitation.'}
+            {errorMessage || t('admin.ops.emptyTextFallback')}
           </Text>
 
           <Pressable
@@ -649,7 +650,7 @@ export default function AdminOpsScreen() {
             ) : (
               <>
                 <Ionicons name="refresh-outline" size={18} color="#FFFFFF" />
-                <Text style={styles.retryButtonText}>Réessayer</Text>
+                <Text style={styles.retryButtonText}>{t('restaurant.retry')}</Text>
               </>
             )}
           </Pressable>
@@ -697,19 +698,18 @@ export default function AdminOpsScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Admin</Text>
-          <Text style={styles.title}>Ops / Health</Text>
+          <Text style={styles.eyebrow}>{t('admin.dashboard.eyebrow')}</Text>
+          <Text style={styles.title}>{t('admin.common.opsTitle')}</Text>
           <Text style={styles.subtitle}>
-            Supervise la plateforme, détecte les signaux faibles et pilote
-            l’exploitation en mode premium.
+            {t('admin.ops.subtitle')}
           </Text>
         </View>
 
         <View style={styles.heroCard}>
           <View style={styles.heroLeft}>
-            <Text style={styles.heroTitle}>État global système</Text>
+            <Text style={styles.heroTitle}>{t('admin.ops.heroTitle')}</Text>
             <Text style={styles.heroText}>
-              Dernière génération : {formatDateTime(system.generatedAt)}
+              {t('admin.ops.generatedLabel', { date: formatDateTime(system.generatedAt) })}
             </Text>
             <Text style={styles.heroSubText}>{healthStyle.description}</Text>
           </View>
@@ -738,7 +738,7 @@ export default function AdminOpsScreen() {
           <View style={styles.liveOpsHeader}>
             <View style={styles.liveOpsTitleWrap}>
               <Ionicons name="radio-outline" size={18} color="#245EA8" />
-              <Text style={styles.liveOpsTitle}>Live Ops Monitor</Text>
+              <Text style={styles.liveOpsTitle}>{t('admin.ops.liveOpsMonitorTitle')}</Text>
             </View>
 
             <View style={styles.liveBadge}>
@@ -747,16 +747,14 @@ export default function AdminOpsScreen() {
           </View>
 
           <Text style={styles.liveOpsText}>
-            Ce panneau est la base du monitoring temps réel AFROEAT : flux
-            commandes, supervision livreurs, paiements sensibles et audit
-            d’exploitation.
+            {t('admin.ops.liveOpsText')}
           </Text>
 
           <Text style={styles.liveOpsSubText}>{liveRefreshLabel}</Text>
         </View>
 
         <MetricStripCard
-          title="Résumé exploitation immédiat"
+          title={t('admin.ops.immediateSummaryTitle')}
           items={liveOverviewMetrics}
         />
 
@@ -777,7 +775,7 @@ export default function AdminOpsScreen() {
                 color={healthStyle.text}
               />
               <Text style={[styles.healthCardTitle, { color: healthStyle.text }]}>
-                Santé plateforme : {healthStyle.label}
+                {t('admin.ops.systemHealthLabel', { label: healthStyle.label })}
               </Text>
             </View>
           </View>
@@ -788,24 +786,24 @@ export default function AdminOpsScreen() {
           </Text>
         </View>
 
-        <Text style={styles.sectionTitle}>Accès rapide supervision</Text>
+        <Text style={styles.sectionTitle}>{t('admin.ops.quickAccessSupervisionTitle')}</Text>
         <View style={styles.quickActionsGrid}>
           <Pressable style={styles.quickActionCard} onPress={handleOpenOrders}>
             <Ionicons name="receipt-outline" size={20} color="#245EA8" />
-            <Text style={styles.quickActionTitle}>Commandes</Text>
-            <Text style={styles.quickActionText}>Voir le flux commandes</Text>
+            <Text style={styles.quickActionTitle}>{t('admin.common.ordersTitle')}</Text>
+            <Text style={styles.quickActionText}>{t('admin.ops.ordersQuickText')}</Text>
           </Pressable>
 
           <Pressable style={styles.quickActionCard} onPress={handleOpenDrivers}>
             <Ionicons name="bicycle-outline" size={20} color="#1F6F43" />
-            <Text style={styles.quickActionTitle}>Livreurs</Text>
-            <Text style={styles.quickActionText}>Piloter la flotte</Text>
+            <Text style={styles.quickActionTitle}>{t('admin.common.driversTitle')}</Text>
+            <Text style={styles.quickActionText}>{t('admin.ops.driversQuickText')}</Text>
           </Pressable>
 
           <Pressable style={styles.quickActionCard} onPress={handleOpenUsers}>
             <Ionicons name="people-outline" size={20} color="#7C3AED" />
-            <Text style={styles.quickActionTitle}>Utilisateurs</Text>
-            <Text style={styles.quickActionText}>Contrôle comptes</Text>
+            <Text style={styles.quickActionTitle}>{t('admin.common.usersTitle')}</Text>
+            <Text style={styles.quickActionText}>{t('admin.ops.usersQuickText')}</Text>
           </Pressable>
 
           <Pressable
@@ -813,8 +811,8 @@ export default function AdminOpsScreen() {
             onPress={handleOpenRestaurants}
           >
             <Ionicons name="storefront-outline" size={20} color="#D96C2D" />
-            <Text style={styles.quickActionTitle}>Restaurants</Text>
-            <Text style={styles.quickActionText}>Suivi partenaires</Text>
+            <Text style={styles.quickActionTitle}>{t('admin.common.restaurantsTitle')}</Text>
+            <Text style={styles.quickActionText}>{t('admin.ops.restaurantsQuickText')}</Text>
           </Pressable>
 
           <Pressable
@@ -822,14 +820,14 @@ export default function AdminOpsScreen() {
             onPress={handleOpenAuditLogs}
           >
             <Ionicons name="document-text-outline" size={20} color="#B83232" />
-            <Text style={styles.quickActionTitle}>Audit logs</Text>
+            <Text style={styles.quickActionTitle}>{t('admin.dashboard.navAuditTitle')}</Text>
             <Text style={styles.quickActionText}>
-              Contrôle des actions sensibles et traçabilité admin
+              {t('admin.ops.auditQuickText')}
             </Text>
           </Pressable>
         </View>
 
-        <Text style={styles.sectionTitle}>Population plateforme</Text>
+        <Text style={styles.sectionTitle}>{t('admin.ops.platformPopulationTitle')}</Text>
         <View style={styles.grid}>
           {populationStats.map((item) => (
             <StatCard
@@ -842,7 +840,7 @@ export default function AdminOpsScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Risque comptes</Text>
+        <Text style={styles.sectionTitle}>{t('admin.ops.accountRiskTitle')}</Text>
         <View style={styles.grid}>
           {riskStats.map((item) => (
             <StatCard
@@ -855,7 +853,7 @@ export default function AdminOpsScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Flux commandes</Text>
+        <Text style={styles.sectionTitle}>{t('admin.ops.orderFlowTitle')}</Text>
         <View style={styles.grid}>
           {orderFlowStats.map((item) => (
             <StatCard
@@ -868,7 +866,7 @@ export default function AdminOpsScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Highlights ops</Text>
+        <Text style={styles.sectionTitle}>{t('admin.dashboard.opsHighlightsTitle')}</Text>
         <View style={styles.highlightGrid}>
           {highlights.map((item) => (
             <HighlightCard
@@ -881,12 +879,12 @@ export default function AdminOpsScreen() {
           ))}
         </View>
 
-        <Text style={styles.sectionTitle}>Alertes de supervision</Text>
+        <Text style={styles.sectionTitle}>{t('admin.dashboard.alertsSectionTitle')}</Text>
 
         {healthFlags.length > 0 ? (
           <View style={styles.flagList}>
             {healthFlags.map((flag, index) => {
-              const flagStyle = getFlagStyle(flag?.level);
+              const flagStyle = getFlagStyle(flag?.level, t);
 
               return (
                 <View
@@ -919,7 +917,7 @@ export default function AdminOpsScreen() {
                   <Text style={[styles.flagMessage, { color: flagStyle.text }]}>
                     {normalizeText(
                       flag?.message,
-                      'Signal de supervision détecté.'
+                      t('admin.ops.flagMessageFallback')
                     )}
                   </Text>
                 </View>
@@ -934,12 +932,12 @@ export default function AdminOpsScreen() {
               color="#1F6F43"
             />
             <Text style={styles.cleanStateText}>
-              Aucun signal critique remonté pour le moment.
+              {t('admin.dashboard.noSignalText')}
             </Text>
           </View>
         )}
 
-        <Text style={styles.sectionTitle}>Alertes exploitation</Text>
+        <Text style={styles.sectionTitle}>{t('admin.ops.exploitationAlertsTitle')}</Text>
 
         <View style={styles.alertCard}>
           <View style={styles.alertRow}>
@@ -949,15 +947,14 @@ export default function AdminOpsScreen() {
               color="#8A6500"
             />
             <Text style={styles.alertText}>
-              Commandes sans livreur :{' '}
-              {normalizeNumber(orders.unassignedOrders)}
+              {t('admin.ops.unassignedOrdersAlertLabel', { count: normalizeNumber(orders.unassignedOrders) })}
             </Text>
           </View>
 
           <View style={styles.alertRow}>
             <Ionicons name="card-outline" size={20} color="#B83232" />
             <Text style={styles.alertText}>
-              Commandes non payées : {normalizeNumber(orders.unpaidOrders)}
+              {t('admin.ops.unpaidOrdersAlertLabel', { count: normalizeNumber(orders.unpaidOrders) })}
             </Text>
           </View>
 
@@ -968,18 +965,14 @@ export default function AdminOpsScreen() {
               color="#245EA8"
             />
             <Text style={styles.alertText}>
-              Audit logs dernières 24h :{' '}
-              {normalizeNumber(
-                audit.recentAuditLogs24h || audit.recentAuditLogs
-              )}
+              {t('admin.ops.auditLogs24hAlertLabel', { count: normalizeNumber(audit.recentAuditLogs24h || audit.recentAuditLogs) })}
             </Text>
           </View>
 
           <View style={[styles.alertRow, styles.alertRowLast]}>
             <Ionicons name="close-circle-outline" size={20} color="#B83232" />
             <Text style={styles.alertText}>
-              Commandes annulées sur 7 jours :{' '}
-              {normalizeNumber(orders.cancelledOrders7d)}
+              {t('admin.ops.cancelledOrders7dAlertLabel', { count: normalizeNumber(orders.cancelledOrders7d) })}
             </Text>
           </View>
         </View>
