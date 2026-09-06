@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router, useFocusEffect, Redirect } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { getMyRestaurant } from '../../services/restaurantService';
+import i18n from '../../i18n';
 
 const normalizeText = (v, f = '') => {
   const n = String(v ?? '').trim();
@@ -52,10 +54,10 @@ const normalizeRestaurant = (data) => {
 
   return {
     _id: r._id || r.id,
-    name: normalizeText(r.name, 'Restaurant partenaire'),
-    cuisine: normalizeText(r.cuisine, 'Cuisine africaine'),
-    address: normalizeText(r.address, 'Adresse non renseignée'),
-    phone: normalizeText(r.phone, 'Non renseigné'),
+    name: normalizeText(r.name, i18n.t('restaurant.profile.restaurantFallbackName')),
+    cuisine: normalizeText(r.cuisine, i18n.t('restaurant.profile.cuisineFallback')),
+    address: normalizeText(r.address, i18n.t('restaurant.profile.addressFallback')),
+    phone: normalizeText(r.phone, i18n.t('profile.info.notProvided')),
     email: normalizeText(r.email),
     description: normalizeText(r.description),
     city: normalizeText(r.city),
@@ -68,8 +70,8 @@ const normalizeRestaurant = (data) => {
 
 const getOpenState = (r) => {
   return r?.isOpen === false
-    ? { label: 'Fermé', color: '#B83232', bg: '#FDECEC' }
-    : { label: 'Ouvert', color: '#1F6F43', bg: '#E8F5ED' };
+    ? { label: i18n.t('restaurant.profile.closedLabel'), color: '#B83232', bg: '#FDECEC' }
+    : { label: i18n.t('restaurant.profile.openLabel'), color: '#1F6F43', bg: '#E8F5ED' };
 };
 
 const formatPrice = (value, currency = 'EUR') => {
@@ -108,6 +110,7 @@ const MetaRow = ({ icon, label, value, valueStyle, multiline = false }) => (
 );
 
 export default function RestaurantProfile() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -204,9 +207,9 @@ export default function RestaurantProfile() {
             size={56}
             color="#C8BBAA"
           />
-          <Text style={styles.emptyTitle}>Restaurant introuvable</Text>
+          <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
-            Impossible de charger les informations du restaurant.
+            {t('restaurant.profile.notFoundText')}
           </Text>
         </View>
       </FadeInView>
@@ -246,10 +249,10 @@ export default function RestaurantProfile() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Restaurant</Text>
-          <Text style={styles.title}>Profil partenaire</Text>
+          <Text style={styles.eyebrow}>{t('restaurant.settings.eyebrow')}</Text>
+          <Text style={styles.title}>{t('restaurant.profile.title')}</Text>
           <Text style={styles.subtitle}>
-            Vue premium de l’identité, de la vitrine commerciale et des informations clés.
+            {t('restaurant.profile.subtitle')}
           </Text>
         </View>
 
@@ -265,7 +268,7 @@ export default function RestaurantProfile() {
           <View style={styles.heroContent}>
             <Text style={styles.heroTitle}>{restaurant.name}</Text>
             <Text style={styles.heroText}>
-              {restaurant.description || 'Restaurant partenaire AFROEAT.'}
+              {restaurant.description || t('restaurant.profile.descriptionFallback')}
             </Text>
 
             <View style={styles.heroTags}>
@@ -282,59 +285,59 @@ export default function RestaurantProfile() {
           </View>
         </View>
 
-        <InfoCard title="Informations générales">
+        <InfoCard title={t('restaurant.profile.generalInfoCardTitle')}>
           <MetaRow
             icon="storefront-outline"
-            label="Nom"
+            label={t('restaurant.profile.nameLabel')}
             value={restaurant.name}
           />
           <MetaRow
             icon="restaurant-outline"
-            label="Cuisine"
+            label={t('restaurant.profile.cuisineLabel')}
             value={restaurant.cuisine}
           />
           <MetaRow
             icon="location-outline"
-            label="Adresse"
+            label={t('restaurant.profile.addressLabel')}
             value={restaurant.address}
             multiline
           />
           <MetaRow
             icon="business-outline"
-            label="Ville"
-            value={normalizeText(restaurant.city, 'Non renseignée')}
+            label={t('restaurant.profile.cityLabel')}
+            value={normalizeText(restaurant.city, t('restaurant.profile.cityFallback'))}
           />
           <MetaRow
             icon="earth-outline"
-            label="Pays"
-            value={normalizeText(restaurant.country, 'Non renseigné')}
+            label={t('restaurant.profile.countryLabel')}
+            value={normalizeText(restaurant.country, t('profile.info.notProvided'))}
           />
         </InfoCard>
 
-        <InfoCard title="Contact & exploitation">
+        <InfoCard title={t('restaurant.profile.contactCardTitle')}>
           <MetaRow
             icon="call-outline"
-            label="Téléphone"
+            label={t('restaurant.profile.phoneLabel')}
             value={restaurant.phone}
           />
           <MetaRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(restaurant.email, 'Non renseigné')}
+            label={t('restaurant.profile.emailLabel')}
+            value={normalizeText(restaurant.email, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="cash-outline"
-            label="Devise"
+            label={t('restaurant.profile.currencyLabel')}
             value={restaurant.currency}
           />
           <MetaRow
             icon="car-outline"
-            label="Livraison"
+            label={t('restaurant.profile.deliveryLabel')}
             value={formatPrice(restaurant.deliveryFee, restaurant.currency)}
           />
           <MetaRow
             icon="time-outline"
-            label="Statut"
+            label={t('restaurant.profile.statusLabel')}
             value={openState.label}
             valueStyle={{ color: openState.color, fontWeight: '900' }}
           />
@@ -346,7 +349,7 @@ export default function RestaurantProfile() {
             onPress={() => router.push('/restaurant/MenuScreen')}
           >
             <Ionicons name="restaurant-outline" size={18} color="#111111" />
-            <Text style={styles.primaryButtonText}>Voir mon menu</Text>
+            <Text style={styles.primaryButtonText}>{t('restaurant.profile.viewMenuButton')}</Text>
           </Pressable>
 
           <Pressable
@@ -354,7 +357,7 @@ export default function RestaurantProfile() {
             onPress={() => router.push('/restaurant/restaurant-orders')}
           >
             <Ionicons name="receipt-outline" size={18} color="#1F6F43" />
-            <Text style={styles.secondaryButtonText}>Voir mes commandes</Text>
+            <Text style={styles.secondaryButtonText}>{t('restaurant.profile.viewOrdersButton')}</Text>
           </Pressable>
         </View>
       </ScrollView>

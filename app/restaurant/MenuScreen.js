@@ -12,10 +12,12 @@ import {
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { apiDelete, apiGet } from '../../services/apiClient';
 import { API_ENDPOINTS } from '../../constants/api';
+import i18n from '../../i18n';
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
@@ -61,10 +63,10 @@ const normalizeMenuItem = (item = {}) => ({
   ...item,
   _id: item?._id || item?.id || '',
   id: item?.id || item?._id || '',
-  name: normalizeText(item?.name, 'Plat'),
-  description: normalizeText(item?.description, 'Aucune description'),
-  category: normalizeText(item?.category, 'Autres'),
-  cuisine: normalizeText(item?.cuisine, 'Africaine'),
+  name: normalizeText(item?.name, i18n.t('restaurant.menuScreen.dishFallback')),
+  description: normalizeText(item?.description, i18n.t('restaurant.menuScreen.noDescriptionFallback')),
+  category: normalizeText(item?.category, i18n.t('restaurant.menuScreen.categoryFallback')),
+  cuisine: normalizeText(item?.cuisine, i18n.t('restaurant.menuScreen.cuisineFallback')),
   price: normalizeNumber(item?.price, 0),
   available: item?.available !== false,
   isPopular: Boolean(item?.isPopular),
@@ -72,6 +74,7 @@ const normalizeMenuItem = (item = {}) => ({
 });
 
 export default function MenuScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const role = normalizeRole(auth.role || user?.role);
@@ -117,7 +120,7 @@ export default function MenuScreen() {
         ...safeRestaurant,
         _id: restaurantId,
         currency: normalizeText(safeRestaurant?.currency, 'EUR'),
-        name: normalizeText(safeRestaurant?.name, 'Restaurant'),
+        name: normalizeText(safeRestaurant?.name, t('restaurant.menuScreen.restaurantNameFallback')),
       });
 
       setItems(
@@ -127,13 +130,13 @@ export default function MenuScreen() {
       );
     } catch (error) {
       console.log('Erreur MenuScreen :', error);
-      Alert.alert('Erreur', error?.message || 'Impossible de charger le menu.');
+      Alert.alert(t('common.error'), error?.message || t('restaurant.menuScreen.errorLoadBody'));
       setItems([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [role, token]);
+  }, [role, token, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -155,23 +158,23 @@ export default function MenuScreen() {
       if (!token || !itemId) return;
 
       Alert.alert(
-        'Supprimer ce plat',
-        'Veux-tu vraiment supprimer ce plat du menu ?',
+        t('restaurant.menuScreen.deleteConfirmTitle'),
+        t('restaurant.menuScreen.deleteConfirmBody'),
         [
-          { text: 'Annuler', style: 'cancel' },
+          { text: t('restaurant.settings.cancelButton'), style: 'cancel' },
           {
-            text: 'Supprimer',
+            text: t('restaurant.menuScreen.deleteButton'),
             style: 'destructive',
             onPress: async () => {
               try {
                 await apiDelete(API_ENDPOINTS.menu.byId(itemId), token);
                 setItems((prev) => prev.filter((item) => item?._id !== itemId));
-                Alert.alert('Succès', 'Plat supprimé.');
+                Alert.alert(t('restaurant.settings.successTitle'), t('restaurant.menuScreen.deleteSuccessBody'));
               } catch (error) {
                 console.log('Erreur suppression menu :', error);
                 Alert.alert(
-                  'Erreur',
-                  error?.message || 'Impossible de supprimer ce plat.'
+                  t('common.error'),
+                  error?.message || t('restaurant.menuScreen.deleteErrorBody')
                 );
               }
             },
@@ -179,7 +182,7 @@ export default function MenuScreen() {
         ]
       );
     },
-    [token]
+    [token, t]
   );
 
   const handleEdit = useCallback((item) => {
@@ -241,29 +244,29 @@ export default function MenuScreen() {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.eyebrow}>Restaurant</Text>
-              <Text style={styles.title}>Menu</Text>
+              <Text style={styles.eyebrow}>{t('restaurant.settings.eyebrow')}</Text>
+              <Text style={styles.title}>{t('restaurant.menuScreen.title')}</Text>
               <Text style={styles.subtitle}>
-                Gère tous les plats visibles de ta vitrine.
+                {t('restaurant.menuScreen.subtitle')}
               </Text>
             </View>
 
             <View style={styles.statsRow}>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.total}</Text>
-                <Text style={styles.statLabel}>Total</Text>
+                <Text style={styles.statLabel}>{t('restaurant.menuScreen.totalLabel')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.available}</Text>
-                <Text style={styles.statLabel}>Disponibles</Text>
+                <Text style={styles.statLabel}>{t('restaurant.menuScreen.availableLabel')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.unavailable}</Text>
-                <Text style={styles.statLabel}>Indisponibles</Text>
+                <Text style={styles.statLabel}>{t('restaurant.menuScreen.unavailableLabel')}</Text>
               </View>
               <View style={styles.statCard}>
                 <Text style={styles.statValue}>{stats.popular}</Text>
-                <Text style={styles.statLabel}>Populaires</Text>
+                <Text style={styles.statLabel}>{t('restaurant.menuScreen.popularLabel')}</Text>
               </View>
             </View>
           </View>
@@ -290,7 +293,7 @@ export default function MenuScreen() {
                       : styles.badgeTextClosed,
                   ]}
                 >
-                  {item?.available !== false ? 'Disponible' : 'Indisponible'}
+                  {item?.available !== false ? t('restaurant.menuScreen.availableBadge') : t('restaurant.menuScreen.unavailableBadge')}
                 </Text>
               </View>
             </View>
@@ -308,14 +311,14 @@ export default function MenuScreen() {
               {!!item?.isPopular && (
                 <View style={styles.metaBadge}>
                   <Ionicons name="flame-outline" size={14} color="#C05621" />
-                  <Text style={styles.metaBadgeText}>Populaire</Text>
+                  <Text style={styles.metaBadgeText}>{t('restaurant.menuScreen.popularBadge')}</Text>
                 </View>
               )}
 
               {!!item?.isRecommended && (
                 <View style={styles.metaBadge}>
                   <Ionicons name="star-outline" size={14} color="#7C3AED" />
-                  <Text style={styles.metaBadgeText}>Recommandé</Text>
+                  <Text style={styles.metaBadgeText}>{t('restaurant.menuScreen.recommendedBadge')}</Text>
                 </View>
               )}
             </View>
@@ -326,7 +329,7 @@ export default function MenuScreen() {
                 onPress={() => handleEdit(item)}
               >
                 <Ionicons name="create-outline" size={16} color="#1F6F43" />
-                <Text style={styles.secondaryButtonText}>Modifier</Text>
+                <Text style={styles.secondaryButtonText}>{t('restaurant.menuScreen.editButton')}</Text>
               </Pressable>
 
               <Pressable
@@ -334,7 +337,7 @@ export default function MenuScreen() {
                 onPress={() => handleDelete(item?._id)}
               >
                 <Ionicons name="trash-outline" size={16} color="#FFFFFF" />
-                <Text style={styles.deleteButtonText}>Supprimer</Text>
+                <Text style={styles.deleteButtonText}>{t('restaurant.menuScreen.deleteButton')}</Text>
               </Pressable>
             </View>
           </View>
@@ -342,15 +345,15 @@ export default function MenuScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="restaurant-outline" size={52} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>Aucun plat</Text>
+            <Text style={styles.emptyTitle}>{t('restaurant.menuScreen.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
-              Commence par ajouter tes premiers plats.
+              {t('restaurant.menuScreen.emptyText')}
             </Text>
             <Pressable
               style={styles.primaryButton}
               onPress={() => router.push('/restaurant/AddMenuItem')}
             >
-              <Text style={styles.primaryButtonText}>Ajouter un plat</Text>
+              <Text style={styles.primaryButtonText}>{t('restaurant.menuScreen.addDishButton')}</Text>
             </Pressable>
           </View>
         }

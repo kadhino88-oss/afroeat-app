@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
@@ -62,6 +63,7 @@ const SettingRow = ({
 };
 
 export default function RestaurantSettingsScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const logout = auth.logout;
@@ -73,8 +75,8 @@ export default function RestaurantSettingsScreen() {
   const [busy, setBusy] = useState(false);
 
   const restaurantName = useMemo(() => {
-    return normalizeText(user?.restaurantName || user?.name, 'Restaurant AFROEAT');
-  }, [user]);
+    return normalizeText(user?.restaurantName || user?.name, t('restaurant.settings.restaurantFallback'));
+  }, [user, t]);
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -96,27 +98,27 @@ export default function RestaurantSettingsScreen() {
       setTimeout(() => {
         setBusy(false);
         Alert.alert(
-          'Succès',
-          'Les préférences critiques du restaurant ont été enregistrées.'
+          t('restaurant.settings.successTitle'),
+          t('restaurant.settings.successBody')
         );
       }, 600);
     } catch (error) {
       setBusy(false);
       Alert.alert(
-        'Erreur',
-        error?.message || 'Impossible d’enregistrer les paramètres.'
+        t('common.error'),
+        error?.message || t('restaurant.settings.errorSaveBody')
       );
     }
-  }, []);
+  }, [t]);
 
   const handleLogout = useCallback(() => {
     Alert.alert(
-      'Déconnexion',
-      'Veux-tu vraiment te déconnecter de l’espace restaurant ?',
+      t('restaurant.settings.logoutTitle'),
+      t('restaurant.settings.logoutBody'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('restaurant.settings.cancelButton'), style: 'cancel' },
         {
-          text: 'Déconnexion',
+          text: t('restaurant.settings.logoutTitle'),
           style: 'destructive',
           onPress: async () => {
             try {
@@ -126,15 +128,15 @@ export default function RestaurantSettingsScreen() {
               router.replace('/auth/role');
             } catch (error) {
               Alert.alert(
-                'Erreur',
-                error?.message || 'Impossible de se déconnecter.'
+                t('common.error'),
+                error?.message || t('restaurant.settings.logoutErrorBody')
               );
             }
           },
         },
       ]
     );
-  }, [logout]);
+  }, [logout, t]);
 
   return (
     <FadeInView style={styles.screen}>
@@ -159,18 +161,17 @@ export default function RestaurantSettingsScreen() {
             ) : (
               <>
                 <Ionicons name="save-outline" size={16} color="#111111" />
-                <Text style={styles.saveButtonText}>Sauvegarder</Text>
+                <Text style={styles.saveButtonText}>{t('restaurant.settings.saveButton')}</Text>
               </>
             )}
           </Pressable>
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Restaurant</Text>
-          <Text style={styles.title}>Paramètres</Text>
+          <Text style={styles.eyebrow}>{t('restaurant.settings.eyebrow')}</Text>
+          <Text style={styles.title}>{t('restaurant.settings.title')}</Text>
           <Text style={styles.subtitle}>
-            Centre de contrôle premium pour piloter l’exploitation, la réception
-            des commandes, les notifications et les préférences du restaurant.
+            {t('restaurant.settings.subtitle')}
           </Text>
         </View>
 
@@ -178,26 +179,25 @@ export default function RestaurantSettingsScreen() {
           <View style={styles.heroLeft}>
             <Text style={styles.heroTitle}>{restaurantName}</Text>
             <Text style={styles.heroText}>
-              Paramétrage stratégique du restaurant pour une exécution fluide,
-              robuste et premium.
+              {t('restaurant.settings.heroText')}
             </Text>
           </View>
 
           <View style={styles.heroBadge}>
             <Ionicons name="settings-outline" size={16} color="#1F6F43" />
-            <Text style={styles.heroBadgeText}>Control Center</Text>
+            <Text style={styles.heroBadgeText}>{t('restaurant.settings.heroBadge')}</Text>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Exploitation</Text>
+          <Text style={styles.sectionTitle}>{t('restaurant.settings.sectionExploitation')}</Text>
 
           <SettingRow
             icon="receipt-outline"
             iconColor="#1F6F43"
             iconBg="#E8F5ED"
-            title="Recevoir les commandes"
-            subtitle="Active ou coupe l’entrée de nouvelles commandes"
+            title={t('restaurant.settings.acceptOrdersTitle')}
+            subtitle={t('restaurant.settings.acceptOrdersSubtitle')}
             rightNode={
               <Switch
                 value={acceptOrders}
@@ -212,8 +212,8 @@ export default function RestaurantSettingsScreen() {
             icon="flash-outline"
             iconColor="#D96C2D"
             iconBg="#FFF0E8"
-            title="Acceptation automatique"
-            subtitle="Accepte instantanément les commandes entrantes"
+            title={t('restaurant.settings.autoAcceptTitle')}
+            subtitle={t('restaurant.settings.autoAcceptSubtitle')}
             rightNode={
               <Switch
                 value={autoAcceptOrders}
@@ -228,8 +228,8 @@ export default function RestaurantSettingsScreen() {
             icon="restaurant-outline"
             iconColor="#245EA8"
             iconBg="#EAF3FF"
-            title="Mode préparation"
-            subtitle="Signale que la cuisine est prête à traiter les flux"
+            title={t('restaurant.settings.prepModeTitle')}
+            subtitle={t('restaurant.settings.prepModeSubtitle')}
             rightNode={
               <Switch
                 value={preparationMode}
@@ -242,14 +242,14 @@ export default function RestaurantSettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Notifications</Text>
+          <Text style={styles.sectionTitle}>{t('restaurant.settings.sectionNotifications')}</Text>
 
           <SettingRow
             icon="notifications-outline"
             iconColor="#7C3AED"
             iconBg="#F3E8FF"
-            title="Notifications opérationnelles"
-            subtitle="Alertes commandes, incidents et événements critiques"
+            title={t('restaurant.settings.opNotifTitle')}
+            subtitle={t('restaurant.settings.opNotifSubtitle')}
             rightNode={
               <Switch
                 value={notificationsEnabled}
@@ -264,30 +264,30 @@ export default function RestaurantSettingsScreen() {
             icon="mail-outline"
             iconColor="#245EA8"
             iconBg="#EAF3FF"
-            title="Préférences de contact"
-            subtitle="Gérer email, téléphone et informations visibles"
+            title={t('restaurant.settings.contactPrefTitle')}
+            subtitle={t('restaurant.settings.contactPrefSubtitle')}
             onPress={() =>
               handleSimpleInfo(
-                'Contact',
-                'Ce module peut être relié ensuite au profil restaurant et aux préférences de communication.'
+                t('restaurant.settings.contactInfoTitle'),
+                t('restaurant.settings.contactInfoBody')
               )
             }
           />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Configuration métier</Text>
+          <Text style={styles.sectionTitle}>{t('restaurant.settings.sectionBusinessConfig')}</Text>
 
           <SettingRow
             icon="time-outline"
             iconColor="#8A6500"
             iconBg="#FFF3D8"
-            title="Horaires d’ouverture"
-            subtitle="Définir les plages horaires du restaurant"
+            title={t('restaurant.settings.hoursTitle')}
+            subtitle={t('restaurant.settings.hoursSubtitle')}
             onPress={() =>
               handleSimpleInfo(
-                'Horaires',
-                'On pourra brancher ici un écran complet de gestion des horaires par jour.'
+                t('restaurant.settings.hoursInfoTitle'),
+                t('restaurant.settings.hoursInfoBody')
               )
             }
           />
@@ -296,12 +296,12 @@ export default function RestaurantSettingsScreen() {
             icon="car-outline"
             iconColor="#D96C2D"
             iconBg="#FFF0E8"
-            title="Livraison & zones"
-            subtitle="Piloter les frais et périmètres de livraison"
+            title={t('restaurant.settings.deliveryZonesTitle')}
+            subtitle={t('restaurant.settings.deliveryZonesSubtitle')}
             onPress={() =>
               handleSimpleInfo(
-                'Livraison',
-                'On peut ensuite créer un écran premium dédié aux zones et frais de livraison.'
+                t('restaurant.settings.deliveryInfoTitle'),
+                t('restaurant.settings.deliveryInfoBody')
               )
             }
           />
@@ -310,26 +310,26 @@ export default function RestaurantSettingsScreen() {
             icon="card-outline"
             iconColor="#1F6F43"
             iconBg="#E8F5ED"
-            title="Paiement & facturation"
-            subtitle="Préparer les paramètres financiers du restaurant"
+            title={t('restaurant.settings.paymentTitle')}
+            subtitle={t('restaurant.settings.paymentSubtitle')}
             onPress={() =>
               handleSimpleInfo(
-                'Paiement',
-                'Le bloc paiement/facturation pourra être relié aux méthodes de paiement et au back-office.'
+                t('restaurant.settings.paymentInfoTitle'),
+                t('restaurant.settings.paymentInfoBody')
               )
             }
           />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Compte</Text>
+          <Text style={styles.sectionTitle}>{t('restaurant.settings.sectionAccount')}</Text>
 
           <SettingRow
             icon="person-circle-outline"
             iconColor="#245EA8"
             iconBg="#EAF3FF"
-            title="Profil restaurant"
-            subtitle="Modifier les informations principales du compte"
+            title={t('restaurant.settings.profileTitle')}
+            subtitle={t('restaurant.settings.profileSubtitle')}
             onPress={() => router.push('/restaurant/restaurant-profile')}
           />
 
@@ -337,12 +337,12 @@ export default function RestaurantSettingsScreen() {
             icon="shield-checkmark-outline"
             iconColor="#1F6F43"
             iconBg="#E8F5ED"
-            title="Sécurité"
-            subtitle="Mot de passe, accès et protection du compte"
+            title={t('restaurant.settings.securityTitle')}
+            subtitle={t('restaurant.settings.securitySubtitle')}
             onPress={() =>
               handleSimpleInfo(
-                'Sécurité',
-                'Le module sécurité peut être branché ensuite à une gestion avancée du mot de passe et des sessions.'
+                t('restaurant.settings.securityTitle'),
+                t('restaurant.settings.securityInfoBody')
               )
             }
           />
@@ -351,8 +351,8 @@ export default function RestaurantSettingsScreen() {
             icon="log-out-outline"
             iconColor="#B83232"
             iconBg="#FDECEC"
-            title="Déconnexion"
-            subtitle="Quitter l’espace restaurant"
+            title={t('restaurant.settings.logoutTitle')}
+            subtitle={t('restaurant.settings.logoutRowSubtitle')}
             onPress={handleLogout}
             danger
           />

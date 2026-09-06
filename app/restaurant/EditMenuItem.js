@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { apiPut } from '../../services/apiClient';
@@ -40,7 +41,17 @@ const CATEGORY_OPTIONS = [
   'Autres',
 ];
 
+const CATEGORY_SLUG_BY_LABEL = {
+  'Entrées': 'starters',
+  'Plats principaux': 'mainCourses',
+  'Desserts': 'desserts',
+  'Boissons': 'drinks',
+  'Snacks': 'snacks',
+  'Autres': 'other',
+};
+
 export default function EditMenuItem() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const role = normalizeRole(auth.role || user?.role);
@@ -87,17 +98,17 @@ export default function EditMenuItem() {
 
   const handleSubmit = useCallback(async () => {
     if (!token || !itemId) {
-      Alert.alert('Erreur', 'Plat invalide.');
+      Alert.alert(t('common.error'), t('restaurant.editMenuItem.errorInvalidDishBody'));
       return;
     }
 
     if (!normalizeText(name)) {
-      Alert.alert('Erreur', 'Le nom du plat est obligatoire.');
+      Alert.alert(t('common.error'), t('restaurant.addMenuItem.errorNameRequired'));
       return;
     }
 
     if (resolvedPrice <= 0) {
-      Alert.alert('Erreur', 'Le prix doit être supérieur à 0.');
+      Alert.alert(t('common.error'), t('restaurant.addMenuItem.errorPriceInvalid'));
       return;
     }
 
@@ -118,13 +129,13 @@ export default function EditMenuItem() {
 
       await apiPut(API_ENDPOINTS.menu.update(itemId), payload, token);
 
-      Alert.alert('Succès', 'Plat mis à jour avec succès.');
+      Alert.alert(t('restaurant.settings.successTitle'), t('restaurant.editMenuItem.successBody'));
       router.replace('/restaurant/MenuScreen');
     } catch (error) {
       console.log('Erreur modification plat :', error);
       Alert.alert(
-        'Erreur',
-        error?.message || 'Impossible de modifier ce plat.'
+        t('common.error'),
+        error?.message || t('restaurant.editMenuItem.errorEditBody')
       );
     } finally {
       setSubmitting(false);
@@ -141,6 +152,7 @@ export default function EditMenuItem() {
     available,
     isPopular,
     isRecommended,
+    t,
   ]);
 
   if (!canAccess) {
@@ -162,53 +174,53 @@ export default function EditMenuItem() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Restaurant</Text>
-          <Text style={styles.title}>Modifier le plat</Text>
+          <Text style={styles.eyebrow}>{t('restaurant.settings.eyebrow')}</Text>
+          <Text style={styles.title}>{t('restaurant.editMenuItem.title')}</Text>
           <Text style={styles.subtitle}>
-            Mets à jour les informations de ton article.
+            {t('restaurant.editMenuItem.subtitle')}
           </Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.label}>Nom du plat</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.nameLabel')}</Text>
           <TextInput
             style={styles.input}
             value={name}
             onChangeText={setName}
-            placeholder="Ex : Mafé poulet"
+            placeholder={t('restaurant.addMenuItem.namePlaceholder')}
             placeholderTextColor="#999"
           />
 
-          <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.descriptionLabel')}</Text>
           <TextInput
             style={[styles.input, styles.textarea]}
             value={description}
             onChangeText={setDescription}
-            placeholder="Décris ton plat..."
+            placeholder={t('restaurant.addMenuItem.descriptionPlaceholder')}
             placeholderTextColor="#999"
             multiline
           />
 
-          <Text style={styles.label}>Prix</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.priceLabel')}</Text>
           <TextInput
             style={styles.input}
             value={price}
             onChangeText={setPrice}
-            placeholder="Ex : 14.90"
+            placeholder={t('restaurant.addMenuItem.pricePlaceholder')}
             placeholderTextColor="#999"
             keyboardType="decimal-pad"
           />
 
-          <Text style={styles.label}>Cuisine</Text>
+          <Text style={styles.label}>{t('restaurant.profile.cuisineLabel')}</Text>
           <TextInput
             style={styles.input}
             value={cuisine}
             onChangeText={setCuisine}
-            placeholder="Ex : Africaine"
+            placeholder={t('restaurant.addMenuItem.cuisinePlaceholder')}
             placeholderTextColor="#999"
           />
 
-          <Text style={styles.label}>Image URL</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.imageLabel')}</Text>
           <TextInput
             style={styles.input}
             value={image}
@@ -218,10 +230,11 @@ export default function EditMenuItem() {
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Catégorie</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.categoryLabel')}</Text>
           <View style={styles.chipsRow}>
             {CATEGORY_OPTIONS.map((item) => {
               const active = category === item;
+              const slug = CATEGORY_SLUG_BY_LABEL[item] || 'other';
 
               return (
                 <Pressable
@@ -232,17 +245,17 @@ export default function EditMenuItem() {
                   <Text
                     style={[styles.chipText, active && styles.chipTextActive]}
                   >
-                    {item}
+                    {t(`restaurant.addMenuItem.categories.${slug}`, item)}
                   </Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={styles.label}>Options</Text>
+          <Text style={styles.label}>{t('restaurant.editMenuItem.optionsLabel')}</Text>
 
           <Pressable style={styles.toggleRow} onPress={() => toggleField('available')}>
-            <Text style={styles.toggleLabel}>Disponible</Text>
+            <Text style={styles.toggleLabel}>{t('restaurant.menuScreen.availableBadge')}</Text>
             <Ionicons
               name={available ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
@@ -251,7 +264,7 @@ export default function EditMenuItem() {
           </Pressable>
 
           <Pressable style={styles.toggleRow} onPress={() => toggleField('popular')}>
-            <Text style={styles.toggleLabel}>Populaire</Text>
+            <Text style={styles.toggleLabel}>{t('restaurant.menuScreen.popularBadge')}</Text>
             <Ionicons
               name={isPopular ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
@@ -263,7 +276,7 @@ export default function EditMenuItem() {
             style={styles.toggleRow}
             onPress={() => toggleField('recommended')}
           >
-            <Text style={styles.toggleLabel}>Recommandé</Text>
+            <Text style={styles.toggleLabel}>{t('restaurant.menuScreen.recommendedBadge')}</Text>
             <Ionicons
               name={isRecommended ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
@@ -281,7 +294,7 @@ export default function EditMenuItem() {
             ) : (
               <>
                 <Ionicons name="save-outline" size={18} color="#111111" />
-                <Text style={styles.primaryButtonText}>Enregistrer</Text>
+                <Text style={styles.primaryButtonText}>{t('restaurant.editMenuItem.saveButton')}</Text>
               </>
             )}
           </Pressable>

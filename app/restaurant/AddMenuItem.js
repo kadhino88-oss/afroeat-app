@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { apiPost, apiGet } from '../../services/apiClient';
@@ -33,7 +34,17 @@ const CATEGORY_OPTIONS = [
   'Autres',
 ];
 
+const CATEGORY_SLUG_BY_LABEL = {
+  'Entrées': 'starters',
+  'Plats principaux': 'mainCourses',
+  'Desserts': 'desserts',
+  'Boissons': 'drinks',
+  'Snacks': 'snacks',
+  'Autres': 'other',
+};
+
 export default function AddMenuItem() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const role = normalizeRole(auth.role || user?.role);
@@ -83,24 +94,24 @@ export default function AddMenuItem() {
 
   const handleSubmit = useCallback(async () => {
     if (!token) {
-      Alert.alert('Erreur', 'Session invalide.');
+      Alert.alert(t('common.error'), t('restaurant.addMenuItem.errorSessionBody'));
       return;
     }
 
     const safeRestaurantId = await ensureRestaurantId();
 
     if (!safeRestaurantId) {
-      Alert.alert('Erreur', 'Restaurant introuvable.');
+      Alert.alert(t('common.error'), t('restaurant.addMenuItem.errorRestaurantNotFound'));
       return;
     }
 
     if (!normalizeText(name)) {
-      Alert.alert('Erreur', 'Le nom du plat est obligatoire.');
+      Alert.alert(t('common.error'), t('restaurant.addMenuItem.errorNameRequired'));
       return;
     }
 
     if (resolvedPrice <= 0) {
-      Alert.alert('Erreur', 'Le prix doit être supérieur à 0.');
+      Alert.alert(t('common.error'), t('restaurant.addMenuItem.errorPriceInvalid'));
       return;
     }
 
@@ -123,13 +134,13 @@ export default function AddMenuItem() {
 
       await apiPost(API_ENDPOINTS.menu.create, payload, token);
 
-      Alert.alert('Succès', 'Plat ajouté avec succès.');
+      Alert.alert(t('restaurant.settings.successTitle'), t('restaurant.addMenuItem.successBody'));
       router.replace('/restaurant/MenuScreen');
     } catch (error) {
       console.log('Erreur ajout plat :', error);
       Alert.alert(
-        'Erreur',
-        error?.message || 'Impossible d’ajouter ce plat.'
+        t('common.error'),
+        error?.message || t('restaurant.addMenuItem.errorAddBody')
       );
     } finally {
       setSubmitting(false);
@@ -143,6 +154,7 @@ export default function AddMenuItem() {
     category,
     cuisine,
     image,
+    t,
   ]);
 
   if (!canAccess) {
@@ -164,53 +176,53 @@ export default function AddMenuItem() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Restaurant</Text>
-          <Text style={styles.title}>Ajouter un plat</Text>
+          <Text style={styles.eyebrow}>{t('restaurant.settings.eyebrow')}</Text>
+          <Text style={styles.title}>{t('restaurant.addMenuItem.title')}</Text>
           <Text style={styles.subtitle}>
-            Crée un nouvel article premium pour ton menu.
+            {t('restaurant.addMenuItem.subtitle')}
           </Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.label}>Nom du plat</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.nameLabel')}</Text>
           <TextInput
             style={styles.input}
             value={name}
             onChangeText={setName}
-            placeholder="Ex : Mafé poulet"
+            placeholder={t('restaurant.addMenuItem.namePlaceholder')}
             placeholderTextColor="#999"
           />
 
-          <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.descriptionLabel')}</Text>
           <TextInput
             style={[styles.input, styles.textarea]}
             value={description}
             onChangeText={setDescription}
-            placeholder="Décris ton plat..."
+            placeholder={t('restaurant.addMenuItem.descriptionPlaceholder')}
             placeholderTextColor="#999"
             multiline
           />
 
-          <Text style={styles.label}>Prix</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.priceLabel')}</Text>
           <TextInput
             style={styles.input}
             value={price}
             onChangeText={setPrice}
-            placeholder="Ex : 14.90"
+            placeholder={t('restaurant.addMenuItem.pricePlaceholder')}
             placeholderTextColor="#999"
             keyboardType="decimal-pad"
           />
 
-          <Text style={styles.label}>Cuisine</Text>
+          <Text style={styles.label}>{t('restaurant.profile.cuisineLabel')}</Text>
           <TextInput
             style={styles.input}
             value={cuisine}
             onChangeText={setCuisine}
-            placeholder="Ex : Africaine"
+            placeholder={t('restaurant.addMenuItem.cuisinePlaceholder')}
             placeholderTextColor="#999"
           />
 
-          <Text style={styles.label}>Image URL</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.imageLabel')}</Text>
           <TextInput
             style={styles.input}
             value={image}
@@ -220,10 +232,11 @@ export default function AddMenuItem() {
             autoCapitalize="none"
           />
 
-          <Text style={styles.label}>Catégorie</Text>
+          <Text style={styles.label}>{t('restaurant.addMenuItem.categoryLabel')}</Text>
           <View style={styles.chipsRow}>
             {CATEGORY_OPTIONS.map((item) => {
               const active = category === item;
+              const slug = CATEGORY_SLUG_BY_LABEL[item] || 'other';
 
               return (
                 <Pressable
@@ -234,7 +247,7 @@ export default function AddMenuItem() {
                   <Text
                     style={[styles.chipText, active && styles.chipTextActive]}
                   >
-                    {item}
+                    {t(`restaurant.addMenuItem.categories.${slug}`, item)}
                   </Text>
                 </Pressable>
               );
@@ -251,7 +264,7 @@ export default function AddMenuItem() {
             ) : (
               <>
                 <Ionicons name="checkmark-circle-outline" size={18} color="#111111" />
-                <Text style={styles.primaryButtonText}>Ajouter le plat</Text>
+                <Text style={styles.primaryButtonText}>{t('restaurant.addMenuItem.submitButton')}</Text>
               </>
             )}
           </Pressable>
