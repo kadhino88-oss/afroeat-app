@@ -332,5 +332,264 @@
   },
   "entry": {
     "loadingExperience": "Loading the premium experience"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Your password",
+      "submit": "Log in",
+      "createAccount": "Create an account",
+      "infoTitle": "Login separated by area",
+      "infoText1": "Each role enters its own business area without crossing into the others.",
+      "infoText2": "Once logged in, you're automatically redirected to the right dashboard based on your role and status.",
+      "invalidEmailTitle": "Invalid email",
+      "invalidEmailBody": "Please enter a valid email address.",
+      "invalidPasswordTitle": "Invalid password",
+      "invalidPasswordBody": "Please enter a valid password.",
+      "invalidLoginResponse": "Invalid login response.",
+      "wrongSpaceError": "This account doesn't belong to the selected area. Please use the correct role.",
+      "adminAccessDenied": "Access denied. This area is reserved for administration.",
+      "sessionUnavailable": "The session context is unavailable.",
+      "sessionSaveFailed": "Could not save the session.",
+      "failedTitle": "Login failed",
+      "serverErrorFallback": "Server error, try again."
+    },
+    "roles": {
+      "client": {
+        "label": "Customer",
+        "description": "Log in to order, track your orders and manage your AFROEAT account."
+      },
+      "restaurant": {
+        "label": "Restaurant",
+        "description": "Log in to your partner area to manage your menu, orders and activity."
+      },
+      "livreur": {
+        "label": "Driver",
+        "description": "Log in to your delivery area to manage your runs, tracking and activity."
+      },
+      "admin": {
+        "label": "Admin",
+        "description": "Secure login to the AFROEAT supervision and management area."
+      }
+    },
+    "role": {
+      "loadingSpace": "Loading your area...",
+      "openingSpace": "Opening your area...",
+      "heroStats": {
+        "client": "Customer",
+        "order": "Order",
+        "restaurant": "Restaurant",
+        "management": "Manage",
+        "driver": "Driver",
+        "mission": "Delivery"
+      },
+      "chooseSpace": "Choose an area",
+      "chooseSpaceSubtitle": "Log in or sign up in the area that matches your activity.",
+      "register": "Sign up",
+      "premiumEntryTitle": "Premium entry experience",
+      "premiumEntryText1": "This page is the app's main entry point before any internal navigation.",
+      "premiumEntryText2": "No user should land directly on a dashboard without going through session or login logic.",
+      "resetLocalAccounts": "Clear local accounts"
+    },
+    "headline": {
+      "title": "Welcome to AFROEAT",
+      "subtitle": "Choose your area to access a dedicated, premium and secure experience.",
+      "description": "Restaurants, delivery and a top-tier customer experience in one international platform."
+    },
+    "roleCards": {
+      "client": {
+        "title": "Customer",
+        "subtitle": "Order on AFROEAT",
+        "description": "Discover restaurants, add to cart, order easily and track your deliveries."
+      },
+      "restaurant": {
+        "title": "Partner restaurant",
+        "subtitle": "Manage your business",
+        "description": "Manage your menu, orders, activity and your AFROEAT partner area."
+      },
+      "livreur": {
+        "title": "Driver",
+        "subtitle": "Manage your runs",
+        "description": "Access your runs, field tracking, delivery statuses and activity."
+      }
+    },
+    "fields": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone",
+      "address": "Address",
+      "addressPlaceholder": "Main address",
+      "country": "Country",
+      "email": "Email",
+      "password": "Password"
+    },
+    "validation": {
+      "firstNameInvalidTitle": "Invalid first name",
+      "firstNameInvalidBody": "Please enter a valid first name.",
+      "lastNameInvalidTitle": "Invalid last name",
+      "lastNameInvalidBody": "Please enter a valid last name.",
+      "phoneInvalidTitle": "Invalid phone number",
+      "phoneInvalidBody": "Please enter a valid phone number.",
+      "addressInvalidTitle": "Invalid address",
+      "addressInvalidBody": "Please enter a valid address.",
+      "countryInvalidTitle": "Invalid country",
+      "countryInvalidBody": "Please enter a valid country.",
+      "passwordTooShortBody": "Password must be at least 6 characters long.",
+      "ok": "OK"
+    },
+    "registerClient": {
+      "title": "Create a customer account",
+      "subtitle": "Enter your information to access a premium AFROEAT customer experience.",
+      "paymentLaterTitle": "Payment later",
+      "paymentLaterText": "Cards, Apple Pay, Google Pay and multiple payment methods will be managed later in the customer profile and at checkout without disrupting the main flow.",
+      "submit": "Create my customer account",
+      "successTitle": "Account created",
+      "successBody": "Your customer account has been created. You can now log in.",
+      "failedTitle": "Sign-up failed",
+      "failedFallback": "Could not create the customer account."
+    },
+    "registerDriver": {
+      "eyebrow": "AFROEAT DELIVERY",
+      "title": "Driver sign-up",
+      "subtitle": "Complete your professional file. Dashboard access will depend on verifying your identity, documents and activation.",
+      "documentTypeLabel": "Document type",
+      "documents": {
+        "passeport": "Passport",
+        "carteResident": "Resident card",
+        "carteSejour": "Residence permit",
+        "titreSejour": "Residence title",
+        "documentEuropeen": "European document"
+      },
+      "idFrontLabel": "ID front",
+      "idBackLabel": "ID back",
+      "selfieLabel": "Verification selfie",
+      "uploadPlaceholder": "File link / upload",
+      "selfieUploadPlaceholder": "Selfie link / upload",
+      "payoutAccountLabel": "Payout account",
+      "payoutPlaceholder": "IBAN / bank account / card",
+      "membershipPaymentLabel": "Membership payment",
+      "membershipPaymentPlaceholder": "Card / payment method",
+      "validationRequiredTitle": "Verification required",
+      "validationRequiredText": "After signing up, your access will be pending verification: identity, file, documents and membership fee if enabled.",
+      "submit": "Send my driver file",
+      "phoneInvalidBody": "Please enter a valid phone number.",
+      "documentTypeInvalidTitle": "Invalid document type",
+      "documentTypeInvalidBody": "Please select a document type.",
+      "idFrontInvalidTitle": "Invalid ID front",
+      "idFrontInvalidBody": "Please provide the ID front.",
+      "idBackInvalidTitle": "Invalid ID back",
+      "idBackInvalidBody": "Please provide the ID back.",
+      "selfieInvalidTitle": "Invalid selfie",
+      "selfieInvalidBody": "Please provide the verification selfie.",
+      "payoutInvalidTitle": "Invalid payout account",
+      "payoutInvalidBody": "Please provide a valid payout method.",
+      "membershipInvalidTitle": "Invalid membership payment",
+      "membershipInvalidBody": "Please provide a valid membership payment method.",
+      "successTitle": "Driver account created",
+      "successBody": "Your file has been submitted. It's now pending verification.",
+      "failedFallback": "Could not create the driver account.",
+      "failedTitle": "Registration failed",
+      "emailAlreadyUsedTitle": "Email already in use",
+      "emailAlreadyUsedBody": "An account already exists with this email. Log in or use a different email.",
+      "connectionFailedTitle": "Connection failed",
+      "connectionFailedBody": "Check that the server is running and your phone is on the same Wi-Fi network."
+    },
+    "registerRestaurant": {
+      "eyebrow": "AFROEAT PARTNER",
+      "title": "Restaurant sign-up",
+      "subtitle": "Complete the partner file to access the AFROEAT restaurant space after verification.",
+      "restaurantNameLabel": "Restaurant name",
+      "restaurantNameInvalidTitle": "Invalid restaurant name",
+      "restaurantNameInvalidBody": "Please enter a valid restaurant name.",
+      "logoLabel": "Restaurant logo",
+      "logoPlaceholder": "Logo link / upload",
+      "logoInvalidTitle": "Invalid logo",
+      "logoInvalidBody": "Please provide a valid logo or logo link.",
+      "managerFirstNameLabel": "Manager's first name",
+      "managerFirstNameInvalidBody": "Please enter the manager's first name.",
+      "managerLastNameLabel": "Manager's last name",
+      "managerLastNameInvalidBody": "Please enter the manager's last name.",
+      "addressPlaceholder": "Restaurant address",
+      "siretLabel": "Business registration number",
+      "siretPlaceholder": "Business registration or legal ID number",
+      "siretInvalidTitle": "Invalid registration number",
+      "siretInvalidBody": "Please enter a valid legal ID number.",
+      "idFrontLabel": "ID front side",
+      "idFrontInvalidBody": "Please provide the front side of the document.",
+      "idBackLabel": "ID back side",
+      "idBackInvalidBody": "Please provide the back side of the document.",
+      "validationPartnerTitle": "Partner verification",
+      "validationPartnerText": "The restaurant account will be pending verification before full access to the partner dashboard.",
+      "submit": "Submit my restaurant application",
+      "successTitle": "Restaurant account created",
+      "successBody": "Your partner file has been sent. It is now pending verification.",
+      "failedFallback": "Unable to create the restaurant account."
+    },
+    "reset": {
+      "topTitle": "Diagnostics & Reset",
+      "networkConfigTitle": "Network configuration",
+      "detectedUrlLabel": "Detected backend URL:",
+      "hintPart1": "If this URL doesn't match your server's address, open",
+      "hintPart2": "and fix",
+      "testServerButton": "🔌 Test server connection",
+      "serverOk": "✅ Server reachable (HTTP {{code}})",
+      "serverError": "❌ {{msg}}",
+      "timeoutError": "Timeout — server unreachable after 5s",
+      "networkError": "Network error",
+      "resetSessionTitle": "Reset session",
+      "resetHint": "If you have a blocked account, an expired token, or an \"inactive account\" message, clear local data to start fresh.",
+      "clearButton": "🗑️ Clear all local data",
+      "clearAlertTitle": "Clear all data",
+      "clearAlertBody": "This removes the local account, the cart and the token. You will need to log in again.",
+      "cancel": "Cancel",
+      "confirmClear": "Clear",
+      "successTitle": "✅ Session cleared",
+      "successBody": "Data removed. Create a new account or log in.",
+      "clearErrorBody": "Unable to clear the data.",
+      "checklistTitle": "Getting-started checklist",
+      "checklist": [
+        "The Node.js backend is running (npm start)",
+        "The phone and computer are on the same Wi-Fi",
+        "The IP in constants/api.js matches your computer",
+        "Port 5000 is the one used by the backend",
+        "The database (MongoDB) is running"
+      ]
+    },
+    "pendingApproval": {
+      "eyebrow": "Verification in progress",
+      "roles": {
+        "restaurant": {
+          "title": "Restaurant application pending",
+          "subtitle": "Your partner file has been received. It must be verified before your restaurant space is fully activated.",
+          "primaryLabel": "Back to restaurant login"
+        },
+        "livreur": {
+          "title": "Driver application pending",
+          "subtitle": "Your driver file has been received. Identity and membership verification must be completed before activation.",
+          "primaryLabel": "Back to driver login"
+        },
+        "admin": {
+          "title": "Controlled administrator access",
+          "subtitle": "Your administrator space requires verification and secure access before it fully opens.",
+          "primaryLabel": "Back to admin login"
+        },
+        "client": {
+          "title": "Account pending",
+          "subtitle": "Your account is pending processing.",
+          "primaryLabel": "Back to login"
+        }
+      },
+      "stepsTitle": "Planned steps",
+      "step1": "File received by AFROEAT",
+      "step2": "Verification in progress",
+      "step3": "Space activation after verification",
+      "infoTitle": "Controlled access",
+      "infoText1": "Until verification is complete, access to the partner or driver dashboard stays blocked.",
+      "infoText2": "Once verified, redirection to the corresponding business space will be possible.",
+      "changeSpace": "Change space",
+      "resetAccounts": "Reset local accounts"
+    }
   }
 }

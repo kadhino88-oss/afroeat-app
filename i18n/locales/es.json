@@ -332,5 +332,264 @@
   },
   "entry": {
     "loadingExperience": "Cargando la experiencia premium"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "emailLabel": "Dirección de correo",
+      "passwordLabel": "Contraseña",
+      "passwordPlaceholder": "Tu contraseña",
+      "submit": "Iniciar sesión",
+      "createAccount": "Crear una cuenta",
+      "infoTitle": "Inicio de sesión separado por área",
+      "infoText1": "Cada rol accede a su propia área de negocio sin cruzarse con las demás.",
+      "infoText2": "Una vez conectado, se te redirige automáticamente al panel correcto según tu rol y estado.",
+      "invalidEmailTitle": "Correo no válido",
+      "invalidEmailBody": "Introduce una dirección de correo válida.",
+      "invalidPasswordTitle": "Contraseña no válida",
+      "invalidPasswordBody": "Introduce una contraseña válida.",
+      "invalidLoginResponse": "Respuesta de inicio de sesión no válida.",
+      "wrongSpaceError": "Esta cuenta no pertenece al área seleccionada. Utiliza el rol correcto.",
+      "adminAccessDenied": "Acceso denegado. Esta área está reservada para la administración.",
+      "sessionUnavailable": "El contexto de la sesión no está disponible.",
+      "sessionSaveFailed": "No se pudo guardar la sesión.",
+      "failedTitle": "Inicio de sesión fallido",
+      "serverErrorFallback": "Error del servidor, inténtalo de nuevo."
+    },
+    "roles": {
+      "client": {
+        "label": "Cliente",
+        "description": "Inicia sesión para pedir, seguir tus pedidos y gestionar tu cuenta de AFROEAT."
+      },
+      "restaurant": {
+        "label": "Restaurante",
+        "description": "Inicia sesión en tu área de socio para gestionar tu menú, pedidos y actividad."
+      },
+      "livreur": {
+        "label": "Repartidor",
+        "description": "Inicia sesión en tu área de reparto para gestionar tus entregas, seguimiento y actividad."
+      },
+      "admin": {
+        "label": "Administrador",
+        "description": "Inicio de sesión seguro en el área de supervisión y gestión de AFROEAT."
+      }
+    },
+    "role": {
+      "loadingSpace": "Cargando tu área...",
+      "openingSpace": "Abriendo tu área...",
+      "heroStats": {
+        "client": "Cliente",
+        "order": "Pedido",
+        "restaurant": "Restaurante",
+        "management": "Gestión",
+        "driver": "Repartidor",
+        "mission": "Entrega"
+      },
+      "chooseSpace": "Elegir un área",
+      "chooseSpaceSubtitle": "Inicia sesión o regístrate en el área que corresponde a tu actividad.",
+      "register": "Registrarse",
+      "premiumEntryTitle": "Experiencia de entrada premium",
+      "premiumEntryText1": "Esta página es el punto de acceso principal de la aplicación antes de cualquier navegación interna.",
+      "premiumEntryText2": "Ningún usuario debe llegar directamente a un panel sin pasar por la lógica de sesión o inicio de sesión.",
+      "resetLocalAccounts": "Borrar cuentas locales"
+    },
+    "headline": {
+      "title": "Bienvenido a AFROEAT",
+      "subtitle": "Elige tu área para acceder a una experiencia dedicada, premium y segura.",
+      "description": "Restaurantes, entrega y una experiencia de cliente de primer nivel en una sola plataforma internacional."
+    },
+    "roleCards": {
+      "client": {
+        "title": "Cliente",
+        "subtitle": "Pedir en AFROEAT",
+        "description": "Descubre restaurantes, añade al carrito, pide fácilmente y sigue tus entregas."
+      },
+      "restaurant": {
+        "title": "Restaurante socio",
+        "subtitle": "Gestiona tu negocio",
+        "description": "Gestiona tu menú, tus pedidos, tu actividad y tu área de socio AFROEAT."
+      },
+      "livreur": {
+        "title": "Repartidor",
+        "subtitle": "Gestiona tus entregas",
+        "description": "Accede a tus entregas, seguimiento en campo, estados de entrega y actividad."
+      }
+    },
+    "fields": {
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "addressPlaceholder": "Dirección principal",
+      "country": "País",
+      "email": "Correo electrónico",
+      "password": "Contraseña"
+    },
+    "validation": {
+      "firstNameInvalidTitle": "Nombre no válido",
+      "firstNameInvalidBody": "Introduce un nombre válido.",
+      "lastNameInvalidTitle": "Apellido no válido",
+      "lastNameInvalidBody": "Introduce un apellido válido.",
+      "phoneInvalidTitle": "Teléfono no válido",
+      "phoneInvalidBody": "Introduce un número válido.",
+      "addressInvalidTitle": "Dirección no válida",
+      "addressInvalidBody": "Introduce una dirección válida.",
+      "countryInvalidTitle": "País no válido",
+      "countryInvalidBody": "Introduce un país válido.",
+      "passwordTooShortBody": "La contraseña debe tener al menos 6 caracteres.",
+      "ok": "OK"
+    },
+    "registerClient": {
+      "title": "Crear una cuenta de cliente",
+      "subtitle": "Introduce tus datos para acceder a una experiencia de cliente premium de AFROEAT.",
+      "paymentLaterTitle": "Pago más tarde",
+      "paymentLaterText": "Las tarjetas, Apple Pay, Google Pay y otros métodos de pago se gestionarán después en el perfil del cliente y en el checkout sin alterar el flujo principal.",
+      "submit": "Crear mi cuenta de cliente",
+      "successTitle": "Cuenta creada",
+      "successBody": "Tu cuenta de cliente se ha creado correctamente. Ya puedes iniciar sesión.",
+      "failedTitle": "Registro fallido",
+      "failedFallback": "No se pudo crear la cuenta de cliente."
+    },
+    "registerDriver": {
+      "eyebrow": "AFROEAT DELIVERY",
+      "title": "Registro de repartidor",
+      "subtitle": "Completa tu expediente profesional. El acceso al panel dependerá de la verificación de tu identidad, tus documentos y tu activación.",
+      "documentTypeLabel": "Tipo de documento",
+      "documents": {
+        "passeport": "Pasaporte",
+        "carteResident": "Tarjeta de residente",
+        "carteSejour": "Tarjeta de estancia",
+        "titreSejour": "Título de residencia",
+        "documentEuropeen": "Documento europeo"
+      },
+      "idFrontLabel": "Documento (anverso)",
+      "idBackLabel": "Documento (reverso)",
+      "selfieLabel": "Selfie de verificación",
+      "uploadPlaceholder": "Enlace de archivo / subir",
+      "selfieUploadPlaceholder": "Enlace de selfie / subir",
+      "payoutAccountLabel": "Cuenta de pago",
+      "payoutPlaceholder": "IBAN / cuenta bancaria / tarjeta",
+      "membershipPaymentLabel": "Pago de membresía",
+      "membershipPaymentPlaceholder": "Tarjeta / método de pago",
+      "validationRequiredTitle": "Verificación obligatoria",
+      "validationRequiredText": "Tras el registro, tu acceso quedará pendiente de verificación: identidad, expediente, documentos y cuota de membresía si está activada.",
+      "submit": "Enviar mi expediente de repartidor",
+      "phoneInvalidBody": "Introduce un número de teléfono válido.",
+      "documentTypeInvalidTitle": "Tipo de documento no válido",
+      "documentTypeInvalidBody": "Selecciona un tipo de documento.",
+      "idFrontInvalidTitle": "Anverso no válido",
+      "idFrontInvalidBody": "Indica el anverso del documento.",
+      "idBackInvalidTitle": "Reverso no válido",
+      "idBackInvalidBody": "Indica el reverso del documento.",
+      "selfieInvalidTitle": "Selfie no válido",
+      "selfieInvalidBody": "Indica el selfie de verificación.",
+      "payoutInvalidTitle": "Cuenta de pago no válida",
+      "payoutInvalidBody": "Indica un método de pago válido.",
+      "membershipInvalidTitle": "Pago de membresía no válido",
+      "membershipInvalidBody": "Indica un método de pago de membresía válido.",
+      "successTitle": "Cuenta de repartidor creada",
+      "successBody": "Tu expediente se ha enviado. Ahora está pendiente de verificación.",
+      "failedFallback": "No se pudo crear la cuenta de repartidor.",
+      "failedTitle": "Registro fallido",
+      "emailAlreadyUsedTitle": "Correo ya utilizado",
+      "emailAlreadyUsedBody": "Ya existe una cuenta con este correo. Inicia sesión o utiliza otro correo.",
+      "connectionFailedTitle": "Conexión fallida",
+      "connectionFailedBody": "Verifica que el servidor esté en marcha y que tu teléfono esté en la misma red Wi-Fi."
+    },
+    "registerRestaurant": {
+      "eyebrow": "AFROEAT PARTNER",
+      "title": "Registro de restaurante",
+      "subtitle": "Completa el expediente de socio para acceder al espacio de restaurante AFROEAT tras la verificación.",
+      "restaurantNameLabel": "Nombre del restaurante",
+      "restaurantNameInvalidTitle": "Nombre de restaurante inválido",
+      "restaurantNameInvalidBody": "Introduce un nombre de restaurante válido.",
+      "logoLabel": "Logo del restaurante",
+      "logoPlaceholder": "Enlace del logo / subir",
+      "logoInvalidTitle": "Logo inválido",
+      "logoInvalidBody": "Proporciona un logo o enlace de logo válido.",
+      "managerFirstNameLabel": "Nombre del responsable",
+      "managerFirstNameInvalidBody": "Introduce el nombre del responsable.",
+      "managerLastNameLabel": "Apellido del responsable",
+      "managerLastNameInvalidBody": "Introduce el apellido del responsable.",
+      "addressPlaceholder": "Dirección del restaurante",
+      "siretLabel": "Número de registro legal",
+      "siretPlaceholder": "Número de registro mercantil o identificador legal",
+      "siretInvalidTitle": "Número de registro inválido",
+      "siretInvalidBody": "Introduce un identificador legal válido.",
+      "idFrontLabel": "Documento - anverso",
+      "idFrontInvalidBody": "Proporciona el anverso del documento.",
+      "idBackLabel": "Documento - reverso",
+      "idBackInvalidBody": "Proporciona el reverso del documento.",
+      "validationPartnerTitle": "Verificación de socio",
+      "validationPartnerText": "La cuenta del restaurante quedará pendiente de verificación antes del acceso completo al panel de socios.",
+      "submit": "Enviar mi expediente de restaurante",
+      "successTitle": "Cuenta de restaurante creada",
+      "successBody": "Tu expediente de socio ha sido enviado. Ahora está pendiente de verificación.",
+      "failedFallback": "No se pudo crear la cuenta del restaurante."
+    },
+    "reset": {
+      "topTitle": "Diagnóstico y Reinicio",
+      "networkConfigTitle": "Configuración de red",
+      "detectedUrlLabel": "URL del backend detectada:",
+      "hintPart1": "Si esta URL no coincide con la dirección de tu servidor, abre",
+      "hintPart2": "y corrige",
+      "testServerButton": "🔌 Probar conexión al servidor",
+      "serverOk": "✅ Servidor accesible (HTTP {{code}})",
+      "serverError": "❌ {{msg}}",
+      "timeoutError": "Tiempo agotado — servidor inaccesible tras 5s",
+      "networkError": "Error de red",
+      "resetSessionTitle": "Reiniciar la sesión",
+      "resetHint": "Si tienes una cuenta bloqueada, un token caducado o un mensaje de \"cuenta inactiva\", borra los datos locales para empezar de nuevo.",
+      "clearButton": "🗑️ Borrar todos los datos locales",
+      "clearAlertTitle": "Borrar todos los datos",
+      "clearAlertBody": "Esto elimina la cuenta local, el carrito y el token. Deberás iniciar sesión de nuevo.",
+      "cancel": "Cancelar",
+      "confirmClear": "Borrar",
+      "successTitle": "✅ Sesión borrada",
+      "successBody": "Datos eliminados. Crea una nueva cuenta o inicia sesión.",
+      "clearErrorBody": "No se pudieron borrar los datos.",
+      "checklistTitle": "Lista de verificación inicial",
+      "checklist": [
+        "El backend Node.js está en marcha (npm start)",
+        "El teléfono y el ordenador están en la misma red Wi-Fi",
+        "La IP en constants/api.js coincide con tu ordenador",
+        "El puerto 5000 es el que usa el backend",
+        "La base de datos (MongoDB) está en marcha"
+      ]
+    },
+    "pendingApproval": {
+      "eyebrow": "Verificación en curso",
+      "roles": {
+        "restaurant": {
+          "title": "Expediente de restaurante pendiente",
+          "subtitle": "Tu expediente de socio ha sido recibido. Debe verificarse antes de activar completamente tu espacio de restaurante.",
+          "primaryLabel": "Volver al inicio de sesión de restaurante"
+        },
+        "livreur": {
+          "title": "Expediente de repartidor pendiente",
+          "subtitle": "Tu expediente de repartidor ha sido recibido. La verificación de identidad y de los elementos de afiliación debe completarse antes de la activación.",
+          "primaryLabel": "Volver al inicio de sesión de repartidor"
+        },
+        "admin": {
+          "title": "Acceso de administrador controlado",
+          "subtitle": "Tu espacio de administrador requiere verificación y acceso seguro antes de abrirse por completo.",
+          "primaryLabel": "Volver al inicio de sesión de administrador"
+        },
+        "client": {
+          "title": "Cuenta pendiente",
+          "subtitle": "Tu cuenta está pendiente de procesamiento.",
+          "primaryLabel": "Volver al inicio de sesión"
+        }
+      },
+      "stepsTitle": "Pasos previstos",
+      "step1": "Expediente recibido por AFROEAT",
+      "step2": "Verificación en curso",
+      "step3": "Activación del espacio tras la verificación",
+      "infoTitle": "Acceso controlado",
+      "infoText1": "Mientras la verificación no esté completa, el acceso al panel de socio o repartidor permanece bloqueado.",
+      "infoText2": "Una vez verificado, será posible la redirección al espacio de negocio correspondiente.",
+      "changeSpace": "Cambiar de espacio",
+      "resetAccounts": "Reiniciar cuentas locales"
+    }
   }
 }

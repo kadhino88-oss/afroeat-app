@@ -332,5 +332,264 @@
   },
   "entry": {
     "loadingExperience": "Caricamento dell'esperienza premium"
+  },
+  "auth": {
+    "login": {
+      "title": "Accesso",
+      "emailLabel": "Indirizzo email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "La tua password",
+      "submit": "Accedi",
+      "createAccount": "Crea un account",
+      "infoTitle": "Accesso separato per area",
+      "infoText1": "Ogni ruolo entra nella propria area senza sovrapporsi alle altre.",
+      "infoText2": "Una volta effettuato l'accesso, verrai reindirizzato automaticamente alla dashboard corretta in base al tuo ruolo e stato.",
+      "invalidEmailTitle": "Email non valida",
+      "invalidEmailBody": "Inserisci un indirizzo email valido.",
+      "invalidPasswordTitle": "Password non valida",
+      "invalidPasswordBody": "Inserisci una password valida.",
+      "invalidLoginResponse": "Risposta di accesso non valida.",
+      "wrongSpaceError": "Questo account non appartiene all'area selezionata. Usa il ruolo corretto.",
+      "adminAccessDenied": "Accesso negato. Quest'area è riservata all'amministrazione.",
+      "sessionUnavailable": "Il contesto della sessione non è disponibile.",
+      "sessionSaveFailed": "Impossibile salvare la sessione.",
+      "failedTitle": "Accesso non riuscito",
+      "serverErrorFallback": "Errore del server, riprova."
+    },
+    "roles": {
+      "client": {
+        "label": "Cliente",
+        "description": "Accedi per ordinare, tracciare i tuoi ordini e gestire il tuo account AFROEAT."
+      },
+      "restaurant": {
+        "label": "Ristorante",
+        "description": "Accedi alla tua area partner per gestire il menu, gli ordini e l'attività."
+      },
+      "livreur": {
+        "label": "Rider",
+        "description": "Accedi alla tua area di consegna per gestire le tue consegne, il tracciamento e l'attività."
+      },
+      "admin": {
+        "label": "Admin",
+        "description": "Accesso sicuro all'area di supervisione e gestione di AFROEAT."
+      }
+    },
+    "role": {
+      "loadingSpace": "Caricamento della tua area...",
+      "openingSpace": "Apertura della tua area...",
+      "heroStats": {
+        "client": "Cliente",
+        "order": "Ordine",
+        "restaurant": "Ristorante",
+        "management": "Gestione",
+        "driver": "Rider",
+        "mission": "Consegna"
+      },
+      "chooseSpace": "Scegli un'area",
+      "chooseSpaceSubtitle": "Accedi o registrati nell'area corrispondente alla tua attività.",
+      "register": "Registrati",
+      "premiumEntryTitle": "Esperienza di accesso premium",
+      "premiumEntryText1": "Questa pagina è il punto di accesso principale dell'app prima di qualsiasi navigazione interna.",
+      "premiumEntryText2": "Nessun utente dovrebbe arrivare direttamente su una dashboard senza passare dalla logica di sessione o accesso.",
+      "resetLocalAccounts": "Cancella account locali"
+    },
+    "headline": {
+      "title": "Benvenuto su AFROEAT",
+      "subtitle": "Scegli la tua area per accedere a un percorso dedicato, premium e sicuro.",
+      "description": "Ristoranti, consegne ed esperienza cliente di alto livello in un'unica piattaforma internazionale."
+    },
+    "roleCards": {
+      "client": {
+        "title": "Cliente",
+        "subtitle": "Ordina su AFROEAT",
+        "description": "Scopri i ristoranti, aggiungi al carrello, ordina facilmente e traccia le tue consegne."
+      },
+      "restaurant": {
+        "title": "Ristorante partner",
+        "subtitle": "Gestisci la tua attività",
+        "description": "Gestisci il tuo menu, i tuoi ordini, la tua attività e la tua area partner AFROEAT."
+      },
+      "livreur": {
+        "title": "Rider",
+        "subtitle": "Gestisci le tue consegne",
+        "description": "Accedi alle tue consegne, al tracciamento sul campo, agli stati di consegna e all'attività."
+      }
+    },
+    "fields": {
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "phone": "Telefono",
+      "address": "Indirizzo",
+      "addressPlaceholder": "Indirizzo principale",
+      "country": "Paese",
+      "email": "Email",
+      "password": "Password"
+    },
+    "validation": {
+      "firstNameInvalidTitle": "Nome non valido",
+      "firstNameInvalidBody": "Inserisci un nome valido.",
+      "lastNameInvalidTitle": "Cognome non valido",
+      "lastNameInvalidBody": "Inserisci un cognome valido.",
+      "phoneInvalidTitle": "Telefono non valido",
+      "phoneInvalidBody": "Inserisci un numero valido.",
+      "addressInvalidTitle": "Indirizzo non valido",
+      "addressInvalidBody": "Inserisci un indirizzo valido.",
+      "countryInvalidTitle": "Paese non valido",
+      "countryInvalidBody": "Inserisci un paese valido.",
+      "passwordTooShortBody": "La password deve contenere almeno 6 caratteri.",
+      "ok": "OK"
+    },
+    "registerClient": {
+      "title": "Crea un account cliente",
+      "subtitle": "Inserisci i tuoi dati per accedere a un'esperienza cliente premium AFROEAT.",
+      "paymentLaterTitle": "Pagamento in seguito",
+      "paymentLaterText": "Carte, Apple Pay, Google Pay e più metodi di pagamento saranno gestiti in seguito nel profilo cliente e al checkout senza interrompere il flusso principale.",
+      "submit": "Crea il mio account cliente",
+      "successTitle": "Account creato",
+      "successBody": "Il tuo account cliente è stato creato. Ora puoi accedere.",
+      "failedTitle": "Registrazione non riuscita",
+      "failedFallback": "Impossibile creare l'account cliente."
+    },
+    "registerDriver": {
+      "eyebrow": "AFROEAT DELIVERY",
+      "title": "Registrazione rider",
+      "subtitle": "Completa il tuo fascicolo professionale. L'accesso alla dashboard dipenderà dalla verifica della tua identità, dei tuoi documenti e della tua attivazione.",
+      "documentTypeLabel": "Tipo di documento",
+      "documents": {
+        "passeport": "Passaporto",
+        "carteResident": "Carta di soggiorno",
+        "carteSejour": "Permesso di soggiorno",
+        "titreSejour": "Titolo di soggiorno",
+        "documentEuropeen": "Documento europeo"
+      },
+      "idFrontLabel": "Documento fronte",
+      "idBackLabel": "Documento retro",
+      "selfieLabel": "Selfie di verifica",
+      "uploadPlaceholder": "Link file / carica",
+      "selfieUploadPlaceholder": "Link selfie / carica",
+      "payoutAccountLabel": "Conto di pagamento",
+      "payoutPlaceholder": "IBAN / conto bancario / carta",
+      "membershipPaymentLabel": "Pagamento iscrizione",
+      "membershipPaymentPlaceholder": "Carta / metodo di pagamento",
+      "validationRequiredTitle": "Verifica obbligatoria",
+      "validationRequiredText": "Dopo la registrazione, il tuo accesso sarà in attesa di verifica: identità, fascicolo, documenti e quota di iscrizione se attivata.",
+      "submit": "Invia il mio fascicolo rider",
+      "phoneInvalidBody": "Inserisci un numero di telefono valido.",
+      "documentTypeInvalidTitle": "Tipo di documento non valido",
+      "documentTypeInvalidBody": "Seleziona un tipo di documento.",
+      "idFrontInvalidTitle": "Fronte non valido",
+      "idFrontInvalidBody": "Indica il fronte del documento.",
+      "idBackInvalidTitle": "Retro non valido",
+      "idBackInvalidBody": "Indica il retro del documento.",
+      "selfieInvalidTitle": "Selfie non valido",
+      "selfieInvalidBody": "Indica il selfie di verifica.",
+      "payoutInvalidTitle": "Conto di pagamento non valido",
+      "payoutInvalidBody": "Indica un metodo di pagamento valido.",
+      "membershipInvalidTitle": "Pagamento iscrizione non valido",
+      "membershipInvalidBody": "Indica un metodo di pagamento dell'iscrizione valido.",
+      "successTitle": "Account rider creato",
+      "successBody": "Il tuo fascicolo è stato inviato. È ora in attesa di verifica.",
+      "failedFallback": "Impossibile creare l'account rider.",
+      "failedTitle": "Registrazione non riuscita",
+      "emailAlreadyUsedTitle": "Email già utilizzata",
+      "emailAlreadyUsedBody": "Esiste già un account con questa email. Accedi oppure usa un'altra email.",
+      "connectionFailedTitle": "Connessione non riuscita",
+      "connectionFailedBody": "Verifica che il server sia avviato e che il tuo telefono sia sulla stessa rete Wi-Fi."
+    },
+    "registerRestaurant": {
+      "eyebrow": "AFROEAT PARTNER",
+      "title": "Registrazione ristorante",
+      "subtitle": "Completa il fascicolo partner per accedere allo spazio ristorante AFROEAT dopo la verifica.",
+      "restaurantNameLabel": "Nome del ristorante",
+      "restaurantNameInvalidTitle": "Nome ristorante non valido",
+      "restaurantNameInvalidBody": "Inserisci un nome di ristorante valido.",
+      "logoLabel": "Logo del ristorante",
+      "logoPlaceholder": "Link logo / carica",
+      "logoInvalidTitle": "Logo non valido",
+      "logoInvalidBody": "Fornisci un logo o un link logo valido.",
+      "managerFirstNameLabel": "Nome del responsabile",
+      "managerFirstNameInvalidBody": "Inserisci il nome del responsabile.",
+      "managerLastNameLabel": "Cognome del responsabile",
+      "managerLastNameInvalidBody": "Inserisci il cognome del responsabile.",
+      "addressPlaceholder": "Indirizzo del ristorante",
+      "siretLabel": "Numero di registrazione legale",
+      "siretPlaceholder": "Numero di registro imprese o identificativo legale",
+      "siretInvalidTitle": "Numero di registrazione non valido",
+      "siretInvalidBody": "Inserisci un identificativo legale valido.",
+      "idFrontLabel": "Documento - fronte",
+      "idFrontInvalidBody": "Fornisci il fronte del documento.",
+      "idBackLabel": "Documento - retro",
+      "idBackInvalidBody": "Fornisci il retro del documento.",
+      "validationPartnerTitle": "Verifica partner",
+      "validationPartnerText": "L'account ristorante sarà in attesa di verifica prima dell'accesso completo alla dashboard partner.",
+      "submit": "Invia la mia richiesta ristorante",
+      "successTitle": "Account ristorante creato",
+      "successBody": "Il tuo fascicolo partner è stato inviato. È ora in attesa di verifica.",
+      "failedFallback": "Impossibile creare l'account ristorante."
+    },
+    "reset": {
+      "topTitle": "Diagnostica e Reset",
+      "networkConfigTitle": "Configurazione di rete",
+      "detectedUrlLabel": "URL backend rilevato:",
+      "hintPart1": "Se questo URL non corrisponde all'indirizzo del tuo server, apri",
+      "hintPart2": "e correggi",
+      "testServerButton": "🔌 Testa la connessione al server",
+      "serverOk": "✅ Server raggiungibile (HTTP {{code}})",
+      "serverError": "❌ {{msg}}",
+      "timeoutError": "Timeout — server irraggiungibile dopo 5s",
+      "networkError": "Errore di rete",
+      "resetSessionTitle": "Reimposta la sessione",
+      "resetHint": "Se hai un account bloccato, un token scaduto o un messaggio \"account non attivo\", cancella i dati locali per ripartire da zero.",
+      "clearButton": "🗑️ Cancella tutti i dati locali",
+      "clearAlertTitle": "Cancella tutti i dati",
+      "clearAlertBody": "Questo rimuove l'account locale, il carrello e il token. Dovrai accedere di nuovo.",
+      "cancel": "Annulla",
+      "confirmClear": "Cancella",
+      "successTitle": "✅ Sessione cancellata",
+      "successBody": "Dati rimossi. Crea un nuovo account o accedi.",
+      "clearErrorBody": "Impossibile cancellare i dati.",
+      "checklistTitle": "Checklist di avvio",
+      "checklist": [
+        "Il backend Node.js è avviato (npm start)",
+        "Il telefono e il computer sono sulla stessa rete Wi-Fi",
+        "L'IP in constants/api.js corrisponde al tuo computer",
+        "La porta 5000 è quella usata dal backend",
+        "Il database (MongoDB) è avviato"
+      ]
+    },
+    "pendingApproval": {
+      "eyebrow": "Verifica in corso",
+      "roles": {
+        "restaurant": {
+          "title": "Pratica ristorante in attesa",
+          "subtitle": "Il tuo fascicolo partner è stato ricevuto. Deve essere verificato prima della piena attivazione del tuo spazio ristorante.",
+          "primaryLabel": "Torna all'accesso ristorante"
+        },
+        "livreur": {
+          "title": "Pratica fattorino in attesa",
+          "subtitle": "Il tuo fascicolo fattorino è stato ricevuto. La verifica dell'identità e degli elementi di adesione deve essere completata prima dell'attivazione.",
+          "primaryLabel": "Torna all'accesso fattorino"
+        },
+        "admin": {
+          "title": "Accesso amministratore controllato",
+          "subtitle": "Il tuo spazio amministratore richiede una verifica e un accesso sicuro prima dell'apertura completa.",
+          "primaryLabel": "Torna all'accesso amministratore"
+        },
+        "client": {
+          "title": "Account in attesa",
+          "subtitle": "Il tuo account è in attesa di elaborazione.",
+          "primaryLabel": "Torna all'accesso"
+        }
+      },
+      "stepsTitle": "Fasi previste",
+      "step1": "Fascicolo ricevuto da AFROEAT",
+      "step2": "Verifica in corso",
+      "step3": "Attivazione dello spazio dopo la verifica",
+      "infoTitle": "Accesso controllato",
+      "infoText1": "Finché la verifica non è completata, l'accesso alla dashboard partner o fattorino resta bloccato.",
+      "infoText2": "Una volta verificato, sarà possibile il reindirizzamento allo spazio aziendale corrispondente.",
+      "changeSpace": "Cambia spazio",
+      "resetAccounts": "Reimposta account locali"
+    }
   }
 }

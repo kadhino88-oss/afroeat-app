@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { registerClient } from '../../services/authService';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -45,6 +46,7 @@ const sanitizePhone = (value) => {
  */
 
 export default function RegisterClientScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const setSelectedRole = auth.setSelectedRole;
 
@@ -91,39 +93,39 @@ export default function RegisterClientScreen() {
     const safePassword = normalizeText(password);
 
     if (!safeFirstName || safeFirstName.length < 2) {
-      Alert.alert('Prénom invalide', 'Merci de saisir un prénom valide.');
+      Alert.alert(t('auth.validation.firstNameInvalidTitle'), t('auth.validation.firstNameInvalidBody'));
       return;
     }
 
     if (!safeLastName || safeLastName.length < 2) {
-      Alert.alert('Nom invalide', 'Merci de saisir un nom valide.');
+      Alert.alert(t('auth.validation.lastNameInvalidTitle'), t('auth.validation.lastNameInvalidBody'));
       return;
     }
 
     if (!safePhone || safePhone.length < 6) {
-      Alert.alert('Téléphone invalide', 'Merci de saisir un numéro valide.');
+      Alert.alert(t('auth.validation.phoneInvalidTitle'), t('auth.validation.phoneInvalidBody'));
       return;
     }
 
     if (!safeAddress || safeAddress.length < 5) {
-      Alert.alert('Adresse invalide', 'Merci de saisir une adresse valide.');
+      Alert.alert(t('auth.validation.addressInvalidTitle'), t('auth.validation.addressInvalidBody'));
       return;
     }
 
     if (!safeCountry || safeCountry.length < 2) {
-      Alert.alert('Pays invalide', 'Merci de saisir un pays valide.');
+      Alert.alert(t('auth.validation.countryInvalidTitle'), t('auth.validation.countryInvalidBody'));
       return;
     }
 
     if (!isValidEmail(safeEmail)) {
-      Alert.alert('Email invalide', 'Merci de saisir une adresse email valide.');
+      Alert.alert(t('auth.login.invalidEmailTitle'), t('auth.login.invalidEmailBody'));
       return;
     }
 
     if (!safePassword || safePassword.length < 6) {
       Alert.alert(
-        'Mot de passe invalide',
-        'Le mot de passe doit contenir au moins 6 caractères.'
+        t('auth.login.invalidPasswordTitle'),
+        t('auth.validation.passwordTooShortBody')
       );
       return;
     }
@@ -147,11 +149,11 @@ export default function RegisterClientScreen() {
       });
 
       Alert.alert(
-        'Compte créé',
-        'Ton compte client a bien été créé. Tu peux maintenant te connecter.',
+        t('auth.registerClient.successTitle'),
+        t('auth.registerClient.successBody'),
         [
           {
-            text: 'OK',
+            text: t('auth.validation.ok'),
             onPress: () =>
               router.replace({
                 pathname: '/auth/login',
@@ -163,8 +165,8 @@ export default function RegisterClientScreen() {
     } catch (error) {
       console.log('Erreur register client :', error);
       Alert.alert(
-        'Inscription impossible',
-        error?.message || 'Impossible de créer le compte client.'
+        t('auth.registerClient.failedTitle'),
+        error?.message || t('auth.registerClient.failedFallback')
       );
     } finally {
       setLoading(false);
@@ -213,73 +215,72 @@ export default function RegisterClientScreen() {
             </View>
 
             <Text style={styles.eyebrow}>AFROEAT</Text>
-            <Text style={styles.title}>Créer un compte client</Text>
+            <Text style={styles.title}>{t('auth.registerClient.title')}</Text>
             <Text style={styles.subtitle}>
-              Renseigne tes informations pour accéder à une expérience client
-              premium AFROEAT.
+              {t('auth.registerClient.subtitle')}
             </Text>
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.label}>Prénom</Text>
+            <Text style={styles.label}>{t('auth.fields.firstName')}</Text>
             <TextInput
               style={styles.input}
               value={firstName}
               onChangeText={setFirstName}
-              placeholder="Prénom"
+              placeholder={t('auth.fields.firstName')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Nom</Text>
+            <Text style={styles.label}>{t('auth.fields.lastName')}</Text>
             <TextInput
               style={styles.input}
               value={lastName}
               onChangeText={setLastName}
-              placeholder="Nom"
+              placeholder={t('auth.fields.lastName')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Téléphone</Text>
+            <Text style={styles.label}>{t('auth.fields.phone')}</Text>
             <TextInput
               style={styles.input}
               value={phone}
               onChangeText={setPhone}
-              placeholder="Téléphone"
+              placeholder={t('auth.fields.phone')}
               placeholderTextColor="#888888"
               keyboardType="phone-pad"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Adresse</Text>
+            <Text style={styles.label}>{t('auth.fields.address')}</Text>
             <TextInput
               style={[styles.input, styles.textarea]}
               value={address}
               onChangeText={setAddress}
-              placeholder="Adresse principale"
+              placeholder={t('auth.fields.addressPlaceholder')}
               placeholderTextColor="#888888"
               multiline
               textAlignVertical="top"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Pays</Text>
+            <Text style={styles.label}>{t('auth.fields.country')}</Text>
             <TextInput
               style={styles.input}
               value={country}
               onChangeText={setCountry}
-              placeholder="Pays"
+              placeholder={t('auth.fields.country')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>{t('auth.fields.email')}</Text>
             <TextInput
               style={styles.input}
               value={email}
               onChangeText={setEmail}
-              placeholder="Email"
+              placeholder={t('auth.fields.email')}
               placeholderTextColor="#888888"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -287,13 +288,13 @@ export default function RegisterClientScreen() {
               editable={!loading}
             />
 
-            <Text style={styles.label}>Mot de passe</Text>
+            <Text style={styles.label}>{t('auth.fields.password')}</Text>
             <View style={styles.passwordWrapper}>
               <TextInput
                 style={styles.passwordInput}
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Mot de passe"
+                placeholder={t('auth.fields.password')}
                 placeholderTextColor="#888888"
                 secureTextEntry={secure}
                 autoCapitalize="none"
@@ -314,11 +315,9 @@ export default function RegisterClientScreen() {
             </View>
 
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Paiement plus tard</Text>
+              <Text style={styles.infoTitle}>{t('auth.registerClient.paymentLaterTitle')}</Text>
               <Text style={styles.infoText}>
-                Les cartes, Apple Pay, Google Pay et les moyens de paiement
-                multiples seront gérés ensuite dans le profil client et au
-                checkout sans casser le flux principal.
+                {t('auth.registerClient.paymentLaterText')}
               </Text>
             </View>
 
@@ -334,7 +333,7 @@ export default function RegisterClientScreen() {
               {loading ? (
                 <ActivityIndicator color="#111111" />
               ) : (
-                <Text style={styles.buttonText}>Créer mon compte client</Text>
+                <Text style={styles.buttonText}>{t('auth.registerClient.submit')}</Text>
               )}
             </Pressable>
           </View>

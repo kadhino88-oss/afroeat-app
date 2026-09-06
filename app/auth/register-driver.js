@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { registerDriver } from '../../services/authService';
 
@@ -30,6 +31,14 @@ const DOCUMENT_OPTIONS = [
   'Titre de séjour',
   'Document européen',
 ];
+
+const DOCUMENT_SLUG_BY_LABEL = {
+  'Passeport': 'passeport',
+  'Carte de résident': 'carteResident',
+  'Carte de séjour': 'carteSejour',
+  'Titre de séjour': 'titreSejour',
+  'Document européen': 'documentEuropeen',
+};
 
 /**
  * =========================================================
@@ -58,6 +67,7 @@ const sanitizePhone = (value) => {
  */
 
 export default function RegisterDriverScreen() {
+  const { t } = useTranslation();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -132,55 +142,55 @@ export default function RegisterDriverScreen() {
     const safePassword = normalizeText(password);
 
     if (safeFirstName.length < 2) {
-      Alert.alert('Prénom invalide', 'Merci de saisir un prénom valide.');
+      Alert.alert(t('auth.validation.firstNameInvalidTitle'), t('auth.validation.firstNameInvalidBody'));
       return;
     }
     if (safeLastName.length < 2) {
-      Alert.alert('Nom invalide', 'Merci de saisir un nom valide.');
+      Alert.alert(t('auth.validation.lastNameInvalidTitle'), t('auth.validation.lastNameInvalidBody'));
       return;
     }
     if (safePhone.length < 6) {
-      Alert.alert('Téléphone invalide', 'Merci de saisir un numéro de téléphone valide.');
+      Alert.alert(t('auth.validation.phoneInvalidTitle'), t('auth.registerDriver.phoneInvalidBody'));
       return;
     }
     if (safeAddress.length < 5) {
-      Alert.alert('Adresse invalide', 'Merci de saisir une adresse valide.');
+      Alert.alert(t('auth.validation.addressInvalidTitle'), t('auth.validation.addressInvalidBody'));
       return;
     }
     if (safeCountry.length < 2) {
-      Alert.alert('Pays invalide', 'Merci de saisir un pays valide.');
+      Alert.alert(t('auth.validation.countryInvalidTitle'), t('auth.validation.countryInvalidBody'));
       return;
     }
     if (safeDocumentType.length < 2) {
-      Alert.alert('Type de document invalide', 'Merci de sélectionner un type de document.');
+      Alert.alert(t('auth.registerDriver.documentTypeInvalidTitle'), t('auth.registerDriver.documentTypeInvalidBody'));
       return;
     }
     if (safeIdentityFront.length < 5) {
-      Alert.alert('Document recto invalide', 'Merci de renseigner la pièce recto.');
+      Alert.alert(t('auth.registerDriver.idFrontInvalidTitle'), t('auth.registerDriver.idFrontInvalidBody'));
       return;
     }
     if (safeIdentityBack.length < 5) {
-      Alert.alert('Document verso invalide', 'Merci de renseigner la pièce verso.');
+      Alert.alert(t('auth.registerDriver.idBackInvalidTitle'), t('auth.registerDriver.idBackInvalidBody'));
       return;
     }
     if (safeSelfie.length < 5) {
-      Alert.alert('Selfie invalide', 'Merci de renseigner le selfie de vérification.');
+      Alert.alert(t('auth.registerDriver.selfieInvalidTitle'), t('auth.registerDriver.selfieInvalidBody'));
       return;
     }
     if (safePayoutMethod.length < 3) {
-      Alert.alert('Compte de versement invalide', 'Merci de renseigner un moyen de versement valide.');
+      Alert.alert(t('auth.registerDriver.payoutInvalidTitle'), t('auth.registerDriver.payoutInvalidBody'));
       return;
     }
     if (safeMembershipPaymentMethod.length < 3) {
-      Alert.alert("Paiement adhésion invalide", "Merci de renseigner un moyen de paiement d'adhésion valide.");
+      Alert.alert(t('auth.registerDriver.membershipInvalidTitle'), t('auth.registerDriver.membershipInvalidBody'));
       return;
     }
     if (!isValidEmail(safeEmail)) {
-      Alert.alert('Email invalide', 'Merci de saisir une adresse email valide.');
+      Alert.alert(t('auth.login.invalidEmailTitle'), t('auth.login.invalidEmailBody'));
       return;
     }
     if (safePassword.length < 6) {
-      Alert.alert('Mot de passe invalide', 'Le mot de passe doit contenir au moins 6 caractères.');
+      Alert.alert(t('auth.login.invalidPasswordTitle'), t('auth.validation.passwordTooShortBody'));
       return;
     }
 
@@ -206,11 +216,11 @@ export default function RegisterDriverScreen() {
       });
 
       Alert.alert(
-        'Compte livreur créé',
-        'Ton dossier a bien été envoyé. Il est maintenant en attente de validation.',
+        t('auth.registerDriver.successTitle'),
+        t('auth.registerDriver.successBody'),
         [
           {
-            text: 'OK',
+            text: t('auth.validation.ok'),
             onPress: () =>
               router.replace({
                 pathname: '/auth/pending-approval',
@@ -222,14 +232,14 @@ export default function RegisterDriverScreen() {
     } catch (error) {
       const msg = error?.message || '';
       const status = error?.status;
-      let title = 'Inscription impossible';
-      let body = msg || 'Impossible de créer le compte livreur.';
+      let title = t('auth.registerDriver.failedTitle');
+      let body = msg || t('auth.registerDriver.failedFallback');
       if (status === 409 || msg.toLowerCase().includes('exist') || msg.toLowerCase().includes('déjà') || msg.toLowerCase().includes('already')) {
-        title = 'Email déjà utilisé';
-        body = 'Un compte existe déjà avec cet email. Connecte-toi ou utilise un autre email.';
+        title = t('auth.registerDriver.emailAlreadyUsedTitle');
+        body = t('auth.registerDriver.emailAlreadyUsedBody');
       } else if (status === 0 || msg.toLowerCase().includes('réseau') || msg.toLowerCase().includes('network') || msg.toLowerCase().includes('serveur')) {
-        title = 'Connexion impossible';
-        body = 'Vérifie que le serveur est démarré et que ton téléphone est sur le même réseau Wi-Fi.';
+        title = t('auth.registerDriver.connectionFailedTitle');
+        body = t('auth.registerDriver.connectionFailedBody');
       }
       Alert.alert(title, body);
     } finally {
@@ -283,73 +293,70 @@ export default function RegisterDriverScreen() {
               <Ionicons name="bicycle-outline" size={30} color="#D96C2D" />
             </View>
 
-            <Text style={styles.eyebrow}>AFROEAT DELIVERY</Text>
-            <Text style={styles.title}>Inscription livreur</Text>
-            <Text style={styles.subtitle}>
-              Complète ton dossier professionnel. L'accès au dashboard dépendra
-              de la vérification de ton identité, de tes documents et de ton
-              activation.
-            </Text>
+            <Text style={styles.eyebrow}>{t('auth.registerDriver.eyebrow')}</Text>
+            <Text style={styles.title}>{t('auth.registerDriver.title')}</Text>
+            <Text style={styles.subtitle}>{t('auth.registerDriver.subtitle')}</Text>
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.label}>Prénom</Text>
+            <Text style={styles.label}>{t('auth.fields.firstName')}</Text>
             <TextInput
               style={styles.input}
               value={firstName}
               onChangeText={setFirstName}
-              placeholder="Prénom"
+              placeholder={t('auth.fields.firstName')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Nom</Text>
+            <Text style={styles.label}>{t('auth.fields.lastName')}</Text>
             <TextInput
               style={styles.input}
               value={lastName}
               onChangeText={setLastName}
-              placeholder="Nom"
+              placeholder={t('auth.fields.lastName')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Téléphone</Text>
+            <Text style={styles.label}>{t('auth.fields.phone')}</Text>
             <TextInput
               style={styles.input}
               value={phone}
               onChangeText={setPhone}
-              placeholder="Téléphone"
+              placeholder={t('auth.fields.phone')}
               placeholderTextColor="#888888"
               keyboardType="phone-pad"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Adresse</Text>
+            <Text style={styles.label}>{t('auth.fields.address')}</Text>
             <TextInput
               style={[styles.input, styles.textarea]}
               value={address}
               onChangeText={setAddress}
-              placeholder="Adresse"
+              placeholder={t('auth.fields.addressPlaceholder')}
               placeholderTextColor="#888888"
               multiline
               textAlignVertical="top"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Pays</Text>
+            <Text style={styles.label}>{t('auth.fields.country')}</Text>
             <TextInput
               style={styles.input}
               value={country}
               onChangeText={setCountry}
-              placeholder="Pays"
+              placeholder={t('auth.fields.country')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Type de document</Text>
+            <Text style={styles.label}>{t('auth.registerDriver.documentTypeLabel')}</Text>
             <View style={styles.chipsWrapper}>
               {DOCUMENT_OPTIONS.map((item) => {
                 const active = documentType === item;
+                const slug = DOCUMENT_SLUG_BY_LABEL[item];
                 return (
                   <Pressable
                     key={item}
@@ -362,74 +369,74 @@ export default function RegisterDriverScreen() {
                     disabled={loading}
                   >
                     <Text style={[styles.chipText, active && styles.chipTextActive]}>
-                      {item}
+                      {t(`auth.registerDriver.documents.${slug}`, item)}
                     </Text>
                   </Pressable>
                 );
               })}
             </View>
 
-            <Text style={styles.label}>Pièce recto</Text>
+            <Text style={styles.label}>{t('auth.registerDriver.idFrontLabel')}</Text>
             <TextInput
               style={styles.input}
               value={identityFront}
               onChangeText={setIdentityFront}
-              placeholder="Lien fichier / upload"
+              placeholder={t('auth.registerDriver.uploadPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Pièce verso</Text>
+            <Text style={styles.label}>{t('auth.registerDriver.idBackLabel')}</Text>
             <TextInput
               style={styles.input}
               value={identityBack}
               onChangeText={setIdentityBack}
-              placeholder="Lien fichier / upload"
+              placeholder={t('auth.registerDriver.uploadPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Selfie vérification</Text>
+            <Text style={styles.label}>{t('auth.registerDriver.selfieLabel')}</Text>
             <TextInput
               style={styles.input}
               value={selfie}
               onChangeText={setSelfie}
-              placeholder="Lien selfie / upload"
+              placeholder={t('auth.registerDriver.selfieUploadPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Compte de versement</Text>
+            <Text style={styles.label}>{t('auth.registerDriver.payoutAccountLabel')}</Text>
             <TextInput
               style={styles.input}
               value={payoutMethod}
               onChangeText={setPayoutMethod}
-              placeholder="IBAN / compte bancaire / carte"
+              placeholder={t('auth.registerDriver.payoutPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Paiement adhésion</Text>
+            <Text style={styles.label}>{t('auth.registerDriver.membershipPaymentLabel')}</Text>
             <TextInput
               style={styles.input}
               value={membershipPaymentMethod}
               onChangeText={setMembershipPaymentMethod}
-              placeholder="Carte / moyen de paiement"
+              placeholder={t('auth.registerDriver.membershipPaymentPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>{t('auth.fields.email')}</Text>
             <TextInput
               style={styles.input}
               value={email}
               onChangeText={setEmail}
-              placeholder="Email"
+              placeholder={t('auth.fields.email')}
               placeholderTextColor="#888888"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -437,13 +444,13 @@ export default function RegisterDriverScreen() {
               editable={!loading}
             />
 
-            <Text style={styles.label}>Mot de passe</Text>
+            <Text style={styles.label}>{t('auth.fields.password')}</Text>
             <View style={styles.passwordWrapper}>
               <TextInput
                 style={styles.passwordInput}
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Mot de passe"
+                placeholder={t('auth.fields.password')}
                 placeholderTextColor="#888888"
                 secureTextEntry={secure}
                 autoCapitalize="none"
@@ -464,11 +471,8 @@ export default function RegisterDriverScreen() {
             </View>
 
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Validation obligatoire</Text>
-              <Text style={styles.infoText}>
-                Après inscription, ton accès sera placé en attente de validation :
-                identité, dossier, documents et frais d'adhésion si activés.
-              </Text>
+              <Text style={styles.infoTitle}>{t('auth.registerDriver.validationRequiredTitle')}</Text>
+              <Text style={styles.infoText}>{t('auth.registerDriver.validationRequiredText')}</Text>
             </View>
 
             <Pressable
@@ -483,7 +487,7 @@ export default function RegisterDriverScreen() {
               {loading ? (
                 <ActivityIndicator color="#111111" />
               ) : (
-                <Text style={styles.buttonText}>Envoyer mon dossier livreur</Text>
+                <Text style={styles.buttonText}>{t('auth.registerDriver.submit')}</Text>
               )}
             </Pressable>
           </View>

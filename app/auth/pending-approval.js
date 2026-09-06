@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 
@@ -171,6 +172,7 @@ const getRoleConfig = (role) => {
  */
 
 export default function PendingApprovalScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const auth = useAuth() || {};
 
@@ -300,13 +302,13 @@ export default function PendingApprovalScreen() {
             <Ionicons name={config.icon} size={34} color={config.accent} />
           </View>
 
-          <Text style={styles.eyebrow}>Validation en cours</Text>
-          <Text style={styles.title}>{config.title}</Text>
-          <Text style={styles.subtitle}>{config.subtitle}</Text>
+          <Text style={styles.eyebrow}>{t('auth.pendingApproval.eyebrow')}</Text>
+          <Text style={styles.title}>{t(`auth.pendingApproval.roles.${safeRole}.title`, config.title)}</Text>
+          <Text style={styles.subtitle}>{t(`auth.pendingApproval.roles.${safeRole}.subtitle`, config.subtitle)}</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Étapes prévues</Text>
+          <Text style={styles.cardTitle}>{t('auth.pendingApproval.stepsTitle')}</Text>
 
           <View style={styles.stepRow}>
             <Ionicons
@@ -314,12 +316,12 @@ export default function PendingApprovalScreen() {
               size={18}
               color="#1F6F43"
             />
-            <Text style={styles.stepText}>Dossier reçu par AFROEAT</Text>
+            <Text style={styles.stepText}>{t('auth.pendingApproval.step1')}</Text>
           </View>
 
           <View style={styles.stepRow}>
             <Ionicons name="time-outline" size={18} color="#D4A017" />
-            <Text style={styles.stepText}>Vérification en cours</Text>
+            <Text style={styles.stepText}>{t('auth.pendingApproval.step2')}</Text>
           </View>
 
           <View style={styles.stepRow}>
@@ -329,21 +331,15 @@ export default function PendingApprovalScreen() {
               color="#777777"
             />
             <Text style={styles.stepText}>
-              Activation de l’espace après validation
+              {t('auth.pendingApproval.step3')}
             </Text>
           </View>
         </View>
 
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Accès contrôlé</Text>
-          <Text style={styles.infoText}>
-            Tant que la validation n’est pas terminée, l’accès au dashboard
-            partenaire ou livreur reste bloqué.
-          </Text>
-          <Text style={styles.infoText}>
-            Dès validation, la redirection vers l’espace métier correspondant
-            sera possible.
-          </Text>
+          <Text style={styles.infoTitle}>{t('auth.pendingApproval.infoTitle')}</Text>
+          <Text style={styles.infoText}>{t('auth.pendingApproval.infoText1')}</Text>
+          <Text style={styles.infoText}>{t('auth.pendingApproval.infoText2')}</Text>
         </View>
 
         <Pressable
@@ -354,7 +350,7 @@ export default function PendingApprovalScreen() {
           ]}
           onPress={handleBackToLogin}
         >
-          <Text style={styles.buttonText}>{config.primaryLabel}</Text>
+          <Text style={styles.buttonText}>{t(`auth.pendingApproval.roles.${safeRole}.primaryLabel`, config.primaryLabel)}</Text>
         </Pressable>
 
         <Pressable
@@ -364,7 +360,7 @@ export default function PendingApprovalScreen() {
           ]}
           onPress={handleChangeSpace}
         >
-          <Text style={styles.secondaryButtonText}>Changer d’espace</Text>
+          <Text style={styles.secondaryButtonText}>{t('auth.pendingApproval.changeSpace')}</Text>
         </Pressable>
 
         <Pressable
@@ -375,7 +371,7 @@ export default function PendingApprovalScreen() {
           onPress={handleResetEverything}
         >
           <Ionicons name="refresh-outline" size={18} color="#B63B3B" />
-          <Text style={styles.resetButtonText}>Réinitialiser les comptes locaux</Text>
+          <Text style={styles.resetButtonText}>{t('auth.pendingApproval.resetAccounts')}</Text>
         </Pressable>
       </ScrollView>
     </FadeInView>

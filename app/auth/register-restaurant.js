@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { registerRestaurant } from '../../services/authService';
 
@@ -44,6 +45,7 @@ const sanitizePhone = (value) => {
  */
 
 export default function RegisterRestaurantScreen() {
+  const { t } = useTranslation();
   const [restaurantName, setRestaurantName] = useState('');
   const [restaurantLogo, setRestaurantLogo] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -114,51 +116,51 @@ export default function RegisterRestaurantScreen() {
     const safePassword = normalizeText(password);
 
     if (safeRestaurantName.length < 2) {
-      Alert.alert('Nom du restaurant invalide', 'Merci de saisir un nom de restaurant valide.');
+      Alert.alert(t('auth.registerRestaurant.restaurantNameInvalidTitle'), t('auth.registerRestaurant.restaurantNameInvalidBody'));
       return;
     }
     if (safeRestaurantLogo.length < 5) {
-      Alert.alert('Logo invalide', 'Merci de renseigner un logo ou un lien de logo valide.');
+      Alert.alert(t('auth.registerRestaurant.logoInvalidTitle'), t('auth.registerRestaurant.logoInvalidBody'));
       return;
     }
     if (safeFirstName.length < 2) {
-      Alert.alert('Prénom invalide', 'Merci de saisir le prénom du responsable.');
+      Alert.alert(t('auth.validation.firstNameInvalidTitle'), t('auth.registerRestaurant.managerFirstNameInvalidBody'));
       return;
     }
     if (safeLastName.length < 2) {
-      Alert.alert('Nom invalide', 'Merci de saisir le nom du responsable.');
+      Alert.alert(t('auth.validation.lastNameInvalidTitle'), t('auth.registerRestaurant.managerLastNameInvalidBody'));
       return;
     }
     if (safePhone.length < 6) {
-      Alert.alert('Téléphone invalide', 'Merci de saisir un numéro de téléphone valide.');
+      Alert.alert(t('auth.validation.phoneInvalidTitle'), t('auth.registerDriver.phoneInvalidBody'));
       return;
     }
     if (safeAddress.length < 5) {
-      Alert.alert('Adresse invalide', 'Merci de saisir une adresse valide.');
+      Alert.alert(t('auth.validation.addressInvalidTitle'), t('auth.validation.addressInvalidBody'));
       return;
     }
     if (safeSiret.length < 5) {
-      Alert.alert('SIRET invalide', 'Merci de saisir un identifiant légal valide.');
+      Alert.alert(t('auth.registerRestaurant.siretInvalidTitle'), t('auth.registerRestaurant.siretInvalidBody'));
       return;
     }
     if (safeIdentityFront.length < 5) {
-      Alert.alert('Document recto invalide', 'Merci de renseigner le document recto.');
+      Alert.alert(t('auth.registerDriver.idFrontInvalidTitle'), t('auth.registerRestaurant.idFrontInvalidBody'));
       return;
     }
     if (safeIdentityBack.length < 5) {
-      Alert.alert('Document verso invalide', 'Merci de renseigner le document verso.');
+      Alert.alert(t('auth.registerDriver.idBackInvalidTitle'), t('auth.registerRestaurant.idBackInvalidBody'));
       return;
     }
     if (safePayoutMethod.length < 3) {
-      Alert.alert('Compte de versement invalide', 'Merci de renseigner un moyen de versement valide.');
+      Alert.alert(t('auth.registerDriver.payoutInvalidTitle'), t('auth.registerDriver.payoutInvalidBody'));
       return;
     }
     if (!isValidEmail(safeEmail)) {
-      Alert.alert('Email invalide', 'Merci de saisir une adresse email valide.');
+      Alert.alert(t('auth.login.invalidEmailTitle'), t('auth.login.invalidEmailBody'));
       return;
     }
     if (safePassword.length < 6) {
-      Alert.alert('Mot de passe invalide', 'Le mot de passe doit contenir au moins 6 caractères.');
+      Alert.alert(t('auth.login.invalidPasswordTitle'), t('auth.validation.passwordTooShortBody'));
       return;
     }
 
@@ -183,11 +185,11 @@ export default function RegisterRestaurantScreen() {
       });
 
       Alert.alert(
-        'Compte restaurant créé',
-        'Le dossier partenaire a bien été envoyé. Il est maintenant en attente de validation.',
+        t('auth.registerRestaurant.successTitle'),
+        t('auth.registerRestaurant.successBody'),
         [
           {
-            text: 'OK',
+            text: t('auth.validation.ok'),
             onPress: () =>
               router.replace({
                 pathname: '/auth/pending-approval',
@@ -199,8 +201,8 @@ export default function RegisterRestaurantScreen() {
     } catch (error) {
       console.log('Erreur register restaurant :', error);
       Alert.alert(
-        'Inscription impossible',
-        error?.message || 'Impossible de créer le compte restaurant.'
+        t('auth.registerClient.failedTitle'),
+        error?.message || t('auth.registerRestaurant.failedFallback')
       );
     } finally {
       setLoading(false);
@@ -252,129 +254,126 @@ export default function RegisterRestaurantScreen() {
               <Ionicons name="storefront-outline" size={30} color="#1F6F43" />
             </View>
 
-            <Text style={styles.eyebrow}>AFROEAT PARTNER</Text>
-            <Text style={styles.title}>Inscription restaurant</Text>
-            <Text style={styles.subtitle}>
-              Complète le dossier partenaire pour accéder à l'espace restaurant
-              AFROEAT après validation.
-            </Text>
+            <Text style={styles.eyebrow}>{t('auth.registerRestaurant.eyebrow')}</Text>
+            <Text style={styles.title}>{t('auth.registerRestaurant.title')}</Text>
+            <Text style={styles.subtitle}>{t('auth.registerRestaurant.subtitle')}</Text>
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.label}>Nom du restaurant</Text>
+            <Text style={styles.label}>{t('auth.registerRestaurant.restaurantNameLabel')}</Text>
             <TextInput
               style={styles.input}
               value={restaurantName}
               onChangeText={setRestaurantName}
-              placeholder="Nom du restaurant"
+              placeholder={t('auth.registerRestaurant.restaurantNameLabel')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Logo du restaurant</Text>
+            <Text style={styles.label}>{t('auth.registerRestaurant.logoLabel')}</Text>
             <TextInput
               style={styles.input}
               value={restaurantLogo}
               onChangeText={setRestaurantLogo}
-              placeholder="Lien logo / upload"
+              placeholder={t('auth.registerRestaurant.logoPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Prénom du responsable</Text>
+            <Text style={styles.label}>{t('auth.registerRestaurant.managerFirstNameLabel')}</Text>
             <TextInput
               style={styles.input}
               value={firstName}
               onChangeText={setFirstName}
-              placeholder="Prénom"
+              placeholder={t('auth.fields.firstName')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Nom du responsable</Text>
+            <Text style={styles.label}>{t('auth.registerRestaurant.managerLastNameLabel')}</Text>
             <TextInput
               style={styles.input}
               value={lastName}
               onChangeText={setLastName}
-              placeholder="Nom"
+              placeholder={t('auth.fields.lastName')}
               placeholderTextColor="#888888"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Téléphone</Text>
+            <Text style={styles.label}>{t('auth.fields.phone')}</Text>
             <TextInput
               style={styles.input}
               value={phone}
               onChangeText={setPhone}
-              placeholder="Téléphone"
+              placeholder={t('auth.fields.phone')}
               placeholderTextColor="#888888"
               keyboardType="phone-pad"
               editable={!loading}
             />
 
-            <Text style={styles.label}>Adresse</Text>
+            <Text style={styles.label}>{t('auth.fields.address')}</Text>
             <TextInput
               style={[styles.input, styles.textarea]}
               value={address}
               onChangeText={setAddress}
-              placeholder="Adresse du restaurant"
+              placeholder={t('auth.registerRestaurant.addressPlaceholder')}
               placeholderTextColor="#888888"
               multiline
               textAlignVertical="top"
               editable={!loading}
             />
 
-            <Text style={styles.label}>SIRET / Identifiant légal</Text>
+            <Text style={styles.label}>{t('auth.registerRestaurant.siretLabel')}</Text>
             <TextInput
               style={styles.input}
               value={siret}
               onChangeText={setSiret}
-              placeholder="Numéro SIRET ou identifiant légal"
+              placeholder={t('auth.registerRestaurant.siretPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="characters"
             />
 
-            <Text style={styles.label}>Pièce d'identité recto</Text>
+            <Text style={styles.label}>{t('auth.registerRestaurant.idFrontLabel')}</Text>
             <TextInput
               style={styles.input}
               value={identityFront}
               onChangeText={setIdentityFront}
-              placeholder="Lien fichier / upload"
+              placeholder={t('auth.registerDriver.uploadPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Pièce d'identité verso</Text>
+            <Text style={styles.label}>{t('auth.registerRestaurant.idBackLabel')}</Text>
             <TextInput
               style={styles.input}
               value={identityBack}
               onChangeText={setIdentityBack}
-              placeholder="Lien fichier / upload"
+              placeholder={t('auth.registerDriver.uploadPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Compte de versement</Text>
+            <Text style={styles.label}>{t('auth.registerDriver.payoutAccountLabel')}</Text>
             <TextInput
               style={styles.input}
               value={payoutMethod}
               onChangeText={setPayoutMethod}
-              placeholder="IBAN / compte bancaire / carte"
+              placeholder={t('auth.registerDriver.payoutPlaceholder')}
               placeholderTextColor="#888888"
               editable={!loading}
               autoCapitalize="none"
             />
 
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>{t('auth.fields.email')}</Text>
             <TextInput
               style={styles.input}
               value={email}
               onChangeText={setEmail}
-              placeholder="Email"
+              placeholder={t('auth.fields.email')}
               placeholderTextColor="#888888"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -382,13 +381,13 @@ export default function RegisterRestaurantScreen() {
               editable={!loading}
             />
 
-            <Text style={styles.label}>Mot de passe</Text>
+            <Text style={styles.label}>{t('auth.fields.password')}</Text>
             <View style={styles.passwordWrapper}>
               <TextInput
                 style={styles.passwordInput}
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Mot de passe"
+                placeholder={t('auth.fields.password')}
                 placeholderTextColor="#888888"
                 secureTextEntry={secure}
                 autoCapitalize="none"
@@ -409,11 +408,8 @@ export default function RegisterRestaurantScreen() {
             </View>
 
             <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>Validation partenaire</Text>
-              <Text style={styles.infoText}>
-                Le compte restaurant sera placé en attente de validation avant
-                l'accès complet au dashboard partenaire.
-              </Text>
+              <Text style={styles.infoTitle}>{t('auth.registerRestaurant.validationPartnerTitle')}</Text>
+              <Text style={styles.infoText}>{t('auth.registerRestaurant.validationPartnerText')}</Text>
             </View>
 
             <Pressable
@@ -429,7 +425,7 @@ export default function RegisterRestaurantScreen() {
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
                 <Text style={styles.buttonText}>
-                  Envoyer mon dossier restaurant
+                  {t('auth.registerRestaurant.submit')}
                 </Text>
               )}
             </Pressable>

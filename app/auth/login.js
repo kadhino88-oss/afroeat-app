@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/authService';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -210,6 +211,7 @@ const getRedirectRouteByUser = (user) => {
  */
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const auth = useAuth() || {};
 
@@ -253,14 +255,14 @@ export default function LoginScreen() {
     const safePassword = String(password ?? '').trim();
 
     if (!isValidEmail(safeEmail)) {
-      Alert.alert('Email invalide', 'Merci de saisir une adresse email valide.');
+      Alert.alert(t('auth.login.invalidEmailTitle'), t('auth.login.invalidEmailBody'));
       return;
     }
 
     if (!safePassword || safePassword.length < 6) {
       Alert.alert(
-        'Mot de passe invalide',
-        'Merci de saisir un mot de passe valide.'
+        t('auth.login.invalidPasswordTitle'),
+        t('auth.login.invalidPasswordBody')
       );
       return;
     }
@@ -282,31 +284,27 @@ export default function LoginScreen() {
       const safeToken = response?.token || '';
 
       if (!safeUser?._id || !safeToken) {
-        throw new Error('Réponse de connexion invalide.');
+        throw new Error(t('auth.login.invalidLoginResponse'));
       }
 
       const normalizedLoggedRole = normalizeRole(safeUser?.role);
 
       if (currentRole !== 'admin' && normalizedLoggedRole !== currentRole) {
-        throw new Error(
-          "Ce compte n'appartient pas à l’espace sélectionné. Merci d’utiliser le bon rôle."
-        );
+        throw new Error(t('auth.login.wrongSpaceError'));
       }
 
       if (currentRole === 'admin' && normalizedLoggedRole !== 'admin') {
-        throw new Error(
-          "Accès refusé. Cet espace est réservé à l'administration."
-        );
+        throw new Error(t('auth.login.adminAccessDenied'));
       }
 
       if (typeof login !== 'function') {
-        throw new Error('Le contexte de session est indisponible.');
+        throw new Error(t('auth.login.sessionUnavailable'));
       }
 
       const success = await login(safeUser, safeToken);
 
       if (!success) {
-        throw new Error("Impossible d'enregistrer la session.");
+        throw new Error(t('auth.login.sessionSaveFailed'));
       }
 
       router.replace(getRedirectRouteByUser(safeUser));
@@ -314,8 +312,8 @@ export default function LoginScreen() {
       console.log('Erreur login :', error);
 
       Alert.alert(
-        'Connexion impossible',
-        error?.message || 'Erreur serveur, réessaie.'
+        t('auth.login.failedTitle'),
+        error?.message || t('auth.login.serverErrorFallback')
       );
     } finally {
       setSubmitting(false);
@@ -385,8 +383,8 @@ export default function LoginScreen() {
             </View>
 
             <Text style={styles.eyebrow}>AFROEAT</Text>
-            <Text style={styles.title}>Connexion</Text>
-            <Text style={styles.subtitle}>{roleConfig.description}</Text>
+            <Text style={styles.title}>{t('auth.login.title')}</Text>
+            <Text style={styles.subtitle}>{t(`auth.roles.${currentRole}.description`, roleConfig.description)}</Text>
 
             <View
               style={[
@@ -401,13 +399,13 @@ export default function LoginScreen() {
                 style={styles.roleBadgeIcon}
               />
               <Text style={[styles.roleBadgeText, { color: roleConfig.color }]}>
-                {roleConfig.label}
+                {t(`auth.roles.${currentRole}.label`, roleConfig.label)}
               </Text>
             </View>
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.label}>Adresse email</Text>
+            <Text style={styles.label}>{t('auth.login.emailLabel')}</Text>
             <View style={styles.inputWrap}>
               <Ionicons
                 name="mail-outline"
@@ -428,7 +426,7 @@ export default function LoginScreen() {
               />
             </View>
 
-            <Text style={styles.label}>Mot de passe</Text>
+            <Text style={styles.label}>{t('auth.login.passwordLabel')}</Text>
             <View style={styles.inputWrap}>
               <Ionicons
                 name="lock-closed-outline"
@@ -440,7 +438,7 @@ export default function LoginScreen() {
                 style={styles.input}
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Ton mot de passe"
+                placeholder={t('auth.login.passwordPlaceholder')}
                 placeholderTextColor="#9A948D"
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
@@ -476,7 +474,7 @@ export default function LoginScreen() {
               ) : (
                 <>
                   <Ionicons name="log-in-outline" size={18} color="#FFFFFF" />
-                  <Text style={styles.primaryButtonText}>Se connecter</Text>
+                  <Text style={styles.primaryButtonText}>{t('auth.login.submit')}</Text>
                 </>
               )}
             </Pressable>
@@ -490,20 +488,18 @@ export default function LoginScreen() {
                 onPress={handleGoToRegister}
                 disabled={submitting}
               >
-                <Text style={styles.secondaryButtonText}>Créer un compte</Text>
+                <Text style={styles.secondaryButtonText}>{t('auth.login.createAccount')}</Text>
               </Pressable>
             )}
           </View>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>Connexion séparée par bloc</Text>
+            <Text style={styles.infoTitle}>{t('auth.login.infoTitle')}</Text>
             <Text style={styles.infoText}>
-              Chaque rôle entre dans son propre espace métier sans croiser les
-              autres blocs.
+              {t('auth.login.infoText1')}
             </Text>
             <Text style={styles.infoText}>
-              Une fois connecté, tu es redirigé automatiquement vers le bon
-              dashboard selon ton rôle et ton statut.
+              {t('auth.login.infoText2')}
             </Text>
           </View>
         </ScrollView>

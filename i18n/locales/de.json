@@ -332,5 +332,264 @@
   },
   "entry": {
     "loadingExperience": "Das Premium-Erlebnis wird geladen"
+  },
+  "auth": {
+    "login": {
+      "title": "Anmeldung",
+      "emailLabel": "E-Mail-Adresse",
+      "passwordLabel": "Passwort",
+      "passwordPlaceholder": "Dein Passwort",
+      "submit": "Anmelden",
+      "createAccount": "Konto erstellen",
+      "infoTitle": "Nach Bereich getrennte Anmeldung",
+      "infoText1": "Jede Rolle betritt ihren eigenen Geschäftsbereich, ohne sich mit anderen zu überschneiden.",
+      "infoText2": "Nach der Anmeldung wirst du automatisch je nach Rolle und Status zum richtigen Dashboard weitergeleitet.",
+      "invalidEmailTitle": "Ungültige E-Mail",
+      "invalidEmailBody": "Bitte gib eine gültige E-Mail-Adresse ein.",
+      "invalidPasswordTitle": "Ungültiges Passwort",
+      "invalidPasswordBody": "Bitte gib ein gültiges Passwort ein.",
+      "invalidLoginResponse": "Ungültige Anmeldeantwort.",
+      "wrongSpaceError": "Dieses Konto gehört nicht zum ausgewählten Bereich. Bitte verwende die richtige Rolle.",
+      "adminAccessDenied": "Zugriff verweigert. Dieser Bereich ist der Verwaltung vorbehalten.",
+      "sessionUnavailable": "Der Sitzungskontext ist nicht verfügbar.",
+      "sessionSaveFailed": "Die Sitzung konnte nicht gespeichert werden.",
+      "failedTitle": "Anmeldung fehlgeschlagen",
+      "serverErrorFallback": "Serverfehler, versuche es erneut."
+    },
+    "roles": {
+      "client": {
+        "label": "Kunde",
+        "description": "Melde dich an, um zu bestellen, deine Bestellungen zu verfolgen und dein AFROEAT-Konto zu verwalten."
+      },
+      "restaurant": {
+        "label": "Restaurant",
+        "description": "Melde dich in deinem Partnerbereich an, um dein Menü, deine Bestellungen und deine Aktivität zu verwalten."
+      },
+      "livreur": {
+        "label": "Fahrer",
+        "description": "Melde dich in deinem Lieferbereich an, um deine Aufträge, dein Tracking und deine Aktivität zu verwalten."
+      },
+      "admin": {
+        "label": "Admin",
+        "description": "Sichere Anmeldung im AFROEAT-Verwaltungs- und Steuerungsbereich."
+      }
+    },
+    "role": {
+      "loadingSpace": "Dein Bereich wird geladen...",
+      "openingSpace": "Dein Bereich wird geöffnet...",
+      "heroStats": {
+        "client": "Kunde",
+        "order": "Bestellung",
+        "restaurant": "Restaurant",
+        "management": "Steuerung",
+        "driver": "Fahrer",
+        "mission": "Auftrag"
+      },
+      "chooseSpace": "Bereich wählen",
+      "chooseSpaceSubtitle": "Melde dich an oder registriere dich in dem Bereich, der zu deiner Tätigkeit passt.",
+      "register": "Registrieren",
+      "premiumEntryTitle": "Premium-Einstiegserlebnis",
+      "premiumEntryText1": "Diese Seite ist der Haupteinstiegspunkt der App vor jeder internen Navigation.",
+      "premiumEntryText2": "Kein Nutzer sollte direkt auf einem Dashboard landen, ohne die Sitzungs- oder Anmeldelogik durchlaufen zu haben.",
+      "resetLocalAccounts": "Lokale Konten löschen"
+    },
+    "headline": {
+      "title": "Willkommen bei AFROEAT",
+      "subtitle": "Wähle deinen Bereich für ein maßgeschneidertes, hochwertiges und sicheres Erlebnis.",
+      "description": "Restaurants, Lieferung und erstklassiges Kundenerlebnis auf einer einzigen internationalen Plattform."
+    },
+    "roleCards": {
+      "client": {
+        "title": "Kunde",
+        "subtitle": "Bei AFROEAT bestellen",
+        "description": "Entdecke Restaurants, füge zum Warenkorb hinzu, bestelle einfach und verfolge deine Lieferungen."
+      },
+      "restaurant": {
+        "title": "Partnerrestaurant",
+        "subtitle": "Dein Geschäft steuern",
+        "description": "Verwalte dein Menü, deine Bestellungen, deine Aktivität und deinen AFROEAT-Partnerbereich."
+      },
+      "livreur": {
+        "title": "Fahrer",
+        "subtitle": "Deine Aufträge verwalten",
+        "description": "Greife auf deine Aufträge, dein Tracking vor Ort, deine Lieferstatus und deine Aktivität zu."
+      }
+    },
+    "fields": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "addressPlaceholder": "Hauptadresse",
+      "country": "Land",
+      "email": "E-Mail",
+      "password": "Passwort"
+    },
+    "validation": {
+      "firstNameInvalidTitle": "Ungültiger Vorname",
+      "firstNameInvalidBody": "Bitte gib einen gültigen Vornamen ein.",
+      "lastNameInvalidTitle": "Ungültiger Nachname",
+      "lastNameInvalidBody": "Bitte gib einen gültigen Nachnamen ein.",
+      "phoneInvalidTitle": "Ungültige Telefonnummer",
+      "phoneInvalidBody": "Bitte gib eine gültige Nummer ein.",
+      "addressInvalidTitle": "Ungültige Adresse",
+      "addressInvalidBody": "Bitte gib eine gültige Adresse ein.",
+      "countryInvalidTitle": "Ungültiges Land",
+      "countryInvalidBody": "Bitte gib ein gültiges Land ein.",
+      "passwordTooShortBody": "Das Passwort muss mindestens 6 Zeichen lang sein.",
+      "ok": "OK"
+    },
+    "registerClient": {
+      "title": "Kundenkonto erstellen",
+      "subtitle": "Gib deine Daten ein, um Zugang zu einem Premium-AFROEAT-Kundenerlebnis zu erhalten.",
+      "paymentLaterTitle": "Zahlung später",
+      "paymentLaterText": "Karten, Apple Pay, Google Pay und mehrere Zahlungsmethoden werden später im Kundenprofil und beim Checkout verwaltet, ohne den Hauptablauf zu stören.",
+      "submit": "Mein Kundenkonto erstellen",
+      "successTitle": "Konto erstellt",
+      "successBody": "Dein Kundenkonto wurde erfolgreich erstellt. Du kannst dich jetzt anmelden.",
+      "failedTitle": "Registrierung fehlgeschlagen",
+      "failedFallback": "Das Kundenkonto konnte nicht erstellt werden."
+    },
+    "registerDriver": {
+      "eyebrow": "AFROEAT DELIVERY",
+      "title": "Fahrer-Registrierung",
+      "subtitle": "Vervollständige deine Bewerbungsunterlagen. Der Dashboard-Zugang hängt von der Überprüfung deiner Identität, deiner Dokumente und deiner Aktivierung ab.",
+      "documentTypeLabel": "Dokumenttyp",
+      "documents": {
+        "passeport": "Reisepass",
+        "carteResident": "Aufenthaltskarte",
+        "carteSejour": "Aufenthaltserlaubnis",
+        "titreSejour": "Aufenthaltstitel",
+        "documentEuropeen": "Europäisches Dokument"
+      },
+      "idFrontLabel": "Ausweis Vorderseite",
+      "idBackLabel": "Ausweis Rückseite",
+      "selfieLabel": "Verifizierungs-Selfie",
+      "uploadPlaceholder": "Datei-Link / Upload",
+      "selfieUploadPlaceholder": "Selfie-Link / Upload",
+      "payoutAccountLabel": "Auszahlungskonto",
+      "payoutPlaceholder": "IBAN / Bankkonto / Karte",
+      "membershipPaymentLabel": "Mitgliedschaftszahlung",
+      "membershipPaymentPlaceholder": "Karte / Zahlungsmethode",
+      "validationRequiredTitle": "Verifizierung erforderlich",
+      "validationRequiredText": "Nach der Registrierung wird dein Zugang zur Überprüfung ausstehen: Identität, Unterlagen, Dokumente und Mitgliedschaftsgebühr, falls aktiviert.",
+      "submit": "Meine Fahrer-Unterlagen senden",
+      "phoneInvalidBody": "Bitte gib eine gültige Telefonnummer ein.",
+      "documentTypeInvalidTitle": "Ungültiger Dokumenttyp",
+      "documentTypeInvalidBody": "Bitte wähle einen Dokumenttyp aus.",
+      "idFrontInvalidTitle": "Ungültige Vorderseite",
+      "idFrontInvalidBody": "Bitte gib die Vorderseite des Ausweises an.",
+      "idBackInvalidTitle": "Ungültige Rückseite",
+      "idBackInvalidBody": "Bitte gib die Rückseite des Ausweises an.",
+      "selfieInvalidTitle": "Ungültiges Selfie",
+      "selfieInvalidBody": "Bitte gib das Verifizierungs-Selfie an.",
+      "payoutInvalidTitle": "Ungültiges Auszahlungskonto",
+      "payoutInvalidBody": "Bitte gib eine gültige Auszahlungsmethode an.",
+      "membershipInvalidTitle": "Ungültige Mitgliedschaftszahlung",
+      "membershipInvalidBody": "Bitte gib eine gültige Zahlungsmethode für die Mitgliedschaft an.",
+      "successTitle": "Fahrerkonto erstellt",
+      "successBody": "Deine Unterlagen wurden gesendet. Sie werden nun überprüft.",
+      "failedFallback": "Das Fahrerkonto konnte nicht erstellt werden.",
+      "failedTitle": "Registrierung fehlgeschlagen",
+      "emailAlreadyUsedTitle": "E-Mail bereits verwendet",
+      "emailAlreadyUsedBody": "Es existiert bereits ein Konto mit dieser E-Mail. Melde dich an oder verwende eine andere E-Mail.",
+      "connectionFailedTitle": "Verbindung fehlgeschlagen",
+      "connectionFailedBody": "Überprüfe, ob der Server läuft und dein Telefon sich im selben WLAN-Netzwerk befindet."
+    },
+    "registerRestaurant": {
+      "eyebrow": "AFROEAT PARTNER",
+      "title": "Restaurant-Registrierung",
+      "subtitle": "Vervollständige die Partnerakte, um nach der Überprüfung Zugang zum AFROEAT-Restaurantbereich zu erhalten.",
+      "restaurantNameLabel": "Name des Restaurants",
+      "restaurantNameInvalidTitle": "Ungültiger Restaurantname",
+      "restaurantNameInvalidBody": "Bitte gib einen gültigen Restaurantnamen ein.",
+      "logoLabel": "Restaurant-Logo",
+      "logoPlaceholder": "Logo-Link / Upload",
+      "logoInvalidTitle": "Ungültiges Logo",
+      "logoInvalidBody": "Bitte gib ein gültiges Logo oder einen Logo-Link an.",
+      "managerFirstNameLabel": "Vorname des Verantwortlichen",
+      "managerFirstNameInvalidBody": "Bitte gib den Vornamen des Verantwortlichen ein.",
+      "managerLastNameLabel": "Nachname des Verantwortlichen",
+      "managerLastNameInvalidBody": "Bitte gib den Nachnamen des Verantwortlichen ein.",
+      "addressPlaceholder": "Adresse des Restaurants",
+      "siretLabel": "Handelsregisternummer",
+      "siretPlaceholder": "Handelsregister- oder Rechtsform-Nummer",
+      "siretInvalidTitle": "Ungültige Registernummer",
+      "siretInvalidBody": "Bitte gib eine gültige Rechtsform-Nummer ein.",
+      "idFrontLabel": "Ausweis Vorderseite",
+      "idFrontInvalidBody": "Bitte gib die Vorderseite des Dokuments an.",
+      "idBackLabel": "Ausweis Rückseite",
+      "idBackInvalidBody": "Bitte gib die Rückseite des Dokuments an.",
+      "validationPartnerTitle": "Partnerüberprüfung",
+      "validationPartnerText": "Das Restaurantkonto wird vor dem vollständigen Zugang zum Partner-Dashboard einer Überprüfung unterzogen.",
+      "submit": "Restaurantantrag senden",
+      "successTitle": "Restaurantkonto erstellt",
+      "successBody": "Deine Partnerakte wurde gesendet. Sie wird nun überprüft.",
+      "failedFallback": "Das Restaurantkonto konnte nicht erstellt werden."
+    },
+    "reset": {
+      "topTitle": "Diagnose & Zurücksetzen",
+      "networkConfigTitle": "Netzwerkkonfiguration",
+      "detectedUrlLabel": "Erkannte Backend-URL:",
+      "hintPart1": "Wenn diese URL nicht mit der Adresse deines Servers übereinstimmt, öffne",
+      "hintPart2": "und korrigiere",
+      "testServerButton": "🔌 Serververbindung testen",
+      "serverOk": "✅ Server erreichbar (HTTP {{code}})",
+      "serverError": "❌ {{msg}}",
+      "timeoutError": "Timeout — Server nach 5s nicht erreichbar",
+      "networkError": "Netzwerkfehler",
+      "resetSessionTitle": "Sitzung zurücksetzen",
+      "resetHint": "Wenn dein Konto gesperrt ist, ein Token abgelaufen ist oder eine Meldung \"Konto inaktiv\" erscheint, lösche die lokalen Daten, um neu zu starten.",
+      "clearButton": "🗑️ Alle lokalen Daten löschen",
+      "clearAlertTitle": "Alle Daten löschen",
+      "clearAlertBody": "Dies entfernt das lokale Konto, den Warenkorb und das Token. Du musst dich erneut anmelden.",
+      "cancel": "Abbrechen",
+      "confirmClear": "Löschen",
+      "successTitle": "✅ Sitzung gelöscht",
+      "successBody": "Daten entfernt. Erstelle ein neues Konto oder melde dich an.",
+      "clearErrorBody": "Die Daten konnten nicht gelöscht werden.",
+      "checklistTitle": "Checkliste zum Einstieg",
+      "checklist": [
+        "Das Node.js-Backend läuft (npm start)",
+        "Telefon und Computer sind im selben WLAN",
+        "Die IP in constants/api.js stimmt mit deinem Computer überein",
+        "Port 5000 ist der vom Backend verwendete",
+        "Die Datenbank (MongoDB) läuft"
+      ]
+    },
+    "pendingApproval": {
+      "eyebrow": "Überprüfung läuft",
+      "roles": {
+        "restaurant": {
+          "title": "Restaurantantrag ausstehend",
+          "subtitle": "Deine Partnerakte wurde empfangen. Sie muss überprüft werden, bevor dein Restaurantbereich vollständig aktiviert wird.",
+          "primaryLabel": "Zurück zum Restaurant-Login"
+        },
+        "livreur": {
+          "title": "Fahrerantrag ausstehend",
+          "subtitle": "Deine Fahrerakte wurde empfangen. Die Identitäts- und Mitgliedschaftsprüfung muss vor der Aktivierung abgeschlossen sein.",
+          "primaryLabel": "Zurück zum Fahrer-Login"
+        },
+        "admin": {
+          "title": "Kontrollierter Administratorzugang",
+          "subtitle": "Dein Administratorbereich erfordert eine Überprüfung und einen sicheren Zugang, bevor er vollständig geöffnet wird.",
+          "primaryLabel": "Zurück zum Admin-Login"
+        },
+        "client": {
+          "title": "Konto ausstehend",
+          "subtitle": "Dein Konto wird noch bearbeitet.",
+          "primaryLabel": "Zurück zur Anmeldung"
+        }
+      },
+      "stepsTitle": "Geplante Schritte",
+      "step1": "Akte von AFROEAT empfangen",
+      "step2": "Überprüfung läuft",
+      "step3": "Aktivierung des Bereichs nach Überprüfung",
+      "infoTitle": "Kontrollierter Zugang",
+      "infoText1": "Solange die Überprüfung nicht abgeschlossen ist, bleibt der Zugang zum Partner- oder Fahrer-Dashboard gesperrt.",
+      "infoText2": "Nach der Überprüfung ist die Weiterleitung zum entsprechenden Geschäftsbereich möglich.",
+      "changeSpace": "Bereich wechseln",
+      "resetAccounts": "Lokale Konten zurücksetzen"
+    }
   }
 }

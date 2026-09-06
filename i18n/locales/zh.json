@@ -332,5 +332,264 @@
   },
   "entry": {
     "loadingExperience": "正在加载优选体验"
+  },
+  "auth": {
+    "login": {
+      "title": "登录",
+      "emailLabel": "邮箱地址",
+      "passwordLabel": "密码",
+      "passwordPlaceholder": "您的密码",
+      "submit": "登录",
+      "createAccount": "创建账户",
+      "infoTitle": "各角色分区登录",
+      "infoText1": "每个角色进入各自独立的业务区域，互不干扰。",
+      "infoText2": "登录后，系统会根据您的角色和状态自动跳转到相应的控制台。",
+      "invalidEmailTitle": "邮箱无效",
+      "invalidEmailBody": "请输入有效的邮箱地址。",
+      "invalidPasswordTitle": "密码无效",
+      "invalidPasswordBody": "请输入有效的密码。",
+      "invalidLoginResponse": "登录响应无效。",
+      "wrongSpaceError": "该账户不属于所选区域，请使用正确的角色登录。",
+      "adminAccessDenied": "访问被拒绝，该区域仅限管理员使用。",
+      "sessionUnavailable": "会话上下文不可用。",
+      "sessionSaveFailed": "无法保存会话。",
+      "failedTitle": "登录失败",
+      "serverErrorFallback": "服务器错误，请重试。"
+    },
+    "roles": {
+      "client": {
+        "label": "顾客",
+        "description": "登录以下单、跟踪订单并管理您的 AFROEAT 账户。"
+      },
+      "restaurant": {
+        "label": "餐厅",
+        "description": "登录您的合作伙伴专区，管理菜单、订单和业务。"
+      },
+      "livreur": {
+        "label": "骑手",
+        "description": "登录您的配送专区，管理任务、跟踪和活动。"
+      },
+      "admin": {
+        "label": "管理员",
+        "description": "安全登录 AFROEAT 监督与管理专区。"
+      }
+    },
+    "role": {
+      "loadingSpace": "正在加载您的专区...",
+      "openingSpace": "正在打开您的专区...",
+      "heroStats": {
+        "client": "顾客",
+        "order": "下单",
+        "restaurant": "餐厅",
+        "management": "管理",
+        "driver": "骑手",
+        "mission": "配送"
+      },
+      "chooseSpace": "选择专区",
+      "chooseSpaceSubtitle": "请在与您的活动相符的专区登录或注册。",
+      "register": "注册",
+      "premiumEntryTitle": "优选入口体验",
+      "premiumEntryText1": "此页面是应用进行任何内部导航前的主要入口。",
+      "premiumEntryText2": "任何用户都不应在未经过会话或登录逻辑的情况下直接进入控制台。",
+      "resetLocalAccounts": "清除本地账户"
+    },
+    "headline": {
+      "title": "欢迎使用 AFROEAT",
+      "subtitle": "选择您的专区，享受专属、优选且安全的体验。",
+      "description": "餐厅、配送与顶级顾客体验，尽在这一国际化平台。"
+    },
+    "roleCards": {
+      "client": {
+        "title": "顾客",
+        "subtitle": "在 AFROEAT 下单",
+        "description": "发现餐厅、加入购物车、轻松下单并跟踪配送。"
+      },
+      "restaurant": {
+        "title": "合作餐厅",
+        "subtitle": "管理您的业务",
+        "description": "管理您的菜单、订单、业务和 AFROEAT 合作伙伴专区。"
+      },
+      "livreur": {
+        "title": "骑手",
+        "subtitle": "管理您的配送任务",
+        "description": "查看您的任务、实时跟踪、配送状态和活动。"
+      }
+    },
+    "fields": {
+      "firstName": "名字",
+      "lastName": "姓氏",
+      "phone": "电话",
+      "address": "地址",
+      "addressPlaceholder": "主要地址",
+      "country": "国家/地区",
+      "email": "邮箱",
+      "password": "密码"
+    },
+    "validation": {
+      "firstNameInvalidTitle": "名字无效",
+      "firstNameInvalidBody": "请输入有效的名字。",
+      "lastNameInvalidTitle": "姓氏无效",
+      "lastNameInvalidBody": "请输入有效的姓氏。",
+      "phoneInvalidTitle": "电话无效",
+      "phoneInvalidBody": "请输入有效的号码。",
+      "addressInvalidTitle": "地址无效",
+      "addressInvalidBody": "请输入有效的地址。",
+      "countryInvalidTitle": "国家/地区无效",
+      "countryInvalidBody": "请输入有效的国家/地区。",
+      "passwordTooShortBody": "密码至少需要6个字符。",
+      "ok": "确定"
+    },
+    "registerClient": {
+      "title": "创建顾客账户",
+      "subtitle": "填写您的信息，享受 AFROEAT 优选顾客体验。",
+      "paymentLaterTitle": "稍后支付",
+      "paymentLaterText": "银行卡、Apple Pay、Google Pay 及多种支付方式将在顾客资料和结账时管理，不影响主流程。",
+      "submit": "创建我的顾客账户",
+      "successTitle": "账户已创建",
+      "successBody": "您的顾客账户已成功创建，现在可以登录了。",
+      "failedTitle": "注册失败",
+      "failedFallback": "无法创建顾客账户。"
+    },
+    "registerDriver": {
+      "eyebrow": "AFROEAT DELIVERY",
+      "title": "骑手注册",
+      "subtitle": "请完善您的专业资料。控制台的访问权限取决于身份、证件和账户激活的审核结果。",
+      "documentTypeLabel": "证件类型",
+      "documents": {
+        "passeport": "护照",
+        "carteResident": "居留卡",
+        "carteSejour": "居留证",
+        "titreSejour": "居留权证明",
+        "documentEuropeen": "欧盟证件"
+      },
+      "idFrontLabel": "证件正面",
+      "idBackLabel": "证件反面",
+      "selfieLabel": "验证自拍",
+      "uploadPlaceholder": "文件链接 / 上传",
+      "selfieUploadPlaceholder": "自拍链接 / 上传",
+      "payoutAccountLabel": "收款账户",
+      "payoutPlaceholder": "IBAN / 银行账户 / 银行卡",
+      "membershipPaymentLabel": "会员费支付",
+      "membershipPaymentPlaceholder": "银行卡 / 支付方式",
+      "validationRequiredTitle": "需要审核",
+      "validationRequiredText": "注册后，您的账户将进入审核阶段：身份、资料、证件及会员费（如已启用）。",
+      "submit": "提交我的骑手资料",
+      "phoneInvalidBody": "请输入有效的电话号码。",
+      "documentTypeInvalidTitle": "证件类型无效",
+      "documentTypeInvalidBody": "请选择证件类型。",
+      "idFrontInvalidTitle": "证件正面无效",
+      "idFrontInvalidBody": "请提供证件正面。",
+      "idBackInvalidTitle": "证件反面无效",
+      "idBackInvalidBody": "请提供证件反面。",
+      "selfieInvalidTitle": "自拍无效",
+      "selfieInvalidBody": "请提供验证自拍。",
+      "payoutInvalidTitle": "收款账户无效",
+      "payoutInvalidBody": "请提供有效的收款方式。",
+      "membershipInvalidTitle": "会员费支付方式无效",
+      "membershipInvalidBody": "请提供有效的会员费支付方式。",
+      "successTitle": "骑手账户已创建",
+      "successBody": "您的资料已提交，现在进入审核阶段。",
+      "failedFallback": "无法创建骑手账户。",
+      "failedTitle": "注册失败",
+      "emailAlreadyUsedTitle": "邮箱已被使用",
+      "emailAlreadyUsedBody": "该邮箱已注册账号。请登录或使用其他邮箱。",
+      "connectionFailedTitle": "连接失败",
+      "connectionFailedBody": "请检查服务器是否已启动，以及您的手机是否连接到同一 Wi-Fi 网络。"
+    },
+    "registerRestaurant": {
+      "eyebrow": "AFROEAT PARTNER",
+      "title": "餐厅注册",
+      "subtitle": "完成合作伙伴资料，审核通过后即可访问 AFROEAT 餐厅空间。",
+      "restaurantNameLabel": "餐厅名称",
+      "restaurantNameInvalidTitle": "餐厅名称无效",
+      "restaurantNameInvalidBody": "请输入有效的餐厅名称。",
+      "logoLabel": "餐厅Logo",
+      "logoPlaceholder": "Logo链接/上传",
+      "logoInvalidTitle": "Logo无效",
+      "logoInvalidBody": "请提供有效的Logo或Logo链接。",
+      "managerFirstNameLabel": "负责人名字",
+      "managerFirstNameInvalidBody": "请输入负责人的名字。",
+      "managerLastNameLabel": "负责人姓氏",
+      "managerLastNameInvalidBody": "请输入负责人的姓氏。",
+      "addressPlaceholder": "餐厅地址",
+      "siretLabel": "营业登记号",
+      "siretPlaceholder": "营业执照号码或法定识别号",
+      "siretInvalidTitle": "登记号无效",
+      "siretInvalidBody": "请输入有效的法定识别号。",
+      "idFrontLabel": "证件正面",
+      "idFrontInvalidBody": "请提供证件正面。",
+      "idBackLabel": "证件反面",
+      "idBackInvalidBody": "请提供证件反面。",
+      "validationPartnerTitle": "合作伙伴审核",
+      "validationPartnerText": "在完全访问合作伙伴后台之前，餐厅账号将处于审核待定状态。",
+      "submit": "提交我的餐厅申请",
+      "successTitle": "餐厅账号已创建",
+      "successBody": "您的合作伙伴资料已发送，目前正在审核中。",
+      "failedFallback": "无法创建餐厅账号。"
+    },
+    "reset": {
+      "topTitle": "诊断与重置",
+      "networkConfigTitle": "网络配置",
+      "detectedUrlLabel": "检测到的后端URL：",
+      "hintPart1": "如果此URL与您的服务器地址不符，请打开",
+      "hintPart2": "并修改",
+      "testServerButton": "🔌 测试服务器连接",
+      "serverOk": "✅ 服务器可访问（HTTP {{code}}）",
+      "serverError": "❌ {{msg}}",
+      "timeoutError": "超时 — 5秒后仍无法连接服务器",
+      "networkError": "网络错误",
+      "resetSessionTitle": "重置会话",
+      "resetHint": "如果您的账号被封锁、令牌已过期，或收到\"账号未激活\"的提示，请清除本地数据以重新开始。",
+      "clearButton": "🗑️ 清除所有本地数据",
+      "clearAlertTitle": "清除所有数据",
+      "clearAlertBody": "这将删除本地账号、购物车和令牌。您需要重新登录。",
+      "cancel": "取消",
+      "confirmClear": "清除",
+      "successTitle": "✅ 会话已清除",
+      "successBody": "数据已删除。请创建新账号或登录。",
+      "clearErrorBody": "无法清除数据。",
+      "checklistTitle": "启动检查清单",
+      "checklist": [
+        "Node.js 后端已启动 (npm start)",
+        "手机和电脑连接同一个Wi-Fi",
+        "constants/api.js 中的IP与您的电脑一致",
+        "5000端口是后端使用的端口",
+        "数据库 (MongoDB) 已启动"
+      ]
+    },
+    "pendingApproval": {
+      "eyebrow": "审核进行中",
+      "roles": {
+        "restaurant": {
+          "title": "餐厅申请待审核",
+          "subtitle": "您的合作伙伴资料已收到。在完全激活您的餐厅空间之前需要进行审核。",
+          "primaryLabel": "返回餐厅登录"
+        },
+        "livreur": {
+          "title": "骑手申请待审核",
+          "subtitle": "您的骑手资料已收到。身份认证和会员资料需在激活前完成核实。",
+          "primaryLabel": "返回骑手登录"
+        },
+        "admin": {
+          "title": "受控管理员访问",
+          "subtitle": "您的管理员空间在完全开放前需要审核和安全访问认证。",
+          "primaryLabel": "返回管理员登录"
+        },
+        "client": {
+          "title": "账号待处理",
+          "subtitle": "您的账号正在处理中。",
+          "primaryLabel": "返回登录"
+        }
+      },
+      "stepsTitle": "预计流程",
+      "step1": "AFROEAT 已收到资料",
+      "step2": "审核进行中",
+      "step3": "审核通过后激活空间",
+      "infoTitle": "受控访问",
+      "infoText1": "审核未完成前，合作伙伴或骑手后台的访问将保持锁定。",
+      "infoText2": "审核通过后，即可跳转至相应的业务空间。",
+      "changeSpace": "切换空间",
+      "resetAccounts": "重置本地账号"
+    }
   }
 }

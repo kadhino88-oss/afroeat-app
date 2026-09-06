@@ -13,6 +13,7 @@ import { router } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 /**
  * =========================================================
@@ -186,6 +187,7 @@ const ROLE_CARDS = [
  */
 
 export default function RoleSelectionScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const loading = Boolean(auth.loading);
@@ -198,13 +200,11 @@ export default function RoleSelectionScreen() {
 
   const headline = useMemo(
     () => ({
-      title: 'Bienvenue sur AFROEAT',
-      subtitle:
-        'Choisis ton espace pour accéder à un parcours dédié, premium et sécurisé.',
-      description:
-        'Restaurants, livraison et expérience client haut de gamme dans une seule plateforme internationale.',
+      title: t('auth.headline.title'),
+      subtitle: t('auth.headline.subtitle'),
+      description: t('auth.headline.description'),
     }),
-    []
+    [t]
   );
 
   useEffect(() => {
@@ -290,7 +290,7 @@ export default function RoleSelectionScreen() {
           <Image source={LOGO_IMAGE} style={styles.loaderLogo} resizeMode="cover" />
         </View>
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement de votre espace...</Text>
+        <Text style={styles.loaderText}>{t('auth.role.loadingSpace')}</Text>
       </View>
     );
   }
@@ -303,7 +303,7 @@ export default function RoleSelectionScreen() {
           <Image source={LOGO_IMAGE} style={styles.loaderLogo} resizeMode="cover" />
         </View>
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Ouverture de votre espace...</Text>
+        <Text style={styles.loaderText}>{t('auth.role.openingSpace')}</Text>
       </View>
     );
   }
@@ -335,25 +335,25 @@ export default function RoleSelectionScreen() {
 
           <View style={styles.heroStatsRow}>
             <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>Client</Text>
-              <Text style={styles.heroStatLabel}>Commande</Text>
+              <Text style={styles.heroStatValue}>{t('auth.role.heroStats.client')}</Text>
+              <Text style={styles.heroStatLabel}>{t('auth.role.heroStats.order')}</Text>
             </View>
             <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>Resto</Text>
-              <Text style={styles.heroStatLabel}>Pilotage</Text>
+              <Text style={styles.heroStatValue}>{t('auth.role.heroStats.restaurant')}</Text>
+              <Text style={styles.heroStatLabel}>{t('auth.role.heroStats.management')}</Text>
             </View>
             <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>Livreur</Text>
-              <Text style={styles.heroStatLabel}>Mission</Text>
+              <Text style={styles.heroStatValue}>{t('auth.role.heroStats.driver')}</Text>
+              <Text style={styles.heroStatLabel}>{t('auth.role.heroStats.mission')}</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Choisir un espace</Text>
+            <Text style={styles.sectionTitle}>{t('auth.role.chooseSpace')}</Text>
             <Text style={styles.sectionSubtitle}>
-              Connecte-toi ou inscris-toi dans le bloc qui correspond à ton activité.
+              {t('auth.role.chooseSpaceSubtitle')}
             </Text>
           </View>
 
@@ -372,11 +372,11 @@ export default function RoleSelectionScreen() {
               </View>
 
               <View style={styles.roleTextWrap}>
-                <Text style={styles.roleTitle}>{item.title}</Text>
+                <Text style={styles.roleTitle}>{t(`auth.roleCards.${item.id}.title`, item.title)}</Text>
                 <Text style={[styles.roleSubtitle, { color: item.dark }]}>
-                  {item.subtitle}
+                  {t(`auth.roleCards.${item.id}.subtitle`, item.subtitle)}
                 </Text>
-                <Text style={styles.roleDescription}>{item.description}</Text>
+                <Text style={styles.roleDescription}>{t(`auth.roleCards.${item.id}.description`, item.description)}</Text>
 
                 <View style={styles.actionsRow}>
                   <Pressable
@@ -393,7 +393,7 @@ export default function RoleSelectionScreen() {
                       color="#FFFFFF"
                       style={styles.primaryButtonIcon}
                     />
-                    <Text style={styles.primaryButtonText}>Connexion</Text>
+                    <Text style={styles.primaryButtonText}>{t('auth.login.title')}</Text>
                   </Pressable>
 
                   <Pressable
@@ -403,7 +403,7 @@ export default function RoleSelectionScreen() {
                     ]}
                     onPress={() => handleRegister(item.id)}
                   >
-                    <Text style={styles.secondaryButtonText}>Inscription</Text>
+                    <Text style={styles.secondaryButtonText}>{t('auth.role.register')}</Text>
                   </Pressable>
                 </View>
               </View>
@@ -412,14 +412,12 @@ export default function RoleSelectionScreen() {
         </View>
 
         <View style={styles.infoPanel}>
-          <Text style={styles.infoTitle}>Expérience d’entrée premium</Text>
+          <Text style={styles.infoTitle}>{t('auth.role.premiumEntryTitle')}</Text>
           <Text style={styles.infoText}>
-            Cette page est le point d’accès principal de l’application avant toute
-            navigation interne.
+            {t('auth.role.premiumEntryText1')}
           </Text>
           <Text style={styles.infoText}>
-            Aucun utilisateur ne doit arriver directement sur un dashboard sans
-            être passé par la logique de session ou de connexion.
+            {t('auth.role.premiumEntryText2')}
           </Text>
         </View>
 
@@ -431,7 +429,7 @@ export default function RoleSelectionScreen() {
           onPress={handleResetLocalData}
         >
           <Ionicons name="refresh-outline" size={18} color="#B63B3B" />
-          <Text style={styles.resetButtonText}>Vider les comptes locaux</Text>
+          <Text style={styles.resetButtonText}>{t('auth.role.resetLocalAccounts')}</Text>
         </Pressable>
       </ScrollView>
     </FadeInView>

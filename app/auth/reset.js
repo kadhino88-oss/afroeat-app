@@ -21,10 +21,12 @@ import {
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { API_BASE_URL } from '../../constants/api';
 
 export default function ResetScreen() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const clearAllLocalAppData = auth.clearAllLocalAppData;
 
@@ -46,8 +48,8 @@ export default function ResetScreen() {
       setServerStatus({ ok: true, code: response.status });
     } catch (err) {
       const msg = err?.name === 'AbortError'
-        ? 'Timeout — serveur injoignable après 5s'
-        : err?.message || 'Erreur réseau';
+        ? t('auth.reset.timeoutError')
+        : err?.message || t('auth.reset.networkError');
       setServerStatus({ ok: false, msg });
     } finally {
       setTesting(false);
@@ -56,12 +58,12 @@ export default function ResetScreen() {
 
   const handleClearSession = useCallback(async () => {
     Alert.alert(
-      'Effacer toutes les données',
-      'Cela supprime le compte local, le panier et le token. Tu devras te reconnecter.',
+      t('auth.reset.clearAlertTitle'),
+      t('auth.reset.clearAlertBody'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('auth.reset.cancel'), style: 'cancel' },
         {
-          text: 'Effacer',
+          text: t('auth.reset.confirmClear'),
           style: 'destructive',
           onPress: async () => {
             setClearing(true);
@@ -72,12 +74,12 @@ export default function ResetScreen() {
                 await AsyncStorage.clear();
               }
               Alert.alert(
-                '✅ Session effacée',
-                'Données supprimées. Crée un nouveau compte ou connecte-toi.',
-                [{ text: 'OK', onPress: () => router.replace('/auth/role') }]
+                t('auth.reset.successTitle'),
+                t('auth.reset.successBody'),
+                [{ text: t('auth.validation.ok'), onPress: () => router.replace('/auth/role') }]
               );
             } catch {
-              Alert.alert('Erreur', 'Impossible d\'effacer les données.');
+              Alert.alert(t('common.error'), t('auth.reset.clearErrorBody'));
             } finally {
               setClearing(false);
             }
@@ -98,7 +100,7 @@ export default function ResetScreen() {
         >
           <Ionicons name="arrow-back" size={22} color="#111" />
         </Pressable>
-        <Text style={styles.topTitle}>Diagnostic & Reset</Text>
+        <Text style={styles.topTitle}>{t('auth.reset.topTitle')}</Text>
         <View style={{ width: 42 }} />
       </View>
 
@@ -108,15 +110,15 @@ export default function ResetScreen() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Ionicons name="wifi-outline" size={20} color="#245EA8" />
-            <Text style={styles.cardTitle}>Configuration réseau</Text>
+            <Text style={styles.cardTitle}>{t('auth.reset.networkConfigTitle')}</Text>
           </View>
-          <Text style={styles.label}>URL backend détectée :</Text>
+          <Text style={styles.label}>{t('auth.reset.detectedUrlLabel')}</Text>
           <View style={styles.codeBox}>
             <Text style={styles.codeText}>{API_BASE_URL}</Text>
           </View>
           <Text style={styles.hint}>
-            Si cette URL ne correspond pas à l'adresse de ton serveur, ouvre{' '}
-            <Text style={styles.bold}>constants/api.js</Text> et corrige{' '}
+            {t('auth.reset.hintPart1')}{' '}
+            <Text style={styles.bold}>constants/api.js</Text> {t('auth.reset.hintPart2')}{' '}
             <Text style={styles.bold}>LOCAL_IP</Text>.
           </Text>
           <Pressable
@@ -126,7 +128,7 @@ export default function ResetScreen() {
           >
             {testing
               ? <ActivityIndicator size="small" color="#245EA8" />
-              : <Text style={styles.btnSecondaryText}>🔌 Tester la connexion serveur</Text>}
+              : <Text style={styles.btnSecondaryText}>{t('auth.reset.testServerButton')}</Text>}
           </Pressable>
 
           {serverStatus && (
@@ -138,8 +140,8 @@ export default function ResetScreen() {
               />
               <Text style={[styles.statusText, serverStatus.ok ? styles.statusTextOk : styles.statusTextErr]}>
                 {serverStatus.ok
-                  ? `✅ Serveur accessible (HTTP ${serverStatus.code})`
-                  : `❌ ${serverStatus.msg}`}
+                  ? t('auth.reset.serverOk', { code: serverStatus.code })
+                  : t('auth.reset.serverError', { msg: serverStatus.msg })}
               </Text>
             </View>
           )}
@@ -149,12 +151,9 @@ export default function ResetScreen() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Ionicons name="refresh-circle-outline" size={20} color="#D96C2D" />
-            <Text style={styles.cardTitle}>Réinitialiser la session</Text>
+            <Text style={styles.cardTitle}>{t('auth.reset.resetSessionTitle')}</Text>
           </View>
-          <Text style={styles.hint}>
-            Si tu as un compte bloqué, un token périmé, ou un message
-            "compte non actif", efface les données locales pour repartir de zéro.
-          </Text>
+          <Text style={styles.hint}>{t('auth.reset.resetHint')}</Text>
           <Pressable
             style={({ pressed }) => [styles.btn, styles.btnDanger, pressed && styles.pressed, clearing && styles.btnDisabled]}
             onPress={handleClearSession}
@@ -162,7 +161,7 @@ export default function ResetScreen() {
           >
             {clearing
               ? <ActivityIndicator size="small" color="#fff" />
-              : <Text style={styles.btnDangerText}>🗑️ Effacer toutes les données locales</Text>}
+              : <Text style={styles.btnDangerText}>{t('auth.reset.clearButton')}</Text>}
           </Pressable>
         </View>
 
@@ -170,15 +169,9 @@ export default function ResetScreen() {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Ionicons name="help-circle-outline" size={20} color="#8A6500" />
-            <Text style={styles.cardTitle}>Checklist de démarrage</Text>
+            <Text style={styles.cardTitle}>{t('auth.reset.checklistTitle')}</Text>
           </View>
-          {[
-            'Le backend Node.js est démarré (npm start)',
-            'Le téléphone et l\'ordi sont sur le même Wi-Fi',
-            'L\'IP dans constants/api.js correspond à ton ordi',
-            'Le port 5000 est bien celui du backend',
-            'La base de données (MongoDB) est démarrée',
-          ].map((item, i) => (
+          {t('auth.reset.checklist', { returnObjects: true }).map((item, i) => (
             <View key={i} style={styles.checkRow}>
               <Ionicons name="checkmark-outline" size={16} color="#D4A017" />
               <Text style={styles.checkText}>{item}</Text>
