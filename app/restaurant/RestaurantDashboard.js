@@ -12,10 +12,12 @@ import {
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { apiDelete, apiGet } from '../../services/apiClient';
 import { API_ENDPOINTS } from '../../constants/api';
+import i18n from '../../i18n';
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
@@ -109,14 +111,14 @@ const normalizeMenuItem = (item = {}) => {
     ...item,
     _id: item?._id || item?.id || '',
     id: item?.id || item?._id || '',
-    name: normalizeText(item?.name, 'Plat africain'),
+    name: normalizeText(item?.name, i18n.t('restaurant.dashboard.dishFallbackName')),
     description: normalizeText(
       item?.description,
-      'Plat africain préparé avec soin.'
+      i18n.t('restaurant.dashboard.dishFallbackDescription')
     ),
     price: normalizeNumber(item?.price, 0),
     category: normalizeText(item?.category),
-    cuisine: normalizeText(item?.cuisine, 'Africaine'),
+    cuisine: normalizeText(item?.cuisine, i18n.t('restaurant.menuScreen.cuisineFallback')),
     available: normalizeBoolean(item?.available, true),
     isPopular: normalizeBoolean(item?.isPopular, false),
     isRecommended: normalizeBoolean(item?.isRecommended, false),
@@ -164,6 +166,7 @@ const isRestaurantPending = (user) => {
 };
 
 export default function RestaurantDashboard() {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -220,7 +223,7 @@ export default function RestaurantDashboard() {
           ...safeRestaurant,
           _id: safeRestaurant?._id || safeRestaurant?.id,
           id: safeRestaurant?.id || safeRestaurant?._id,
-          name: normalizeText(safeRestaurant?.name, user?.name || 'Restaurant'),
+          name: normalizeText(safeRestaurant?.name, user?.name || t('restaurant.menuScreen.restaurantNameFallback')),
           currency: normalizeText(safeRestaurant?.currency, 'EUR'),
           cuisine: normalizeText(safeRestaurant?.cuisine),
           address: normalizeText(safeRestaurant?.address),
@@ -258,8 +261,8 @@ export default function RestaurantDashboard() {
       } catch (error) {
         console.log('Erreur dashboard restaurant :', error);
         Alert.alert(
-          'Erreur',
-          error?.message || 'Impossible de charger le dashboard restaurant.'
+          t('common.error'),
+          error?.message || t('restaurant.dashboard.errorLoadDashboardBody')
         );
         setRestaurant(null);
         setMenuItems([]);
@@ -269,7 +272,7 @@ export default function RestaurantDashboard() {
         setRefreshing(false);
       }
     },
-    [token, currentRole, user]
+    [token, currentRole, user, t]
   );
 
   useFocusEffect(
@@ -318,33 +321,33 @@ export default function RestaurantDashboard() {
   const handleDelete = useCallback(
     async (id) => {
       if (!token) {
-        Alert.alert('Erreur', 'Session invalide. Reconnecte-toi.');
+        Alert.alert(t('common.error'), t('restaurant.dashboard.errorSessionInvalidBody'));
         return;
       }
 
       if (!id) {
-        Alert.alert('Erreur', 'Plat introuvable.');
+        Alert.alert(t('common.error'), t('restaurant.dashboard.errorDishNotFoundBody'));
         return;
       }
 
       Alert.alert(
-        'Supprimer ce plat',
-        'Es-tu sûr de vouloir supprimer ce plat ?',
+        t('restaurant.menuScreen.deleteConfirmTitle'),
+        t('restaurant.dashboard.deleteConfirmBody'),
         [
-          { text: 'Annuler', style: 'cancel' },
+          { text: t('restaurant.settings.cancelButton'), style: 'cancel' },
           {
-            text: 'Supprimer',
+            text: t('restaurant.menuScreen.deleteButton'),
             style: 'destructive',
             onPress: async () => {
               try {
                 await apiDelete(API_ENDPOINTS.menu.byId(id), token);
                 setMenuItems((prev) => prev.filter((item) => item?._id !== id));
-                Alert.alert('Supprimé', 'Le plat a bien été supprimé.');
+                Alert.alert(t('restaurant.dashboard.deleteSuccessTitle'), t('restaurant.dashboard.deleteSuccessBody'));
               } catch (error) {
                 console.log('Erreur suppression menu :', error);
                 Alert.alert(
-                  'Erreur',
-                  error?.message || 'Impossible de supprimer ce plat.'
+                  t('common.error'),
+                  error?.message || t('restaurant.menuScreen.deleteErrorBody')
                 );
               }
             },
@@ -352,7 +355,7 @@ export default function RestaurantDashboard() {
         ]
       );
     },
-    [token]
+    [token, t]
   );
 
   const handleEdit = useCallback((item) => {
@@ -379,8 +382,8 @@ export default function RestaurantDashboard() {
   const handleAddItem = useCallback(() => {
     if (!restaurantId) {
       Alert.alert(
-        'Restaurant introuvable',
-        'Impossible de trouver le restaurant connecté.'
+        t('restaurant.dashboard.restaurantNotFoundTitle'),
+        t('restaurant.dashboard.restaurantNotFoundBody')
       );
       return;
     }
@@ -389,7 +392,7 @@ export default function RestaurantDashboard() {
       pathname: '/restaurant/AddMenuItem',
       params: { restaurantId },
     });
-  }, [restaurantId]);
+  }, [restaurantId, t]);
 
   const handleOpenOrders = useCallback(() => {
     router.push('/restaurant/restaurant-orders');
@@ -404,7 +407,7 @@ export default function RestaurantDashboard() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement...</Text>
+        <Text style={styles.loaderText}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -459,10 +462,10 @@ export default function RestaurantDashboard() {
       </View>
 
       <View style={styles.header}>
-        <Text style={styles.eyebrow}>Espace partenaire</Text>
-        <Text style={styles.title}>Dashboard Restaurant</Text>
+        <Text style={styles.eyebrow}>{t('restaurant.dashboard.eyebrow')}</Text>
+        <Text style={styles.title}>{t('restaurant.dashboard.title')}</Text>
         <Text style={styles.subtitle}>
-          Gère ton menu, ton activité commerciale et tes commandes en temps réel.
+          {t('restaurant.dashboard.subtitle')}
         </Text>
       </View>
 
@@ -477,11 +480,11 @@ export default function RestaurantDashboard() {
 
         <View style={styles.heroContent}>
           <Text style={styles.heroTitle}>
-            {restaurant?.name || user?.name || 'Ton restaurant sur AFROEAT'}
+            {restaurant?.name || user?.name || t('restaurant.dashboard.heroTitleFallback')}
           </Text>
           <Text style={styles.heroText}>
             {restaurant?.description ||
-              'Pilote ton catalogue, améliore ta vitrine et garde le contrôle sur ton exploitation.'}
+              t('restaurant.dashboard.heroTextFallback')}
           </Text>
 
           <View style={styles.heroTags}>
@@ -505,7 +508,7 @@ export default function RestaurantDashboard() {
                     : styles.heroTagTextClosed,
                 ]}
               >
-                {restaurant?.isOpen ? 'Ouvert' : 'Fermé'}
+                {restaurant?.isOpen ? t('restaurant.profile.openLabel') : t('restaurant.profile.closedLabel')}
               </Text>
             </View>
           </View>
@@ -515,41 +518,41 @@ export default function RestaurantDashboard() {
       <View style={styles.statsGrid}>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{dashboardStats.totalItems}</Text>
-          <Text style={styles.statLabel}>Plats</Text>
+          <Text style={styles.statLabel}>{t('restaurant.dashboard.statDishesLabel')}</Text>
         </View>
 
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{dashboardStats.availableItems}</Text>
-          <Text style={styles.statLabel}>Disponibles</Text>
+          <Text style={styles.statLabel}>{t('restaurant.menuScreen.availableLabel')}</Text>
         </View>
 
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{dashboardStats.totalOrders}</Text>
-          <Text style={styles.statLabel}>Commandes</Text>
+          <Text style={styles.statLabel}>{t('restaurant.orders.title')}</Text>
         </View>
 
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{dashboardStats.pendingOrders}</Text>
-          <Text style={styles.statLabel}>En cours</Text>
+          <Text style={styles.statLabel}>{t('restaurant.dashboard.statInProgressLabel')}</Text>
         </View>
 
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{dashboardStats.popularItems}</Text>
-          <Text style={styles.statLabel}>Populaires</Text>
+          <Text style={styles.statLabel}>{t('restaurant.menuScreen.popularLabel')}</Text>
         </View>
 
         <View style={styles.statCard}>
           <Text style={styles.statValue}>
             {formatPrice(dashboardStats.revenue, restaurant?.currency || 'EUR')}
           </Text>
-          <Text style={styles.statLabel}>CA brut</Text>
+          <Text style={styles.statLabel}>{t('restaurant.dashboard.statRevenueLabel')}</Text>
         </View>
       </View>
 
       <View style={styles.quickButtonsRow}>
         <Pressable style={styles.quickButtonPrimary} onPress={handleAddItem}>
           <Ionicons name="add-circle-outline" size={20} color="#1E1E1E" />
-          <Text style={styles.quickButtonPrimaryText}>Ajouter un plat</Text>
+          <Text style={styles.quickButtonPrimaryText}>{t('restaurant.menuScreen.addDishButton')}</Text>
         </Pressable>
 
         <Pressable
@@ -557,13 +560,13 @@ export default function RestaurantDashboard() {
           onPress={handleOpenOrders}
         >
           <Ionicons name="receipt-outline" size={20} color="#1F6F43" />
-          <Text style={styles.quickButtonSecondaryText}>Voir les commandes</Text>
+          <Text style={styles.quickButtonSecondaryText}>{t('restaurant.dashboard.viewOrdersButton')}</Text>
         </Pressable>
       </View>
 
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Mon menu</Text>
-        <Text style={styles.sectionCount}>{menuItems.length} plats</Text>
+        <Text style={styles.sectionTitle}>{t('restaurant.dashboard.myMenuSectionTitle')}</Text>
+        <Text style={styles.sectionCount}>{t('restaurant.dashboard.dishesCount', { count: menuItems.length })}</Text>
       </View>
     </View>
   );
@@ -573,7 +576,7 @@ export default function RestaurantDashboard() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>Chargement du dashboard...</Text>
+        <Text style={styles.loaderText}>{t('restaurant.dashboard.dashboardLoadingText')}</Text>
       </View>
     );
   }
@@ -588,9 +591,9 @@ export default function RestaurantDashboard() {
             size={52}
             color="#C8BBAA"
           />
-          <Text style={styles.emptyTitle}>Aucun restaurant connecté</Text>
+          <Text style={styles.emptyTitle}>{t('restaurant.dashboard.noRestaurantTitle')}</Text>
           <Text style={styles.emptyText}>
-            Connecte-toi avec un compte restaurant pour accéder à cet espace.
+            {t('restaurant.dashboard.noRestaurantText')}
           </Text>
         </View>
       </FadeInView>
@@ -610,7 +613,7 @@ export default function RestaurantDashboard() {
           <View style={styles.card}>
             <View style={styles.cardTopRow}>
               <Text style={styles.name} numberOfLines={1}>
-                {item?.name || 'Plat africain'}
+                {item?.name || t('restaurant.dashboard.dishFallbackName')}
               </Text>
 
               <View
@@ -629,13 +632,13 @@ export default function RestaurantDashboard() {
                       : styles.statusBadgeTextUnavailable,
                   ]}
                 >
-                  {item?.available !== false ? 'Disponible' : 'Indisponible'}
+                  {item?.available !== false ? t('restaurant.menuScreen.availableBadge') : t('restaurant.menuScreen.unavailableBadge')}
                 </Text>
               </View>
             </View>
 
             <Text style={styles.desc} numberOfLines={2}>
-              {item?.description || 'Plat africain préparé avec soin.'}
+              {item?.description || t('restaurant.dashboard.dishFallbackDescription')}
             </Text>
 
             <View style={styles.metaRow}>
@@ -656,13 +659,13 @@ export default function RestaurantDashboard() {
             <View style={styles.tagsRow}>
               {!!item?.isPopular && (
                 <View style={styles.tag}>
-                  <Text style={styles.tagText}>Populaire</Text>
+                  <Text style={styles.tagText}>{t('restaurant.menuScreen.popularBadge')}</Text>
                 </View>
               )}
 
               {!!item?.isRecommended && (
                 <View style={styles.tag}>
-                  <Text style={styles.tagText}>Recommandé</Text>
+                  <Text style={styles.tagText}>{t('restaurant.menuScreen.recommendedBadge')}</Text>
                 </View>
               )}
 
@@ -679,7 +682,7 @@ export default function RestaurantDashboard() {
                 onPress={() => handleEdit(item)}
               >
                 <Ionicons name="create-outline" size={16} color="#1F6F43" />
-                <Text style={styles.secondaryActionText}>Modifier</Text>
+                <Text style={styles.secondaryActionText}>{t('restaurant.menuScreen.editButton')}</Text>
               </Pressable>
 
               <Pressable
@@ -687,7 +690,7 @@ export default function RestaurantDashboard() {
                 onPress={() => handleDelete(item?._id)}
               >
                 <Ionicons name="trash-outline" size={16} color="#FFFFFF" />
-                <Text style={styles.deleteText}>Supprimer</Text>
+                <Text style={styles.deleteText}>{t('restaurant.menuScreen.deleteButton')}</Text>
               </Pressable>
             </View>
           </View>
@@ -700,13 +703,13 @@ export default function RestaurantDashboard() {
               size={46}
               color="#C8BBAA"
             />
-            <Text style={styles.emptyTitle}>Aucun plat disponible</Text>
+            <Text style={styles.emptyTitle}>{t('restaurant.dashboard.emptyMenuTitle')}</Text>
             <Text style={styles.emptyText}>
-              Commence par ajouter tes premiers plats pour remplir ton menu.
+              {t('restaurant.dashboard.emptyMenuText')}
             </Text>
 
             <Pressable style={styles.emptyButton} onPress={handleAddItem}>
-              <Text style={styles.emptyButtonText}>Ajouter un premier plat</Text>
+              <Text style={styles.emptyButtonText}>{t('restaurant.dashboard.addFirstDishButton')}</Text>
             </Pressable>
           </View>
         }
