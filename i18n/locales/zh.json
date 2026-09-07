@@ -576,6 +576,18 @@
       "ctaTitle": "您的 AFROEAT 空间已就绪",
       "ctaText": "继续您的旅程，管理您的偏好设置，准备未来的订单，享受为持续演进而打造的高级导航体验。",
       "ctaButton": "继续我的体验"
+    },
+    "menu": {
+      "accountSectionTitle": "我的账户",
+      "personalInfoLabel": "个人信息",
+      "paymentSubtitle": "管理付款方式",
+      "preferencesSectionTitle": "偏好设置",
+      "helpSubtitle": "获取账户帮助",
+      "logoutLabel": "退出登录",
+      "statusActiveLabel": "账户已激活",
+      "statusClientDefaultLabel": "客户账户",
+      "guestTitle": "我的客户账户",
+      "guestText": "登录以访问您的订单、地址、个人资料和完整的AFROEAT客户体验。"
     }
   },
   "languages": {

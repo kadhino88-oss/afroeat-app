@@ -576,6 +576,18 @@
       "ctaTitle": "Your AFROEAT space is ready",
       "ctaText": "Continue your journey, manage your preferences, prepare future orders, and enjoy a premium navigation built to evolve.",
       "ctaButton": "Continue my experience"
+    },
+    "menu": {
+      "accountSectionTitle": "My account",
+      "personalInfoLabel": "Personal information",
+      "paymentSubtitle": "Manage payment methods",
+      "preferencesSectionTitle": "Preferences",
+      "helpSubtitle": "Get help with your account",
+      "logoutLabel": "Log out",
+      "statusActiveLabel": "Active account",
+      "statusClientDefaultLabel": "Client account",
+      "guestTitle": "My client account",
+      "guestText": "Sign in to access your orders, addresses, profile and the full AFROEAT customer experience."
     }
   },
   "languages": {

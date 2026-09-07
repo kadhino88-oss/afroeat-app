@@ -13,6 +13,7 @@ import {
 import { router, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../i18n';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -92,7 +93,7 @@ const getDisplayName = (user) => {
     normalizeText(user?.fullName) ||
     normalizeText(fullName) ||
     normalizeText(user?.prenom) ||
-    'Mon compte'
+    i18n.t('profile.menu.accountSectionTitle')
   );
 };
 
@@ -164,12 +165,12 @@ const getAccountStatus = (user, auth) => {
   );
 };
 
-const getAccountStatusStyle = (status) => {
+const getAccountStatusStyle = (status, t) => {
   switch (normalizeStatus(status)) {
     case 'active':
     case 'approved':
       return {
-        label: 'Compte actif',
+        label: t('profile.menu.statusActiveLabel'),
         bg: '#E8F5ED',
         text: '#1F6F43',
         icon: 'checkmark-circle-outline',
@@ -180,7 +181,7 @@ const getAccountStatusStyle = (status) => {
     case 'pending-approval':
     case 'pending_approval':
       return {
-        label: 'En attente',
+        label: t('order.status.pending'),
         bg: '#FFF3D8',
         text: '#8A6500',
         icon: 'time-outline',
@@ -190,7 +191,7 @@ const getAccountStatusStyle = (status) => {
     case 'blocked':
     case 'disabled':
       return {
-        label: 'Suspendu',
+        label: t('admin.users.statusSuspendedLabel'),
         bg: '#FDECEC',
         text: '#B83232',
         icon: 'ban-outline',
@@ -198,7 +199,7 @@ const getAccountStatusStyle = (status) => {
 
     default:
       return {
-        label: 'Compte client',
+        label: t('profile.menu.statusClientDefaultLabel'),
         bg: '#F3ECE4',
         text: '#555555',
         icon: 'person-outline',
@@ -289,8 +290,8 @@ export default function ProfileScreen() {
   const initials = useMemo(() => getInitials(user), [user]);
   const accountStatus = useMemo(() => getAccountStatus(user, auth), [user, auth]);
   const statusStyle = useMemo(
-    () => getAccountStatusStyle(accountStatus),
-    [accountStatus]
+    () => getAccountStatusStyle(accountStatus, t),
+    [accountStatus, t]
   );
 
   const roleRedirect = useMemo(() => getRoleRedirect(currentRole), [currentRole]);
@@ -355,10 +356,9 @@ export default function ProfileScreen() {
               <Ionicons name="person-circle-outline" size={68} color="#111111" />
             </View>
 
-            <Text style={styles.guestTitle}>Mon compte client</Text>
+            <Text style={styles.guestTitle}>{t('profile.menu.guestTitle')}</Text>
             <Text style={styles.guestText}>
-              Connecte-toi pour accéder à tes commandes, tes adresses, ton profil
-              et toute l’expérience client AFROEAT.
+              {t('profile.menu.guestText')}
             </Text>
 
             <Pressable
@@ -368,7 +368,7 @@ export default function ProfileScreen() {
               ]}
               onPress={handleGoLogin}
             >
-              <Text style={styles.primaryGuestButtonText}>Se connecter</Text>
+              <Text style={styles.primaryGuestButtonText}>{t('auth.login.submit')}</Text>
             </Pressable>
 
             <Pressable
@@ -378,7 +378,7 @@ export default function ProfileScreen() {
               ]}
               onPress={handleGoRegister}
             >
-              <Text style={styles.secondaryGuestButtonText}>Créer un compte</Text>
+              <Text style={styles.secondaryGuestButtonText}>{t('auth.login.createAccount')}</Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -434,27 +434,27 @@ export default function ProfileScreen() {
         <View style={styles.quickActions}>
           <QuickActionCard
             icon="receipt-outline"
-            label="Mes commandes"
+            label={t('orders.title')}
             onPress={() => router.push('/(tabs)/orders')}
           />
           <QuickActionCard
             icon="heart-outline"
-            label="Favoris"
+            label={t('nav.favorites')}
             onPress={() => router.push('/favorites')}
           />
           <QuickActionCard
             icon="location-outline"
-            label="Adresses"
+            label={t('profile.home.quickAddressTitle')}
             onPress={() => router.push('/profile/address')}
           />
         </View>
 
         <View style={styles.menuSection}>
-          <Text style={styles.sectionTitle}>Mon compte</Text>
+          <Text style={styles.sectionTitle}>{t('profile.menu.accountSectionTitle')}</Text>
 
           <MenuRow
             icon="person-outline"
-            label="Informations personnelles"
+            label={t('profile.menu.personalInfoLabel')}
             subtitle={displayEmail || undefined}
             onPress={() => router.push('/profile/info')}
           />
@@ -462,7 +462,7 @@ export default function ProfileScreen() {
           {!!displayPhone && (
             <MenuRow
               icon="call-outline"
-              label="Téléphone"
+              label={t('restaurant.profile.phoneLabel')}
               subtitle={displayPhone}
               onPress={() => router.push('/profile/info')}
             />
@@ -471,7 +471,7 @@ export default function ProfileScreen() {
           {!!displayAddress && (
             <MenuRow
               icon="location-outline"
-              label="Adresse"
+              label={t('restaurant.profile.addressLabel')}
               subtitle={displayAddress}
               onPress={() => router.push('/profile/address')}
             />
@@ -479,14 +479,14 @@ export default function ProfileScreen() {
 
           <MenuRow
             icon="card-outline"
-            label="Paiement"
-            subtitle="Gérer les moyens de paiement"
+            label={t('profile.home.quickPaymentTitle')}
+            subtitle={t('profile.menu.paymentSubtitle')}
             onPress={() => router.push('/profile/payement')}
           />
         </View>
 
         <View style={styles.menuSection}>
-          <Text style={styles.sectionTitle}>Préférences</Text>
+          <Text style={styles.sectionTitle}>{t('profile.menu.preferencesSectionTitle')}</Text>
 
           <MenuRow
             icon="language-outline"
@@ -497,8 +497,8 @@ export default function ProfileScreen() {
 
           <MenuRow
             icon="help-circle-outline"
-            label="Aide & Support"
-            subtitle="Obtenir de l’aide sur ton compte"
+            label={t('profile.help.topTitle')}
+            subtitle={t('profile.menu.helpSubtitle')}
             onPress={() => router.push('/profile/help')}
           />
         </View>
@@ -506,7 +506,7 @@ export default function ProfileScreen() {
         <View style={styles.menuSection}>
           <MenuRow
             icon="log-out-outline"
-            label="Se déconnecter"
+            label={t('profile.menu.logoutLabel')}
             onPress={handleLogout}
             danger
           />

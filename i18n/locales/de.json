@@ -576,6 +576,18 @@
       "ctaTitle": "Dein AFROEAT-Bereich ist bereit",
       "ctaText": "Setze deine Reise fort, verwalte deine Einstellungen, bereite zukünftige Bestellungen vor und genieße eine Premium-Navigation, die mit dir wächst.",
       "ctaButton": "Meine Erfahrung fortsetzen"
+    },
+    "menu": {
+      "accountSectionTitle": "Mein Konto",
+      "personalInfoLabel": "Persönliche Informationen",
+      "paymentSubtitle": "Zahlungsmethoden verwalten",
+      "preferencesSectionTitle": "Einstellungen",
+      "helpSubtitle": "Hilfe zu deinem Konto erhalten",
+      "logoutLabel": "Abmelden",
+      "statusActiveLabel": "Aktives Konto",
+      "statusClientDefaultLabel": "Kundenkonto",
+      "guestTitle": "Mein Kundenkonto",
+      "guestText": "Melde dich an, um auf deine Bestellungen, Adressen, dein Profil und das gesamte AFROEAT-Kundenerlebnis zuzugreifen."
     }
   },
   "languages": {
