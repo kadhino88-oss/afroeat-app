@@ -696,7 +696,15 @@
     "close": "Close notifications",
     "premiumBadge": "Premium notifications",
     "heroTitle": "AFROEAT notification center",
-    "heroText": "This space is ready to host alerts, order status, promotions, delivery updates and important messages without disrupting the main customer flow."
+    "heroText": "This space is ready to host alerts, order status, promotions, delivery updates and important messages without disrupting the main customer flow.",
+    "demoNotifications": {
+      "welcomeTitle": "Welcome to AFROEAT",
+      "welcomeDescription": "Discover African restaurants, grocery stores and shops around you.",
+      "orderTrackingTitle": "Order tracking",
+      "orderTrackingDescription": "Find updates about your orders and their delivery here.",
+      "upcomingOffersTitle": "Upcoming offers",
+      "upcomingOffersDescription": "Partner promotions and news will appear here soon."
+    }
   },
   "order": {
     "loading": "Loading order...",

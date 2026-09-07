@@ -69,30 +69,27 @@ const getRoleRedirect = (currentRole) => {
  * =========================================================
  */
 
-const notifications = [
+const NOTIFICATIONS_META = [
   {
     id: '1',
-    title: 'Bienvenue sur AFROEAT',
-    description:
-      'Découvre les restaurants africains, épiceries et boutiques autour de toi.',
+    titleKey: 'modal.demoNotifications.welcomeTitle',
+    descriptionKey: 'modal.demoNotifications.welcomeDescription',
     icon: 'sparkles-outline',
     color: '#D4A017',
     bg: '#FFF3D8',
   },
   {
     id: '2',
-    title: 'Suivi des commandes',
-    description:
-      'Retrouve ici les mises à jour liées à tes commandes et à leur livraison.',
+    titleKey: 'modal.demoNotifications.orderTrackingTitle',
+    descriptionKey: 'modal.demoNotifications.orderTrackingDescription',
     icon: 'receipt-outline',
     color: '#1F6F43',
     bg: '#E8F5ED',
   },
   {
     id: '3',
-    title: 'Offres à venir',
-    description:
-      'Les promotions et nouveautés partenaires apparaîtront bientôt dans cet espace.',
+    titleKey: 'modal.demoNotifications.upcomingOffersTitle',
+    descriptionKey: 'modal.demoNotifications.upcomingOffersDescription',
     icon: 'gift-outline',
     color: '#D96C2D',
     bg: '#FFF0E8',
@@ -120,7 +117,15 @@ export default function ModalScreen() {
     return <Redirect href={roleRedirect} />;
   }
 
-  const safeNotifications = useMemo(() => notifications, []);
+  const safeNotifications = useMemo(
+    () =>
+      NOTIFICATIONS_META.map((item) => ({
+        ...item,
+        title: t(item.titleKey),
+        description: t(item.descriptionKey),
+      })),
+    [t]
+  );
 
   const handleClose = useCallback(() => {
     if (router.canGoBack()) {

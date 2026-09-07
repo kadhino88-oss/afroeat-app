@@ -696,7 +696,15 @@
     "close": "Chiudi notifiche",
     "premiumBadge": "Notifiche premium",
     "heroTitle": "Centro notifiche AFROEAT",
-    "heroText": "Questo spazio è pronto ad accogliere avvisi, stato degli ordini, promozioni, aggiornamenti di consegna e messaggi importanti senza interrompere il flusso principale del cliente."
+    "heroText": "Questo spazio è pronto ad accogliere avvisi, stato degli ordini, promozioni, aggiornamenti di consegna e messaggi importanti senza interrompere il flusso principale del cliente.",
+    "demoNotifications": {
+      "welcomeTitle": "Benvenuto su AFROEAT",
+      "welcomeDescription": "Scopri ristoranti africani, negozi di alimentari e negozi vicino a te.",
+      "orderTrackingTitle": "Tracciamento ordini",
+      "orderTrackingDescription": "Trova qui gli aggiornamenti sui tuoi ordini e sulla loro consegna.",
+      "upcomingOffersTitle": "Offerte in arrivo",
+      "upcomingOffersDescription": "Le promozioni e le novità dei partner appariranno presto in questo spazio."
+    }
   },
   "order": {
     "loading": "Caricamento ordine...",
