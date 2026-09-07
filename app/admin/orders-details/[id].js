@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
@@ -15,8 +16,18 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../../components/FadeInView';
 import { useAuth } from '../../../context/AuthContext';
 import { getAdminOrderById } from '../../../services/adminService';
+import i18n from '../../../i18n';
 
 const LIVE_REFRESH_MS = 15000;
+
+const DATE_LOCALE_MAP = {
+  fr: 'fr-FR',
+  en: 'en-US',
+  de: 'de-DE',
+  es: 'es-ES',
+  it: 'it-IT',
+  zh: 'zh-CN',
+};
 
 /**
  * =========================================================
@@ -71,15 +82,15 @@ const formatPrice = (value, currency = 'EUR') => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -94,61 +105,61 @@ const getSafeParam = (value) => {
   return normalizeText(value);
 };
 
-const getStatusStyle = (status) => {
+const getStatusStyle = (status, t) => {
   switch (normalizeText(status)) {
     case 'Livrée':
       return {
         bg: '#E8F5ED',
         text: '#1F6F43',
-        label: 'Livrée',
+        label: t('order.status.delivered'),
         icon: 'checkmark-circle-outline',
       };
     case 'En livraison':
       return {
         bg: '#EAF3FF',
         text: '#245EA8',
-        label: 'En livraison',
+        label: t('order.status.on_the_way'),
         icon: 'bicycle-outline',
       };
     case 'En préparation':
       return {
         bg: '#FFF3D8',
         text: '#8A6500',
-        label: 'En préparation',
+        label: t('order.status.preparing'),
         icon: 'restaurant-outline',
       };
     case 'Confirmée':
       return {
         bg: '#EFE9FF',
         text: '#6D4CDB',
-        label: 'Confirmée',
+        label: t('order.status.confirmed'),
         icon: 'checkmark-done-outline',
       };
     case 'Annulée':
       return {
         bg: '#FDECEC',
         text: '#B83232',
-        label: 'Annulée',
+        label: t('order.status.cancelled'),
         icon: 'close-circle-outline',
       };
     default:
       return {
         bg: '#FFF0E8',
         text: '#D96C2D',
-        label: normalizeText(status, 'En attente'),
+        label: normalizeText(status) ? status : t('order.status.pending'),
         icon: 'time-outline',
       };
   }
 };
 
-const getPaymentStyle = (value) => {
+const getPaymentStyle = (value, t) => {
   const normalized = normalizeText(value).toLowerCase();
 
   if (normalized === 'paid' || normalized === 'payé') {
     return {
       bg: '#E8F5ED',
       text: '#1F6F43',
-      label: 'Payé',
+      label: t('admin.orders.paymentPaidLabel'),
       icon: 'card-outline',
     };
   }
@@ -157,7 +168,7 @@ const getPaymentStyle = (value) => {
     return {
       bg: '#FDECEC',
       text: '#B83232',
-      label: 'Non payé',
+      label: t('admin.orders.paymentUnpaidLabel'),
       icon: 'alert-circle-outline',
     };
   }
@@ -166,7 +177,7 @@ const getPaymentStyle = (value) => {
     return {
       bg: '#EAF3FF',
       text: '#245EA8',
-      label: 'Remboursé',
+      label: t('admin.orders.paymentRefundedLabel'),
       icon: 'swap-horizontal-outline',
     };
   }
@@ -174,12 +185,12 @@ const getPaymentStyle = (value) => {
   return {
     bg: '#F4F4F4',
     text: '#555555',
-    label: normalizeText(value, 'Inconnu'),
+    label: normalizeText(value, t('admin.users.statusUnknownLabel')),
     icon: 'help-circle-outline',
   };
 };
 
-const getRiskStyle = (order) => {
+const getRiskStyle = (order, t) => {
   const status = normalizeText(order?.status);
   const payment = normalizeText(order?.paymentStatus).toLowerCase();
   const hasDriver = Boolean(order?.deliveryPerson?._id);
@@ -189,7 +200,7 @@ const getRiskStyle = (order) => {
     return {
       bg: '#FDECEC',
       text: '#B83232',
-      label: 'Élevé',
+      label: t('admin.restaurantDetails.riskHighLabel'),
       icon: 'alert-circle-outline',
     };
   }
@@ -198,7 +209,7 @@ const getRiskStyle = (order) => {
     return {
       bg: '#FFF3D8',
       text: '#8A6500',
-      label: 'Moyen',
+      label: t('admin.restaurantDetails.riskMediumLabel'),
       icon: 'warning-outline',
     };
   }
@@ -206,7 +217,7 @@ const getRiskStyle = (order) => {
   return {
     bg: '#E8F5ED',
     text: '#1F6F43',
-    label: 'Faible',
+    label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
   };
 };
@@ -227,7 +238,7 @@ const normalizeOrder = (payload) => {
     ...item,
     _id: item?._id || item?.id || null,
     id: item?.id || item?._id || null,
-    name: normalizeText(item?.name || item?.title || item?.menuItem?.name, 'Article'),
+    name: normalizeText(item?.name || item?.title || item?.menuItem?.name, i18n.t('admin.restaurantDetails.menuItemNameFallback')),
     price:
       item?.price !== undefined && item?.price !== null
         ? normalizeNumber(item?.price, 0)
@@ -242,8 +253,8 @@ const normalizeOrder = (payload) => {
           ...raw.restaurant,
           _id: raw.restaurant?._id || raw.restaurant?.id || null,
           id: raw.restaurant?.id || raw.restaurant?._id || null,
-          name: normalizeText(raw.restaurant?.name, 'Restaurant Afroeat'),
-          cuisine: normalizeText(raw.restaurant?.cuisine, 'Non définie'),
+          name: normalizeText(raw.restaurant?.name, i18n.t('admin.orders.restaurantNameFallback')),
+          cuisine: normalizeText(raw.restaurant?.cuisine, i18n.t('admin.orderDetails.cuisineUndefinedShort')),
           email: normalizeText(raw.restaurant?.email),
           owner:
             raw.restaurant?.owner && typeof raw.restaurant.owner === 'object'
@@ -253,7 +264,7 @@ const normalizeOrder = (payload) => {
                     raw.restaurant.owner?._id ||
                     raw.restaurant.owner?.id ||
                     null,
-                  name: normalizeText(raw.restaurant.owner?.name, 'Non renseigné'),
+                  name: normalizeText(raw.restaurant.owner?.name, i18n.t('profile.info.notProvided')),
                 }
               : null,
         }
@@ -265,7 +276,7 @@ const normalizeOrder = (payload) => {
           ...raw.user,
           _id: raw.user?._id || raw.user?.id || null,
           id: raw.user?.id || raw.user?._id || null,
-          name: normalizeText(raw.user?.name, 'Client inconnu'),
+          name: normalizeText(raw.user?.name, i18n.t('admin.orderDetails.unknownClientFallback')),
           email: normalizeText(raw.user?.email),
           phone: normalizeText(raw.user?.phone),
         }
@@ -277,7 +288,7 @@ const normalizeOrder = (payload) => {
           ...raw.deliveryPerson,
           _id: raw.deliveryPerson?._id || raw.deliveryPerson?.id || null,
           id: raw.deliveryPerson?.id || raw.deliveryPerson?._id || null,
-          name: normalizeText(raw.deliveryPerson?.name, 'Non assigné'),
+          name: normalizeText(raw.deliveryPerson?.name, i18n.t('admin.orderDetails.unassignedDriverFallback')),
           email: normalizeText(raw.deliveryPerson?.email),
           phone: normalizeText(raw.deliveryPerson?.phone),
         }
@@ -287,8 +298,8 @@ const normalizeOrder = (payload) => {
     ...raw,
     _id: raw?._id || raw?.id || null,
     id: raw?.id || raw?._id || null,
-    status: normalizeText(raw?.status, 'En attente'),
-    paymentStatus: normalizeText(raw?.paymentStatus, 'Non payé'),
+    status: normalizeText(raw?.status, i18n.t('order.status.pending')),
+    paymentStatus: normalizeText(raw?.paymentStatus, i18n.t('admin.orders.paymentUnpaidLabel')),
     currency: normalizeText(raw?.currency, 'EUR').toUpperCase(),
     totalPrice: normalizeNumber(raw?.totalPrice, 0),
     deliveryAddress: normalizeText(raw?.deliveryAddress),
@@ -351,6 +362,7 @@ const FlagBox = ({ label, value, accent, icon }) => (
  */
 
 export default function AdminOrderDetailsScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const auth = useAuth() || {};
 
@@ -378,7 +390,7 @@ export default function AdminOrderDetailsScreen() {
       if (!token || !orderId || !isAuthenticated || !isAdminRole(currentRole)) {
         setOrder(null);
         setErrorMessage(
-          !orderId ? 'Commande invalide.' : 'Session admin invalide.'
+          !orderId ? t('admin.orders.invalidOrderAlert') : t('admin.users.invalidSessionAlert')
         );
         setLoading(false);
         setRefreshing(false);
@@ -399,7 +411,7 @@ export default function AdminOrderDetailsScreen() {
         const safeOrder = normalizeOrder(data);
 
         if (!safeOrder?._id) {
-          throw new Error('Impossible de charger le détail de la commande.');
+          throw new Error(t('admin.orderDetails.fetchErrorFallback'));
         }
 
         setOrder(safeOrder);
@@ -408,7 +420,7 @@ export default function AdminOrderDetailsScreen() {
         console.log('Erreur admin order details :', error);
 
         const message =
-          error?.message || 'Impossible de charger le détail de la commande.';
+          error?.message || t('admin.orderDetails.fetchErrorFallback');
 
         if (!silent) {
           setOrder(null);
@@ -417,7 +429,7 @@ export default function AdminOrderDetailsScreen() {
         setErrorMessage(message);
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -425,7 +437,7 @@ export default function AdminOrderDetailsScreen() {
         setInitialLoaded(true);
       }
     },
-    [orderId, token, isAuthenticated, currentRole]
+    [orderId, token, isAuthenticated, currentRole, t]
   );
 
   useFocusEffect(
@@ -446,9 +458,9 @@ export default function AdminOrderDetailsScreen() {
     return () => clearInterval(interval);
   }, [canAccess, orderId, fetchOrder]);
 
-  const statusStyle = useMemo(() => getStatusStyle(order?.status), [order]);
-  const paymentStyle = useMemo(() => getPaymentStyle(order?.paymentStatus), [order]);
-  const riskStyle = useMemo(() => getRiskStyle(order), [order]);
+  const statusStyle = useMemo(() => getStatusStyle(order?.status, t), [order, t]);
+  const paymentStyle = useMemo(() => getPaymentStyle(order?.paymentStatus, t), [order, t]);
+  const riskStyle = useMemo(() => getRiskStyle(order, t), [order, t]);
 
   const orderCode = useMemo(() => {
     return String(order?._id || orderId || '').slice(-6).toUpperCase();
@@ -473,58 +485,58 @@ export default function AdminOrderDetailsScreen() {
 
   const liveRefreshLabel = useMemo(() => {
     if (!lastLiveRefresh) {
-      return 'En attente du premier refresh live';
+      return t('admin.ops.liveRefreshWaiting');
     }
 
-    return `Dernier refresh live : ${formatDateTime(lastLiveRefresh)}`;
-  }, [lastLiveRefresh]);
+    return t('admin.ops.liveRefreshLabel', { date: formatDateTime(lastLiveRefresh) });
+  }, [lastLiveRefresh, t]);
 
   const quickFlags = useMemo(() => {
     return [
       {
         key: 'status',
-        label: 'Statut',
+        label: t('restaurant.profile.statusLabel'),
         value: statusStyle.label,
         accent: statusStyle.text,
         icon: statusStyle.icon,
       },
       {
         key: 'payment',
-        label: 'Paiement',
+        label: t('admin.orders.paymentFilterTitle'),
         value: paymentStyle.label,
         accent: paymentStyle.text,
         icon: paymentStyle.icon,
       },
       {
         key: 'delivery',
-        label: 'Livraison',
-        value: order?.deliveryPerson?._id ? 'Assignée' : 'Non assignée',
+        label: t('restaurant.profile.deliveryLabel'),
+        value: order?.deliveryPerson?._id ? t('admin.orderDetails.deliveryAssignedValue') : t('admin.orderDetails.deliveryUnassignedValue'),
         accent: order?.deliveryPerson?._id ? '#1F6F43' : '#B83232',
         icon: 'bicycle-outline',
       },
       {
         key: 'items',
-        label: 'Articles',
+        label: t('admin.orderDetails.itemsLabel'),
         value: String(itemCount),
         accent: '#245EA8',
         icon: 'bag-handle-outline',
       },
       {
         key: 'risk',
-        label: 'Risque',
+        label: t('admin.driverDetails.riskLabel'),
         value: riskStyle.label,
         accent: riskStyle.text,
         icon: riskStyle.icon,
       },
       {
         key: 'amount',
-        label: 'Montant',
+        label: t('admin.orderDetails.amountLabel'),
         value: formatPrice(order?.totalPrice, order?.currency || 'EUR'),
         accent: '#D96C2D',
         icon: 'cash-outline',
       },
     ];
-  }, [statusStyle, paymentStyle, order, itemCount, riskStyle]);
+  }, [statusStyle, paymentStyle, order, itemCount, riskStyle, t]);
 
   const handleGoBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -546,7 +558,7 @@ export default function AdminOrderDetailsScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement du détail commande...</Text>
+        <Text style={styles.loaderText}>{t('admin.orderDetails.loaderText')}</Text>
       </View>
     );
   }
@@ -573,11 +585,11 @@ export default function AdminOrderDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
-          <Text style={styles.emptyTitle}>Commande invalide</Text>
-          <Text style={styles.emptyText}>Identifiant commande manquant.</Text>
+          <Text style={styles.emptyTitle}>{t('admin.orderDetails.notFoundTitleInvalid')}</Text>
+          <Text style={styles.emptyText}>{t('admin.orderDetails.missingIdText')}</Text>
 
           <Pressable style={styles.retryButton} onPress={handleGoBack}>
-            <Text style={styles.retryButtonText}>Retour</Text>
+            <Text style={styles.retryButtonText}>{t('admin.userDetails.backButton')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -590,9 +602,9 @@ export default function AdminOrderDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
-          <Text style={styles.emptyTitle}>Commande introuvable</Text>
+          <Text style={styles.emptyTitle}>{t('admin.orderDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
-            {errorMessage || 'Impossible de charger cette commande.'}
+            {errorMessage || t('admin.orderDetails.fetchErrorEmptyText')}
           </Text>
 
           <Pressable
@@ -608,14 +620,14 @@ export default function AdminOrderDetailsScreen() {
             ) : (
               <>
                 <Ionicons name="refresh-outline" size={18} color="#FFFFFF" />
-                <Text style={styles.retryButtonText}>Réessayer</Text>
+                <Text style={styles.retryButtonText}>{t('restaurant.retry')}</Text>
               </>
             )}
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
             <Ionicons name="arrow-back" size={16} color="#1F6F43" />
-            <Text style={styles.backLinkText}>Retour aux commandes</Text>
+            <Text style={styles.backLinkText}>{t('admin.orderDetails.backToOrdersLink')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -656,10 +668,10 @@ export default function AdminOrderDetailsScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Admin</Text>
-          <Text style={styles.title}>Commande #{orderCode || '------'}</Text>
+          <Text style={styles.eyebrow}>{t('admin.restaurantDetails.eyebrow')}</Text>
+          <Text style={styles.title}>{t('admin.orderDetails.orderTitle', { code: orderCode || '------' })}</Text>
           <Text style={styles.subtitle}>
-            Vue détaillée de la commande pour supervision, support premium et exploitation.
+            {t('admin.orderDetails.subtitleOrder')}
           </Text>
         </View>
 
@@ -667,7 +679,7 @@ export default function AdminOrderDetailsScreen() {
           <View style={styles.liveMonitorHeader}>
             <View style={styles.liveMonitorTitleWrap}>
               <Ionicons name="radio-outline" size={18} color="#245EA8" />
-              <Text style={styles.liveMonitorTitle}>Order Intelligence Panel</Text>
+              <Text style={styles.liveMonitorTitle}>{t('admin.orderDetails.liveMonitorTitleOrder')}</Text>
             </View>
 
             <View style={styles.liveBadge}>
@@ -676,8 +688,7 @@ export default function AdminOrderDetailsScreen() {
           </View>
 
           <Text style={styles.liveMonitorText}>
-            Cette fiche est la base premium AFROEAT pour le suivi des commandes,
-            la supervision opérationnelle, les paiements et la traçabilité support.
+            {t('admin.orderDetails.liveMonitorTextOrder')}
           </Text>
 
           <Text style={styles.liveMonitorSubText}>{liveRefreshLabel}</Text>
@@ -686,13 +697,13 @@ export default function AdminOrderDetailsScreen() {
         <View style={styles.heroCard}>
           <View style={styles.heroLeft}>
             <Text style={styles.heroTitle}>
-              {normalizeText(order?.restaurant?.name, 'Restaurant Afroeat')}
+              {normalizeText(order?.restaurant?.name, t('admin.orders.restaurantNameFallback'))}
             </Text>
             <Text style={styles.heroText}>
-              Créée le {formatDateTime(order?.createdAt)}
+              {t('admin.orderDetails.createdOnHero', { date: formatDateTime(order?.createdAt) })}
             </Text>
             <Text style={styles.heroSubText}>
-              Client : {normalizeText(order?.user?.name, 'Client inconnu')}
+              {t('admin.orders.customerLabel', { name: normalizeText(order?.user?.name, t('admin.orderDetails.unknownClientFallback')) })}
             </Text>
           </View>
 
@@ -726,13 +737,13 @@ export default function AdminOrderDetailsScreen() {
             >
               <Ionicons name={riskStyle.icon} size={14} color={riskStyle.text} />
               <Text style={[styles.badgeText, { color: riskStyle.text }]}>
-                Risque {riskStyle.label}
+                {t('admin.restaurantDetails.riskBadgeLabel', { level: riskStyle.label })}
               </Text>
             </View>
           </View>
         </View>
 
-        <InfoCard title="Indicateurs admin">
+        <InfoCard title={t('admin.restaurantDetails.adminIndicatorsTitle')}>
           <View style={styles.flagGrid}>
             {quickFlags.map((flag) => (
               <FlagBox
@@ -746,125 +757,125 @@ export default function AdminOrderDetailsScreen() {
           </View>
         </InfoCard>
 
-        <InfoCard title="Résumé commande">
+        <InfoCard title={t('admin.orderDetails.orderSummaryTitle')}>
           <MetaRow
             icon="receipt-outline"
-            label="Référence"
+            label={t('admin.orderDetails.referenceLabel')}
             value={`#${orderCode || '------'}`}
           />
           <MetaRow
             icon="cash-outline"
-            label="Total"
+            label={t('admin.orderDetails.totalLabel')}
             value={formatPrice(order?.totalPrice, order?.currency || 'EUR')}
           />
           <MetaRow
             icon="card-outline"
-            label="Paiement"
+            label={t('admin.orders.paymentFilterTitle')}
             value={paymentStyle.label}
             valueStyle={{ color: paymentStyle.text, fontWeight: '900' }}
           />
           <MetaRow
             icon="time-outline"
-            label="Créée le"
+            label={t('admin.orderDetails.createdOnFieldLabelFem')}
             value={formatDateTime(order?.createdAt)}
           />
           <MetaRow
             icon="refresh-outline"
-            label="Mise à jour"
+            label={t('admin.orderDetails.updatedFieldLabelFem')}
             value={formatDateTime(order?.updatedAt)}
           />
           <MetaRow
             icon="location-outline"
-            label="Adresse"
-            value={normalizeText(order?.deliveryAddress, 'Non renseignée')}
+            label={t('restaurant.profile.addressLabel')}
+            value={normalizeText(order?.deliveryAddress, t('restaurant.profile.cityFallback'))}
             multiline
           />
           <MetaRow
             icon="document-text-outline"
-            label="Notes"
-            value={normalizeText(order?.notes, 'Aucune note')}
+            label={t('admin.orderDetails.notesFieldLabel')}
+            value={normalizeText(order?.notes, t('admin.orderDetails.noNotesValue'))}
             multiline
           />
         </InfoCard>
 
-        <InfoCard title="Restaurant">
+        <InfoCard title={t('admin.orderDetails.restaurantSectionTitle')}>
           <MetaRow
             icon="storefront-outline"
-            label="Nom"
-            value={normalizeText(order?.restaurant?.name, 'Restaurant inconnu')}
+            label={t('restaurant.profile.nameLabel')}
+            value={normalizeText(order?.restaurant?.name, t('admin.orderDetails.unknownRestaurantFallback'))}
           />
           <MetaRow
             icon="restaurant-outline"
-            label="Cuisine"
-            value={normalizeText(order?.restaurant?.cuisine, 'Non définie')}
+            label={t('restaurant.profile.cuisineLabel')}
+            value={normalizeText(order?.restaurant?.cuisine, t('admin.orderDetails.cuisineUndefinedShort'))}
           />
           <MetaRow
             icon="person-outline"
-            label="Owner"
-            value={normalizeText(order?.restaurant?.owner?.name, 'Non renseigné')}
+            label={t('admin.orderDetails.ownerFieldLabel')}
+            value={normalizeText(order?.restaurant?.owner?.name, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(order?.restaurant?.email, 'Non renseigné')}
+            label={t('admin.userDetails.emailFieldLabel')}
+            value={normalizeText(order?.restaurant?.email, t('profile.info.notProvided'))}
           />
         </InfoCard>
 
-        <InfoCard title="Client">
+        <InfoCard title={t('admin.orderDetails.clientSectionTitle')}>
           <MetaRow
             icon="person-circle-outline"
-            label="Nom"
-            value={normalizeText(order?.user?.name, 'Client inconnu')}
+            label={t('restaurant.profile.nameLabel')}
+            value={normalizeText(order?.user?.name, t('admin.orderDetails.unknownClientFallback'))}
           />
           <MetaRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(order?.user?.email, 'Non renseigné')}
+            label={t('admin.userDetails.emailFieldLabel')}
+            value={normalizeText(order?.user?.email, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="call-outline"
-            label="Téléphone"
-            value={normalizeText(order?.user?.phone, 'Non renseigné')}
+            label={t('admin.userDetails.phoneFieldLabel')}
+            value={normalizeText(order?.user?.phone, t('profile.info.notProvided'))}
           />
         </InfoCard>
 
-        <InfoCard title="Livreur">
+        <InfoCard title={t('admin.orderDetails.driverSectionTitle')}>
           <MetaRow
             icon="bicycle-outline"
-            label="Nom"
-            value={normalizeText(order?.deliveryPerson?.name, 'Non assigné')}
+            label={t('restaurant.profile.nameLabel')}
+            value={normalizeText(order?.deliveryPerson?.name, t('admin.orderDetails.unassignedDriverFallback'))}
           />
           <MetaRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(order?.deliveryPerson?.email, 'Non renseigné')}
+            label={t('admin.userDetails.emailFieldLabel')}
+            value={normalizeText(order?.deliveryPerson?.email, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="call-outline"
-            label="Téléphone"
-            value={normalizeText(order?.deliveryPerson?.phone, 'Non renseigné')}
+            label={t('admin.userDetails.phoneFieldLabel')}
+            value={normalizeText(order?.deliveryPerson?.phone, t('profile.info.notProvided'))}
           />
         </InfoCard>
 
         <InfoCard
-          title="Articles commandés"
+          title={t('admin.orderDetails.orderedItemsTitle')}
           footer={
             items.length > 0 ? (
               <View style={styles.summaryBox}>
                 <View style={styles.summaryRow}>
-                  <Text style={styles.summaryLabel}>Sous-total estimé</Text>
+                  <Text style={styles.summaryLabel}>{t('admin.orderDetails.estimatedSubtotalLabel')}</Text>
                   <Text style={styles.summaryValue}>
                     {formatPrice(subtotal, order?.currency || 'EUR')}
                   </Text>
                 </View>
 
                 <View style={styles.summaryRow}>
-                  <Text style={styles.summaryLabel}>Articles</Text>
+                  <Text style={styles.summaryLabel}>{t('admin.orderDetails.itemsLabel')}</Text>
                   <Text style={styles.summaryValue}>{itemCount}</Text>
                 </View>
 
                 <View style={[styles.summaryRow, styles.summaryRowLast]}>
-                  <Text style={styles.summaryLabelStrong}>Total commande</Text>
+                  <Text style={styles.summaryLabelStrong}>{t('admin.orderDetails.orderTotalLabel')}</Text>
                   <Text style={styles.summaryValueStrong}>
                     {formatPrice(order?.totalPrice, order?.currency || 'EUR')}
                   </Text>
@@ -877,7 +888,7 @@ export default function AdminOrderDetailsScreen() {
             items.map((item, index) => {
               const itemName = normalizeText(
                 item?.name || item?.title || item?.menuItem?.name,
-                `Article ${index + 1}`
+                t('admin.orderDetails.itemFallback', { index: index + 1 })
               );
               const quantity = normalizeNumber(item?.quantity, 0);
               const unitPrice = normalizeNumber(item?.price, 0);
@@ -895,15 +906,15 @@ export default function AdminOrderDetailsScreen() {
                     <Text style={styles.itemName}>{itemName}</Text>
 
                     <Text style={styles.itemMeta}>
-                      Qté : {quantity}
+                      {t('admin.orderDetails.qtyLabel', { qty: quantity })}
                       {unitPrice > 0
-                        ? ` • PU : ${formatPrice(unitPrice, order?.currency || 'EUR')}`
+                        ? t('admin.orderDetails.unitPriceFragment', { price: formatPrice(unitPrice, order?.currency || 'EUR') })
                         : ''}
                     </Text>
 
                     {!!normalizeText(item?.notes) && (
                       <Text style={styles.itemNotes}>
-                        Note : {normalizeText(item?.notes)}
+                        {t('admin.orderDetails.noteFragment', { note: normalizeText(item?.notes) })}
                       </Text>
                     )}
                   </View>
@@ -915,7 +926,7 @@ export default function AdminOrderDetailsScreen() {
               );
             })
           ) : (
-            <Text style={styles.emptyInfoText}>Aucun article disponible.</Text>
+            <Text style={styles.emptyInfoText}>{t('admin.orderDetails.noItemsAvailable')}</Text>
           )}
         </InfoCard>
 
