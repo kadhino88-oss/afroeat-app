@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   Text,
@@ -18,8 +19,18 @@ import {
   getAdminDrivers,
   updateAdminUserStatus,
 } from '../../../services/adminService';
+import i18n from '../../../i18n';
 
 const LIVE_REFRESH_MS = 15000;
+
+const DATE_LOCALE_MAP = {
+  fr: 'fr-FR',
+  en: 'en-US',
+  de: 'de-DE',
+  es: 'es-ES',
+  it: 'it-IT',
+  zh: 'zh-CN',
+};
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value || '').trim();
@@ -40,7 +51,7 @@ const formatDate = (value) => {
     return '—';
   }
 
-  return date.toLocaleDateString('fr-FR', {
+  return date.toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -48,15 +59,15 @@ const formatDate = (value) => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -66,52 +77,52 @@ const formatDateTime = (value) => {
   });
 };
 
-const getStatusStyle = (status) => {
+const getStatusStyle = (status, t) => {
   switch (String(status || '').toLowerCase()) {
     case 'active':
       return {
         bg: '#E8F5ED',
         text: '#1F6F43',
-        label: 'Actif',
+        label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
         bg: '#FDECEC',
         text: '#B83232',
-        label: 'Suspendu',
+        label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
         bg: '#FFF3D8',
         text: '#8A6500',
-        label: 'En attente',
+        label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
         bg: '#EFE9FF',
         text: '#6D4CDB',
-        label: 'Refusé',
+        label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
         bg: '#F4F4F4',
         text: '#555',
-        label: 'Inconnu',
+        label: t('admin.users.statusUnknownLabel'),
         icon: 'help-circle-outline',
       };
   }
 };
 
-const getDriverRiskStyle = (driver) => {
+const getDriverRiskStyle = (driver, t) => {
   if (!driver) {
     return {
       bg: '#F4F4F4',
       text: '#555',
-      label: 'Inconnu',
+      label: t('admin.users.statusUnknownLabel'),
       icon: 'help-circle-outline',
     };
   }
@@ -120,7 +131,7 @@ const getDriverRiskStyle = (driver) => {
     return {
       bg: '#FDECEC',
       text: '#B83232',
-      label: 'Élevé',
+      label: t('admin.restaurantDetails.riskHighLabel'),
       icon: 'alert-circle-outline',
     };
   }
@@ -129,7 +140,7 @@ const getDriverRiskStyle = (driver) => {
     return {
       bg: '#FFF3D8',
       text: '#8A6500',
-      label: 'Moyen',
+      label: t('admin.restaurantDetails.riskMediumLabel'),
       icon: 'warning-outline',
     };
   }
@@ -137,7 +148,7 @@ const getDriverRiskStyle = (driver) => {
   return {
     bg: '#E8F5ED',
     text: '#1F6F43',
-    label: 'Faible',
+    label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
   };
 };
@@ -154,7 +165,7 @@ const normalizeDriver = (driver) => {
   return {
     ...driver,
     _id: driver?._id || driver?.id || null,
-    name: normalizeText(driver?.name || fullName, 'Livreur Afroeat'),
+    name: normalizeText(driver?.name || fullName, i18n.t('admin.drivers.driverNameFallback')),
     email: normalizeText(driver?.email),
     phone: normalizeText(driver?.phone),
     accountStatus: normalizeText(driver?.accountStatus, 'unknown'),
@@ -232,6 +243,7 @@ const FlagBox = ({ label, value, accent, icon }) => (
 );
 
 export default function AdminDriverDetailsScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams();
   const { token, isAuthenticated, role, user } = useAuth();
 
@@ -254,7 +266,7 @@ export default function AdminDriverDetailsScreen() {
     async (manual = false, silent = false) => {
       if (!isAuthenticated || !token || !driverId) {
         setDriver(null);
-        setErrorMessage(!driverId ? 'Livreur invalide.' : 'Session admin invalide.');
+        setErrorMessage(!driverId ? t('admin.driverDetails.invalidDriverAlert') : t('admin.users.invalidSessionAlert'));
         setLoading(false);
         setRefreshing(false);
         setInitialLoaded(true);
@@ -292,7 +304,7 @@ export default function AdminDriverDetailsScreen() {
           safeDrivers.find((item) => item?._id === driverId) || null;
 
         if (!matchedDriver) {
-          throw new Error('Livreur introuvable.');
+          throw new Error(t('admin.driverDetails.driverNotFoundFallback'));
         }
 
         setDriver(matchedDriver);
@@ -301,7 +313,7 @@ export default function AdminDriverDetailsScreen() {
         console.log('Erreur admin driver details :', error);
 
         const message =
-          error?.message || 'Impossible de charger ce livreur.';
+          error?.message || t('admin.driverDetails.fetchErrorFallback');
 
         if (!silent) {
           setDriver(null);
@@ -310,7 +322,7 @@ export default function AdminDriverDetailsScreen() {
         setErrorMessage(message);
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -318,7 +330,7 @@ export default function AdminDriverDetailsScreen() {
         setInitialLoaded(true);
       }
     },
-    [isAuthenticated, token, driverId]
+    [isAuthenticated, token, driverId, t]
   );
 
   useFocusEffect(
@@ -339,63 +351,63 @@ export default function AdminDriverDetailsScreen() {
     return () => clearInterval(interval);
   }, [canAccess, token, driverId, fetchDriver]);
 
-  const statusStyle = useMemo(() => getStatusStyle(driver?.accountStatus), [driver]);
-  const riskStyle = useMemo(() => getDriverRiskStyle(driver), [driver]);
+  const statusStyle = useMemo(() => getStatusStyle(driver?.accountStatus, t), [driver, t]);
+  const riskStyle = useMemo(() => getDriverRiskStyle(driver, t), [driver, t]);
 
   const liveRefreshLabel = useMemo(() => {
     if (!lastLiveRefresh) {
-      return 'En attente du premier refresh live';
+      return t('admin.ops.liveRefreshWaiting');
     }
 
-    return `Dernier refresh live : ${formatDateTime(lastLiveRefresh)}`;
-  }, [lastLiveRefresh]);
+    return t('admin.ops.liveRefreshLabel', { date: formatDateTime(lastLiveRefresh) });
+  }, [lastLiveRefresh, t]);
 
   const quickFlags = useMemo(() => {
     return [
       {
         key: 'status',
-        label: 'Statut compte',
+        label: t('admin.driverDetails.statusAccountLabel'),
         value: statusStyle.label,
         accent: statusStyle.text,
         icon: statusStyle.icon,
       },
       {
         key: 'identity',
-        label: 'Identité',
-        value: driver?.isIdentityVerified ? 'Vérifiée' : 'À vérifier',
+        label: t('admin.restaurantDetails.identityFieldLabel'),
+        value: driver?.isIdentityVerified ? t('admin.driverDetails.identityVerifiedValue') : t('admin.driverDetails.identityToVerifyValue'),
         accent: driver?.isIdentityVerified ? '#1F6F43' : '#8A6500',
         icon: 'shield-checkmark-outline',
       },
       {
         key: 'work',
-        label: 'Autorisation',
-        value: driver?.isWorkAuthorized ? 'Valide' : 'Manquante',
+        label: t('admin.driverDetails.authorizationLabel'),
+        value: driver?.isWorkAuthorized ? t('admin.driverDetails.workValidValue') : t('admin.driverDetails.workMissingValue'),
         accent: driver?.isWorkAuthorized ? '#1F6F43' : '#B83232',
         icon: 'briefcase-outline',
       },
       {
         key: 'availability',
-        label: 'Disponibilité',
-        value: driver?.isAvailable ? 'Disponible' : 'Hors ligne',
+        label: t('admin.driverDetails.availabilityLabel'),
+        value: driver?.isAvailable ? t('admin.driverDetails.availableValue') : t('admin.driverDetails.offlineValue'),
         accent: driver?.isAvailable ? '#245EA8' : '#666',
         icon: 'radio-outline',
       },
       {
         key: 'risk',
-        label: 'Risque',
+        label: t('admin.driverDetails.riskLabel'),
         value: riskStyle.label,
         accent: riskStyle.text,
         icon: riskStyle.icon,
       },
       {
         key: 'mission',
-        label: 'Mission active',
-        value: driver?.currentOrderId ? 'Oui' : 'Non',
+        label: t('admin.driverDetails.activeMissionLabel'),
+        value: driver?.currentOrderId ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         accent: driver?.currentOrderId ? '#7C3AED' : '#666',
         icon: 'bicycle-outline',
       },
     ];
-  }, [driver, riskStyle, statusStyle]);
+  }, [driver, riskStyle, statusStyle, t]);
 
   const handleGoBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -408,22 +420,22 @@ export default function AdminDriverDetailsScreen() {
 
   const handleToggleStatus = useCallback(() => {
     if (!token || !driver?._id) {
-      Alert.alert('Erreur', 'Impossible de mettre à jour ce livreur.');
+      Alert.alert(t('common.error'), t('admin.driverDetails.updateErrorFallback'));
       return;
     }
 
     const nextStatus =
       driver?.accountStatus === 'suspended' ? 'active' : 'suspended';
 
-    const actionLabel = nextStatus === 'active' ? 'réactiver' : 'suspendre';
+    const actionLabel = nextStatus === 'active' ? t('admin.users.reactivateAction') : t('admin.users.suspendAction');
 
     Alert.alert(
-      'Confirmer',
-      `Veux-tu ${actionLabel} ${normalizeText(driver?.name, 'ce livreur')} ?`,
+      t('admin.users.confirmDialogTitle'),
+      t('admin.users.confirmDialogMessage', { action: actionLabel, identity: normalizeText(driver?.name, t('admin.driverDetails.defaultDriverIdentity')) }),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('admin.users.cancelAction'), style: 'cancel' },
         {
-          text: 'Confirmer',
+          text: t('admin.users.confirmDialogTitle'),
           onPress: async () => {
             try {
               setUpdatingStatus(true);
@@ -445,14 +457,14 @@ export default function AdminDriverDetailsScreen() {
               }));
 
               Alert.alert(
-                'Succès',
-                response?.message || 'Statut livreur mis à jour.'
+                t('common.success'),
+                response?.message || t('admin.driverDetails.successFallback')
               );
             } catch (error) {
               console.log('Erreur update admin driver status :', error);
               Alert.alert(
-                'Erreur',
-                error?.message || 'Impossible de mettre à jour ce livreur.'
+                t('common.error'),
+                error?.message || t('admin.driverDetails.updateErrorFallback')
               );
             } finally {
               setUpdatingStatus(false);
@@ -461,11 +473,11 @@ export default function AdminDriverDetailsScreen() {
         },
       ]
     );
-  }, [driver, token]);
+  }, [driver, token, t]);
 
   const handleOpenCurrentOrder = useCallback(() => {
     if (!driver?.currentOrderId) {
-      Alert.alert('Info', 'Aucune commande active liée à ce livreur.');
+      Alert.alert(t('admin.driverDetails.infoAlertTitle'), t('admin.driverDetails.noActiveOrderAlert'));
       return;
     }
 
@@ -473,14 +485,14 @@ export default function AdminDriverDetailsScreen() {
       pathname: '/admin/orders-details/[id]',
       params: { id: driver.currentOrderId },
     });
-  }, [driver]);
+  }, [driver, t]);
 
   if (loading && !initialLoaded) {
     return (
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement du livreur...</Text>
+        <Text style={styles.loaderText}>{t('admin.driverDetails.loaderText')}</Text>
       </View>
     );
   }
@@ -491,9 +503,9 @@ export default function AdminDriverDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="shield-outline" size={56} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Accès réservé à l’admin</Text>
+          <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
           <Text style={styles.emptyText}>
-            Connecte-toi avec un compte administrateur pour accéder au détail du livreur.
+            {t('admin.driverDetails.restrictedText')}
           </Text>
         </View>
       </FadeInView>
@@ -506,9 +518,9 @@ export default function AdminDriverDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
-          <Text style={styles.emptyTitle}>Livreur introuvable</Text>
+          <Text style={styles.emptyTitle}>{t('admin.driverDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
-            {errorMessage || 'Impossible de charger ce livreur.'}
+            {errorMessage || t('admin.driverDetails.fetchErrorFallback')}
           </Text>
 
           <Pressable
@@ -524,14 +536,14 @@ export default function AdminDriverDetailsScreen() {
             ) : (
               <>
                 <Ionicons name="refresh-outline" size={18} color="#FFFFFF" />
-                <Text style={styles.retryButtonText}>Réessayer</Text>
+                <Text style={styles.retryButtonText}>{t('restaurant.retry')}</Text>
               </>
             )}
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
             <Ionicons name="arrow-back" size={16} color="#1F6F43" />
-            <Text style={styles.backLinkText}>Retour aux livreurs</Text>
+            <Text style={styles.backLinkText}>{t('admin.driverDetails.backToDriversLink')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -569,10 +581,10 @@ export default function AdminDriverDetailsScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Admin</Text>
-          <Text style={styles.title}>Détail livreur</Text>
+          <Text style={styles.eyebrow}>{t('admin.restaurantDetails.eyebrow')}</Text>
+          <Text style={styles.title}>{t('admin.driverDetails.titleDriverDetail')}</Text>
           <Text style={styles.subtitle}>
-            Vision complète du compte, de la conformité, de l’activité et du niveau de risque opérationnel.
+            {t('admin.driverDetails.subtitleDriver')}
           </Text>
         </View>
 
@@ -580,7 +592,7 @@ export default function AdminDriverDetailsScreen() {
           <View style={styles.liveMonitorHeader}>
             <View style={styles.liveMonitorTitleWrap}>
               <Ionicons name="radio-outline" size={18} color="#245EA8" />
-              <Text style={styles.liveMonitorTitle}>Driver Control Center</Text>
+              <Text style={styles.liveMonitorTitle}>{t('admin.driverDetails.liveMonitorTitleDriver')}</Text>
             </View>
 
             <View style={styles.liveBadge}>
@@ -589,8 +601,7 @@ export default function AdminDriverDetailsScreen() {
           </View>
 
           <Text style={styles.liveMonitorText}>
-            Cette fiche admin est la base premium de supervision flotte AFROEAT :
-            conformité, disponibilité, mission active, performance et contrôle d’accès.
+            {t('admin.driverDetails.liveMonitorTextDriver')}
           </Text>
 
           <Text style={styles.liveMonitorSubText}>{liveRefreshLabel}</Text>
@@ -599,10 +610,10 @@ export default function AdminDriverDetailsScreen() {
         <View style={styles.heroCard}>
           <View style={styles.heroLeft}>
             <Text style={styles.heroTitle}>
-              {normalizeText(driver?.name, 'Livreur Afroeat')}
+              {normalizeText(driver?.name, t('admin.drivers.driverNameFallback'))}
             </Text>
             <Text style={styles.heroText}>
-              {normalizeText(driver?.email, 'Email indisponible')}
+              {normalizeText(driver?.email, t('admin.driverDetails.emailUnavailable'))}
             </Text>
             {!!normalizeText(driver?.phone) && (
               <Text style={styles.heroSubText}>{normalizeText(driver?.phone)}</Text>
@@ -626,7 +637,7 @@ export default function AdminDriverDetailsScreen() {
             >
               <Ionicons name={riskStyle.icon} size={14} color={riskStyle.text} />
               <Text style={[styles.badgeText, { color: riskStyle.text }]}>
-                Risque {riskStyle.label}
+                {t('admin.restaurantDetails.riskBadgeLabel', { level: riskStyle.label })}
               </Text>
             </View>
           </View>
@@ -634,13 +645,13 @@ export default function AdminDriverDetailsScreen() {
 
         <View style={styles.metricsGrid}>
           <MetricCard
-            label="Livraisons"
+            label={t('admin.driverDetails.deliveriesLabel')}
             value={String(normalizeNumber(driver?.completedDeliveries))}
             icon="checkmark-done-outline"
             tint="#1F6F43"
           />
           <MetricCard
-            label="Note"
+            label={t('restaurant.analytics.ratingLabel')}
             value={
               driver?.rating > 0 ? Number(driver.rating).toFixed(1) : '—'
             }
@@ -648,7 +659,7 @@ export default function AdminDriverDetailsScreen() {
             tint="#D4A017"
           />
           <MetricCard
-            label="Taux accept."
+            label={t('admin.driverDetails.acceptanceRateLabel')}
             value={
               driver?.acceptanceRate > 0
                 ? `${normalizeNumber(driver?.acceptanceRate)}%`
@@ -658,7 +669,7 @@ export default function AdminDriverDetailsScreen() {
             tint="#245EA8"
           />
           <MetricCard
-            label="Taux compl."
+            label={t('admin.driverDetails.completionRateLabel')}
             value={
               driver?.completionRate > 0
                 ? `${normalizeNumber(driver?.completionRate)}%`
@@ -668,7 +679,7 @@ export default function AdminDriverDetailsScreen() {
             tint="#7C3AED"
           />
           <MetricCard
-            label="Gain jour"
+            label={t('admin.driverDetails.earningsTodayLabel')}
             value={
               driver?.earningsToday > 0 ? `${normalizeNumber(driver?.earningsToday)} €` : '—'
             }
@@ -676,7 +687,7 @@ export default function AdminDriverDetailsScreen() {
             tint="#D96C2D"
           />
           <MetricCard
-            label="Gain semaine"
+            label={t('admin.driverDetails.earningsWeekLabel')}
             value={
               driver?.earningsWeek > 0 ? `${normalizeNumber(driver?.earningsWeek)} €` : '—'
             }
@@ -685,7 +696,7 @@ export default function AdminDriverDetailsScreen() {
           />
         </View>
 
-        <InfoCard title="Indicateurs clés">
+        <InfoCard title={t('admin.driverDetails.keyIndicatorsTitle')}>
           <View style={styles.flagGrid}>
             {quickFlags.map((flag) => (
               <FlagBox
@@ -699,44 +710,44 @@ export default function AdminDriverDetailsScreen() {
           </View>
         </InfoCard>
 
-        <InfoCard title="Profil livreur">
+        <InfoCard title={t('admin.driverDetails.driverProfileTitle')}>
           <MetaRow
             icon="person-circle-outline"
-            label="Nom"
-            value={normalizeText(driver?.name, 'Non renseigné')}
+            label={t('restaurant.profile.nameLabel')}
+            value={normalizeText(driver?.name, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(driver?.email, 'Non renseigné')}
+            label={t('admin.userDetails.emailFieldLabel')}
+            value={normalizeText(driver?.email, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="call-outline"
-            label="Téléphone"
-            value={normalizeText(driver?.phone, 'Non renseigné')}
+            label={t('admin.userDetails.phoneFieldLabel')}
+            value={normalizeText(driver?.phone, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="location-outline"
-            label="Ville"
-            value={normalizeText(driver?.city, 'Non renseignée')}
+            label={t('restaurant.profile.cityLabel')}
+            value={normalizeText(driver?.city, t('restaurant.profile.cityFallback'))}
           />
           <MetaRow
             icon="earth-outline"
-            label="Pays"
-            value={normalizeText(driver?.country, 'Non renseigné')}
+            label={t('restaurant.profile.countryLabel')}
+            value={normalizeText(driver?.country, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="car-sport-outline"
-            label="Véhicule"
-            value={normalizeText(driver?.vehicleType, 'Non renseigné')}
+            label={t('admin.driverDetails.vehicleLabel')}
+            value={normalizeText(driver?.vehicleType, t('profile.info.notProvided'))}
           />
         </InfoCard>
 
-        <InfoCard title="Conformité & compte">
+        <InfoCard title={t('admin.driverDetails.complianceAccountTitle')}>
           <MetaRow
             icon="shield-checkmark-outline"
-            label="Identité"
-            value={driver?.isIdentityVerified ? 'Vérifiée' : 'À vérifier'}
+            label={t('admin.restaurantDetails.identityFieldLabel')}
+            value={driver?.isIdentityVerified ? t('admin.driverDetails.identityVerifiedValue') : t('admin.driverDetails.identityToVerifyValue')}
             valueStyle={{
               color: driver?.isIdentityVerified ? '#1F6F43' : '#8A6500',
               fontWeight: '900',
@@ -744,8 +755,8 @@ export default function AdminDriverDetailsScreen() {
           />
           <MetaRow
             icon="briefcase-outline"
-            label="Travail"
-            value={driver?.isWorkAuthorized ? 'Autorisé' : 'Non validé'}
+            label={t('admin.restaurantDetails.workFieldLabel')}
+            value={driver?.isWorkAuthorized ? t('admin.driverDetails.workAuthorizedValue') : t('admin.driverDetails.workNotValidatedValue')}
             valueStyle={{
               color: driver?.isWorkAuthorized ? '#1F6F43' : '#B83232',
               fontWeight: '900',
@@ -753,27 +764,27 @@ export default function AdminDriverDetailsScreen() {
           />
           <MetaRow
             icon="checkmark-circle-outline"
-            label="Statut"
+            label={t('restaurant.profile.statusLabel')}
             value={statusStyle.label}
             valueStyle={{ color: statusStyle.text, fontWeight: '900' }}
           />
           <MetaRow
             icon="calendar-outline"
-            label="Créé le"
+            label={t('admin.userDetails.createdOnFieldLabel')}
             value={formatDate(driver?.createdAt)}
           />
           <MetaRow
             icon="refresh-outline"
-            label="Maj compte"
+            label={t('admin.driverDetails.accountUpdatedLabel')}
             value={formatDateTime(driver?.updatedAt)}
           />
         </InfoCard>
 
-        <InfoCard title="Activité terrain">
+        <InfoCard title={t('admin.driverDetails.fieldActivityTitle')}>
           <MetaRow
             icon="radio-outline"
-            label="Disponibilité"
-            value={driver?.isAvailable ? 'Disponible' : 'Hors ligne'}
+            label={t('admin.driverDetails.availabilityLabel')}
+            value={driver?.isAvailable ? t('admin.driverDetails.availableValue') : t('admin.driverDetails.offlineValue')}
             valueStyle={{
               color: driver?.isAvailable ? '#245EA8' : '#666',
               fontWeight: '900',
@@ -781,8 +792,8 @@ export default function AdminDriverDetailsScreen() {
           />
           <MetaRow
             icon="bicycle-outline"
-            label="Mission"
-            value={driver?.currentOrderId ? 'Commande active détectée' : 'Aucune mission active'}
+            label={t('admin.driverDetails.missionFieldLabel')}
+            value={driver?.currentOrderId ? t('admin.driverDetails.activeOrderDetectedValue') : t('admin.driverDetails.noActiveMissionValue')}
             valueStyle={{
               color: driver?.currentOrderId ? '#7C3AED' : '#666',
               fontWeight: '900',
@@ -790,30 +801,30 @@ export default function AdminDriverDetailsScreen() {
           />
           <MetaRow
             icon="time-outline"
-            label="Dernière activité"
+            label={t('admin.driverDetails.lastActivityLabel')}
             value={formatDateTime(driver?.lastSeenAt)}
           />
           <MetaRow
             icon="receipt-outline"
-            label="Commande ID"
-            value={normalizeText(driver?.currentOrderId, 'Non renseigné')}
+            label={t('admin.driverDetails.orderIdLabel')}
+            value={normalizeText(driver?.currentOrderId, t('profile.info.notProvided'))}
             multiline
           />
           <MetaRow
             icon="sync-outline"
-            label="Statut course"
-            value={normalizeText(driver?.currentOrderStatus, 'Non renseigné')}
+            label={t('admin.driverDetails.rideStatusLabel')}
+            value={normalizeText(driver?.currentOrderStatus, t('profile.info.notProvided'))}
           />
         </InfoCard>
 
-        <InfoCard title="Actions admin">
+        <InfoCard title={t('admin.driverDetails.adminActionsTitle')}>
           <View style={styles.actionBlock}>
             <Pressable
               style={styles.secondaryButton}
               onPress={handleOpenCurrentOrder}
             >
               <Ionicons name="receipt-outline" size={16} color="#245EA8" />
-              <Text style={styles.secondaryButtonText}>Voir la commande active</Text>
+              <Text style={styles.secondaryButtonText}>{t('admin.driverDetails.viewActiveOrderButton')}</Text>
             </Pressable>
 
             <Pressable
@@ -840,8 +851,8 @@ export default function AdminDriverDetailsScreen() {
                   />
                   <Text style={styles.primaryButtonText}>
                     {driver?.accountStatus === 'suspended'
-                      ? 'Réactiver le compte'
-                      : 'Suspendre le compte'}
+                      ? t('admin.userDetails.reactivateAccountButton')
+                      : t('admin.userDetails.suspendAccountButton')}
                   </Text>
                 </>
               )}
