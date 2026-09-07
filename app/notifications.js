@@ -20,6 +20,16 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
+
+const DATE_LOCALE_MAP = {
+  fr: 'fr-FR',
+  en: 'en-US',
+  de: 'de-DE',
+  es: 'es-ES',
+  it: 'it-IT',
+  zh: 'zh-CN',
+};
 
 // ─── Types de notifications ───────────────────────────────
 const NOTIF_TYPES = {
@@ -51,11 +61,11 @@ const formatRelativeTime = (dateString) => {
   const then  = new Date(dateString).getTime();
   const diffS = Math.floor((now - then) / 1000);
 
-  if (diffS < 60)     return 'À l\'instant';
-  if (diffS < 3600)   return `Il y a ${Math.floor(diffS / 60)} min`;
-  if (diffS < 86400)  return `Il y a ${Math.floor(diffS / 3600)} h`;
-  if (diffS < 604800) return `Il y a ${Math.floor(diffS / 86400)} j`;
-  return new Date(dateString).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+  if (diffS < 60)     return i18n.t('notifications.timeJustNow');
+  if (diffS < 3600)   return i18n.t('notifications.timeMinutesAgo', { count: Math.floor(diffS / 60) });
+  if (diffS < 86400)  return i18n.t('notifications.timeHoursAgo', { count: Math.floor(diffS / 3600) });
+  if (diffS < 604800) return i18n.t('notifications.timeDaysAgo', { count: Math.floor(diffS / 86400) });
+  return new Date(dateString).toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', { day: 'numeric', month: 'short' });
 };
 
 // ─── Données de démonstration (à remplacer par API) ───────
@@ -67,8 +77,8 @@ const buildDemoNotifications = (user) => {
     {
       id: '1',
       type: NOTIF_TYPES.WELCOME,
-      title: `Bienvenue sur Afroeat, ${user?.name || 'toi'} ! 🎉`,
-      body: 'Découvre les meilleurs restaurants africains près de toi. Commande maintenant et régale-toi !',
+      title: i18n.t('notifications.demo.welcomeTitle', { name: user?.name || i18n.t('notifications.demo.welcomeName') }),
+      body: i18n.t('notifications.demo.welcomeBody'),
       read: false,
       createdAt: ago(5),
       route: '/(tabs)',
@@ -76,8 +86,8 @@ const buildDemoNotifications = (user) => {
     {
       id: '2',
       type: NOTIF_TYPES.ORDER_DELIVERED,
-      title: 'Commande livrée ✅',
-      body: 'Ta commande a bien été livrée. Bon appétit ! Pense à laisser un avis.',
+      title: i18n.t('notifications.demo.deliveredTitle'),
+      body: i18n.t('notifications.demo.deliveredBody'),
       read: false,
       createdAt: ago(35),
       route: '/(tabs)/orders',
@@ -85,8 +95,8 @@ const buildDemoNotifications = (user) => {
     {
       id: '3',
       type: NOTIF_TYPES.PROMO,
-      title: '🔥 Offre spéciale ce soir',
-      body: 'Livraison offerte sur tous les restaurants ouverts jusqu\'à 23h. Profite-en maintenant !',
+      title: i18n.t('notifications.demo.promoTitle'),
+      body: i18n.t('notifications.demo.promoBody'),
       read: false,
       createdAt: ago(90),
       route: '/(tabs)/explore',
@@ -94,8 +104,8 @@ const buildDemoNotifications = (user) => {
     {
       id: '4',
       type: NOTIF_TYPES.ORDER_CONFIRMED,
-      title: 'Commande confirmée',
-      body: 'Le restaurant a bien reçu ta commande et va commencer la préparation.',
+      title: i18n.t('notifications.demo.confirmedTitle'),
+      body: i18n.t('notifications.demo.confirmedBody'),
       read: true,
       createdAt: ago(300),
       route: '/(tabs)/orders',
@@ -103,8 +113,8 @@ const buildDemoNotifications = (user) => {
     {
       id: '5',
       type: NOTIF_TYPES.ORDER_PREPARING,
-      title: 'En cours de préparation 👨‍🍳',
-      body: 'Ton plat est en préparation. Temps estimé : 20–25 min.',
+      title: i18n.t('notifications.demo.preparingTitle'),
+      body: i18n.t('notifications.demo.preparingBody'),
       read: true,
       createdAt: ago(480),
       route: '/(tabs)/orders',
@@ -112,8 +122,8 @@ const buildDemoNotifications = (user) => {
     {
       id: '6',
       type: NOTIF_TYPES.SYSTEM,
-      title: 'Mise à jour disponible',
-      body: 'Une nouvelle version d\'Afroeat est disponible avec de nouvelles fonctionnalités.',
+      title: i18n.t('notifications.demo.systemTitle'),
+      body: i18n.t('notifications.demo.systemBody'),
       read: true,
       createdAt: ago(1440),
       route: null,

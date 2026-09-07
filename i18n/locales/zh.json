@@ -689,7 +689,26 @@
     "clearAll": "清除所有通知",
     "clearAlertTitle": "清除通知",
     "clearAlertBody": "所有通知将被删除。",
-    "clearAction": "清除"
+    "clearAction": "清除",
+    "demo": {
+      "welcomeTitle": "欢迎来到Afroeat，{{name}}！🎉",
+      "welcomeName": "您",
+      "welcomeBody": "发现您附近最好的非洲餐厅。立即下单，尽情享用！",
+      "deliveredTitle": "订单已送达 ✅",
+      "deliveredBody": "您的订单已送达。祝您用餐愉快！别忘了留下评价。",
+      "promoTitle": "🔥 今晚特别优惠",
+      "promoBody": "所有营业至23点的餐厅免费配送。立即享受优惠！",
+      "confirmedTitle": "订单已确认",
+      "confirmedBody": "餐厅已收到您的订单，即将开始准备。",
+      "preparingTitle": "准备中 👨‍🍳",
+      "preparingBody": "您的餐点正在准备中。预计时间：20-25分钟。",
+      "systemTitle": "有可用更新",
+      "systemBody": "Afroeat新版本已发布，带来更多新功能。"
+    },
+    "timeJustNow": "刚刚",
+    "timeMinutesAgo": "{{count}}分钟前",
+    "timeHoursAgo": "{{count}}小时前",
+    "timeDaysAgo": "{{count}}天前"
   },
   "modal": {
     "subtitle": "AFROEAT 顾客提醒中心",

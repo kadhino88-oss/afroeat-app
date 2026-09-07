@@ -689,7 +689,26 @@
     "clearAll": "Clear all notifications",
     "clearAlertTitle": "Clear notifications",
     "clearAlertBody": "All notifications will be deleted.",
-    "clearAction": "Clear"
+    "clearAction": "Clear",
+    "demo": {
+      "welcomeTitle": "Welcome to Afroeat, {{name}}! 🎉",
+      "welcomeName": "you",
+      "welcomeBody": "Discover the best African restaurants near you. Order now and enjoy!",
+      "deliveredTitle": "Order delivered ✅",
+      "deliveredBody": "Your order has been delivered. Enjoy your meal! Don't forget to leave a review.",
+      "promoTitle": "🔥 Special offer tonight",
+      "promoBody": "Free delivery on all restaurants open until 11pm. Take advantage now!",
+      "confirmedTitle": "Order confirmed",
+      "confirmedBody": "The restaurant has received your order and will start preparing it.",
+      "preparingTitle": "Being prepared 👨‍🍳",
+      "preparingBody": "Your meal is being prepared. Estimated time: 20-25 min.",
+      "systemTitle": "Update available",
+      "systemBody": "A new version of Afroeat is available with new features."
+    },
+    "timeJustNow": "Just now",
+    "timeMinutesAgo": "{{count}} min ago",
+    "timeHoursAgo": "{{count}} h ago",
+    "timeDaysAgo": "{{count}} d ago"
   },
   "modal": {
     "subtitle": "AFROEAT customer alert center",
