@@ -380,9 +380,9 @@ export default function ExploreScreen() {
       user?.name ||
         user?.fullName ||
         `${normalizeText(user?.firstName)} ${normalizeText(user?.lastName)}`.trim(),
-      'Bonjour'
+      t('home.greetingFallback')
     );
-  }, [user]);
+  }, [user, t]);
 
   const displayAddress = useMemo(() => {
     return normalizeText(
@@ -390,9 +390,9 @@ export default function ExploreScreen() {
         user?.adresse ||
         user?.deliveryAddress ||
         user?.profile?.address,
-      'Livraison à domicile'
+      t('home.deliveryAddressFallback')
     );
-  }, [user]);
+  }, [user, t]);
 
   const displayAvatar = useMemo(() => {
     return normalizeText(
@@ -643,7 +643,7 @@ export default function ExploreScreen() {
                     isOpen ? styles.statusTextOpen : styles.statusTextClosed,
                   ]}
                 >
-                  {isOpen ? 'Ouvert' : 'Fermé'}
+                  {isOpen ? t('home.open') : t('home.closed')}
                 </Text>
               </View>
 

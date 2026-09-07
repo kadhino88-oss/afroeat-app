@@ -60,7 +60,13 @@
     "offerTitle": "🔥 AFROEAT 特别优惠",
     "offerSubtitle": "部分合作商家免配送费。",
     "loadingRestaurants": "正在加载餐厅...",
-    "emptyText": "请尝试其他搜索，或在后台添加合作商家。"
+    "emptyText": "请尝试其他搜索，或在后台添加合作商家。",
+    "greetingFallback": "你好",
+    "deliveryAddressFallback": "送货上门",
+    "categories": {
+      "groceries": "杂货店",
+      "shops": "商铺"
+    }
   },
   "checkout": {
     "guestPremiumTitle": "尊享访客模式",

@@ -40,19 +40,19 @@ const LOGO_IMAGE = require('../assets/images/icon.png');
 const CATEGORIES = [
   {
     id: '1',
-    title: 'Restaurants',
+    titleKey: 'explore.restaurants',
     icon: 'silverware-fork-knife',
     route: '/(tabs)/explore',
   },
   {
     id: '2',
-    title: 'Épiceries',
+    titleKey: 'home.categories.groceries',
     icon: 'cart-outline',
     route: '/(tabs)/explore',
   },
   {
     id: '3',
-    title: 'Boutiques',
+    titleKey: 'home.categories.shops',
     icon: 'shopping-outline',
     route: '/(tabs)/explore',
   },
@@ -310,9 +310,9 @@ export default function HomeScreen() {
       normalizeText(user?.name) ||
       normalizeText(user?.fullName) ||
       normalizeText(fullName) ||
-      'Bonjour'
+      t('home.greetingFallback')
     );
-  }, [user]);
+  }, [user, t]);
 
   const userAddress = useMemo(() => {
     return normalizeText(
@@ -320,9 +320,9 @@ export default function HomeScreen() {
         user?.adresse ||
         user?.deliveryAddress ||
         user?.profile?.address,
-      'Livraison à domicile'
+      t('home.deliveryAddressFallback')
     );
-  }, [user]);
+  }, [user, t]);
 
   const userAvatar = useMemo(() => {
     return normalizeText(
@@ -842,7 +842,7 @@ export default function HomeScreen() {
                       color="#D4A017"
                     />
                   </View>
-                  <Text style={styles.categoryText}>{item.title}</Text>
+                  <Text style={styles.categoryText}>{t(item.titleKey)}</Text>
                 </Pressable>
               ))}
             </ScrollView>

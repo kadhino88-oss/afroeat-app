@@ -60,7 +60,13 @@
     "offerTitle": "🔥 Offres spéciales AFROEAT",
     "offerSubtitle": "Livraison offerte sur une sélection de partenaires.",
     "loadingRestaurants": "Chargement des restaurants...",
-    "emptyText": "Essaie une autre recherche ou ajoute des partenaires à ton backend."
+    "emptyText": "Essaie une autre recherche ou ajoute des partenaires à ton backend.",
+    "greetingFallback": "Bonjour",
+    "deliveryAddressFallback": "Livraison à domicile",
+    "categories": {
+      "groceries": "Épiceries",
+      "shops": "Boutiques"
+    }
   },
   "checkout": {
     "guestPremiumTitle": "Mode invité premium",

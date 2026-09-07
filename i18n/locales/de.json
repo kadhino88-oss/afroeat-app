@@ -60,7 +60,13 @@
     "offerTitle": "🔥 AFROEAT Sonderangebote",
     "offerSubtitle": "Kostenlose Lieferung bei einer Auswahl an Partnern.",
     "loadingRestaurants": "Restaurants werden geladen...",
-    "emptyText": "Versuche eine andere Suche oder füge Partner zu deinem Backend hinzu."
+    "emptyText": "Versuche eine andere Suche oder füge Partner zu deinem Backend hinzu.",
+    "greetingFallback": "Hallo",
+    "deliveryAddressFallback": "Lieferung nach Hause",
+    "categories": {
+      "groceries": "Lebensmittelgeschäfte",
+      "shops": "Geschäfte"
+    }
   },
   "checkout": {
     "guestPremiumTitle": "Premium-Gastmodus",

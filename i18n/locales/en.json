@@ -60,7 +60,13 @@
     "offerTitle": "🔥 Special AFROEAT offers",
     "offerSubtitle": "Free delivery on a selection of partners.",
     "loadingRestaurants": "Loading restaurants...",
-    "emptyText": "Try another search or add partners to your backend."
+    "emptyText": "Try another search or add partners to your backend.",
+    "greetingFallback": "Hello",
+    "deliveryAddressFallback": "Home delivery",
+    "categories": {
+      "groceries": "Grocery stores",
+      "shops": "Shops"
+    }
   },
   "checkout": {
     "guestPremiumTitle": "Premium guest mode",
