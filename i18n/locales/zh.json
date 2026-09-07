@@ -1580,6 +1580,37 @@
       "unitPriceFragment": " • 单价：{{price}}",
       "noteFragment": "备注：{{note}}",
       "noItemsAvailable": "暂无商品。"
+    },
+    "auditLogDetails": {
+      "loaderText": "正在加载管理员日志...",
+      "restrictedText": "请使用管理员账户登录以查看日志详情。",
+      "notFoundTitle": "未找到日志",
+      "fetchErrorFallback": "无法加载该管理员日志。",
+      "backToLogsLink": "返回日志列表",
+      "title": "管理员日志详情",
+      "subtitle": "对管理系统中记录的敏感操作进行全面分析。",
+      "liveMonitorTitle": "审计追踪监视器",
+      "liveMonitorText": "此详情是AFROEAT用于可追溯性的高级基础：管理员审计、敏感操作监督和执行上下文的全面验证。",
+      "performedOnHero": "执行于 {{date}}",
+      "actionSectionTitle": "操作",
+      "adminOriginTitle": "操作管理员",
+      "targetSectionTitle": "目标",
+      "typeFieldLabel": "类型",
+      "targetLabelFieldLabel": "标签",
+      "detailsSectionTitle": "详情",
+      "contentFieldLabel": "内容",
+      "noDetailsValue": "未提供详情",
+      "technicalContextTitle": "技术背景",
+      "ipFieldLabel": "IP地址",
+      "agentFieldLabel": "代理",
+      "metadataSectionTitle": "元数据",
+      "noMetadataText": "此日志没有记录元数据。",
+      "targetTypeFlagLabel": "目标类型",
+      "ipCapturedFlagLabel": "已捕获IP",
+      "metadataKeysFlagLabel": "元数据键",
+      "riskLevelFlagLabel": "风险等级",
+      "targetLabelFlagLabel": "目标标签",
+      "riskStandardLabel": "标准"
     }
   }
 }

@@ -1580,6 +1580,37 @@
       "unitPriceFragment": " • PU : {{price}}",
       "noteFragment": "Note : {{note}}",
       "noItemsAvailable": "Aucun article disponible."
+    },
+    "auditLogDetails": {
+      "loaderText": "Chargement du journal admin...",
+      "restrictedText": "Connecte-toi avec un compte administrateur pour accéder au détail du journal.",
+      "notFoundTitle": "Journal introuvable",
+      "fetchErrorFallback": "Impossible de charger ce journal admin.",
+      "backToLogsLink": "Retour aux journaux",
+      "title": "Détail journal admin",
+      "subtitle": "Analyse complète d'une action sensible tracée dans le système d'administration.",
+      "liveMonitorTitle": "Audit Trace Monitor",
+      "liveMonitorText": "Ce détail constitue la base premium de traçabilité AFROEAT : audit admin, supervision des actions sensibles et vérification complète du contexte d'exécution.",
+      "performedOnHero": "Réalisée le {{date}}",
+      "actionSectionTitle": "Action",
+      "adminOriginTitle": "Admin à l'origine",
+      "targetSectionTitle": "Cible",
+      "typeFieldLabel": "Type",
+      "targetLabelFieldLabel": "Label",
+      "detailsSectionTitle": "Détails",
+      "contentFieldLabel": "Contenu",
+      "noDetailsValue": "Aucun détail renseigné",
+      "technicalContextTitle": "Contexte technique",
+      "ipFieldLabel": "IP",
+      "agentFieldLabel": "Agent",
+      "metadataSectionTitle": "Metadata",
+      "noMetadataText": "Aucune metadata enregistrée pour ce journal.",
+      "targetTypeFlagLabel": "Type cible",
+      "ipCapturedFlagLabel": "IP capturée",
+      "metadataKeysFlagLabel": "Clés metadata",
+      "riskLevelFlagLabel": "Niveau de risque",
+      "targetLabelFlagLabel": "Label cible",
+      "riskStandardLabel": "Standard"
     }
   }
 }

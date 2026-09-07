@@ -15,8 +15,19 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../../components/FadeInView';
 import { useAuth } from '../../../context/AuthContext';
 import { getAdminAuditLogById } from '../../../services/adminService';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../../i18n';
 
 const LIVE_REFRESH_MS = 15000;
+
+const DATE_LOCALE_MAP = {
+  fr: 'fr-FR',
+  en: 'en-US',
+  de: 'de-DE',
+  es: 'es-ES',
+  it: 'it-IT',
+  zh: 'zh-CN',
+};
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
@@ -36,15 +47,15 @@ const getSafeParam = (value) => {
 };
 
 const formatDateTime = (value) => {
-  if (!value) return 'Date indisponible';
+  if (!value) return i18n.t('admin.ops.dateUnavailable');
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date indisponible';
+    return i18n.t('admin.ops.dateUnavailable');
   }
 
-  return date.toLocaleString('fr-FR', {
+  return date.toLocaleString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
@@ -54,10 +65,10 @@ const formatDateTime = (value) => {
   });
 };
 
-const formatActionLabel = (value) => {
+const formatActionLabel = (value, t) => {
   const raw = normalizeText(value);
 
-  if (!raw) return 'Action admin';
+  if (!raw) return t('admin.auditLogs.actionFallback');
 
   return raw
     .replace(/_/g, ' ')
@@ -65,22 +76,22 @@ const formatActionLabel = (value) => {
     .trim();
 };
 
-const getTargetTypeLabel = (value) => {
+const getTargetTypeLabel = (value, t) => {
   switch (normalizeText(value).toLowerCase()) {
     case 'user':
-      return 'Utilisateur';
+      return t('admin.auditLogs.targetTypeUserLabel');
     case 'restaurant':
-      return 'Restaurant';
+      return t('admin.users.roleRestaurantLabel');
     case 'driver':
-      return 'Livreur';
+      return t('admin.users.roleDriverLabel');
     case 'order':
-      return 'Commande';
+      return t('admin.auditLogs.targetTypeOrderLabel');
     case 'system':
-      return 'Système';
+      return t('admin.auditLogs.targetTypeSystemLabel');
     case 'other':
-      return 'Autre';
+      return t('admin.auditLogs.targetTypeOtherLabel');
     default:
-      return normalizeText(value, 'Autre');
+      return normalizeText(value, t('admin.auditLogs.targetTypeOtherLabel'));
   }
 };
 
@@ -104,13 +115,13 @@ const getTargetTypeStyle = (value) => {
 const isPlainObject = (value) =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
 
-const formatMetadataValue = (value) => {
+const formatMetadataValue = (value, t) => {
   if (value === null || value === undefined || value === '') {
     return '—';
   }
 
   if (typeof value === 'boolean') {
-    return value ? 'Oui' : 'Non';
+    return value ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel');
   }
 
   if (typeof value === 'number') {
@@ -135,7 +146,7 @@ const formatMetadataLabel = (key) => {
     .trim();
 };
 
-const getRiskLevel = (log) => {
+const getRiskLevel = (log, t) => {
   const action = normalizeText(log?.action).toLowerCase();
   const targetType = normalizeText(log?.targetType).toLowerCase();
 
@@ -148,7 +159,7 @@ const getRiskLevel = (log) => {
     action.includes('reject')
   ) {
     return {
-      label: 'Élevé',
+      label: t('admin.restaurantDetails.riskHighLabel'),
       bg: '#FDECEC',
       text: '#B83232',
       icon: 'alert-circle-outline',
@@ -164,7 +175,7 @@ const getRiskLevel = (log) => {
     targetType === 'driver'
   ) {
     return {
-      label: 'Moyen',
+      label: t('admin.restaurantDetails.riskMediumLabel'),
       bg: '#FFF3D8',
       text: '#8A6500',
       icon: 'warning-outline',
@@ -172,7 +183,7 @@ const getRiskLevel = (log) => {
   }
 
   return {
-    label: 'Standard',
+    label: t('admin.auditLogDetails.riskStandardLabel'),
     bg: '#E8F5ED',
     text: '#1F6F43',
     icon: 'checkmark-circle-outline',
@@ -203,7 +214,7 @@ const normalizeAuditLog = (item) => {
     admin: {
       ...admin,
       _id: admin?._id || admin?.id || null,
-      name: normalizeText(admin?.name, 'Admin inconnu'),
+      name: normalizeText(admin?.name, i18n.t('admin.auditLogs.adminUnknownFallback')),
       email: normalizeText(admin?.email),
       role: normalizeText(admin?.role, 'admin'),
     },
@@ -248,6 +259,7 @@ const FlagBox = ({ value, label, accent, icon }) => (
 );
 
 export default function AdminAuditLogDetailsScreen() {
+  const { t } = useTranslation();
   const params = useLocalSearchParams();
   const { token, isAuthenticated, role, user, loading: authLoading } = useAuth();
 
@@ -270,13 +282,13 @@ export default function AdminAuditLogDetailsScreen() {
     [log]
   );
 
-  const riskStyle = useMemo(() => getRiskLevel(log), [log]);
+  const riskStyle = useMemo(() => getRiskLevel(log, t), [log, t]);
 
   const fetchLog = useCallback(
     async (manual = false, silent = false) => {
       if (!token || !logId) {
         setLog(null);
-        setErrorMessage(!logId ? 'Journal invalide.' : 'Session admin invalide.');
+        setErrorMessage(!logId ? t('admin.auditLogs.invalidLogAlert') : t('admin.users.invalidSessionAlert'));
         setLoading(false);
         setRefreshing(false);
         setInitialLoaded(true);
@@ -296,7 +308,7 @@ export default function AdminAuditLogDetailsScreen() {
         const safeLog = normalizeAuditLog(data);
 
         if (!safeLog?._id) {
-          throw new Error('Impossible de charger ce journal admin.');
+          throw new Error(t('admin.auditLogDetails.fetchErrorFallback'));
         }
 
         setLog(safeLog);
@@ -305,7 +317,7 @@ export default function AdminAuditLogDetailsScreen() {
         console.log('Erreur admin audit log details :', error);
 
         const message =
-          error?.message || 'Impossible de charger ce journal admin.';
+          error?.message || t('admin.auditLogDetails.fetchErrorFallback');
 
         if (!silent) {
           setLog(null);
@@ -314,7 +326,7 @@ export default function AdminAuditLogDetailsScreen() {
         setErrorMessage(message);
 
         if (manual) {
-          Alert.alert('Erreur', message);
+          Alert.alert(t('common.error'), message);
         }
       } finally {
         setLoading(false);
@@ -322,7 +334,7 @@ export default function AdminAuditLogDetailsScreen() {
         setInitialLoaded(true);
       }
     },
-    [logId, token]
+    [logId, token, t]
   );
 
   useFocusEffect(
@@ -351,65 +363,65 @@ export default function AdminAuditLogDetailsScreen() {
     return Object.entries(log.metadata).map(([key, value]) => ({
       key,
       label: formatMetadataLabel(key),
-      value: formatMetadataValue(value),
+      value: formatMetadataValue(value, t),
       isComplex: typeof value === 'object' && value !== null,
     }));
-  }, [log]);
+  }, [log, t]);
 
   const summaryFlags = useMemo(() => {
     return [
       {
         key: 'target-type',
-        value: getTargetTypeLabel(log?.targetType),
-        label: 'Type cible',
+        value: getTargetTypeLabel(log?.targetType, t),
+        label: t('admin.auditLogDetails.targetTypeFlagLabel'),
         accent: targetTypeStyle.text,
         icon: targetTypeStyle.icon,
       },
       {
         key: 'has-target-id',
-        value: normalizeText(log?.targetId) ? 'Oui' : 'Non',
-        label: 'Target ID',
+        value: normalizeText(log?.targetId) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
+        label: t('admin.auditLogs.targetIdLabel'),
         accent: normalizeText(log?.targetId) ? '#1F6F43' : '#8A6500',
         icon: 'finger-print-outline',
       },
       {
         key: 'has-ip',
-        value: normalizeText(log?.ipAddress) ? 'Oui' : 'Non',
-        label: 'IP capturée',
+        value: normalizeText(log?.ipAddress) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
+        label: t('admin.auditLogDetails.ipCapturedFlagLabel'),
         accent: normalizeText(log?.ipAddress) ? '#1F6F43' : '#8A6500',
         icon: 'globe-outline',
       },
       {
         key: 'metadata',
         value: metadataEntries.length > 0 ? String(metadataEntries.length) : '0',
-        label: 'Clés metadata',
+        label: t('admin.auditLogDetails.metadataKeysFlagLabel'),
         accent: metadataEntries.length > 0 ? '#245EA8' : '#666',
         icon: 'layers-outline',
       },
       {
         key: 'risk',
         value: riskStyle.label,
-        label: 'Niveau de risque',
+        label: t('admin.auditLogDetails.riskLevelFlagLabel'),
         accent: riskStyle.text,
         icon: riskStyle.icon,
       },
       {
         key: 'target-label',
-        value: normalizeText(log?.targetLabel) ? 'Oui' : 'Non',
-        label: 'Label cible',
+        value: normalizeText(log?.targetLabel) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
+        label: t('admin.auditLogDetails.targetLabelFlagLabel'),
         accent: normalizeText(log?.targetLabel) ? '#1F6F43' : '#8A6500',
         icon: 'pricetag-outline',
       },
     ];
-  }, [log, targetTypeStyle, metadataEntries, riskStyle]);
+  }, [log, targetTypeStyle, metadataEntries, riskStyle, t]);
 
   const liveRefreshLabel = useMemo(() => {
     if (!lastLiveRefresh) {
-      return 'En attente du premier refresh live';
+      return t('admin.ops.liveRefreshWaiting');
     }
 
-    return `Dernier refresh live : ${formatDateTime(lastLiveRefresh)}`;
-  }, [lastLiveRefresh]);
+    return t('admin.ops.liveRefreshLabel', { date: formatDateTime(lastLiveRefresh) });
+  }, [lastLiveRefresh, t]);
 
   const handleGoBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -425,7 +437,7 @@ export default function AdminAuditLogDetailsScreen() {
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <ActivityIndicator size="large" color="#1F6F43" />
-        <Text style={styles.loaderText}>Chargement du journal admin...</Text>
+        <Text style={styles.loaderText}>{t('admin.auditLogDetails.loaderText')}</Text>
       </View>
     );
   }
@@ -436,9 +448,9 @@ export default function AdminAuditLogDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="shield-outline" size={56} color="#C8BBAA" />
-          <Text style={styles.emptyTitle}>Accès réservé à l’admin</Text>
+          <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
           <Text style={styles.emptyText}>
-            Connecte-toi avec un compte administrateur pour accéder au détail du journal.
+            {t('admin.auditLogDetails.restrictedText')}
           </Text>
         </View>
       </FadeInView>
@@ -451,9 +463,9 @@ export default function AdminAuditLogDetailsScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
-          <Text style={styles.emptyTitle}>Journal introuvable</Text>
+          <Text style={styles.emptyTitle}>{t('admin.auditLogDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
-            {errorMessage || 'Impossible de charger ce journal admin.'}
+            {errorMessage || t('admin.auditLogDetails.fetchErrorFallback')}
           </Text>
 
           <Pressable
@@ -469,14 +481,14 @@ export default function AdminAuditLogDetailsScreen() {
             ) : (
               <>
                 <Ionicons name="refresh-outline" size={18} color="#FFFFFF" />
-                <Text style={styles.retryButtonText}>Réessayer</Text>
+                <Text style={styles.retryButtonText}>{t('restaurant.retry')}</Text>
               </>
             )}
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
             <Ionicons name="arrow-back" size={16} color="#1F6F43" />
-            <Text style={styles.backLinkText}>Retour aux journaux</Text>
+            <Text style={styles.backLinkText}>{t('admin.auditLogDetails.backToLogsLink')}</Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -514,10 +526,10 @@ export default function AdminAuditLogDetailsScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.eyebrow}>Admin</Text>
-          <Text style={styles.title}>Détail journal admin</Text>
+          <Text style={styles.eyebrow}>{t('admin.restaurantDetails.eyebrow')}</Text>
+          <Text style={styles.title}>{t('admin.auditLogDetails.title')}</Text>
           <Text style={styles.subtitle}>
-            Analyse complète d’une action sensible tracée dans le système d’administration.
+            {t('admin.auditLogDetails.subtitle')}
           </Text>
         </View>
 
@@ -525,7 +537,7 @@ export default function AdminAuditLogDetailsScreen() {
           <View style={styles.liveMonitorHeader}>
             <View style={styles.liveMonitorTitleWrap}>
               <Ionicons name="radio-outline" size={18} color="#245EA8" />
-              <Text style={styles.liveMonitorTitle}>Audit Trace Monitor</Text>
+              <Text style={styles.liveMonitorTitle}>{t('admin.auditLogDetails.liveMonitorTitle')}</Text>
             </View>
 
             <View style={styles.liveBadge}>
@@ -534,9 +546,7 @@ export default function AdminAuditLogDetailsScreen() {
           </View>
 
           <Text style={styles.liveMonitorText}>
-            Ce détail constitue la base premium de traçabilité AFROEAT :
-            audit admin, supervision des actions sensibles et vérification
-            complète du contexte d’exécution.
+            {t('admin.auditLogDetails.liveMonitorText')}
           </Text>
 
           <Text style={styles.liveMonitorSubText}>{liveRefreshLabel}</Text>
@@ -545,13 +555,13 @@ export default function AdminAuditLogDetailsScreen() {
         <View style={styles.heroCard}>
           <View style={styles.heroLeft}>
             <Text style={styles.heroTitle}>
-              {formatActionLabel(log?.action)}
+              {formatActionLabel(log?.action, t)}
             </Text>
             <Text style={styles.heroText}>
-              Réalisée le {formatDateTime(log?.createdAt)}
+              {t('admin.auditLogDetails.performedOnHero', { date: formatDateTime(log?.createdAt) })}
             </Text>
             <Text style={styles.heroSubText}>
-              Admin : {normalizeText(log?.admin?.name, 'Admin inconnu')}
+              {t('admin.auditLogs.adminLabel', { name: normalizeText(log?.admin?.name, t('admin.auditLogs.adminUnknownFallback')) })}
             </Text>
           </View>
 
@@ -568,7 +578,7 @@ export default function AdminAuditLogDetailsScreen() {
                 color={targetTypeStyle.text}
               />
               <Text style={[styles.badgeText, { color: targetTypeStyle.text }]}>
-                {getTargetTypeLabel(log?.targetType)}
+                {getTargetTypeLabel(log?.targetType, t)}
               </Text>
             </View>
 
@@ -585,93 +595,93 @@ export default function AdminAuditLogDetailsScreen() {
                 color={riskStyle.text}
               />
               <Text style={[styles.badgeText, { color: riskStyle.text }]}>
-                Risque {riskStyle.label}
+                {t('admin.restaurantDetails.riskBadgeLabel', { level: riskStyle.label })}
               </Text>
             </View>
           </View>
         </View>
 
-        <InfoCard title="Action">
+        <InfoCard title={t('admin.auditLogDetails.actionSectionTitle')}>
           <MetaRow
             icon="flash-outline"
-            label="Action"
-            value={formatActionLabel(log?.action)}
+            label={t('admin.auditLogDetails.actionSectionTitle')}
+            value={formatActionLabel(log?.action, t)}
           />
           <MetaRow
             icon="calendar-outline"
-            label="Créée le"
+            label={t('admin.orderDetails.createdOnFieldLabelFem')}
             value={formatDateTime(log?.createdAt)}
           />
           <MetaRow
             icon="refresh-outline"
-            label="Mise à jour"
+            label={t('admin.orderDetails.updatedFieldLabelFem')}
             value={formatDateTime(log?.updatedAt)}
           />
         </InfoCard>
 
-        <InfoCard title="Admin à l’origine">
+        <InfoCard title={t('admin.auditLogDetails.adminOriginTitle')}>
           <MetaRow
             icon="person-circle-outline"
-            label="Nom"
-            value={normalizeText(log?.admin?.name, 'Admin inconnu')}
+            label={t('restaurant.profile.nameLabel')}
+            value={normalizeText(log?.admin?.name, t('admin.auditLogs.adminUnknownFallback'))}
           />
           <MetaRow
             icon="mail-outline"
-            label="Email"
-            value={normalizeText(log?.admin?.email, 'Non renseigné')}
+            label={t('admin.userDetails.emailFieldLabel')}
+            value={normalizeText(log?.admin?.email, t('profile.info.notProvided'))}
           />
           <MetaRow
             icon="id-card-outline"
-            label="Rôle"
-            value={normalizeText(log?.admin?.role, 'admin')}
+            label={t('admin.userDetails.roleFieldLabel')}
+            value={normalizeText(log?.admin?.role).toLowerCase() === 'admin' ? t('admin.users.roleAdminLabel') : normalizeText(log?.admin?.role, t('admin.users.roleAdminLabel'))}
           />
         </InfoCard>
 
-        <InfoCard title="Cible">
+        <InfoCard title={t('admin.auditLogDetails.targetSectionTitle')}>
           <MetaRow
             icon={targetTypeStyle.icon}
-            label="Type"
-            value={getTargetTypeLabel(log?.targetType)}
+            label={t('admin.auditLogDetails.typeFieldLabel')}
+            value={getTargetTypeLabel(log?.targetType, t)}
             valueStyle={{ color: targetTypeStyle.text, fontWeight: '900' }}
           />
           <MetaRow
             icon="pricetag-outline"
-            label="Label"
-            value={normalizeText(log?.targetLabel, 'Non renseigné')}
+            label={t('admin.auditLogDetails.targetLabelFieldLabel')}
+            value={normalizeText(log?.targetLabel, t('profile.info.notProvided'))}
             multiline
           />
           <MetaRow
             icon="finger-print-outline"
-            label="Target ID"
-            value={normalizeText(log?.targetId, 'Non renseigné')}
+            label={t('admin.auditLogs.targetIdLabel')}
+            value={normalizeText(log?.targetId, t('profile.info.notProvided'))}
             multiline
           />
         </InfoCard>
 
-        <InfoCard title="Détails">
+        <InfoCard title={t('admin.auditLogDetails.detailsSectionTitle')}>
           <MetaRow
             icon="document-text-outline"
-            label="Contenu"
-            value={normalizeText(log?.details, 'Aucun détail renseigné')}
+            label={t('admin.auditLogDetails.contentFieldLabel')}
+            value={normalizeText(log?.details, t('admin.auditLogDetails.noDetailsValue'))}
             multiline
           />
         </InfoCard>
 
-        <InfoCard title="Contexte technique">
+        <InfoCard title={t('admin.auditLogDetails.technicalContextTitle')}>
           <MetaRow
             icon="globe-outline"
-            label="IP"
-            value={normalizeText(log?.ipAddress, 'Non renseignée')}
+            label={t('admin.auditLogDetails.ipFieldLabel')}
+            value={normalizeText(log?.ipAddress, t('restaurant.profile.cityFallback'))}
           />
           <MetaRow
             icon="phone-portrait-outline"
-            label="Agent"
-            value={normalizeText(log?.userAgent, 'Non renseigné')}
+            label={t('admin.auditLogDetails.agentFieldLabel')}
+            value={normalizeText(log?.userAgent, t('profile.info.notProvided'))}
             multiline
           />
         </InfoCard>
 
-        <InfoCard title="Indicateurs admin">
+        <InfoCard title={t('admin.restaurantDetails.adminIndicatorsTitle')}>
           <View style={styles.flagGrid}>
             {summaryFlags.map((flag) => (
               <FlagBox
@@ -685,7 +695,7 @@ export default function AdminAuditLogDetailsScreen() {
           </View>
         </InfoCard>
 
-        <InfoCard title="Metadata">
+        <InfoCard title={t('admin.auditLogDetails.metadataSectionTitle')}>
           {metadataEntries.length > 0 ? (
             metadataEntries.map((entry, index) => (
               <View
@@ -708,7 +718,7 @@ export default function AdminAuditLogDetailsScreen() {
             ))
           ) : (
             <Text style={styles.emptyMetadataText}>
-              Aucune metadata enregistrée pour ce journal.
+              {t('admin.auditLogDetails.noMetadataText')}
             </Text>
           )}
         </InfoCard>

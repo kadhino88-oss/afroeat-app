@@ -1580,6 +1580,37 @@
       "unitPriceFragment": " • Precio unit.: {{price}}",
       "noteFragment": "Nota: {{note}}",
       "noItemsAvailable": "No hay artículos disponibles."
+    },
+    "auditLogDetails": {
+      "loaderText": "Cargando registro admin...",
+      "restrictedText": "Inicia sesión con una cuenta de administrador para acceder al detalle del registro.",
+      "notFoundTitle": "Registro no encontrado",
+      "fetchErrorFallback": "No se pudo cargar este registro admin.",
+      "backToLogsLink": "Volver a los registros",
+      "title": "Detalle del registro admin",
+      "subtitle": "Análisis completo de una acción sensible registrada en el sistema de administración.",
+      "liveMonitorTitle": "Audit Trace Monitor",
+      "liveMonitorText": "Este detalle es la base premium de trazabilidad AFROEAT: auditoría admin, supervisión de acciones sensibles y verificación completa del contexto de ejecución.",
+      "performedOnHero": "Realizada el {{date}}",
+      "actionSectionTitle": "Acción",
+      "adminOriginTitle": "Admin de origen",
+      "targetSectionTitle": "Objetivo",
+      "typeFieldLabel": "Tipo",
+      "targetLabelFieldLabel": "Etiqueta",
+      "detailsSectionTitle": "Detalles",
+      "contentFieldLabel": "Contenido",
+      "noDetailsValue": "Sin detalles indicados",
+      "technicalContextTitle": "Contexto técnico",
+      "ipFieldLabel": "IP",
+      "agentFieldLabel": "Agente",
+      "metadataSectionTitle": "Metadatos",
+      "noMetadataText": "No hay metadatos registrados para este registro.",
+      "targetTypeFlagLabel": "Tipo de objetivo",
+      "ipCapturedFlagLabel": "IP capturada",
+      "metadataKeysFlagLabel": "Claves de metadatos",
+      "riskLevelFlagLabel": "Nivel de riesgo",
+      "targetLabelFlagLabel": "Etiqueta objetivo",
+      "riskStandardLabel": "Estándar"
     }
   }
 }

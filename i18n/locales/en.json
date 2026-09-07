@@ -1580,6 +1580,37 @@
       "unitPriceFragment": " • Unit price: {{price}}",
       "noteFragment": "Note: {{note}}",
       "noItemsAvailable": "No items available."
+    },
+    "auditLogDetails": {
+      "loaderText": "Loading admin log...",
+      "restrictedText": "Sign in with an administrator account to access the log details.",
+      "notFoundTitle": "Log not found",
+      "fetchErrorFallback": "Unable to load this admin log.",
+      "backToLogsLink": "Back to logs",
+      "title": "Admin log detail",
+      "subtitle": "Complete analysis of a sensitive action tracked in the administration system.",
+      "liveMonitorTitle": "Audit Trace Monitor",
+      "liveMonitorText": "This detail is the AFROEAT premium traceability base: admin audit, supervision of sensitive actions and full verification of execution context.",
+      "performedOnHero": "Performed on {{date}}",
+      "actionSectionTitle": "Action",
+      "adminOriginTitle": "Originating admin",
+      "targetSectionTitle": "Target",
+      "typeFieldLabel": "Type",
+      "targetLabelFieldLabel": "Label",
+      "detailsSectionTitle": "Details",
+      "contentFieldLabel": "Content",
+      "noDetailsValue": "No details provided",
+      "technicalContextTitle": "Technical context",
+      "ipFieldLabel": "IP",
+      "agentFieldLabel": "Agent",
+      "metadataSectionTitle": "Metadata",
+      "noMetadataText": "No metadata recorded for this log.",
+      "targetTypeFlagLabel": "Target type",
+      "ipCapturedFlagLabel": "IP captured",
+      "metadataKeysFlagLabel": "Metadata keys",
+      "riskLevelFlagLabel": "Risk level",
+      "targetLabelFlagLabel": "Target label",
+      "riskStandardLabel": "Standard"
     }
   }
 }

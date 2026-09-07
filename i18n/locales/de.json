@@ -1580,6 +1580,37 @@
       "unitPriceFragment": " • Einzelpreis: {{price}}",
       "noteFragment": "Notiz: {{note}}",
       "noItemsAvailable": "Keine Artikel verfügbar."
+    },
+    "auditLogDetails": {
+      "loaderText": "Admin-Protokoll wird geladen...",
+      "restrictedText": "Melde dich mit einem Administratorkonto an, um die Protokolldetails aufzurufen.",
+      "notFoundTitle": "Protokoll nicht gefunden",
+      "fetchErrorFallback": "Dieses Admin-Protokoll konnte nicht geladen werden.",
+      "backToLogsLink": "Zurück zu den Protokollen",
+      "title": "Admin-Protokolldetail",
+      "subtitle": "Vollständige Analyse einer sensiblen Aktion, die im Verwaltungssystem erfasst wurde.",
+      "liveMonitorTitle": "Audit Trace Monitor",
+      "liveMonitorText": "Dieses Detail ist die AFROEAT-Premium-Rückverfolgbarkeitsbasis: Admin-Audit, Überwachung sensibler Aktionen und vollständige Prüfung des Ausführungskontexts.",
+      "performedOnHero": "Durchgeführt am {{date}}",
+      "actionSectionTitle": "Aktion",
+      "adminOriginTitle": "Ausführender Admin",
+      "targetSectionTitle": "Ziel",
+      "typeFieldLabel": "Typ",
+      "targetLabelFieldLabel": "Label",
+      "detailsSectionTitle": "Details",
+      "contentFieldLabel": "Inhalt",
+      "noDetailsValue": "Keine Details angegeben",
+      "technicalContextTitle": "Technischer Kontext",
+      "ipFieldLabel": "IP",
+      "agentFieldLabel": "Agent",
+      "metadataSectionTitle": "Metadaten",
+      "noMetadataText": "Keine Metadaten für dieses Protokoll erfasst.",
+      "targetTypeFlagLabel": "Zieltyp",
+      "ipCapturedFlagLabel": "IP erfasst",
+      "metadataKeysFlagLabel": "Metadaten-Schlüssel",
+      "riskLevelFlagLabel": "Risikostufe",
+      "targetLabelFlagLabel": "Ziel-Label",
+      "riskStandardLabel": "Standard"
     }
   }
 }
