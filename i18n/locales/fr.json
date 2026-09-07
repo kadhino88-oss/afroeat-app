@@ -250,7 +250,33 @@
       "editButton": "Modifier",
       "emptyTitle": "Aucun plat",
       "emptyText": "Commence par ajouter tes premiers plats.",
-      "addDishButton": "Ajouter un plat"
+      "addDishButton": "Ajouter un plat",
+      "demoMenu": {
+        "braisedChicken": {
+          "name": "Poulet braisé premium",
+          "description": "Poulet grillé mariné aux épices africaines, tendre et fumé."
+        },
+        "attiekeFish": {
+          "name": "Attiéké poisson",
+          "description": "Attiéké frais servi avec poisson frit et crudités."
+        },
+        "alloco": {
+          "name": "Alloco",
+          "description": "Bananes plantains frites dorées et fondantes."
+        },
+        "yassaChicken": {
+          "name": "Yassa poulet",
+          "description": "Poulet mariné au citron et aux oignons, servi avec riz."
+        },
+        "bissap": {
+          "name": "Bissap maison",
+          "description": "Boisson fraîche à l'hibiscus, légèrement sucrée."
+        },
+        "thiakry": {
+          "name": "Thiakry",
+          "description": "Dessert frais et gourmand à base de semoule fine et yaourt."
+        }
+      }
     },
     "addMenuItem": {
       "title": "Ajouter un plat",

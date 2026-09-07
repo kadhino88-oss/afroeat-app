@@ -250,7 +250,33 @@
       "editButton": "Modifica",
       "emptyTitle": "Nessun piatto",
       "emptyText": "Inizia aggiungendo i tuoi primi piatti.",
-      "addDishButton": "Aggiungi un piatto"
+      "addDishButton": "Aggiungi un piatto",
+      "demoMenu": {
+        "braisedChicken": {
+          "name": "Pollo alla brace premium",
+          "description": "Pollo alla griglia marinato con spezie africane, tenero e affumicato."
+        },
+        "attiekeFish": {
+          "name": "Attiéké con pesce",
+          "description": "Attiéké fresco servito con pesce fritto e verdure crude."
+        },
+        "alloco": {
+          "name": "Alloco",
+          "description": "Platani fritti dorati, croccanti e teneri."
+        },
+        "yassaChicken": {
+          "name": "Pollo Yassa",
+          "description": "Pollo marinato con limone e cipolle, servito con riso."
+        },
+        "bissap": {
+          "name": "Bissap fatto in casa",
+          "description": "Bevanda rinfrescante all'ibisco, leggermente dolcificata."
+        },
+        "thiakry": {
+          "name": "Thiakry",
+          "description": "Dessert fresco e goloso a base di semolino fine e yogurt."
+        }
+      }
     },
     "addMenuItem": {
       "title": "Aggiungi un piatto",

@@ -250,7 +250,33 @@
       "editButton": "Edit",
       "emptyTitle": "No dishes",
       "emptyText": "Start by adding your first dishes.",
-      "addDishButton": "Add a dish"
+      "addDishButton": "Add a dish",
+      "demoMenu": {
+        "braisedChicken": {
+          "name": "Premium braised chicken",
+          "description": "Grilled chicken marinated in African spices, tender and smoky."
+        },
+        "attiekeFish": {
+          "name": "Attiéké with fish",
+          "description": "Fresh attiéké served with fried fish and fresh vegetables."
+        },
+        "alloco": {
+          "name": "Alloco",
+          "description": "Golden fried plantains, crispy and tender."
+        },
+        "yassaChicken": {
+          "name": "Chicken Yassa",
+          "description": "Chicken marinated in lemon and onions, served with rice."
+        },
+        "bissap": {
+          "name": "Homemade bissap",
+          "description": "Refreshing hibiscus drink, lightly sweetened."
+        },
+        "thiakry": {
+          "name": "Thiakry",
+          "description": "Fresh, indulgent dessert made with fine semolina and yogurt."
+        }
+      }
     },
     "addMenuItem": {
       "title": "Add a dish",

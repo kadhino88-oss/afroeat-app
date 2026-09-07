@@ -250,7 +250,33 @@
       "editButton": "Bearbeiten",
       "emptyTitle": "Keine Gerichte",
       "emptyText": "Beginne mit dem Hinzufügen deiner ersten Gerichte.",
-      "addDishButton": "Gericht hinzufügen"
+      "addDishButton": "Gericht hinzufügen",
+      "demoMenu": {
+        "braisedChicken": {
+          "name": "Premium gegrilltes Hähnchen",
+          "description": "Gegrilltes Hähnchen mit afrikanischen Gewürzen mariniert, zart und rauchig."
+        },
+        "attiekeFish": {
+          "name": "Attiéké mit Fisch",
+          "description": "Frisches Attiéké mit gebratenem Fisch und Rohkost."
+        },
+        "alloco": {
+          "name": "Alloco",
+          "description": "Golden gebratene Kochbananen, knusprig und zart."
+        },
+        "yassaChicken": {
+          "name": "Hähnchen Yassa",
+          "description": "Hähnchen mit Zitrone und Zwiebeln mariniert, serviert mit Reis."
+        },
+        "bissap": {
+          "name": "Hausgemachter Bissap",
+          "description": "Erfrischendes Hibiskusgetränk, leicht gesüßt."
+        },
+        "thiakry": {
+          "name": "Thiakry",
+          "description": "Frisches, köstliches Dessert aus feinem Grieß und Joghurt."
+        }
+      }
     },
     "addMenuItem": {
       "title": "Gericht hinzufügen",

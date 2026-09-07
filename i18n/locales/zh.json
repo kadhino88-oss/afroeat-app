@@ -250,7 +250,33 @@
       "editButton": "编辑",
       "emptyTitle": "暂无菜品",
       "emptyText": "从添加你的第一道菜品开始。",
-      "addDishButton": "添加菜品"
+      "addDishButton": "添加菜品",
+      "demoMenu": {
+        "braisedChicken": {
+          "name": "特级碳烤鸡",
+          "description": "以非洲香料腌制的烤鸡，鲜嫩多汁，带烟熏香气。"
+        },
+        "attiekeFish": {
+          "name": "阿契克配鱼",
+          "description": "新鲜阿契克配炸鱼和生蔬菜。"
+        },
+        "alloco": {
+          "name": "阿洛科炸大蕉",
+          "description": "金黄酥脆、软糯香甜的炸大蕉。"
+        },
+        "yassaChicken": {
+          "name": "亚萨鸡",
+          "description": "以柠檬和洋葱腌制的鸡肉，配米饭食用。"
+        },
+        "bissap": {
+          "name": "自制洛神花饮",
+          "description": "清爽洛神花饮，微甜可口。"
+        },
+        "thiakry": {
+          "name": "蒂亚克里甜点",
+          "description": "由细粗麦粉和酸奶制成的清爽甜点。"
+        }
+      }
     },
     "addMenuItem": {
       "title": "添加菜品",
