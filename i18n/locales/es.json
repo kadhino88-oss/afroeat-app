@@ -778,7 +778,9 @@
     "viewMenu": "Ver menú",
     "noGeoRestaurants": "Ningún restaurante geolocalizado",
     "noGeoRestaurantsText": "Los restaurantes sin coordenadas GPS todavía no se pueden mostrar en el mapa.",
-    "detectedRestaurants": "Restaurantes detectados"
+    "detectedRestaurants": "Restaurantes detectados",
+    "locationDeniedTitle": "Ubicación rechazada",
+    "locationDeniedText": "Activa la ubicación para ver los restaurantes cerca de ti."
   },
   "mapWeb": {
     "title": "Mapa disponible en móvil",

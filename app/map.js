@@ -174,8 +174,8 @@ export default function MapScreen() {
 
       if (status !== 'granted') {
         Alert.alert(
-          'Localisation refusée',
-          'Active la localisation pour voir les restaurants autour de toi.'
+          t('map.locationDeniedTitle'),
+          t('map.locationDeniedText')
         );
         return null;
       }
@@ -197,7 +197,7 @@ export default function MapScreen() {
       console.log('Erreur GPS :', error);
       return null;
     }
-  }, []);
+  }, [t]);
 
   const fetchRestaurants = useCallback(async () => {
     try {

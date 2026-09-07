@@ -778,7 +778,9 @@
     "viewMenu": "查看菜单",
     "noGeoRestaurants": "暂无定位餐厅",
     "noGeoRestaurantsText": "没有 GPS 坐标的餐厅暂时无法在地图上显示。",
-    "detectedRestaurants": "已检测到的餐厅"
+    "detectedRestaurants": "已检测到的餐厅",
+    "locationDeniedTitle": "位置访问被拒绝",
+    "locationDeniedText": "开启位置服务以查看您附近的餐厅。"
   },
   "mapWeb": {
     "title": "地图仅支持移动端",
