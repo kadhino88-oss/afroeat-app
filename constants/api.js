@@ -185,9 +185,9 @@ const getBaseUrl = () => {
     return validateConfiguredApiUrl(CONFIGURED_API_URL);
   }
 
-  if (IS_PRODUCTION) {
+  if (APP_ENV !== 'development') {
     throw new Error(
-      'EXPO_PUBLIC_API_URL est obligatoire pour une build AFROEAT de production.'
+      'EXPO_PUBLIC_API_URL est obligatoire pour les builds AFROEAT preview et production.'
     );
   }
 
