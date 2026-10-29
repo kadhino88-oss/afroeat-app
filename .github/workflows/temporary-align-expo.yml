@@ -1,0 +1,40 @@
+name: Align Expo SDK packages (temporary repair)
+
+on:
+  push:
+    branches:
+      - fix/mobile-expo-security-gates
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v7
+        with:
+          ref: fix/mobile-expo-security-gates
+          persist-credentials: true
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Align package versions to the installed Expo SDK
+        run: npx expo install --fix
+      - name: Commit SDK-compatible package and lock files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then
+            echo "No Expo SDK dependency alignment changes needed."
+            exit 0
+          fi
+          git commit -m "fix(deps): align packages with Expo SDK 54"
+          git push origin HEAD:fix/mobile-expo-security-gates
