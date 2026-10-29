@@ -1,60 +1,17 @@
 import { Platform } from 'react-native';
+import apiConfig from './apiConfig';
 
-/**
- * =========================================================
- * ENV CONFIG
- * =========================================================
- */
+const APP_ENV = String(process.env.EXPO_PUBLIC_APP_ENV || 'development')
+  .trim()
+  .toLowerCase();
 
-/**
- * ⚠️ IMPORTANT — CONFIGURATION RÉSEAU
- * ====================================================
- * Remplace LOCAL_IP par l'adresse IP de ta machine.
- *
- * Pour la trouver :
- *   Windows : ipconfig → "Adresse IPv4"
- *   Mac/Linux : ifconfig → "inet"
- *
- * L'IP doit être sur le même réseau Wi-Fi que ton téléphone.
- * Exemple : 192.168.1.45, 192.168.0.12, 10.0.0.5
- *
- * NE PAS utiliser 'localhost' ou '127.0.0.1' sur téléphone physique.
- * ====================================================
- */
-const LOCAL_IP   = '192.168.1.121'; // ← CHANGE CETTE IP si nécessaire
-const LOCAL_PORT = '5000';          // ← Port de ton backend Node.js
-
-const DEV_PROTOCOL  = 'http';
-const PROD_PROTOCOL = 'https';
-
-/**
- * Domaine backend production
- * Exemple : api.afroeat.com
- */
-const PROD_DOMAIN = 'api.afroeat.com';
-
-/**
- * Passe à true uniquement en production réelle
- */
-const IS_PRODUCTION = false;
-
-/**
- * =========================================================
- * HELPERS
- * =========================================================
- */
-
-const isLocalhost = (value) => {
-  const host = String(value ?? '').trim().toLowerCase();
-  return host === 'localhost' || host === '127.0.0.1';
-};
-
-const sanitizeHost = (value) => {
-  return String(value ?? '')
-    .trim()
-    .replace(/^https?:\/\//, '')
-    .replace(/\/+$/, '');
-};
+const apiConfiguration = apiConfig.resolveApiConfig({
+  appEnv: APP_ENV,
+  configuredApiUrl: process.env.EXPO_PUBLIC_API_URL || '',
+  localIp: process.env.EXPO_PUBLIC_LOCAL_IP || '192.168.1.121',
+  localPort: process.env.EXPO_PUBLIC_API_PORT || '5000',
+  platform: Platform.OS,
+});
 
 export const safePathParam = (value) => {
   const normalized = String(value ?? '').trim();
@@ -79,39 +36,16 @@ const buildQueryString = (params = {}) => {
   return query ? `?${query}` : '';
 };
 
-const getDevHost = () => {
-  const host = sanitizeHost(LOCAL_IP);
-  if (!host) throw new Error('LOCAL_IP est vide dans constants/api.js');
-  if (Platform.OS === 'android' && isLocalhost(host)) return '10.0.2.2';
-  return host;
-};
-
-const getBaseUrl = () => {
-  if (IS_PRODUCTION) {
-    const prodHost = sanitizeHost(PROD_DOMAIN);
-    if (!prodHost) throw new Error('PROD_DOMAIN est vide dans constants/api.js');
-    return `${PROD_PROTOCOL}://${prodHost}/api`;
-  }
-  const host = getDevHost();
-  return `${DEV_PROTOCOL}://${host}:${LOCAL_PORT}/api`;
-};
-
-/**
- * =========================================================
- * BASE URL / CONFIG
- * =========================================================
- */
-
-export const API_BASE_URL = getBaseUrl();
-export const API_URL      = API_BASE_URL;
+export const API_BASE_URL = apiConfiguration.baseUrl;
+export const API_URL = API_BASE_URL;
 
 export const API_CONFIG = {
-  baseUrl:      API_BASE_URL,
-  timeout:      15000,
-  isProduction: IS_PRODUCTION,
-  protocol:     IS_PRODUCTION ? PROD_PROTOCOL : DEV_PROTOCOL,
-  host:         IS_PRODUCTION ? sanitizeHost(PROD_DOMAIN) : getDevHost(),
-  port:         IS_PRODUCTION ? null : LOCAL_PORT,
+  baseUrl: API_BASE_URL,
+  timeout: 15000,
+  isProduction: apiConfiguration.isProduction,
+  protocol: apiConfiguration.protocol,
+  host: apiConfiguration.host,
+  port: apiConfiguration.port,
 };
 
 /**

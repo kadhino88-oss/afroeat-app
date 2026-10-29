@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "check:wallet-config": "node --test scripts/stripe-wallet-config.test.cjs",
-    "check:locales": "node --test scripts/check-locales.cjs"
+    "check:locales": "node --test scripts/check-locales.cjs",
+    "check:api-config": "node --test scripts/api-config.test.cjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
