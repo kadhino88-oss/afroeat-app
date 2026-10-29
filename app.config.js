@@ -10,6 +10,7 @@ const PLACEHOLDER_MARKERS = [
   'your-domain',
   'placeholder',
   'changeme',
+  'replace',
   '<',
   '>',
 ];
