@@ -21,22 +21,79 @@ import { Platform } from 'react-native';
  * NE PAS utiliser 'localhost' ou '127.0.0.1' sur téléphone physique.
  * ====================================================
  */
-const LOCAL_IP   = '192.168.1.121'; // ← CHANGE CETTE IP si nécessaire
-const LOCAL_PORT = '5000';          // ← Port de ton backend Node.js
+const LOCAL_IP = process.env.EXPO_PUBLIC_LOCAL_IP || '192.168.1.121';
+const LOCAL_PORT = process.env.EXPO_PUBLIC_API_PORT || '5000';
+const DEV_PROTOCOL = 'http';
+const APP_ENV = String(process.env.EXPO_PUBLIC_APP_ENV || 'development')
+  .trim()
+  .toLowerCase();
+const IS_PRODUCTION = APP_ENV === 'production';
+const CONFIGURED_API_URL = String(process.env.EXPO_PUBLIC_API_URL || '').trim();
 
-const DEV_PROTOCOL  = 'http';
-const PROD_PROTOCOL = 'https';
+const isLocalhost = (value) => {
+  const host = String(value ?? '').trim().toLowerCase();
+  return host === 'localhost' || host === '127.0.0.1' || host === '::1';
+};
 
-/**
- * Domaine backend production
- * Exemple : api.afroeat.com
- */
-const PROD_DOMAIN = 'api.afroeat.com';
+const sanitizeHost = (value) => {
+  return String(value ?? '')
+    .trim()
+    .replace(/^https?:\\/\\//i, '')
+    .replace(/\\/+$/, '');
+};
 
-/**
- * Passe à true uniquement en production réelle
- */
-const IS_PRODUCTION = false;
+const getHostFromApiUrl = (value) =>
+  String(value || '')
+    .replace(/^https?:\\/\\//i, '')
+    .split('/')[0]
+    .split(':')[0]
+    .trim()
+    .toLowerCase();
+
+const isPrivateOrLocalHost = (host) =>
+  isLocalhost(host) ||
+  host.endsWith('.localhost') ||
+  /^10\\./.test(host) ||
+  /^127\\./.test(host) ||
+  /^192\\.168\\./.test(host) ||
+  /^172\\.(1[6-9]|2[0-9]|3[01])\\./.test(host) ||
+  host === '10.0.2.2';
+
+const isPlaceholderApiUrl = (value) =>
+  /(?:example\\.(?:com|org|net|invalid)|your[-_. ]?(?:api|backend|domain)|placeholder|changeme|<|>)/i.test(
+    String(value || '')
+  );
+
+const validateConfiguredApiUrl = (value) => {
+  const normalized = String(value || '').trim().replace(/\\/+$/, '');
+  if (!normalized) return '';
+
+  if (!/^https?:\\/\\/[^/?#]+\\/api$/i.test(normalized)) {
+    throw new Error(
+      'EXPO_PUBLIC_API_URL doit être une URL HTTP(S) complète terminant par /api.'
+    );
+  }
+
+  if (IS_PRODUCTION) {
+    if (!/^https:\\/\\//i.test(normalized)) {
+      throw new Error('Une URL HTTPS est obligatoire pour AFROEAT en production.');
+    }
+
+    const host = getHostFromApiUrl(normalized);
+    if (
+      !host ||
+      !host.includes('.') ||
+      isPrivateOrLocalHost(host) ||
+      isPlaceholderApiUrl(normalized)
+    ) {
+      throw new Error(
+        'EXPO_PUBLIC_API_URL doit désigner un domaine public HTTPS configuré pour AFROEAT.'
+      );
+    }
+  }
+
+  return normalized;
+};
 
 /**
  * =========================================================
@@ -81,17 +138,22 @@ const buildQueryString = (params = {}) => {
 
 const getDevHost = () => {
   const host = sanitizeHost(LOCAL_IP);
-  if (!host) throw new Error('LOCAL_IP est vide dans constants/api.js');
+  if (!host) throw new Error('EXPO_PUBLIC_LOCAL_IP est vide dans constants/api.js');
   if (Platform.OS === 'android' && isLocalhost(host)) return '10.0.2.2';
   return host;
 };
 
 const getBaseUrl = () => {
-  if (IS_PRODUCTION) {
-    const prodHost = sanitizeHost(PROD_DOMAIN);
-    if (!prodHost) throw new Error('PROD_DOMAIN est vide dans constants/api.js');
-    return `${PROD_PROTOCOL}://${prodHost}/api`;
+  if (CONFIGURED_API_URL) {
+    return validateConfiguredApiUrl(CONFIGURED_API_URL);
   }
+
+  if (IS_PRODUCTION) {
+    throw new Error(
+      'EXPO_PUBLIC_API_URL est obligatoire pour une build AFROEAT de production.'
+    );
+  }
+
   const host = getDevHost();
   return `${DEV_PROTOCOL}://${host}:${LOCAL_PORT}/api`;
 };
@@ -103,15 +165,23 @@ const getBaseUrl = () => {
  */
 
 export const API_BASE_URL = getBaseUrl();
-export const API_URL      = API_BASE_URL;
+export const API_URL = API_BASE_URL;
+
+const API_URL_AUTHORITY = API_BASE_URL
+  .replace(/^https?:\\/\\//i, '')
+  .split('/')[0];
+const API_URL_HOST = API_URL_AUTHORITY.split(':')[0];
+const API_URL_PORT = API_URL_AUTHORITY.includes(':')
+  ? API_URL_AUTHORITY.slice(API_URL_AUTHORITY.lastIndexOf(':') + 1)
+  : null;
 
 export const API_CONFIG = {
-  baseUrl:      API_BASE_URL,
-  timeout:      15000,
+  baseUrl: API_BASE_URL,
+  timeout: 15000,
   isProduction: IS_PRODUCTION,
-  protocol:     IS_PRODUCTION ? PROD_PROTOCOL : DEV_PROTOCOL,
-  host:         IS_PRODUCTION ? sanitizeHost(PROD_DOMAIN) : getDevHost(),
-  port:         IS_PRODUCTION ? null : LOCAL_PORT,
+  protocol: API_BASE_URL.startsWith('https://') ? 'https' : 'http',
+  host: API_URL_HOST,
+  port: API_URL_PORT,
 };
 
 /**
