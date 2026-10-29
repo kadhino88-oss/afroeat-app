@@ -1,6 +1,4 @@
 import { Platform } from 'react-native';
-
-import { Platform } from 'react-native';
 import apiConfig from './apiConfig';
 
 const APP_ENV = String(process.env.EXPO_PUBLIC_APP_ENV || 'development')
