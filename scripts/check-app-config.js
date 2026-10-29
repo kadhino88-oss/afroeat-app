@@ -113,17 +113,29 @@ assert.throws(
   /ANDROID_GOOGLE_MAPS_API_KEY/
 );
 
+assert.throws(
+  () => runConfig({
+    EXPO_PUBLIC_APP_ENV: 'production',
+    EXPO_PUBLIC_API_URL: 'https://api.afroeat.com/api',
+    EXPO_PUBLIC_STRIPE_KEY: 'pk_live_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+    ANDROID_GOOGLE_MAPS_API_KEY: 'AIzaSyB0123456789_RestrictedExampleKey',
+    EAS_BUILD_PLATFORM: 'android',
+  }),
+  /ANDROID_GOOGLE_MAPS_API_KEY/
+);
+
+const validMapsKey = 'AIza' + '0123456789abcdefABCDEF0123456789XYZ';
 const androidConfig = runConfig({
   EXPO_PUBLIC_APP_ENV: 'production',
   EXPO_PUBLIC_API_URL: 'https://api.afroeat.com/api',
   EXPO_PUBLIC_STRIPE_KEY: 'pk_live_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-  ANDROID_GOOGLE_MAPS_API_KEY: 'AIzaSyB0123456789_RestrictedExampleKey',
+  ANDROID_GOOGLE_MAPS_API_KEY: validMapsKey,
   EAS_BUILD_PLATFORM: 'android',
 });
 
 assert.equal(
   androidConfig.android.config.googleMaps.apiKey,
-  'AIzaSyB0123456789_RestrictedExampleKey'
+  validMapsKey
 );
 
-process.stdout.write('Expo environment guard checks passed (8 cases).\n');
+process.stdout.write('Expo environment guard checks passed (9 cases).\n');
