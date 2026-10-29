@@ -19,7 +19,7 @@
  * =========================================================
  */
 
-import { apiPost } from './apiClient';
+import { apiGet, apiPost } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
 export const STRIPE_PUBLISHABLE_KEY =
@@ -50,6 +50,34 @@ export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
     { orderId, paymentIntentId },
     token
   );
+};
+
+/**
+ * Payment methods remain server-authoritative on web; card entry is not
+ * available here because this app uses the native Stripe SDK.
+ */
+export const getAvailablePaymentMethods = async (token) => {
+  const response = await apiGet(API_ENDPOINTS.payments.methods, token);
+  const methods = response?.methods || {};
+  return {
+    card: false,
+    cash: methods.cash === true,
+  };
+};
+
+export const selectCashPayment = async (orderId, token) => {
+  if (!orderId || !token) {
+    throw new Error('Commande ou session manquante.');
+  }
+  const response = await apiPost(
+    API_ENDPOINTS.payments.selectCash,
+    { orderId },
+    token
+  );
+  if (response?.success !== true || response?.paymentMethod !== 'cash') {
+    throw new Error('Le paiement à la livraison n’a pas été confirmé par le serveur.');
+  }
+  return response;
 };
 
 const WEB_UNAVAILABLE_MESSAGE =
