@@ -15,7 +15,7 @@
  */
 
 import { useStripe } from '@stripe/stripe-react-native';
-import { apiPost } from './apiClient';
+import { apiGet, apiPost } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
 // ─── Clé publique Stripe (côté frontend, NON secrète) ─────
@@ -54,6 +54,42 @@ export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
     { orderId, paymentIntentId },
     token
   );
+};
+
+/**
+ * Read the payment options authorized by the backend for this environment.
+ * An unavailable response is not treated as permission to accept a payment.
+ */
+const hasConfiguredPublishableKey = () =>
+  /^pk_(test|live)_[A-Za-z0-9]+$/.test(STRIPE_PUBLISHABLE_KEY) &&
+  !STRIPE_PUBLISHABLE_KEY.includes('VOTRE_CLE');
+
+export const getAvailablePaymentMethods = async (token) => {
+  const response = await apiGet(API_ENDPOINTS.payments.methods, token);
+  const methods = response?.methods || {};
+  return {
+    card: methods.card === true && hasConfiguredPublishableKey(),
+    cash: methods.cash === true,
+  };
+};
+
+/**
+ * Select cash-on-delivery only when the backend explicitly accepts it.
+ * The backend rejects this method in production until the settlement ledger exists.
+ */
+export const selectCashPayment = async (orderId, token) => {
+  if (!orderId || !token) {
+    throw new Error('Commande ou session manquante.');
+  }
+  const response = await apiPost(
+    API_ENDPOINTS.payments.selectCash,
+    { orderId },
+    token
+  );
+  if (response?.success !== true || response?.paymentMethod !== 'cash') {
+    throw new Error('Le paiement à la livraison n’a pas été confirmé par le serveur.');
+  }
+  return response;
 };
 
 /**

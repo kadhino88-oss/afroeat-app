@@ -224,6 +224,7 @@ export const API_ENDPOINTS = {
     verify:             '/payments/verify',
     // Méthodes disponibles
     methods:            '/payments/methods',
+    selectCash:         '/payments/select-cash',
     // Historique
     history:            '/payments/history',
     // Payment Sheet (Stripe natif)
