@@ -1691,6 +1691,7 @@
     "intro": "设置一个安全账户，用于接收 Afroeat 订单款项。",
     "statusError": "Stripe 状态暂时不可用。",
     "statusConnected": "收款账户已启用",
+    "statusPlatformPaused": "账户已连接，但 Afroeat 暂时关闭了收款功能。",
     "statusReview": "资料已提交，正在审核",
     "statusIncomplete": "需要完成设置",
     "requirementsDue": "仍需提供的信息：{{count}}",
