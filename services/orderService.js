@@ -211,9 +211,12 @@ export const getOrderById = async (orderId, token) => {
   return order;
 };
 
-export const createOrder = async (payload, token) => {
+export const createOrder = async (payload, token, idempotencyKey = null) => {
   const endpoint = ensureEndpoint(API_ENDPOINTS?.orders?.create, 'orders.create');
-  const response = await apiPost(endpoint, payload, token);
+  const options = idempotencyKey
+    ? { headers: { 'Idempotency-Key': String(idempotencyKey) } }
+    : {};
+  const response = await apiPost(endpoint, payload, token, options);
 
   const order = normalizeOrderPayload(response);
 
