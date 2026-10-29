@@ -1691,6 +1691,7 @@
     "intro": "Configura il conto sicuro che riceverà i pagamenti dei tuoi ordini Afroeat.",
     "statusError": "Lo stato Stripe non è momentaneamente disponibile.",
     "statusConnected": "Conto pagamenti attivo",
+    "statusPlatformPaused": "Il conto è collegato, ma i pagamenti Afroeat sono temporaneamente disattivati.",
     "statusReview": "Dati inviati, verifica in corso",
     "statusIncomplete": "Configurazione da completare",
     "requirementsDue": "Informazioni ancora richieste: {{count}}",
