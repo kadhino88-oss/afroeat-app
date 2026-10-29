@@ -1563,6 +1563,17 @@
       "menuItemCategoryFallback": "Categoria"
     },
     "driverDetails": {
+      "verificationActionsTitle": "Verifica del corriere",
+      "verificationHint": "Registra una decisione solo dopo aver esaminato i documenti giustificativi. Ogni decisione deve essere motivata nella nota di audit.",
+      "identityVerifiedToggle": "Identità verificata",
+      "workAuthorizedToggle": "Autorizzazione al lavoro verificata",
+      "verificationNoteLabel": "Nota di verifica",
+      "verificationNotePlaceholder": "Descrivi i controlli effettuati (almeno 8 caratteri)…",
+      "saveVerificationButton": "Salva verifica",
+      "verificationSavedMessage": "La verifica del corriere è stata salvata.",
+      "verificationNoteRequired": "Inserisci una nota di audit da 8 a 500 caratteri prima di salvare.",
+      "verificationWorkNeedsIdentity": "Verifica l’identità del corriere prima di approvare l’autorizzazione al lavoro.",
+      "verificationErrorFallback": "Impossibile salvare la verifica del corriere.",
       "invalidDriverAlert": "Fattorino non valido.",
       "driverNotFoundFallback": "Fattorino non trovato.",
       "fetchErrorFallback": "Impossibile caricare questo fattorino.",

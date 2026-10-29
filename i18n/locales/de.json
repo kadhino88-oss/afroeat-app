@@ -1563,6 +1563,17 @@
       "menuItemCategoryFallback": "Kategorie"
     },
     "driverDetails": {
+      "verificationActionsTitle": "Kurierverifizierung",
+      "verificationHint": "Trage eine Entscheidung erst nach Prüfung der Nachweise ein. Jede Entscheidung muss in der Prüfnotiz begründet werden.",
+      "identityVerifiedToggle": "Identität verifiziert",
+      "workAuthorizedToggle": "Arbeitsberechtigung verifiziert",
+      "verificationNoteLabel": "Prüfnotiz",
+      "verificationNotePlaceholder": "Beschreibe die durchgeführten Prüfungen (mindestens 8 Zeichen)…",
+      "saveVerificationButton": "Verifizierung speichern",
+      "verificationSavedMessage": "Die Kurierverifizierung wurde gespeichert.",
+      "verificationNoteRequired": "Gib vor dem Speichern eine Prüfnotiz mit 8 bis 500 Zeichen ein.",
+      "verificationWorkNeedsIdentity": "Die Identität muss vor der Bestätigung der Arbeitsberechtigung verifiziert werden.",
+      "verificationErrorFallback": "Die Kurierverifizierung konnte nicht gespeichert werden.",
       "invalidDriverAlert": "Ungültiger Fahrer.",
       "driverNotFoundFallback": "Fahrer nicht gefunden.",
       "fetchErrorFallback": "Dieser Fahrer konnte nicht geladen werden.",

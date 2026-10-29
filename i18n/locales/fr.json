@@ -1563,6 +1563,17 @@
       "menuItemCategoryFallback": "Catégorie"
     },
     "driverDetails": {
+      "verificationActionsTitle": "Vérification du livreur",
+      "verificationHint": "Enregistre une décision après contrôle des justificatifs. Chaque décision doit être justifiée dans la note d’audit.",
+      "identityVerifiedToggle": "Identité vérifiée",
+      "workAuthorizedToggle": "Autorisation de travail vérifiée",
+      "verificationNoteLabel": "Note de contrôle",
+      "verificationNotePlaceholder": "Décris les contrôles effectués (8 caractères minimum)…",
+      "saveVerificationButton": "Enregistrer la vérification",
+      "verificationSavedMessage": "La vérification du livreur a été enregistrée.",
+      "verificationNoteRequired": "Saisis une note d’audit de 8 à 500 caractères avant d’enregistrer.",
+      "verificationWorkNeedsIdentity": "L’identité doit être vérifiée avant de valider l’autorisation de travail.",
+      "verificationErrorFallback": "Impossible d’enregistrer la vérification du livreur.",
       "invalidDriverAlert": "Livreur invalide.",
       "driverNotFoundFallback": "Livreur introuvable.",
       "fetchErrorFallback": "Impossible de charger ce livreur.",

@@ -60,6 +60,7 @@
   "private": true,
   "overrides": {
     "postcss": "^8.5.23",
-    "image-size": "npm:image-size-next@1.2.2"
+    "image-size": "npm:image-size-next@1.2.2",
+    "decode-uri-component": "^0.5.1"
   }
 }
