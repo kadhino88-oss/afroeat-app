@@ -19,7 +19,38 @@ import { apiGet, apiPost } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
 // ─── Clé publique Stripe (côté frontend, NON secrète) ─────
-export const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_KEY || 'pk_test_VOTRE_CLE_PUBLIQUE';
+export const STRIPE_PUBLISHABLE_KEY = String(
+  process.env.EXPO_PUBLIC_STRIPE_KEY || ''
+).trim();
+
+const APP_ENV = String(process.env.EXPO_PUBLIC_APP_ENV || 'development')
+  .trim()
+  .toLowerCase();
+const IS_PRODUCTION_BUILD = APP_ENV === 'production';
+
+const isValidStripePublishableKey = (key) => {
+  const value = String(key || '').trim();
+  const prefix = value.startsWith('pk_live_')
+    ? 'pk_live_'
+    : value.startsWith('pk_test_')
+      ? 'pk_test_'
+      : '';
+
+  if (!prefix) return false;
+
+  const suffix = value.slice(prefix.length);
+  return suffix.length >= 16 && /^[A-Za-z0-9]+$/.test(suffix);
+};
+
+if (
+  IS_PRODUCTION_BUILD &&
+  (!STRIPE_PUBLISHABLE_KEY.startsWith('pk_live_') ||
+    !isValidStripePublishableKey(STRIPE_PUBLISHABLE_KEY))
+) {
+  throw new Error(
+    'EXPO_PUBLIC_STRIPE_KEY doit contenir une clé publique Stripe live valide pour une build de production.'
+  );
+}
 
 /**
  * Crée un PaymentIntent côté backend et retourne le clientSecret.
@@ -61,8 +92,7 @@ export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
  * An unavailable response is not treated as permission to accept a payment.
  */
 const hasConfiguredPublishableKey = () =>
-  /^pk_(test|live)_[A-Za-z0-9]+$/.test(STRIPE_PUBLISHABLE_KEY) &&
-  !STRIPE_PUBLISHABLE_KEY.includes('VOTRE_CLE');
+  isValidStripePublishableKey(STRIPE_PUBLISHABLE_KEY);
 
 export const getAvailablePaymentMethods = async (token) => {
   const response = await apiGet(API_ENDPOINTS.payments.methods, token);
