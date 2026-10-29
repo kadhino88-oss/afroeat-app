@@ -1,0 +1,44 @@
+name: Apply safe npm audit fixes (temporary repair)
+
+on:
+  push:
+    branches:
+      - fix/mobile-expo-security-gates
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v7
+        with:
+          ref: fix/mobile-expo-security-gates
+          persist-credentials: true
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Apply non-breaking npm audit fixes
+        run: npm audit fix --ignore-scripts
+      - name: Verify available non-breaking fixes and record residual findings
+        shell: bash
+        run: |
+          npm audit --omit=dev --audit-level=high || echo "::warning::High-severity production advisories remain and require dependency-level remediation."
+      - name: Commit dependency changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then
+            echo "No additional safe npm dependency changes."
+            exit 0
+          fi
+          git commit -m "fix(deps): apply non-breaking npm audit fixes"
+          git push origin HEAD:fix/mobile-expo-security-gates
