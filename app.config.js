@@ -5,6 +5,7 @@ const PLACEHOLDER_MARKERS = [
   'example.org',
   'example.net',
   'example.invalid',
+  'example',
   'your-api',
   'your-backend',
   'your-domain',
@@ -43,6 +44,14 @@ const isPrivateOrLocalHost = (host) => {
     normalized.startsWith('192.168.') ||
     private172 ||
     isIpAddress(normalized)
+  );
+};
+
+const isValidAndroidMapsKey = (value) => {
+  const key = String(value || '').trim();
+  return (
+    /^AIza[0-9A-Za-z_-]{35}$/.test(key) &&
+    !PLACEHOLDER_MARKERS.some((marker) => key.toLowerCase().includes(marker))
   );
 };
 
@@ -98,10 +107,7 @@ module.exports = ({ config }) => {
 
     const platform = String(process.env.EAS_BUILD_PLATFORM || '').trim().toLowerCase();
     const mapsKey = String(process.env.ANDROID_GOOGLE_MAPS_API_KEY || '').trim();
-    if (
-      platform === 'android' &&
-      (!mapsKey || PLACEHOLDER_MARKERS.some((marker) => mapsKey.toLowerCase().includes(marker)))
-    ) {
+    if (platform === 'android' && !isValidAndroidMapsKey(mapsKey)) {
       throw new Error(
         'Android production build blocked: configure ANDROID_GOOGLE_MAPS_API_KEY and restrict it to the AFROEAT package/signing certificate.'
       );
