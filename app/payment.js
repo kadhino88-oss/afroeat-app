@@ -26,7 +26,11 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
-import { useAfroeatPayment } from '../services/stripeService';
+import {
+  useAfroeatPayment,
+  getAvailablePaymentMethods,
+  selectCashPayment,
+} from '../services/stripeService';
 import { useTranslation } from 'react-i18next';
 
 // ─── Helpers ──────────────────────────────────────────────
@@ -85,7 +89,9 @@ export default function PaymentScreen() {
   const amount   = normalizeNumber(params?.amount, 0);
   const currency = normalizeText(params?.currency, 'EUR');
 
-  const [selectedMethod, setSelectedMethod] = useState('card');
+  const [selectedMethod, setSelectedMethod] = useState('');
+  const [availableMethods, setAvailableMethods] = useState({ card: false, cash: false });
+  const [methodsLoading, setMethodsLoading] = useState(true);
   const [loading,        setLoading]         = useState(false);
   const [step,           setStep]            = useState('select'); // 'select' | 'processing' | 'success' | 'error'
   const [errorMsg,       setErrorMsg]        = useState('');
@@ -100,16 +106,52 @@ export default function PaymentScreen() {
     }
   }, [orderId]);
 
+  useEffect(() => {
+    let active = true;
+    setMethodsLoading(true);
+
+    getAvailablePaymentMethods(token)
+      .then((methods) => {
+        if (!active) return;
+        const nextMethods = {
+          card: methods.card === true,
+          cash: methods.cash === true,
+        };
+        setAvailableMethods(nextMethods);
+        setSelectedMethod(nextMethods.card ? 'card' : nextMethods.cash ? 'cash' : '');
+      })
+      .catch(() => {
+        // Fail closed: a network/API error never enables a payment method.
+        if (!active) return;
+        setAvailableMethods({ card: false, cash: false });
+        setSelectedMethod('');
+      })
+      .finally(() => {
+        if (active) setMethodsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [token]);
+
   const handleCashPayment = useCallback(async () => {
-    // Paiement à la livraison : aucun appel backend n'est nécessaire ici.
-    // La commande reste "En attente" (le restaurant la confirme comme
-    // n'importe quelle commande) et le client règle le livreur en espèces
-    // ou par carte directement à la réception.
     setLoading(true);
     setStep('processing');
-    setLoading(false);
-    setStep('success');
-  }, []);
+    setErrorMsg('');
+
+    try {
+      // Cash is selected on the server; production returns 503 until the
+      // cash collection and settlement ledger is implemented.
+      await selectCashPayment(orderId, token);
+      setStep('success');
+    } catch (error) {
+      setErrorMsg(error?.message || t('payment.cashUnavailable', 'Le paiement à la livraison est indisponible.'));
+      setStep('error');
+    } finally {
+      setLoading(false);
+    }
+  }, [orderId, token, t]);
 
   const handleCardPayment = useCallback(async () => {
     setLoading(true);
@@ -128,17 +170,32 @@ export default function PaymentScreen() {
   }, [orderId, token, payWithStripe]);
 
   const handlePay = useCallback(() => {
-    if (!orderId) return;
-    if (selectedMethod === 'cash') {
-      handleCashPayment();
-    } else {
-      handleCardPayment();
+    if (!orderId || !selectedMethod) {
+      Alert.alert(
+        t('payment.title'),
+        t('payment.noMethodsAvailable', 'Aucun moyen de paiement n’est disponible actuellement.')
+      );
+      return;
     }
-  }, [selectedMethod, orderId, handleCashPayment, handleCardPayment]);
+    if (selectedMethod === 'cash' && availableMethods.cash) {
+      handleCashPayment();
+    } else if (selectedMethod === 'card' && availableMethods.card) {
+      handleCardPayment();
+    } else {
+      Alert.alert(
+        t('payment.title'),
+        t('payment.noMethodsAvailable', 'Aucun moyen de paiement n’est disponible actuellement.')
+      );
+    }
+  }, [selectedMethod, orderId, availableMethods, handleCashPayment, handleCardPayment, t]);
 
   const handleGoToOrders = useCallback(() => {
     router.replace('/(tabs)/orders');
   }, []);
+
+  const availablePaymentMethods = PAYMENT_METHODS.filter(
+    (method) => availableMethods[method.id] === true
+  );
 
   const handleRetry = useCallback(() => {
     setStep('select');
@@ -235,7 +292,21 @@ export default function PaymentScreen() {
         {/* Méthodes de paiement */}
         <Text style={styles.sectionTitle}>{t('payment.chooseMethod')}</Text>
 
-        {PAYMENT_METHODS.map((method) => (
+        {methodsLoading ? (
+          <View style={styles.infoBox}>
+            <ActivityIndicator color="#D4A017" />
+            <Text style={styles.infoText}>
+              {t('payment.loadingMethods', 'Vérification des moyens de paiement…')}
+            </Text>
+          </View>
+        ) : availablePaymentMethods.length === 0 ? (
+          <View style={styles.infoBox}>
+            <Ionicons name="alert-circle-outline" size={18} color="#B63B3B" />
+            <Text style={[styles.infoText, { color: '#B63B3B' }]}>
+              {t('payment.noMethodsAvailable', 'Aucun moyen de paiement n’est disponible actuellement. Réessaie plus tard.')}
+            </Text>
+          </View>
+        ) : availablePaymentMethods.map((method) => (
           <PaymentMethodBtn
             key={method.id}
             method={method}
@@ -271,7 +342,7 @@ export default function PaymentScreen() {
             pressed && styles.pressed,
           ]}
           onPress={handlePay}
-          disabled={loading}
+          disabled={loading || methodsLoading || !selectedMethod}
         >
           {loading
             ? <ActivityIndicator color="#111" />
