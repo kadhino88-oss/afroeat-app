@@ -151,6 +151,16 @@ export default function AdminIndexScreen() {
       route: '/admin/orders',
     },
     {
+      key: 'payouts',
+      title: t('payouts.reconciliationTitle'),
+      subtitle: t('payouts.reconciliationSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'wallet-outline',
+      accent: '#5A32A3',
+      soft: '#EEE7FA',
+      route: '/admin/payouts',
+    },
+    {
       key: 'audit',
       title: t('admin.common.auditTitle'),
       subtitle: t('admin.index.auditSubtitle'),
@@ -180,6 +190,12 @@ export default function AdminIndexScreen() {
       label: t('admin.common.ordersTitle'),
       icon: 'receipt-outline',
       route: '/admin/orders',
+    },
+    {
+      key: 'payouts',
+      label: t('payouts.reconciliationTitle'),
+      icon: 'wallet-outline',
+      route: '/admin/payouts',
     },
     {
       key: 'audit',

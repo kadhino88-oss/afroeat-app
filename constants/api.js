@@ -234,6 +234,13 @@ export const API_ENDPOINTS = {
     // Remboursement admin
     refund:             '/payments/refund',
     refundOrderPayment: (orderId) => `/payments/orders/${safePathParam(orderId)}/refund`,
+    // Stripe Connect / versements partenaires
+    connectStatus:      '/payments/connect/status',
+    connectOnboardingLink: '/payments/connect/onboarding-link',
+    connectDashboardLink: '/payments/connect/dashboard-link',
+    connectReconciliation: '/payments/connect/reconciliation',
+    connectResolveReconciliation: (orderId) => `/payments/connect/reconciliation/${safePathParam(orderId)}/resolve`,
+    connectReconcile:   (orderId) => `/payments/connect/reconcile/${safePathParam(orderId)}`,
     // Webhook Stripe (backend uniquement)
     webhook:            '/payments/webhook',
   },

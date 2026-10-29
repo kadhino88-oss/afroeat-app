@@ -1685,5 +1685,35 @@
       "targetLabelFlagLabel": "Etiqueta objetivo",
       "riskStandardLabel": "Estándar"
     }
+  },
+  "payouts": {
+    "title": "Pagos",
+    "intro": "Configura la cuenta segura que recibirá los pagos de tus pedidos de Afroeat.",
+    "statusError": "El estado de Stripe no está disponible temporalmente.",
+    "statusConnected": "Cuenta de pagos activa",
+    "statusPlatformPaused": "Tu cuenta está conectada, pero los pagos aún no están habilitados para esta plataforma o este país.",
+    "statusReview": "Datos enviados, verificación en curso",
+    "statusIncomplete": "Debes completar la configuración",
+    "requirementsDue": "Datos aún solicitados: {{count}}",
+    "countryCodeError": "Introduce el código ISO de dos letras, como FR o CI.",
+    "countryLabel": "País de la cuenta de pagos",
+    "countryPlaceholder": "Código ISO2, por ejemplo FR",
+    "countryHelp": "Debe coincidir con el país de la cuenta Stripe y estar habilitado por Afroeat.",
+    "continueButton": "Continuar configuración de Stripe",
+    "connectButton": "Configurar pagos con Stripe",
+    "refreshButton": "Actualizar estado",
+    "secureNotice": "Stripe recopila directamente los datos personales y bancarios. Afroeat no guarda tus datos bancarios.",
+    "profileLink": "Mis pagos",
+    "manageButton": "Gestionar cuenta de Stripe",
+    "reconciliationTitle": "Conciliación de pagos",
+    "reconciliationSubtitle": "Pedidos entregados cuyos pagos de Stripe requieren otro intento o revisión.",
+    "reconciliationEmpty": "No hay pagos que conciliar.",
+    "reconciliationLoadError": "No se pudo cargar la lista de pagos pendientes de conciliación.",
+    "reconciliationRetry": "Reintentar transferencia",
+    "retryDone": "Se ejecutó la conciliación.",
+    "retryFailed": "El pago todavía requiere revisión.",
+    "resolutionNoteError": "Describe el pago o la revisión manual con al menos 10 caracteres.",
+    "resolutionNotePlaceholder": "Registra la conciliación realizada fuera de Stripe…",
+    "reconciliationResolve": "Cerrar tras la conciliación manual"
   }
 }

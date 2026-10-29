@@ -1685,5 +1685,35 @@
       "targetLabelFlagLabel": "Etichetta obiettivo",
       "riskStandardLabel": "Standard"
     }
+  },
+  "payouts": {
+    "title": "Pagamenti",
+    "intro": "Configura il conto sicuro che riceverà i pagamenti dei tuoi ordini Afroeat.",
+    "statusError": "Lo stato Stripe non è momentaneamente disponibile.",
+    "statusConnected": "Conto pagamenti attivo",
+    "statusPlatformPaused": "Il conto è collegato, ma i pagamenti non sono ancora attivi per questa piattaforma o questo paese.",
+    "statusReview": "Dati inviati, verifica in corso",
+    "statusIncomplete": "Configurazione da completare",
+    "requirementsDue": "Informazioni ancora richieste: {{count}}",
+    "countryCodeError": "Inserisci il codice paese ISO di due lettere, ad esempio FR o CI.",
+    "countryLabel": "Paese del conto pagamenti",
+    "countryPlaceholder": "Codice ISO2, ad esempio FR",
+    "countryHelp": "Deve corrispondere al paese del conto Stripe ed essere abilitato da Afroeat.",
+    "continueButton": "Continua configurazione Stripe",
+    "connectButton": "Configura i pagamenti con Stripe",
+    "refreshButton": "Aggiorna stato",
+    "secureNotice": "Stripe raccoglie direttamente i dati personali e bancari. Afroeat non conserva i tuoi dati bancari.",
+    "profileLink": "I miei pagamenti",
+    "manageButton": "Gestisci account Stripe",
+    "reconciliationTitle": "Riconciliazione pagamenti",
+    "reconciliationSubtitle": "Ordini consegnati con trasferimenti Stripe da riprovare o verificare.",
+    "reconciliationEmpty": "Nessun pagamento richiede la riconciliazione.",
+    "reconciliationLoadError": "Impossibile caricare i pagamenti da riconciliare.",
+    "reconciliationRetry": "Riprova il trasferimento",
+    "retryDone": "Riconciliazione eseguita.",
+    "retryFailed": "Il pagamento richiede ancora una verifica.",
+    "resolutionNoteError": "Descrivi la verifica o il pagamento manuale con almeno 10 caratteri.",
+    "resolutionNotePlaceholder": "Registra la riconciliazione eseguita fuori da Stripe…",
+    "reconciliationResolve": "Chiudi dopo la riconciliazione manuale"
   }
 }

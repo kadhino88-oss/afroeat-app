@@ -144,6 +144,7 @@ export default function AdminLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="AdminDashboard" />
       <Stack.Screen name="ops" />
+      <Stack.Screen name="payouts" />
 
       {/* Blocs principaux */}
       <Stack.Screen name="users" />

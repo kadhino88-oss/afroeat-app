@@ -1685,5 +1685,35 @@
       "targetLabelFlagLabel": "Label cible",
       "riskStandardLabel": "Standard"
     }
+  },
+  "payouts": {
+    "title": "Versements",
+    "intro": "Configure le compte sécurisé qui recevra les versements de tes commandes Afroeat.",
+    "statusError": "Le statut Stripe est momentanément indisponible.",
+    "statusConnected": "Compte de versement activé",
+    "statusPlatformPaused": "Compte connecté, mais les versements Afroeat ne sont pas encore activés pour cette plateforme ou ce pays.",
+    "statusReview": "Informations envoyées, vérification en cours",
+    "statusIncomplete": "Configuration à terminer",
+    "requirementsDue": "Informations encore demandées : {{count}}",
+    "countryCodeError": "Saisis le code pays ISO à deux lettres, par exemple FR ou CI.",
+    "countryLabel": "Pays du compte de versement",
+    "countryPlaceholder": "Code ISO2, par exemple FR",
+    "countryHelp": "Ce code doit correspondre au pays du compte Stripe et être autorisé par Afroeat.",
+    "continueButton": "Continuer la configuration Stripe",
+    "connectButton": "Configurer les versements avec Stripe",
+    "refreshButton": "Actualiser le statut",
+    "secureNotice": "Stripe collecte directement les informations personnelles et bancaires. Afroeat ne stocke pas tes coordonnées bancaires.",
+    "profileLink": "Mes versements",
+    "manageButton": "Gérer mon compte Stripe",
+    "reconciliationTitle": "Rapprochement des versements",
+    "reconciliationSubtitle": "Commandes livrées dont les transferts Stripe nécessitent une reprise ou une vérification.",
+    "reconciliationEmpty": "Aucun versement ne nécessite de rapprochement.",
+    "reconciliationLoadError": "Impossible de charger la liste des versements à rapprocher.",
+    "reconciliationRetry": "Réessayer le versement",
+    "retryDone": "Le rapprochement a été exécuté.",
+    "retryFailed": "Le versement nécessite encore une vérification.",
+    "resolutionNoteError": "Décris en au moins 10 caractères le règlement ou contrôle manuel effectué.",
+    "resolutionNotePlaceholder": "Note le rapprochement effectué hors Stripe…",
+    "reconciliationResolve": "Clôturer après rapprochement manuel"
   }
 }

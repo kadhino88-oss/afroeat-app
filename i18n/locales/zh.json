@@ -1685,5 +1685,35 @@
       "targetLabelFlagLabel": "目标标签",
       "riskStandardLabel": "标准"
     }
+  },
+  "payouts": {
+    "title": "收款设置",
+    "intro": "设置一个安全账户，用于接收 Afroeat 订单款项。",
+    "statusError": "Stripe 状态暂时不可用。",
+    "statusConnected": "收款账户已启用",
+    "statusPlatformPaused": "账户已连接，但此平台或所在国家/地区尚未启用 Afroeat 收款。",
+    "statusReview": "资料已提交，正在审核",
+    "statusIncomplete": "需要完成设置",
+    "requirementsDue": "仍需提供的信息：{{count}}",
+    "countryCodeError": "请输入两位 ISO 国家代码，例如 FR 或 CI。",
+    "countryLabel": "收款账户所在国家",
+    "countryPlaceholder": "ISO2 代码，例如 FR",
+    "countryHelp": "该代码必须与 Stripe 账户国家一致，并已获 Afroeat 开通。",
+    "continueButton": "继续 Stripe 设置",
+    "connectButton": "使用 Stripe 设置收款",
+    "refreshButton": "刷新状态",
+    "secureNotice": "个人和银行信息由 Stripe 直接收集。Afroeat 不会存储你的银行账户信息。",
+    "profileLink": "我的收款",
+    "manageButton": "管理 Stripe 账户",
+    "reconciliationTitle": "款项对账",
+    "reconciliationSubtitle": "已送达订单中需要重试或检查的 Stripe 转账。",
+    "reconciliationEmpty": "没有需要对账的款项。",
+    "reconciliationLoadError": "无法加载待对账款项。",
+    "reconciliationRetry": "重试转账",
+    "retryDone": "已执行对账。",
+    "retryFailed": "该笔款项仍需检查。",
+    "resolutionNoteError": "请至少用 10 个字符说明已完成的手动结算或审核。",
+    "resolutionNotePlaceholder": "记录在 Stripe 之外完成的对账…",
+    "reconciliationResolve": "手动对账后关闭"
   }
 }
