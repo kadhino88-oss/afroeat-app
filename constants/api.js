@@ -30,52 +30,107 @@ const APP_ENV = String(process.env.EXPO_PUBLIC_APP_ENV || 'development')
 const IS_PRODUCTION = APP_ENV === 'production';
 const CONFIGURED_API_URL = String(process.env.EXPO_PUBLIC_API_URL || '').trim();
 
+/**
+ * =========================================================
+ * HELPERS
+ * =========================================================
+ */
+
 const isLocalhost = (value) => {
   const host = String(value ?? '').trim().toLowerCase();
   return host === 'localhost' || host === '127.0.0.1' || host === '::1';
 };
 
-const sanitizeHost = (value) => {
-  return String(value ?? '')
-    .trim()
-    .replace(/^https?:\\/\\//i, '')
-    .replace(/\\/+$/, '');
+const stripHttpScheme = (value) => {
+  const normalized = String(value ?? '').trim();
+  if (normalized.toLowerCase().startsWith('https://')) return normalized.slice(8);
+  if (normalized.toLowerCase().startsWith('http://')) return normalized.slice(7);
+  return normalized;
 };
 
+const sanitizeHost = (value) =>
+  stripHttpScheme(value).replace(/[/]+$/, '');
+
 const getHostFromApiUrl = (value) =>
-  String(value || '')
-    .replace(/^https?:\\/\\//i, '')
-    .split('/')[0]
-    .split(':')[0]
-    .trim()
-    .toLowerCase();
+  stripHttpScheme(value).split('/')[0].split(':')[0].trim().toLowerCase();
 
-const isPrivateOrLocalHost = (host) =>
-  isLocalhost(host) ||
-  host.endsWith('.localhost') ||
-  /^10\\./.test(host) ||
-  /^127\\./.test(host) ||
-  /^192\\.168\\./.test(host) ||
-  /^172\\.(1[6-9]|2[0-9]|3[01])\\./.test(host) ||
-  host === '10.0.2.2';
+const isIpAddress = (host) => {
+  const parts = String(host || '').split('.');
+  return parts.length === 4 && parts.every((part) => {
+    if (!/^\d+$/.test(part)) return false;
+    const number = Number(part);
+    return number >= 0 && number <= 255;
+  });
+};
 
-const isPlaceholderApiUrl = (value) =>
-  /(?:example\\.(?:com|org|net|invalid)|your[-_. ]?(?:api|backend|domain)|placeholder|changeme|<|>)/i.test(
-    String(value || '')
+const isPrivateOrLocalHost = (host) => {
+  const normalized = String(host || '').trim().toLowerCase();
+  const parts = normalized.split('.');
+  const private172 =
+    parts.length === 4 &&
+    parts[0] === '172' &&
+    Number(parts[1]) >= 16 &&
+    Number(parts[1]) <= 31;
+
+  return (
+    isLocalhost(normalized) ||
+    normalized.endsWith('.localhost') ||
+    normalized.endsWith('.local') ||
+    normalized.endsWith('.internal') ||
+    normalized === '10.0.2.2' ||
+    normalized.startsWith('10.') ||
+    normalized.startsWith('127.') ||
+    normalized.startsWith('192.168.') ||
+    private172 ||
+    isIpAddress(normalized)
   );
+};
+
+const isPlaceholderApiUrl = (value) => {
+  const normalized = String(value || '').toLowerCase();
+  return (
+    normalized.includes('example.com') ||
+    normalized.includes('example.org') ||
+    normalized.includes('example.net') ||
+    normalized.includes('example.invalid') ||
+    normalized.includes('your-api') ||
+    normalized.includes('your-backend') ||
+    normalized.includes('your-domain') ||
+    normalized.includes('placeholder') ||
+    normalized.includes('changeme') ||
+    normalized.includes('<') ||
+    normalized.includes('>')
+  );
+};
 
 const validateConfiguredApiUrl = (value) => {
-  const normalized = String(value || '').trim().replace(/\\/+$/, '');
-  if (!normalized) return '';
+  const normalized = String(value || '').trim().replace(/[/]+$/, '');
+  const isHttps = normalized.toLowerCase().startsWith('https://');
+  const isHttp = normalized.toLowerCase().startsWith('http://');
 
-  if (!/^https?:\\/\\/[^/?#]+\\/api$/i.test(normalized)) {
+  if (!isHttps && !isHttp) {
+    throw new Error('EXPO_PUBLIC_API_URL doit commencer par http:// ou https://.');
+  }
+
+  const remainder = stripHttpScheme(normalized);
+  const slashIndex = remainder.indexOf('/');
+  const authority = slashIndex >= 0 ? remainder.slice(0, slashIndex) : remainder;
+  const path = slashIndex >= 0 ? remainder.slice(slashIndex) : '';
+
+  if (
+    !authority ||
+    path !== '/api' ||
+    authority.includes('?') ||
+    authority.includes('#') ||
+    authority.includes('@')
+  ) {
     throw new Error(
       'EXPO_PUBLIC_API_URL doit être une URL HTTP(S) complète terminant par /api.'
     );
   }
 
   if (IS_PRODUCTION) {
-    if (!/^https:\\/\\//i.test(normalized)) {
+    if (!isHttps) {
       throw new Error('Une URL HTTPS est obligatoire pour AFROEAT en production.');
     }
 
@@ -93,24 +148,6 @@ const validateConfiguredApiUrl = (value) => {
   }
 
   return normalized;
-};
-
-/**
- * =========================================================
- * HELPERS
- * =========================================================
- */
-
-const isLocalhost = (value) => {
-  const host = String(value ?? '').trim().toLowerCase();
-  return host === 'localhost' || host === '127.0.0.1';
-};
-
-const sanitizeHost = (value) => {
-  return String(value ?? '')
-    .trim()
-    .replace(/^https?:\/\//, '')
-    .replace(/\/+$/, '');
 };
 
 export const safePathParam = (value) => {
@@ -168,7 +205,7 @@ export const API_BASE_URL = getBaseUrl();
 export const API_URL = API_BASE_URL;
 
 const API_URL_AUTHORITY = API_BASE_URL
-  .replace(/^https?:\\/\\//i, '')
+  .slice(API_BASE_URL.indexOf('://') + 3)
   .split('/')[0];
 const API_URL_HOST = API_URL_AUTHORITY.split(':')[0];
 const API_URL_PORT = API_URL_AUTHORITY.includes(':')
@@ -179,7 +216,7 @@ export const API_CONFIG = {
   baseUrl: API_BASE_URL,
   timeout: 15000,
   isProduction: IS_PRODUCTION,
-  protocol: API_BASE_URL.startsWith('https://') ? 'https' : 'http',
+  protocol: API_BASE_URL.toLowerCase().startsWith('https://') ? 'https' : 'http',
   host: API_URL_HOST,
   port: API_URL_PORT,
 };
