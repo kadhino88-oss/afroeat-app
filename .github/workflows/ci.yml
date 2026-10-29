@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, "fix/**", "sync/**"]
   pull_request:
-    branches: [main]
+    branches: [main, "sync/**"]
 
 jobs:
   validate:
@@ -21,7 +21,9 @@ jobs:
         run: npm ci
       - name: Check Stripe wallet configuration safeguards
         run: npm run check:wallet-config
+      - name: Validate translations
+        run: npm run check:locales
       - name: Lint payment and dynamic app configuration
-        run: npx eslint app.config.js app/payment.js app/checkout.js services/stripeService.js services/stripeService.web.js constants/api.js
+        run: npx eslint app.config.js app/payment.js app/checkout.js app/account/payouts.js app/admin/payouts.js app/admin/index.js app/admin/_layout.js app/livraison/profile.js app/restaurant/restaurant-profile.js services/stripeService.js services/stripeService.web.js services/stripeConnectService.js constants/api.js
       - name: Export web bundle
         run: npx expo export --platform web
