@@ -57,5 +57,9 @@
     "eslint-config-expo": "~10.0.0",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "postcss": "^8.5.23",
+    "image-size": "npm:image-size-next@1.2.2"
+  }
 }
