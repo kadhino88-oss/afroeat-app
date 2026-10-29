@@ -1563,6 +1563,17 @@
       "menuItemCategoryFallback": "Category"
     },
     "driverDetails": {
+      "verificationActionsTitle": "Courier verification",
+      "verificationHint": "Record a decision only after reviewing the supporting documents. Every decision must be justified in the audit note.",
+      "identityVerifiedToggle": "Identity verified",
+      "workAuthorizedToggle": "Work authorization verified",
+      "verificationNoteLabel": "Review note",
+      "verificationNotePlaceholder": "Describe the checks performed (at least 8 characters)…",
+      "saveVerificationButton": "Save verification",
+      "verificationSavedMessage": "Courier verification was saved.",
+      "verificationNoteRequired": "Enter an audit note of 8 to 500 characters before saving.",
+      "verificationWorkNeedsIdentity": "Verify the courier’s identity before approving work authorization.",
+      "verificationErrorFallback": "Could not save courier verification.",
       "invalidDriverAlert": "Invalid driver.",
       "driverNotFoundFallback": "Driver not found.",
       "fetchErrorFallback": "Unable to load this driver.",
