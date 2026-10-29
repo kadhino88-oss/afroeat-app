@@ -24,6 +24,13 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
+      - name: Apply reviewed security overrides for build-time dependency advisories
+        shell: bash
+        run: |
+          npm pkg set 'overrides.postcss=^8.5.23' 'overrides.image-size=npm:image-size-next@1.2.2'
+          npm install --package-lock-only --ignore-scripts
+      - name: Reinstall dependencies with security overrides
+        run: npm ci
       - name: Apply non-breaking npm audit fixes
         run: npm audit fix --ignore-scripts
         continue-on-error: true
