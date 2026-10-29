@@ -10,6 +10,8 @@ import {
   Alert,
   ScrollView,
   RefreshControl,
+  Switch,
+  TextInput,
 } from 'react-native';
 import { useLocalSearchParams, router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +20,7 @@ import { useAuth } from '../../../context/AuthContext';
 import {
   getAdminDrivers,
   updateAdminUserStatus,
+  updateAdminUserVerification,
 } from '../../../services/adminService';
 import i18n from '../../../i18n';
 
@@ -254,6 +257,10 @@ export default function AdminDriverDetailsScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const [lastLiveRefresh, setLastLiveRefresh] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [draftIdentityVerified, setDraftIdentityVerified] = useState(null);
+  const [draftWorkAuthorized, setDraftWorkAuthorized] = useState(null);
+  const [verificationNote, setVerificationNote] = useState('');
+  const [updatingVerification, setUpdatingVerification] = useState(false);
 
   const driverId = normalizeText(Array.isArray(id) ? id[0] : id);
   const currentRole = useMemo(() => {
@@ -332,6 +339,12 @@ export default function AdminDriverDetailsScreen() {
     },
     [isAuthenticated, token, driverId, t]
   );
+
+  useEffect(() => {
+    setDraftIdentityVerified(null);
+    setDraftWorkAuthorized(null);
+    setVerificationNote('');
+  }, [driverId]);
 
   useFocusEffect(
     useCallback(() => {
