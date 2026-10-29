@@ -16,10 +16,7 @@ import { STRIPE_PUBLISHABLE_KEY } from '../services/stripeService';
  */
 export default function AppStripeProvider({ children }) {
   return (
-    <StripeProvider
-      publishableKey={STRIPE_PUBLISHABLE_KEY}
-      merchantIdentifier="merchant.com.afroeat"
-    >
+    <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
       {children}
     </StripeProvider>
   );
