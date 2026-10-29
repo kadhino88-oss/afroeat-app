@@ -865,6 +865,104 @@ export default function AdminDriverDetailsScreen() {
           />
         </InfoCard>
 
+        <InfoCard title={t('admin.driverDetails.verificationActionsTitle')}>
+          <Text style={styles.verificationHint}>
+            {t('admin.driverDetails.verificationHint')}
+          </Text>
+
+          <View style={styles.verificationRow}>
+            <View style={styles.verificationLabelWrap}>
+              <Text style={styles.verificationLabel}>
+                {t('admin.driverDetails.identityVerifiedToggle')}
+              </Text>
+              <Text style={styles.verificationState}>
+                {identityVerificationDraft
+                  ? t('admin.driverDetails.identityVerifiedValue')
+                  : t('admin.driverDetails.identityToVerifyValue')}
+              </Text>
+            </View>
+            <Switch
+              value={identityVerificationDraft}
+              onValueChange={(value) => {
+                setDraftIdentityVerified(value);
+                if (!value) setDraftWorkAuthorized(false);
+              }}
+              disabled={updatingVerification}
+              trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
+              thumbColor={identityVerificationDraft ? '#1F6F43' : '#F4F3F4'}
+            />
+          </View>
+
+          <View style={styles.verificationRow}>
+            <View style={styles.verificationLabelWrap}>
+              <Text style={styles.verificationLabel}>
+                {t('admin.driverDetails.workAuthorizedToggle')}
+              </Text>
+              <Text style={styles.verificationState}>
+                {workAuthorizationDraft
+                  ? t('admin.driverDetails.workAuthorizedValue')
+                  : t('admin.driverDetails.workNotValidatedValue')}
+              </Text>
+            </View>
+            <Switch
+              value={workAuthorizationDraft}
+              onValueChange={(value) => {
+                if (value && !identityVerificationDraft) {
+                  Alert.alert(
+                    t('common.error'),
+                    t('admin.driverDetails.verificationWorkNeedsIdentity')
+                  );
+                  return;
+                }
+                setDraftWorkAuthorized(value);
+              }}
+              disabled={
+                updatingVerification ||
+                (!identityVerificationDraft && !workAuthorizationDraft)
+              }
+              trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
+              thumbColor={workAuthorizationDraft ? '#1F6F43' : '#F4F3F4'}
+            />
+          </View>
+
+          <Text style={styles.verificationNoteLabel}>
+            {t('admin.driverDetails.verificationNoteLabel')}
+          </Text>
+          <TextInput
+            value={verificationNote}
+            onChangeText={setVerificationNote}
+            style={styles.verificationInput}
+            placeholder={t('admin.driverDetails.verificationNotePlaceholder')}
+            placeholderTextColor="#8B8379"
+            multiline
+            maxLength={500}
+            textAlignVertical="top"
+            editable={!updatingVerification}
+            accessibilityLabel={t('admin.driverDetails.verificationNoteLabel')}
+          />
+
+          <Pressable
+            style={[
+              styles.primaryButton,
+              (updatingVerification || !verificationChanged) &&
+                styles.primaryButtonDisabled,
+            ]}
+            onPress={handleSaveVerification}
+            disabled={updatingVerification || !verificationChanged}
+          >
+            {updatingVerification ? (
+              <ActivityIndicator size="small" color="#111" />
+            ) : (
+              <>
+                <Ionicons name="shield-checkmark-outline" size={17} color="#111" />
+                <Text style={styles.primaryButtonText}>
+                  {t('admin.driverDetails.saveVerificationButton')}
+                </Text>
+              </>
+            )}
+          </Pressable>
+        </InfoCard>
+
         <InfoCard title={t('admin.driverDetails.fieldActivityTitle')}>
           <MetaRow
             icon="radio-outline"
@@ -1228,6 +1326,54 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
+  verificationHint: {
+    color: '#6B655E',
+    fontSize: 13,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  verificationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0E7DA',
+  },
+  verificationLabelWrap: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  verificationLabel: {
+    color: '#1E1E1E',
+    fontSize: 14,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  verificationState: {
+    color: '#6B655E',
+    fontSize: 12,
+    lineHeight: 17,
+  },
+  verificationNoteLabel: {
+    color: '#1E1E1E',
+    fontSize: 13,
+    fontWeight: '800',
+    marginTop: 14,
+    marginBottom: 6,
+  },
+  verificationInput: {
+    minHeight: 92,
+    borderWidth: 1,
+    borderColor: '#D9D0C5',
+    backgroundColor: '#FFFCF7',
+    borderRadius: 14,
+    padding: 12,
+    color: '#1E1E1E',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 12,
+  },
   actionBlock: {
     gap: 10,
   },
