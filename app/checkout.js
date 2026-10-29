@@ -41,8 +41,6 @@ const normalizeArray = (value) => {
 
 // Montants proposes pour le don "Afro Impact" - le client choisit,
 // rien n'est ajoute par defaut (0 = pas de don).
-const DONATION_OPTIONS = [0, 1, 2, 5];
-
 const normalizeRole = (value) => {
   const role = normalizeText(value, 'client').toLowerCase();
 
@@ -155,7 +153,6 @@ export default function CheckoutScreen() {
   const role = normalizeRole(auth.role || user?.role);
 
   const [loading, setLoading] = useState(false);
-  const [donation, setDonation] = useState(0);
 
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
   const isClient = role === 'client';
@@ -240,8 +237,8 @@ export default function CheckoutScreen() {
   }, [totals, safeCartItems.length]);
 
   const totalPrice = useMemo(() => {
-    return Number((subtotal + delivery + donation).toFixed(2));
-  }, [subtotal, delivery, donation]);
+    return Number((subtotal + delivery).toFixed(2));
+  }, [subtotal, delivery]);
 
   const totalItems = useMemo(() => {
     return safeCartItems.reduce((sum, item) => {
@@ -328,27 +325,27 @@ export default function CheckoutScreen() {
         return;
       }
 
+      // Send item IDs and quantities only. The API reloads menu records and
+      // calculates authoritative prices, delivery fees, currency and totals.
       const payload = {
-        user: user._id,
         restaurant: restaurantId,
-        items: normalizedItems,
-        totalPrice,
-        deliveryFee: Number(delivery.toFixed(2)),
-        donationAmount: Number(donation.toFixed(2)),
-        currency,
-        status: 'En attente',
-        paymentStatus: 'Non payé',
-        paymentMethod: 'card',
+        items: normalizedItems.map((item) => ({
+          menuItem: item.menuItem,
+          quantity: item.quantity,
+        })),
         deliveryAddress: normalizeText(deliveryAddress),
-        deliveryAddressDetails: {
-          address: normalizeText(deliveryAddress),
-          fullAddress: normalizeText(deliveryAddress),
-        },
         notes: '',
       };
 
       const response = await createOrder(payload, token);
+      const createdOrder = response?.order || response?.data?.order || null;
       const orderId = getOrderIdFromResponse(response);
+      const serverAmount = Number(createdOrder?.totalPrice);
+      const serverCurrency = normalizeText(createdOrder?.currency, currency).toUpperCase();
+
+      if (!orderId || !Number.isFinite(serverAmount) || serverAmount < 0 || !serverCurrency) {
+        throw new Error('Le serveur n’a pas retourné le montant confirmé de la commande.');
+      }
 
       if (typeof clearCart === 'function') {
         await Promise.resolve(clearCart());
@@ -356,19 +353,15 @@ export default function CheckoutScreen() {
 
       Alert.alert(t('checkout.alertOrderCreatedTitle'), t('checkout.alertOrderCreatedBody'));
 
-      if (orderId) {
-  router.replace({
-    pathname: '/payment',
-    params: {
-      orderId,
-      amount: String(totalPrice),
-      currency,
-    },
-  });
-  return;
-}
-
-      router.replace('/(tabs)/orders');
+      router.replace({
+        pathname: '/payment',
+        params: {
+          orderId,
+          amount: String(serverAmount),
+          currency: serverCurrency,
+        },
+      });
+      return;
     } catch (error) {
       const msg = error?.message || '';
       const status = error?.status;
@@ -400,7 +393,6 @@ export default function CheckoutScreen() {
     currency,
     delivery,
     deliveryAddress,
-    donation,
     hasValidAddress,
     isClient,
     isLoggedIn,
@@ -621,47 +613,6 @@ export default function CheckoutScreen() {
           </Text>
         </View>
 
-        {safeCartItems.length > 0 && (
-          <View style={styles.donationCard}>
-            <View style={styles.donationHeader}>
-              <Ionicons name="heart-outline" size={16} color="#1F6F43" />
-              <Text style={styles.donationTitle}>{t('checkout.donationTitle')}</Text>
-            </View>
-            <Text style={styles.donationSubtitle}>
-              {t('checkout.donationSubtitle')}
-            </Text>
-            <View style={styles.donationChipsRow}>
-              {DONATION_OPTIONS.map((option) => {
-                const isActive = donation === option;
-                return (
-                  <Pressable
-                    key={`donation-${option}`}
-                    accessibilityRole="button"
-                    accessibilityLabel={
-                      option === 0
-                        ? t('checkout.donationNone')
-                        : t('checkout.donationAdd', { amount: formatPrice(option, currency) })
-                    }
-                    onPress={() => setDonation(option)}
-                    style={[
-                      styles.donationChip,
-                      isActive && styles.donationChipActive,
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.donationChipText,
-                        isActive && styles.donationChipTextActive,
-                      ]}
-                    >
-                      {option === 0 ? t('checkout.donationNoneShort') : formatPrice(option, currency)}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-        )}
 
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
