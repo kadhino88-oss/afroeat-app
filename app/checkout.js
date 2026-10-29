@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -152,6 +152,7 @@ export default function CheckoutScreen() {
   const isAuthenticated = Boolean(auth.isAuthenticated);
   const role = normalizeRole(auth.role || user?.role);
 
+  const idempotencyRequestRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
@@ -337,7 +338,23 @@ export default function CheckoutScreen() {
         notes: '',
       };
 
-      const response = await createOrder(payload, token);
+      const requestSignature = JSON.stringify(payload);
+      if (
+        !idempotencyRequestRef.current ||
+        idempotencyRequestRef.current.signature !== requestSignature
+      ) {
+        idempotencyRequestRef.current = {
+          signature: requestSignature,
+          key: `afroeat_${Date.now()}_${Math.random().toString(36).slice(2, 14)}`,
+        };
+      }
+
+      // Keep the same key while retrying the exact same checkout after a timeout.
+      const response = await createOrder(
+        payload,
+        token,
+        idempotencyRequestRef.current.key
+      );
       const createdOrder = response?.order || response?.data?.order || null;
       const orderId = getOrderIdFromResponse(response);
       const serverAmount = Number(createdOrder?.totalPrice);
@@ -350,6 +367,8 @@ export default function CheckoutScreen() {
       if (typeof clearCart === 'function') {
         await Promise.resolve(clearCart());
       }
+
+      idempotencyRequestRef.current = null;
 
       Alert.alert(t('checkout.alertOrderCreatedTitle'), t('checkout.alertOrderCreatedBody'));
 
