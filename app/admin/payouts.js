@@ -68,7 +68,7 @@ export default function AdminPayoutsScreen() {
     return <View style={styles.center}><ActivityIndicator size="large" color="#5A32A3" /></View>;
   }
   if (!auth.isAuthenticated || !auth.token) return <Redirect href="/auth/login?role=admin" />;
-  if (String(auth.role || auth.user?.role || '').toLowerCase() !== 'admin') {
+  if (!['admin', 'administrator', 'superadmin', 'super-admin'].includes(String(auth.role || auth.user?.role || '').toLowerCase())) {
     return <Redirect href="/(tabs)" />;
   }
 
@@ -76,7 +76,7 @@ export default function AdminPayoutsScreen() {
     try {
       setBusyId(orderId);
       const result = await retryPayoutReconciliation(orderId, auth.token);
-      Alert.alert(t('common.success'), result?.success ? t('payouts.retryDone') : t('payouts.retryFailed'));
+      Alert.alert('AFROEAT', result?.success ? t('payouts.retryDone') : t('payouts.retryFailed'));
       await loadOrders(true);
     } catch (error) {
       Alert.alert(t('common.error'), error?.message || t('payouts.retryFailed'));
@@ -96,7 +96,7 @@ export default function AdminPayoutsScreen() {
       setBusyId(orderId);
       await resolvePayoutReconciliation(orderId, note, auth.token);
       setNotes((current) => ({ ...current, [orderId]: '' }));
-      Alert.alert(t('common.success'), t('payouts.retryDone'));
+      Alert.alert('AFROEAT', t('payouts.retryDone'));
       await loadOrders(true);
     } catch (error) {
       Alert.alert(t('common.error'), error?.message || t('payouts.retryFailed'));
