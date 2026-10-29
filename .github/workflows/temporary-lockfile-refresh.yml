@@ -1,0 +1,35 @@
+name: Temporary lockfile refresh
+
+on:
+  push:
+    branches:
+      - feat/admin-courier-verification-ui
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout verification UI branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/admin-courier-verification-ui
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Regenerate lockfile without changing declared direct versions
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Commit generated lockfile if changed
+        run: |
+          if git diff --quiet -- package-lock.json; then
+            echo "Lockfile already matches package.json."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "chore(deps): resolve patched URI decoder"
+          git push origin HEAD:feat/admin-courier-verification-ui
