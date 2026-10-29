@@ -2,7 +2,7 @@ name: Expo App CI
 
 on:
   push:
-    branches: [main, "fix/**"]
+    branches: [main, "fix/**", "sync/**"]
   pull_request:
     branches: [main]
 
@@ -19,7 +19,9 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Lint changed payment integration files
-        run: npx eslint app/payment.js app/checkout.js services/stripeService.js services/stripeService.web.js constants/api.js
+      - name: Check Stripe wallet configuration safeguards
+        run: npm run check:wallet-config
+      - name: Lint payment and dynamic app configuration
+        run: npx eslint app.config.js app/payment.js app/checkout.js services/stripeService.js services/stripeService.web.js constants/api.js
       - name: Export web bundle
         run: npx expo export --platform web
