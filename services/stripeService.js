@@ -60,11 +60,15 @@ export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
  * Read the payment options authorized by the backend for this environment.
  * An unavailable response is not treated as permission to accept a payment.
  */
+const hasConfiguredPublishableKey = () =>
+  /^pk_(test|live)_[A-Za-z0-9]+$/.test(STRIPE_PUBLISHABLE_KEY) &&
+  !STRIPE_PUBLISHABLE_KEY.includes('VOTRE_CLE');
+
 export const getAvailablePaymentMethods = async (token) => {
   const response = await apiGet(API_ENDPOINTS.payments.methods, token);
   const methods = response?.methods || {};
   return {
-    card: methods.card === true,
+    card: methods.card === true && hasConfiguredPublishableKey(),
     cash: methods.cash === true,
   };
 };
