@@ -11,6 +11,7 @@ const requiredKeys = [
   'intro',
   'statusError',
   'statusConnected',
+  'statusPlatformPaused',
   'statusReview',
   'statusIncomplete',
   'requirementsDue',
