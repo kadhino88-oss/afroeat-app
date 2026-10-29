@@ -1685,5 +1685,34 @@
       "targetLabelFlagLabel": "Target label",
       "riskStandardLabel": "Standard"
     }
+  },
+  "payouts": {
+    "title": "Payouts",
+    "intro": "Set up the secure account that will receive your Afroeat order payouts.",
+    "statusError": "Stripe status is temporarily unavailable.",
+    "statusConnected": "Payout account active",
+    "statusReview": "Information submitted, verification in progress",
+    "statusIncomplete": "Setup needs to be completed",
+    "requirementsDue": "Information still requested: {{count}}",
+    "countryCodeError": "Enter the two-letter ISO country code, such as FR or CI.",
+    "countryLabel": "Payout account country",
+    "countryPlaceholder": "ISO2 code, for example FR",
+    "countryHelp": "This must match the Stripe account country and be enabled by Afroeat.",
+    "continueButton": "Continue Stripe setup",
+    "connectButton": "Set up payouts with Stripe",
+    "refreshButton": "Refresh status",
+    "secureNotice": "Stripe collects personal and bank details directly. Afroeat does not store your bank details.",
+    "profileLink": "My payouts",
+    "manageButton": "Manage Stripe account",
+    "reconciliationTitle": "Payout reconciliation",
+    "reconciliationSubtitle": "Delivered orders whose Stripe transfers need another attempt or review.",
+    "reconciliationEmpty": "No payouts need reconciliation.",
+    "reconciliationLoadError": "Could not load payouts that need reconciliation.",
+    "reconciliationRetry": "Retry transfer",
+    "retryDone": "Reconciliation was run.",
+    "retryFailed": "The payout still needs review.",
+    "resolutionNoteError": "Describe the manual settlement or review in at least 10 characters.",
+    "resolutionNotePlaceholder": "Record the reconciliation completed outside Stripe…",
+    "reconciliationResolve": "Close after manual reconciliation"
   }
 }
