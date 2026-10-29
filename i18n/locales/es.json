@@ -1563,6 +1563,17 @@
       "menuItemCategoryFallback": "Categoría"
     },
     "driverDetails": {
+      "verificationActionsTitle": "Verificación del repartidor",
+      "verificationHint": "Registra una decisión solo después de revisar los documentos justificativos. Toda decisión debe justificarse en la nota de auditoría.",
+      "identityVerifiedToggle": "Identidad verificada",
+      "workAuthorizedToggle": "Autorización de trabajo verificada",
+      "verificationNoteLabel": "Nota de revisión",
+      "verificationNotePlaceholder": "Describe las comprobaciones realizadas (mínimo 8 caracteres)…",
+      "saveVerificationButton": "Guardar verificación",
+      "verificationSavedMessage": "Se guardó la verificación del repartidor.",
+      "verificationNoteRequired": "Introduce una nota de auditoría de 8 a 500 caracteres antes de guardar.",
+      "verificationWorkNeedsIdentity": "Verifica la identidad del repartidor antes de aprobar la autorización de trabajo.",
+      "verificationErrorFallback": "No se pudo guardar la verificación del repartidor.",
       "invalidDriverAlert": "Repartidor no válido.",
       "driverNotFoundFallback": "Repartidor no encontrado.",
       "fetchErrorFallback": "No se pudo cargar este repartidor.",
