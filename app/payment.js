@@ -21,7 +21,6 @@ import {
   ActivityIndicator,
   StatusBar,
   Alert,
-  Platform,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -104,7 +103,7 @@ export default function PaymentScreen() {
         { text: 'OK', onPress: () => router.replace('/(tabs)/orders') },
       ]);
     }
-  }, [orderId]);
+  }, [orderId, t]);
 
   useEffect(() => {
     let active = true;
@@ -167,7 +166,7 @@ export default function PaymentScreen() {
       setErrorMsg(result.error || t('payment.paymentRefused'));
       setStep('error');
     }
-  }, [orderId, token, payWithStripe]);
+  }, [orderId, token, payWithStripe, t]);
 
   const handlePay = useCallback(() => {
     if (!orderId || !selectedMethod) {
