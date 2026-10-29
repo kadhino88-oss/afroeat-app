@@ -76,6 +76,12 @@ module.exports = ({ config }) => {
     .trim()
     .toLowerCase();
 
+  if (appEnv !== 'development' && !String(process.env.EXPO_PUBLIC_API_URL || '').trim()) {
+    throw new Error(
+      'Preview and production builds require an explicit EXPO_PUBLIC_API_URL.'
+    );
+  }
+
   if (appEnv === 'production') {
     if (!isValidProductionApiUrl(process.env.EXPO_PUBLIC_API_URL)) {
       throw new Error(
