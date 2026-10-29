@@ -124,6 +124,7 @@ export const API_ENDPOINTS = {
     users:            '/admin/users',
     userById:         (id) => `/admin/users/${safePathParam(id)}`,
     userStatus:       (id) => `/admin/users/${safePathParam(id)}/status`,
+    userVerification: (id) => `/admin/users/${safePathParam(id)}/verification`,
     restaurants:      '/admin/restaurants',
     restaurantById:   (id) => `/admin/restaurants/${safePathParam(id)}`,
     restaurantStatus: (id) => `/admin/restaurants/${safePathParam(id)}/status`,
