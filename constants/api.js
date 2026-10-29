@@ -98,6 +98,7 @@ const isPlaceholderApiUrl = (value) => {
     normalized.includes('your-domain') ||
     normalized.includes('placeholder') ||
     normalized.includes('changeme') ||
+    normalized.includes('replace') ||
     normalized.includes('<') ||
     normalized.includes('>')
   );
