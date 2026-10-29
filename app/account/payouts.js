@@ -97,7 +97,7 @@ export default function PayoutsScreen() {
   };
 
   const accountReady = Boolean(status?.accountReady || status?.connected);
-  const statusLabel = accountReady && status?.payoutsFeatureEnabled === false
+  const statusLabel = accountReady && (status?.payoutsFeatureEnabled === false || status?.countryAllowed === false)
     ? t('payouts.statusPlatformPaused')
     : status?.connected
       ? t('payouts.statusConnected')
