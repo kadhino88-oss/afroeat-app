@@ -1685,5 +1685,34 @@
       "targetLabelFlagLabel": "Ziel-Label",
       "riskStandardLabel": "Standard"
     }
+  },
+  "payouts": {
+    "title": "Auszahlungen",
+    "intro": "Richte das sichere Konto ein, auf das deine Afroeat-Auszahlungen eingehen.",
+    "statusError": "Der Stripe-Status ist vorübergehend nicht verfügbar.",
+    "statusConnected": "Auszahlungskonto aktiviert",
+    "statusReview": "Angaben übermittelt, Prüfung läuft",
+    "statusIncomplete": "Einrichtung noch nicht abgeschlossen",
+    "requirementsDue": "Noch benötigte Angaben: {{count}}",
+    "countryCodeError": "Gib den zweistelligen ISO-Ländercode ein, zum Beispiel FR oder CI.",
+    "countryLabel": "Land des Auszahlungskontos",
+    "countryPlaceholder": "ISO2-Code, zum Beispiel FR",
+    "countryHelp": "Der Code muss mit dem Stripe-Kontoland übereinstimmen und von Afroeat freigeschaltet sein.",
+    "continueButton": "Stripe-Einrichtung fortsetzen",
+    "connectButton": "Auszahlungen mit Stripe einrichten",
+    "refreshButton": "Status aktualisieren",
+    "secureNotice": "Stripe erfasst persönliche und Bankdaten direkt. Afroeat speichert deine Bankdaten nicht.",
+    "profileLink": "Meine Auszahlungen",
+    "manageButton": "Stripe-Konto verwalten",
+    "reconciliationTitle": "Auszahlungen abgleichen",
+    "reconciliationSubtitle": "Zugestellte Bestellungen, deren Stripe-Transfers erneut versucht oder geprüft werden müssen.",
+    "reconciliationEmpty": "Keine Auszahlungen müssen abgeglichen werden.",
+    "reconciliationLoadError": "Die Liste der abzugleichenden Auszahlungen konnte nicht geladen werden.",
+    "reconciliationRetry": "Transfer erneut versuchen",
+    "retryDone": "Der Abgleich wurde ausgeführt.",
+    "retryFailed": "Die Auszahlung muss weiterhin geprüft werden.",
+    "resolutionNoteError": "Beschreibe den manuellen Ausgleich oder die Prüfung mit mindestens 10 Zeichen.",
+    "resolutionNotePlaceholder": "Dokumentiere den außerhalb von Stripe vorgenommenen Abgleich…",
+    "reconciliationResolve": "Nach manuellem Abgleich schließen"
   }
 }
