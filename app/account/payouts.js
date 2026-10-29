@@ -96,11 +96,14 @@ export default function PayoutsScreen() {
     }
   };
 
-  const statusLabel = status?.connected
-    ? t('payouts.statusConnected')
-    : status?.detailsSubmitted
-      ? t('payouts.statusReview')
-      : t('payouts.statusIncomplete');
+  const accountReady = Boolean(status?.accountReady || status?.connected);
+  const statusLabel = accountReady && status?.payoutsFeatureEnabled === false
+    ? t('payouts.statusPlatformPaused')
+    : status?.connected
+      ? t('payouts.statusConnected')
+      : status?.detailsSubmitted
+        ? t('payouts.statusReview')
+        : t('payouts.statusIncomplete');
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -125,7 +128,7 @@ export default function PayoutsScreen() {
         )}
       </View>
 
-      {!status?.connected && (
+      {!accountReady && (
         <View style={styles.card}>
           <Text style={styles.label}>{t('payouts.countryLabel')}</Text>
           <TextInput
@@ -146,15 +149,15 @@ export default function PayoutsScreen() {
 
       <Pressable
         accessibilityRole="button"
-        disabled={loading || opening || Boolean(status?.connected)}
+        disabled={loading || opening || accountReady}
         onPress={startOnboarding}
-        style={({ pressed }) => [styles.primary, pressed && styles.pressed, (loading || opening || status?.connected) && styles.disabled]}
+        style={({ pressed }) => [styles.primary, pressed && styles.pressed, (loading || opening || accountReady) && styles.disabled]}
       >
         {opening ? <ActivityIndicator color="#fff" /> : <Ionicons name="wallet-outline" size={19} color="#fff" />}
         <Text style={styles.primaryText}>{status?.detailsSubmitted ? t('payouts.continueButton') : t('payouts.connectButton')}</Text>
       </Pressable>
 
-      {status?.connected && (
+      {accountReady && (
         <Pressable accessibilityRole="link" disabled={opening} onPress={openDashboard} style={styles.link}>
           <Ionicons name="open-outline" size={18} color="#1F6F43" />
           <Text style={styles.linkText}>{t('payouts.manageButton')}</Text>
