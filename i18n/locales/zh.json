@@ -1563,6 +1563,17 @@
       "menuItemCategoryFallback": "分类"
     },
     "driverDetails": {
+      "verificationActionsTitle": "配送员身份与工作资格审核",
+      "verificationHint": "审核相关证明材料后再记录决定。每项决定都必须在审计备注中说明理由。",
+      "identityVerifiedToggle": "身份已核验",
+      "workAuthorizedToggle": "工作许可已核验",
+      "verificationNoteLabel": "审核备注",
+      "verificationNotePlaceholder": "描述已完成的核验（至少 8 个字符）…",
+      "saveVerificationButton": "保存审核结果",
+      "verificationSavedMessage": "配送员审核结果已保存。",
+      "verificationNoteRequired": "保存前请输入 8 至 500 个字符的审计备注。",
+      "verificationWorkNeedsIdentity": "批准工作许可前必须先核验配送员身份。",
+      "verificationErrorFallback": "无法保存配送员审核结果。",
       "invalidDriverAlert": "无效的骑手。",
       "driverNotFoundFallback": "未找到骑手。",
       "fetchErrorFallback": "无法加载该骑手。",
