@@ -359,6 +359,14 @@ export default function RestaurantProfile() {
             <Ionicons name="receipt-outline" size={18} color="#1F6F43" />
             <Text style={styles.secondaryButtonText}>{t('restaurant.profile.viewOrdersButton')}</Text>
           </Pressable>
+
+          <Pressable
+            style={styles.secondaryButton}
+            onPress={() => router.push('/account/payouts')}
+          >
+            <Ionicons name="wallet-outline" size={18} color="#1F6F43" />
+            <Text style={styles.secondaryButtonText}>{t('payouts.profileLink')}</Text>
+          </Pressable>
         </View>
       </ScrollView>
     </FadeInView>
