@@ -364,6 +364,15 @@ export default function AdminDriverDetailsScreen() {
     return () => clearInterval(interval);
   }, [canAccess, token, driverId, fetchDriver]);
 
+  const identityVerificationDraft =
+    draftIdentityVerified ?? Boolean(driver?.isIdentityVerified);
+  const workAuthorizationDraft =
+    draftWorkAuthorized ?? Boolean(driver?.isWorkAuthorized);
+  const verificationChanged = Boolean(driver) && (
+    identityVerificationDraft !== Boolean(driver?.isIdentityVerified) ||
+    workAuthorizationDraft !== Boolean(driver?.isWorkAuthorized)
+  );
+
   const statusStyle = useMemo(() => getStatusStyle(driver?.accountStatus, t), [driver, t]);
   const riskStyle = useMemo(() => getDriverRiskStyle(driver, t), [driver, t]);
 
@@ -487,6 +496,69 @@ export default function AdminDriverDetailsScreen() {
       ]
     );
   }, [driver, token, t]);
+
+  const handleSaveVerification = useCallback(async () => {
+    if (!token || !driver?._id) {
+      Alert.alert(t('common.error'), t('admin.driverDetails.verificationErrorFallback'));
+      return;
+    }
+
+    const note = verificationNote.trim();
+    if (note.length < 8 || note.length > 500) {
+      Alert.alert(t('common.error'), t('admin.driverDetails.verificationNoteRequired'));
+      return;
+    }
+
+    if (workAuthorizationDraft && !identityVerificationDraft) {
+      Alert.alert(t('common.error'), t('admin.driverDetails.verificationWorkNeedsIdentity'));
+      return;
+    }
+
+    try {
+      setUpdatingVerification(true);
+      const response = await updateAdminUserVerification(
+        driver._id,
+        {
+          isIdentityVerified: identityVerificationDraft,
+          isWorkAuthorized: workAuthorizationDraft,
+          note,
+        },
+        token
+      );
+      const updatedDriver = normalizeDriver(response?.user || null);
+
+      setDriver((previous) => ({
+        ...(previous || {}),
+        ...(updatedDriver || {}),
+        isIdentityVerified: identityVerificationDraft,
+        isWorkAuthorized: workAuthorizationDraft,
+      }));
+      setDraftIdentityVerified(identityVerificationDraft);
+      setDraftWorkAuthorized(workAuthorizationDraft);
+      setVerificationNote('');
+      setErrorMessage('');
+
+      Alert.alert(
+        t('common.success'),
+        response?.message || t('admin.driverDetails.verificationSavedMessage')
+      );
+    } catch (error) {
+      console.log('Erreur vérification admin livreur :', error);
+      Alert.alert(
+        t('common.error'),
+        error?.message || t('admin.driverDetails.verificationErrorFallback')
+      );
+    } finally {
+      setUpdatingVerification(false);
+    }
+  }, [
+    driver,
+    token,
+    t,
+    identityVerificationDraft,
+    workAuthorizationDraft,
+    verificationNote,
+  ]);
 
   const handleOpenCurrentOrder = useCallback(() => {
     if (!driver?.currentOrderId) {
