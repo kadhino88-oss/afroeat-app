@@ -21,6 +21,8 @@ jobs:
         run: npm ci
       - name: Check Stripe wallet configuration safeguards
         run: npm run check:wallet-config
+      - name: Test API URL environment safeguards
+        run: npm run check:api-config
       - name: Validate translations
         run: npm run check:locales
       - name: Lint payment and dynamic app configuration
