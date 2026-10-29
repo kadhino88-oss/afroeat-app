@@ -1,50 +1,39 @@
-# Welcome to your Expo app 👋
+# AFROEAT — application mobile
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Application mobile React Native / Expo Router. L’API Node.js/Express/MongoDB est maintenue dans le dépôt privé [afroeat-backend](https://github.com/kadhino88-oss/afroeat-backend).
 
-## Get started
+## Démarrage local
 
-1. Install dependencies
+1. Installer les dépendances avec `npm ci`.
+2. Copier `.env.example` vers `.env` et adapter l’adresse IP LAN de la machine.
+3. Démarrer l’API sur le port 5000 et vérifier `GET http://localhost:5000/health`.
+4. Lancer `npx expo start`.
 
-   ```bash
-   npm install
-   ```
+Pour un téléphone physique, `EXPO_PUBLIC_API_URL` doit contenir l’adresse IP LAN de l’ordinateur, par exemple `http://192.168.1.121:5000/api`. Pour un émulateur Android, utiliser `http://10.0.2.2:5000/api`. L’URL configurée doit se terminer par `/api`.
 
-2. Start the app
+## Builds EAS
 
-   ```bash
-   npx expo start
-   ```
+Les profils EAS définissent `EXPO_PUBLIC_APP_ENV` (`development`, `preview` ou `production`). Les profils preview et production doivent recevoir une valeur explicite pour `EXPO_PUBLIC_API_URL` via l’environnement de build EAS.
 
-In the output, you'll find options to open the app in a
+Une build de production est refusée lorsque :
+- l’URL API est absente, n’utilise pas HTTPS, ne termine pas par `/api`, ou ressemble à une adresse d’exemple/privée ;
+- `EXPO_PUBLIC_STRIPE_KEY` n’est pas une véritable clé publique Stripe live ;
+- le build Android ne reçoit pas `ANDROID_GOOGLE_MAPS_API_KEY`.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+La clé Google Maps est incluse dans l’application : restreindre cette clé au nom de package Android AFROEAT et au certificat de signature. Ne jamais placer de clé secrète Stripe, de JWT secret ou de connexion MongoDB dans une variable `EXPO_PUBLIC_*`.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Paiements et portefeuilles
 
-## Get a fresh project
+La sélection des moyens de paiement dépend de l’API. Apple Pay et Google Pay restent désactivés tant que les identifiants marchands et la configuration wallet ne sont pas vérifiés. Le paiement carte en production est également bloqué côté backend jusqu’à la configuration approuvée des versements marketplace ; le paiement à la livraison reste bloqué tant que le registre d’encaissement/règlement n’existe pas.
 
-When you're ready, run:
+Le checkout envoie uniquement les identifiants des plats et leurs quantités. Le total affiché dans l’écran de paiement provient de la réponse du serveur. Les nouvelles tentatives du même checkout réutilisent une clé d’idempotence pour éviter les commandes en double.
 
-```bash
-npm run reset-project
-```
+## Contrôles
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+`npm run lint` ou `npx eslint app/payment.js app/checkout.js services/stripeService.js services/stripeService.web.js constants/api.js app.config.js`
 
-## Learn more
+Le workflow GitHub Actions installe les dépendances, vérifie les fichiers modifiés et exporte la version web. Les paiements Stripe en mode test et les essais sur appareil réel restent nécessaires avant publication.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Sécurité
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Les fichiers `.env` locaux sont ignorés par Git. Ne jamais publier de secrets, certificats de signature ou identifiants de production. `.env.example` contient uniquement des valeurs de remplacement.
