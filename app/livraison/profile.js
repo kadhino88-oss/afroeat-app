@@ -203,6 +203,14 @@ export default function LivraisonProfileScreen() {
             <Ionicons name="time-outline" size={20} />
             <Text style={styles.navText}>{t('livraison.profile.historyNav')}</Text>
           </Pressable>
+
+          <Pressable
+            style={styles.nav}
+            onPress={() => router.push('/account/payouts')}
+          >
+            <Ionicons name="wallet-outline" size={20} color="#1F6F43" />
+            <Text style={styles.navText}>{t('payouts.profileLink')}</Text>
+          </Pressable>
         </View>
       </View>
     </FadeInView>
