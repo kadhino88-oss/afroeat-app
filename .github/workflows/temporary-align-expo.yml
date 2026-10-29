@@ -26,6 +26,14 @@ jobs:
         run: npm ci
       - name: Align package versions to the installed Expo SDK
         run: npx expo install --fix
+      - name: Apply available non-breaking dependency security fixes
+        shell: bash
+        run: |
+          if npm audit fix --package-lock-only --ignore-scripts; then
+            echo "Applied available non-breaking lockfile fixes."
+          else
+            echo "::warning::Some audit findings require manual or breaking-version changes."
+          fi
       - name: Commit SDK-compatible package and lock files
         shell: bash
         run: |
@@ -36,5 +44,5 @@ jobs:
             echo "No Expo SDK dependency alignment changes needed."
             exit 0
           fi
-          git commit -m "fix(deps): align packages with Expo SDK 54"
+          git commit -m "fix(deps): align Expo SDK 54 and apply safe audit fixes"
           git push origin HEAD:fix/mobile-expo-security-gates
