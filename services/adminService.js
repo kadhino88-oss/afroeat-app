@@ -352,6 +352,51 @@ export const updateAdminUserStatus = async (userId, accountStatus, token) => {
   };
 };
 
+export const updateAdminUserVerification = async (userId, verification, token) => {
+  ensureToken(token);
+  ensureEntityId(userId, 'Livreur invalide.');
+
+  if (
+    typeof verification?.isIdentityVerified !== 'boolean' ||
+    typeof verification?.isWorkAuthorized !== 'boolean'
+  ) {
+    throw new Error('Les deux décisions de vérification doivent être explicites.');
+  }
+
+  const note = normalizeText(verification?.note);
+  if (note.length < 8 || note.length > 500) {
+    throw new Error('La note d’audit doit contenir entre 8 et 500 caractères.');
+  }
+
+  if (verification.isWorkAuthorized && !verification.isIdentityVerified) {
+    throw new Error('L’identité doit être vérifiée avant l’autorisation de travail.');
+  }
+
+  const data = await apiPut(
+    API_ENDPOINTS.admin.userVerification(userId),
+    {
+      isIdentityVerified: verification.isIdentityVerified,
+      isWorkAuthorized: verification.isWorkAuthorized,
+      note,
+    },
+    token
+  );
+
+  const user = normalizeObjectResponse(data, 'user');
+
+  if (!user?._id) {
+    throw new Error(
+      extractMessage(data, 'Impossible d’enregistrer la vérification du livreur.')
+    );
+  }
+
+  return {
+    user,
+    message: extractMessage(data, 'Vérification du livreur enregistrée.'),
+    success: data?.success !== false,
+  };
+};
+
 export const getAdminRestaurants = async (token, options = {}) => {
   ensureToken(token);
 
