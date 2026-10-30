@@ -396,48 +396,6 @@ export default function MapScreen() {
     );
   }
 
-  if (!location && geoRestaurants.length === 0) {
-    return (
-      <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-
-        <View style={styles.topBar}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('checkout.back')}
-            style={({ pressed }) => [
-              styles.topButton,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={handleBack}
-          >
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
-          </Pressable>
-        </View>
-
-        <View style={styles.emptyState}>
-          <Ionicons name="location-outline" size={56} color="#C9B8A3" />
-          <Text style={styles.emptyTitle}>{t('map.locationUnavailable')}</Text>
-          <Text style={styles.emptyText}>
-            {t('map.locationUnavailableText')}
-          </Text>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('map.retryLoadingMap')}
-            style={({ pressed }) => [
-              styles.retryButton,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={handleRefresh}
-          >
-            <Text style={styles.retryButtonText}>{t('restaurant.retry')}</Text>
-          </Pressable>
-        </View>
-      </FadeInView>
-    );
-  }
-
   return (
     <FadeInView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
