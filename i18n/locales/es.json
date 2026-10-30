@@ -36,7 +36,20 @@
     "tunisienne": "Tunecina",
     "epicerie": "Tienda de comestibles",
     "boutique": "Tienda",
-    "all": "Todos"
+    "all": "Todos",
+    "nigeriane": "Nigeriana",
+    "ghaneenne": "Ghanesa",
+    "ethiopienne": "Etíope",
+    "sudafricaine": "Sudafricana",
+    "estafricaine": "África oriental",
+    "ouestafricaine": "África occidental",
+    "afriquecentrale": "África central",
+    "fastfood": "Comida rápida",
+    "pizza": "Pizza",
+    "burgers": "Hamburguesas",
+    "tacos": "Tacos",
+    "grillades": "Parrilla",
+    "internationale": "Cocina internacional"
   },
   "home": {
     "searchPlaceholder": "Buscar un plato, una tienda, una tienda de comestibles...",
