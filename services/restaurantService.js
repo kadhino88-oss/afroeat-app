@@ -94,7 +94,7 @@ const normalizeRestaurant = (item) => {
     _id: item?._id || item?.id || null,
     id: item?.id || item?._id || null,
     name: normalizeText(item?.name || item?.title, 'Restaurant'),
-    cuisine: normalizeText(item?.cuisine, 'Africaine'),
+    cuisine: normalizeText(item?.cuisine),
     address: normalizeText(item?.address),
     image: normalizeText(item?.image || item?.coverImage),
     coverImage: normalizeText(item?.coverImage || item?.image),
