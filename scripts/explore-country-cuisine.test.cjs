@@ -30,3 +30,22 @@ for (const locale of ['de', 'en', 'es', 'fr', 'it', 'zh']) {
     }
   });
 }
+
+test('home drinks shortcut opens the matching Explore category', () => {
+  const home = fs.readFileSync(path.join(root, 'app', '(tabs)', 'index.js'), 'utf8');
+  assert.match(home, /titleKey: 'home\.categories\.drinks'/);
+  assert.match(home, /route: '\/\(tabs\)\/explore\?category=drinks'/);
+  assert.match(explore, /drinks:\s*'Boissons'/);
+  assert.match(explore, /normalizedFilter === 'boissons'/);
+});
+
+for (const locale of ['de', 'en', 'es', 'fr', 'it', 'zh']) {
+  test(`locale ${locale} includes the drinks category`, () => {
+    const file = path.join(root, 'i18n', 'locales', `${locale}.json`);
+    const content = JSON.parse(fs.readFileSync(file, 'utf8'));
+    assert.equal(typeof content.home?.categories?.drinks, 'string');
+    assert.ok(content.home.categories.drinks.length > 0);
+    assert.equal(typeof content.cuisines?.boissons, 'string');
+    assert.ok(content.cuisines.boissons.length > 0);
+  });
+}
