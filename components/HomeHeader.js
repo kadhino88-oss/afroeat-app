@@ -29,7 +29,7 @@ const getBadgeValue = (value) => {
 export default function HomeHeader({
   userName = 'Bonjour',
   locationText = 'Livraison à domicile',
-  notificationCount = 2,
+  notificationCount = 0,
   avatarUri = '',
 }) {
   const router = useRouter();
