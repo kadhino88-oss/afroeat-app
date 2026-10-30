@@ -121,7 +121,8 @@
     "alertSessionExpiredTitle": "Session expired",
     "alertSessionExpiredBody": "Your session has expired. Log in again and retry.",
     "alertConnectionFailedTitle": "Connection failed",
-    "alertConnectionFailedBody": "Check your internet connection and try again."
+    "alertConnectionFailedBody": "Check your internet connection and try again.",
+    "editAddress": "Edit address"
   },
   "restaurant": {
     "popular": "Popular",
