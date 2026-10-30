@@ -425,13 +425,22 @@ export default function ExploreScreen() {
         const matchesAfricanRegion = (africanRegionTerms[regionKey] || []).some((term) =>
           cuisineText.includes(normalizeSearch(term))
         );
+        const countryCuisineTerms = {
+          malienne: ['malian', 'mali', 'malienne', 'malien'],
+          algerienne: ['algerian', 'algeria', 'algerienne', 'algerien', 'algérienne'],
+          tunisienne: ['tunisian', 'tunisia', 'tunisienne', 'tunisien'],
+        };
+        const matchesCountryCuisine = (countryCuisineTerms[normalizedFilter] || []).some((term) =>
+          cuisineText.includes(normalizeSearch(term))
+        );
         const matchesFilter =
           normalizedFilter === 'tous' ||
           cuisine.includes(normalizedFilter) ||
           cuisineText.includes(normalizedFilter) ||
           (normalizedFilter === 'africaine' && cuisineText.includes('afric')) ||
           matchesFastFood ||
-          matchesAfricanRegion;
+          matchesAfricanRegion ||
+          matchesCountryCuisine;
 
         return matchesQuery && matchesFilter;
       })
