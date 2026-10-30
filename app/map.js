@@ -7,6 +7,7 @@ import {
   Alert,
   Pressable,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
 import MapView, { Marker, Callout } from '../components/AppMapView';
@@ -494,7 +495,14 @@ export default function MapScreen() {
             {selectedAddress ? 'Adresse sélectionnée' : 'Adresse de livraison'}
           </Text>
           <Text style={styles.addressValue} numberOfLines={2}>
-            {selectedAddress || (selectedLocation ? 'Recherche de l’adresse…' : 'Touchez la carte pour choisir une adresse')}
+            {selectedAddress ||
+              (Platform.OS === 'web'
+                ? location
+                  ? 'Position actuelle détectée'
+                  : 'Autorise la localisation pour choisir ton adresse'
+                : selectedLocation
+                ? 'Recherche de l’adresse…'
+                : 'Touchez la carte pour choisir une adresse')}
           </Text>
         </View>
         <View style={styles.restaurantCount}>
@@ -519,7 +527,9 @@ export default function MapScreen() {
         ) : (
           <>
             <Ionicons name="location" size={18} color="#FFFFFF" />
-            <Text style={styles.addressButtonText}>Utiliser cette adresse</Text>
+            <Text style={styles.addressButtonText}>
+              {Platform.OS === 'web' ? 'Utiliser ma position' : 'Utiliser cette adresse'}
+            </Text>
           </>
         )}
       </Pressable>
