@@ -368,10 +368,29 @@ export default function ExploreScreen() {
           'fried chicken', 'poulet frit', 'sandwich', 'kebab', 'shawarma',
           'snack', 'hot dog', 'wrap',
         ];
+        // Match region filters against restaurant cuisine, categories, name and description.
+        // Include common country adjectives and English/French spellings so the full
+        // continent remains discoverable even when partner data is not normalized yet.
         const africanRegionTerms = {
-          'afrique de l est': ['est-afric', 'east african', 'ethiop', 'kenyan', 'tanzan', 'somali', 'ougand'],
-          'afrique de l ouest': ['ouest-afric', 'west african', 'niger', 'ghan', 'senegal', 'ivoir', 'mali', 'benin', 'togo', 'burkina', 'guine'],
-          'afrique centrale': ['central african', 'cameroun', 'congo', 'gabonaise', 'tchad', 'centrafric'],
+          'afrique de l est': [
+            'est-afric', 'east african', 'ethiop', 'kenyan', 'kenya', 'tanzan', 'tanzania',
+            'somali', 'somalia', 'ougand', 'uganda', 'rwand', 'burund', 'eritrea',
+            'djibouti', 'sudan', 'sudanais', 'south sudan', 'malgache', 'madagascar',
+            'seychell', 'comor', 'maurice', 'mauritian',
+          ],
+          'afrique de l ouest': [
+            'ouest-afric', 'west african', 'nigerian', 'nigeria', 'ghan', 'senegal',
+            'ivoir', 'cote d ivoire', 'mali', 'malien', 'benin', 'beninois', 'togo',
+            'togolais', 'burkina', 'burkinabe', 'guine', 'guinea', 'sierra leone',
+            'liberia', 'liberien', 'gambia', 'gambian', 'mauritania', 'mauritanien',
+            'nigerien', 'cape verde', 'cap verdien',
+          ],
+          'afrique centrale': [
+            'central african', 'cameroun', 'cameroon', 'congo', 'congolais', 'gabon',
+            'gabonaise', 'tchad', 'chad', 'centrafric', 'central african republic',
+            'guinee equatoriale', 'equatorial guinea', 'sao tome', 'angola', 'angolais',
+            'rdc', 'republique democratique du congo',
+          ],
         };
         const cuisineText = normalizeSearch([
           item?.cuisine,
