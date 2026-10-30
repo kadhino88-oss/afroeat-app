@@ -647,7 +647,6 @@ export default function HomeScreen() {
               userName={userName}
               locationText={userAddress}
               avatarUri={userAvatar}
-              notificationCount={1}
             />
 
             <View style={styles.heroCard}>
