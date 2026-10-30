@@ -51,7 +51,8 @@
     "grillades": "Grill",
     "internationale": "International",
     "afriquedunord": "North African",
-    "afriqueaustrale": "Southern African"
+    "afriqueaustrale": "Southern African",
+    "boissons": "Drinks"
   },
   "home": {
     "searchPlaceholder": "Search a dish, a shop, a grocery store...",
@@ -80,7 +81,8 @@
     "deliveryAddressFallback": "Home delivery",
     "categories": {
       "groceries": "Grocery stores",
-      "shops": "Shops"
+      "shops": "Shops",
+      "drinks": "Drinks"
     }
   },
   "checkout": {
