@@ -51,7 +51,8 @@
     "grillades": "烧烤",
     "internationale": "国际美食",
     "afriquedunord": "北非",
-    "afriqueaustrale": "非洲南部"
+    "afriqueaustrale": "非洲南部",
+    "boissons": "饮品"
   },
   "home": {
     "searchPlaceholder": "搜索菜品、商店或杂货店...",
@@ -80,7 +81,8 @@
     "deliveryAddressFallback": "送货上门",
     "categories": {
       "groceries": "杂货店",
-      "shops": "商铺"
+      "shops": "商铺",
+      "drinks": "饮品"
     }
   },
   "checkout": {
