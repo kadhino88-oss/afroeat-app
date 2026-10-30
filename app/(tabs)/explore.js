@@ -429,6 +429,10 @@ export default function ExploreScreen() {
         const cuisineText = normalizeSearch([
           item?.cuisine,
           ...(Array.isArray(item?.categories) ? item.categories : []),
+          item?.category,
+          item?.type,
+          item?.businessType,
+          item?.storeType,
           item?.name,
           item?.description,
         ].filter(Boolean).join(' '));
