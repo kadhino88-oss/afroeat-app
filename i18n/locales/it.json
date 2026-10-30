@@ -51,7 +51,8 @@
     "grillades": "Grigliate",
     "internationale": "Cucina internazionale",
     "afriquedunord": "Africa settentrionale",
-    "afriqueaustrale": "Africa australe"
+    "afriqueaustrale": "Africa australe",
+    "boissons": "Bevande"
   },
   "home": {
     "searchPlaceholder": "Cerca un piatto, un negozio, una drogheria...",
@@ -80,7 +81,8 @@
     "deliveryAddressFallback": "Consegna a domicilio",
     "categories": {
       "groceries": "Negozi di alimentari",
-      "shops": "Negozi"
+      "shops": "Negozi",
+      "drinks": "Bevande"
     }
   },
   "checkout": {
