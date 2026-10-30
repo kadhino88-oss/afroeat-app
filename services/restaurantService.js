@@ -107,7 +107,8 @@ const normalizeRestaurant = (item) => {
       item?.deliveryFee !== undefined && item?.deliveryFee !== null
         ? normalizeNumber(item.deliveryFee, null)
         : null,
-    isOpen: normalizeBoolean(item?.isOpen, true) !== false,
+    // Unknown opening status stays unknown; never infer that a restaurant is open.
+    isOpen: normalizeBoolean(item?.isOpen, null),
     isFeatured: normalizeBoolean(item?.isFeatured, false) === true,
     owner: item?.owner || null,
     location: item?.location || null,
