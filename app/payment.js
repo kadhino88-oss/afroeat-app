@@ -154,7 +154,7 @@ export default function PaymentScreen() {
     } finally {
       setLoading(false);
     }
-  }, [orderId, token, t]);
+  }, [clearCart, orderId, token, t]);
 
   const handleCardPayment = useCallback(async () => {
     setLoading(true);
@@ -172,7 +172,7 @@ export default function PaymentScreen() {
       setErrorMsg(result.error || t('payment.paymentRefused'));
       setStep('error');
     }
-  }, [orderId, token, payWithStripe, t]);
+  }, [clearCart, orderId, token, payWithStripe, t]);
 
   const handlePay = useCallback(() => {
     if (!orderId || !selectedMethod) {
