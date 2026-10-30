@@ -531,9 +531,27 @@ export default function HomeScreen() {
   const renderRestaurant = useCallback(
     ({ item }) => {
       const isOpen = item?.isOpen !== false;
-      const rating = normalizeNumber(item?.rating, 4.7).toFixed(1);
-      const deliveryTime = item?.deliveryTime || '25 min';
-      const deliveryFee = item?.deliveryFee || '2.99 €';
+      const rating = normalizeNumber(item?.rating, null);
+      const hasRating = rating !== null && rating > 0;
+      const deliveryTime = normalizeText(item?.deliveryTime);
+      const rawDeliveryFee = item?.deliveryFee;
+      const hasDeliveryFee =
+        rawDeliveryFee !== null &&
+        rawDeliveryFee !== undefined &&
+        rawDeliveryFee !== '' &&
+        Number.isFinite(Number(rawDeliveryFee)) &&
+        Number(rawDeliveryFee) >= 0;
+      const currencyCandidate = normalizeText(item?.currency, 'CHF').toUpperCase();
+      const currency = /^[A-Z]{3}$/.test(currencyCandidate) ? currencyCandidate : 'CHF';
+      const deliveryFee = !hasDeliveryFee
+        ? 'Frais à confirmer'
+        : Number(rawDeliveryFee) === 0
+        ? 'Livraison offerte'
+        : new Intl.NumberFormat('fr-CH', {
+            style: 'currency',
+            currency,
+            maximumFractionDigits: 2,
+          }).format(Number(rawDeliveryFee));
 
       return (
         <Pressable
@@ -556,10 +574,12 @@ export default function HomeScreen() {
               style={styles.restaurantImage}
             />
 
-            <View style={styles.badge}>
-              <Ionicons name="star" size={13} color="#D4A017" />
-              <Text style={styles.badgeText}>{rating}</Text>
-            </View>
+            {hasRating && (
+              <View style={styles.badge}>
+                <Ionicons name="star" size={13} color="#D4A017" />
+                <Text style={styles.badgeText}>{rating.toFixed(1)}</Text>
+              </View>
+            )}
 
             <View
               style={[
@@ -592,7 +612,9 @@ export default function HomeScreen() {
               <Text style={styles.restaurantName} numberOfLines={1}>
                 {item?.name}
               </Text>
-              <Text style={styles.deliveryTime}>{deliveryTime}</Text>
+              <Text style={styles.deliveryTime}>
+                {deliveryTime || 'Délai à confirmer'}
+              </Text>
             </View>
 
             <Text style={styles.restaurantCuisine} numberOfLines={1}>
