@@ -121,7 +121,8 @@
     "alertSessionExpiredTitle": "Sitzung abgelaufen",
     "alertSessionExpiredBody": "Deine Sitzung ist abgelaufen. Melde dich erneut an und versuche es noch einmal.",
     "alertConnectionFailedTitle": "Verbindung fehlgeschlagen",
-    "alertConnectionFailedBody": "Überprüfe deine Internetverbindung und versuche es erneut."
+    "alertConnectionFailedBody": "Überprüfe deine Internetverbindung und versuche es erneut.",
+    "editAddress": "Adresse bearbeiten"
   },
   "restaurant": {
     "popular": "Beliebt",
