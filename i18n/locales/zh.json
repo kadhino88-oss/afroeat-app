@@ -36,7 +36,20 @@
     "tunisienne": "突尼斯菜",
     "epicerie": "杂货店",
     "boutique": "商店",
-    "all": "全部"
+    "all": "全部",
+    "nigeriane": "尼日利亚菜",
+    "ghaneenne": "加纳菜",
+    "ethiopienne": "埃塞俄比亚菜",
+    "sudafricaine": "南非菜",
+    "estafricaine": "东非菜",
+    "ouestafricaine": "西非菜",
+    "afriquecentrale": "中非菜",
+    "fastfood": "快餐",
+    "pizza": "披萨",
+    "burgers": "汉堡",
+    "tacos": "塔可",
+    "grillades": "烧烤",
+    "internationale": "国际美食"
   },
   "home": {
     "searchPlaceholder": "搜索菜品、商店或杂货店...",
