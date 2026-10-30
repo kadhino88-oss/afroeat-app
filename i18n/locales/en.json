@@ -675,7 +675,8 @@
       "preparing": "Preparing",
       "on_the_way": "On the way",
       "confirmed": "Confirmed",
-      "default": "Order"
+      "default": "Order",
+      "unknown": "Status to be confirmed"
     }
   },
   "cart": {
