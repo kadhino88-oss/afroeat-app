@@ -82,7 +82,7 @@ export const selectCashPayment = async (orderId, token) => {
     throw new Error('Commande ou session manquante.');
   }
   const response = await apiPost(
-    API_ENDPOINTS.payments.selectCash,
+    API_ENDPOINTS.payments.cash,
     { orderId },
     token
   );
