@@ -28,7 +28,9 @@ import i18n from '../../i18n';
  * Mets à false plus tard quand la vraie data sera 100% stable.
  */
 
-const ENABLE_LOCAL_MENU_FALLBACK = true;
+const ENABLE_LOCAL_MENU_FALLBACK = String(
+  process.env.EXPO_PUBLIC_ENABLE_LOCAL_MENU_FALLBACK || ''
+).trim().toLowerCase() === 'true';
 
 /**
  * =========================================================
@@ -186,13 +188,13 @@ const normalizeRestaurant = (data) => {
         data?.cover ||
         data?.banner
     ),
-    rating: normalizeNumber(data?.ratingAverage ?? data?.rating, 4.5),
+    rating: normalizeNumber(data?.ratingAverage ?? data?.rating, null),
     deliveryTime: normalizeNumber(
       data?.averagePreparationTimeMinutes ??
         data?.estimatedDeliveryTimeMinutes ??
         data?.deliveryTime ??
         data?.preparationTime,
-      25
+      null
     ),
     cuisine: normalizeText(
       data?.cuisine || data?.cuisineType || data?.category,
@@ -206,7 +208,7 @@ const normalizeRestaurant = (data) => {
     country: normalizeText(data?.country || data?.location?.country),
     deliveryFee: normalizeNumber(
       data?.deliveryFee ?? data?.fees?.delivery ?? data?.shippingFee,
-      0
+      null
     ),
     currency: normalizeText(data?.currency, 'EUR'),
     description: normalizeText(data?.description),
@@ -400,13 +402,17 @@ const dedupeMenuItems = (items) => {
 
 const formatDeliveryTime = (value) => {
   const parsed = Number(value);
-  if (!Number.isFinite(parsed) || parsed <= 0) return '25 min';
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return i18n.t('restaurant.deliveryTimeUnavailable', {
+      defaultValue: 'Délai à confirmer',
+    });
+  }
   return `${parsed} min`;
 };
 
 const formatRating = (value) => {
-  const parsed = normalizeNumber(value, 4.5);
-  return parsed.toFixed(1);
+  const parsed = normalizeNumber(value, null);
+  return parsed !== null && parsed > 0 ? parsed.toFixed(1) : '';
 };
 
 const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
@@ -622,6 +628,16 @@ export default function RestaurantScreen() {
 
   const handleAddToCart = useCallback(
     async (item) => {
+      if (menuSource === 'local-fallback') {
+        Alert.alert(
+          t('restaurant.error'),
+          t('restaurant.demoMenuUnavailable', {
+            defaultValue: 'Ce menu de démonstration ne permet pas de passer une vraie commande.',
+          })
+        );
+        return;
+      }
+
       if (
         !item?._id ||
         !restaurant?._id ||
@@ -690,7 +706,7 @@ export default function RestaurantScreen() {
         setAddingId(null);
       }
     },
-    [addToCart, restaurant, addingId]
+    [addToCart, restaurant, addingId, menuSource, t]
   );
 
   /**
@@ -920,7 +936,9 @@ export default function RestaurantScreen() {
           <Text style={styles.heroTitle}>{restaurant.name}</Text>
 
           <Text style={styles.heroMeta}>
-            ⭐ {formatRating(restaurant.rating)} • {formatDeliveryTime(restaurant.deliveryTime)}
+            {formatRating(restaurant.rating)
+              ? `⭐ ${formatRating(restaurant.rating)} • ${formatDeliveryTime(restaurant.deliveryTime)}`
+              : formatDeliveryTime(restaurant.deliveryTime)}
           </Text>
         </View>
       </View>
@@ -978,7 +996,9 @@ export default function RestaurantScreen() {
               <View style={styles.metaRow}>
                 <Ionicons name="card-outline" size={16} color="#245EA8" />
                 <Text style={styles.metaText}>
-                  {t('restaurant.deliveryFee', { amount: formatPrice(restaurant.deliveryFee, restaurant.currency) })}
+                  {restaurant.deliveryFee === null || restaurant.deliveryFee === undefined
+                    ? t('restaurant.deliveryFeeUnavailable', { defaultValue: 'Frais à confirmer' })
+                    : t('restaurant.deliveryFee', { amount: formatPrice(restaurant.deliveryFee, restaurant.currency) })}
                 </Text>
               </View>
 
