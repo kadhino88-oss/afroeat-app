@@ -141,7 +141,6 @@ export default function CheckoutScreen() {
   const auth = useAuth() || {};
 
   const cartItems = cart.cartItems;
-  const clearCart = cart.clearCart;
   const totals = cart.totals || {};
   const getTotalPrice = cart.getTotalPrice;
   const getRestaurantName = cart.getRestaurantName;
@@ -364,11 +363,8 @@ export default function CheckoutScreen() {
         throw new Error('Le serveur n’a pas retourné le montant confirmé de la commande.');
       }
 
-      if (typeof clearCart === 'function') {
-        await Promise.resolve(clearCart());
-      }
-
-      idempotencyRequestRef.current = null;
+      // Do not clear the cart here: order creation is not payment confirmation.
+      // Keep it available if the payment is declined or the payment API fails.
 
       Alert.alert(t('checkout.alertOrderCreatedTitle'), t('checkout.alertOrderCreatedBody'));
 
@@ -408,7 +404,6 @@ export default function CheckoutScreen() {
       setLoading(false);
     }
   }, [
-    clearCart,
     currency,
     delivery,
     deliveryAddress,
