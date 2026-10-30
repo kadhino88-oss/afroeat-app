@@ -134,7 +134,8 @@
     "alertSessionExpiredTitle": "Sessione scaduta",
     "alertSessionExpiredBody": "La tua sessione è scaduta. Accedi di nuovo e riprova.",
     "alertConnectionFailedTitle": "Connessione fallita",
-    "alertConnectionFailedBody": "Controlla la tua connessione internet e riprova."
+    "alertConnectionFailedBody": "Controlla la tua connessione internet e riprova.",
+    "editAddress": "Modifica indirizzo"
   },
   "restaurant": {
     "popular": "Popolare",

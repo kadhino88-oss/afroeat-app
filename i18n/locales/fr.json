@@ -134,7 +134,8 @@
     "alertSessionExpiredTitle": "Session expirée",
     "alertSessionExpiredBody": "Ta session a expiré. Reconnecte-toi et réessaie.",
     "alertConnectionFailedTitle": "Connexion impossible",
-    "alertConnectionFailedBody": "Vérifie ta connexion internet et réessaie."
+    "alertConnectionFailedBody": "Vérifie ta connexion internet et réessaie.",
+    "editAddress": "Modifier l’adresse"
   },
   "restaurant": {
     "popular": "Populaire",

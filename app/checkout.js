@@ -267,8 +267,8 @@ export default function CheckoutScreen() {
     router.replace('/(tabs)/explore');
   }, []);
 
-  const handleGoToProfile = useCallback(() => {
-    router.push('/(tabs)/profile');
+  const handleGoToAddressMap = useCallback(() => {
+    router.push('/map');
   }, []);
 
   const handleOrder = useCallback(async () => {
@@ -567,11 +567,11 @@ export default function CheckoutScreen() {
 
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={t('checkout.viewProfile')}
+                accessibilityLabel={t('checkout.editAddress')}
                 style={styles.addressAction}
-                onPress={handleGoToProfile}
+                onPress={handleGoToAddressMap}
               >
-                <Text style={styles.addressActionText}>{t('checkout.viewProfile')}</Text>
+                <Text style={styles.addressActionText}>{t('checkout.editAddress')}</Text>
                 <Ionicons name="chevron-forward" size={16} color="#1F6F43" />
               </Pressable>
             </View>
