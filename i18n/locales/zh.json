@@ -121,7 +121,8 @@
     "alertSessionExpiredTitle": "会话已过期",
     "alertSessionExpiredBody": "您的会话已过期，请重新登录后再试。",
     "alertConnectionFailedTitle": "连接失败",
-    "alertConnectionFailedBody": "请检查网络连接后重试。"
+    "alertConnectionFailedBody": "请检查网络连接后重试。",
+    "editAddress": "编辑地址"
   },
   "restaurant": {
     "popular": "热门",
