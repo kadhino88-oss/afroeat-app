@@ -43,8 +43,7 @@
       [
         "@stripe/stripe-react-native",
         {
-          "merchantIdentifier": "merchant.com.afroeat",
-          "enableGooglePay": true
+          "enableGooglePay": false
         }
       ],
       [
