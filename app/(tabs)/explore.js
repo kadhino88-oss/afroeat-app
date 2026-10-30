@@ -16,7 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, Redirect, useLocalSearchParams } from 'expo-router';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
-import { getAllRestaurants } from '../../services/restaurantService';
+import { getAllRestaurants, searchRestaurants } from '../../services/restaurantService';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
@@ -329,7 +329,15 @@ export default function ExploreScreen() {
 
       setErrorMessage('');
 
-      const data = await getAllRestaurants(tokenRef.current);
+      const businessTypeByFilter = {
+        'Épicerie': 'grocery',
+        'Boissons': 'drinks',
+        'Boutique': 'shop',
+      };
+      const businessType = businessTypeByFilter[activeFilter];
+      const data = businessType
+        ? await searchRestaurants({ businessType, token: tokenRef.current })
+        : await getAllRestaurants(tokenRef.current);
       const extracted = extractRestaurantsFromResponse(data);
 
       const safeRestaurants = extracted
@@ -353,7 +361,7 @@ export default function ExploreScreen() {
         setLoading(false);
       }
     }
-  }, []);
+  }, [activeFilter]);
 
   useEffect(() => {
     if (!redirectPath) {
