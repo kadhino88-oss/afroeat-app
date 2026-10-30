@@ -6,7 +6,6 @@ import {
   Pressable,
   ScrollView,
   StatusBar,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { router, Redirect } from 'expo-router';
@@ -91,6 +90,15 @@ export default function ProfilePaymentScreen() {
     return normalizeRole(role || user?.role || 'client');
   }, [role, user]);
 
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+
+    router.replace('/(tabs)/profile');
+  }, []);
+
   /**
    * =========================================================
    * LOADING
@@ -124,77 +132,7 @@ export default function ProfilePaymentScreen() {
     return <Redirect href={roleRedirect} />;
   }
 
-  const handleBack = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back();
-      return;
-    }
 
-    router.replace('/(tabs)/profile');
-  }, []);
-
-  const handleSave = useCallback(async () => {
-    if (!isAuthenticated || !token) {
-      Alert.alert(t('profile.payment.connectionRequiredTitle'), t('profile.payment.connectionRequiredBody'));
-      return;
-    }
-
-    const safeHolderName = sanitizeHolderName(holderName);
-    const safeBrand = sanitizeCardBrand(brand);
-    const safeLast4 = sanitizeLast4(last4);
-    const safeExpiry = sanitizeExpiry(expiry);
-
-    if (safeHolderName.length < 2) {
-      Alert.alert(t('profile.payment.fieldRequiredTitle'), t('profile.payment.holderNameInvalidBody'));
-      return;
-    }
-
-    if (safeBrand.length < 2) {
-      Alert.alert(t('profile.payment.fieldRequiredTitle'), t('profile.payment.cardTypeInvalidBody'));
-      return;
-    }
-
-    if (safeLast4.length !== 4) {
-      Alert.alert(
-        t('profile.payment.cardInvalidTitle'),
-        t('profile.payment.cardInvalidBody')
-      );
-      return;
-    }
-
-    if (!isValidExpiry(safeExpiry)) {
-      Alert.alert(
-        t('profile.payment.expiryInvalidTitle'),
-        t('profile.payment.expiryInvalidBody')
-      );
-      return;
-    }
-
-    try {
-      setSaving(true);
-
-      const payload = {
-        paymentMethod: {
-          holderName: safeHolderName,
-          brand: safeBrand,
-          last4: safeLast4,
-          expiry: safeExpiry,
-        },
-      };
-
-      await updateMyProfile(payload, token);
-
-      Alert.alert(t('profile.payment.successTitle'), t('profile.payment.successBody'));
-    } catch (error) {
-      console.log('Erreur update payment :', error);
-      Alert.alert(
-        t('profile.payment.saveErrorTitle'),
-        error?.message || t('profile.payment.saveErrorFallback')
-      );
-    } finally {
-      setSaving(false);
-    }
-  }, [isAuthenticated, token, holderName, brand, last4, expiry]);
 
   return (
     <FadeInView style={styles.container}>
