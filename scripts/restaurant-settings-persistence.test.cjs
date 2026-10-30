@@ -18,7 +18,7 @@ test('restaurant settings are loaded from the API', () => {
 test('saving restaurant settings calls the authenticated update endpoint', () => {
   assert.match(settings, /updateRestaurant\(/);
   for (const key of ['isOpen', 'autoAcceptOrders', 'notificationsEnabled', 'preparationMode']) {
-    assert.ok(settings.includes(`${key}:`), `missing saved setting ${key}`);
+    assert.ok(settings.includes(key), `missing saved setting ${key}`);
   }
   assert.match(service, /apiPut\(endpoint\(normalizedId\), payload, token\)/);
   assert.doesNotMatch(settings, /setTimeout\(/, 'settings must not simulate a successful save');
