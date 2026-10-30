@@ -49,7 +49,9 @@
     "burgers": "Burger",
     "tacos": "Tacos",
     "grillades": "Grillgerichte",
-    "internationale": "International"
+    "internationale": "International",
+    "afriquedunord": "Nordafrikanisch",
+    "afriqueaustrale": "Südliches Afrika"
   },
   "home": {
     "searchPlaceholder": "Gericht, Laden oder Lebensmittelgeschäft suchen...",
