@@ -20,11 +20,6 @@ import { useAuth } from '../../context/AuthContext';
  * =========================================================
  */
 
-const normalizeText = (value, fallback = '') => {
-  const normalized = String(value ?? '').trim();
-  return normalized || fallback;
-};
-
 const normalizeRole = (value) => {
   const normalized = String(value ?? 'client').trim().toLowerCase();
 
@@ -82,7 +77,6 @@ export default function ProfilePaymentScreen() {
 
   const user = auth.user ?? null;
   const role = auth.role;
-  const token = auth.token;
   const isAuthenticated = Boolean(auth.isAuthenticated);
   const authLoading = Boolean(auth.loading);
 
