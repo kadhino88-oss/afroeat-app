@@ -126,7 +126,7 @@ const normalizeStatus = (value) => {
     return 'confirmed';
   }
 
-  return 'pending';
+  return 'unknown';
 };
 
 const normalizeOrder = (item = {}) => {
@@ -187,6 +187,7 @@ const formatDate = (value) => {
 };
 
 const getStatusColor = (s) => {
+  if (s === 'unknown') return '#777777';
   if (s === 'delivered') return '#1F6F43';
   if (s === 'cancelled') return '#B63B3B';
   if (s === 'pending') return '#D4A017';
@@ -197,6 +198,7 @@ const getStatusColor = (s) => {
 };
 
 const getStatusBg = (s) => {
+  if (s === 'unknown') return '#F4F4F4';
   if (s === 'delivered') return '#E8F5ED';
   if (s === 'cancelled') return '#FDECEC';
   if (s === 'pending') return '#FFF3D8';
@@ -213,10 +215,12 @@ const getStatusLabel = (s) => {
   if (s === 'preparing') return 'Préparation';
   if (s === 'on_the_way') return 'En livraison';
   if (s === 'confirmed') return 'Confirmé';
+  if (s === 'unknown') return 'Statut à confirmer';
   return 'Commande';
 };
 
 const getStatusIcon = (s) => {
+  if (s === 'unknown') return 'help-circle-outline';
   if (s === 'delivered') return 'checkmark-circle-outline';
   if (s === 'cancelled') return 'close-circle-outline';
   if (s === 'pending') return 'time-outline';
