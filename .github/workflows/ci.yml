@@ -31,6 +31,8 @@ jobs:
         run: npm run check:payment-route-sync
       - name: Validate translations
         run: npm run check:locales
+      - name: Test Explore national cuisine filters
+        run: npm run check:explore-cuisines
       - name: Lint payment and dynamic app configuration
         run: npx eslint app.config.js constants/apiConfig.js scripts/api-config.test.cjs app/payment.js app/checkout.js app/account/payouts.js app/admin/payouts.js app/admin/index.js app/admin/_layout.js app/livraison/profile.js app/restaurant/restaurant-profile.js services/stripeService.js services/stripeService.web.js services/stripeConnectService.js constants/api.js scripts/payment-route-sync.test.cjs app/map.js app/profile/payment.js 'app/(tabs)/explore.js' 'app/(tabs)/index.js' 'app/restaurant/[id].js'
       - name: Export web bundle
