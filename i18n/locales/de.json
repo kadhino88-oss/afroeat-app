@@ -36,7 +36,20 @@
     "tunisienne": "Tunesisch",
     "epicerie": "Lebensmittelladen",
     "boutique": "Geschäft",
-    "all": "Alle"
+    "all": "Alle",
+    "nigeriane": "Nigerianisch",
+    "ghaneenne": "Ghanaisch",
+    "ethiopienne": "Äthiopisch",
+    "sudafricaine": "Südafrikanisch",
+    "estafricaine": "Ostafrikanisch",
+    "ouestafricaine": "Westafrikanisch",
+    "afriquecentrale": "Zentralafrikanisch",
+    "fastfood": "Fast Food",
+    "pizza": "Pizza",
+    "burgers": "Burger",
+    "tacos": "Tacos",
+    "grillades": "Grillgerichte",
+    "internationale": "International"
   },
   "home": {
     "searchPlaceholder": "Gericht, Laden oder Lebensmittelgeschäft suchen...",
