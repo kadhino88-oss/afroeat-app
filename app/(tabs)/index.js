@@ -231,7 +231,7 @@ const normalizeRestaurant = (item = {}, index = 0) => {
     ),
     image: normalizeText(item?.image),
     coverImage: normalizeText(item?.coverImage),
-    isOpen: normalizeBoolean(item?.isOpen, true),
+    isOpen: normalizeBoolean(item?.isOpen, null),
     isFeatured: normalizeBoolean(item?.isFeatured, false),
     rating: normalizeNumber(
       item?.ratingAverage ?? item?.rating,
@@ -488,7 +488,7 @@ export default function HomeScreen() {
       const cuisine = normalizeSearch(item?.cuisine);
       const address = normalizeSearch(item?.address);
       const matchesSearch = !query || name.includes(query) || cuisine.includes(query) || address.includes(query);
-      const matchesOpen = !openOnly || item?.isOpen !== false;
+      const matchesOpen = !openOnly || item?.isOpen === true;
       const matchesRating = !topRatedOnly || normalizeNumber(item?.rating, 0) >= 4.5;
 
       return matchesSearch && matchesOpen && matchesRating;
@@ -530,7 +530,8 @@ export default function HomeScreen() {
 
   const renderRestaurant = useCallback(
     ({ item }) => {
-      const isOpen = item?.isOpen !== false;
+      const isOpen = item?.isOpen === true;
+      const hasOpenStatus = typeof item?.isOpen === 'boolean';
       const rating = normalizeNumber(item?.rating, null);
       const hasRating = rating !== null && rating > 0;
       const deliveryTime = normalizeText(item?.deliveryTime);
@@ -595,7 +596,11 @@ export default function HomeScreen() {
                     : styles.statusBadgeTextClosed,
                 ]}
               >
-                {isOpen ? t('home.open') : t('home.closed')}
+                {isOpen
+                  ? t('home.open')
+                  : hasOpenStatus
+                  ? t('home.closed')
+                  : 'Horaires à confirmer'}
               </Text>
             </View>
 
