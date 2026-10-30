@@ -25,6 +25,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import {
   useAfroeatPayment,
   getAvailablePaymentMethods,
@@ -83,6 +84,7 @@ export default function PaymentScreen() {
   const params   = useLocalSearchParams();
   const auth     = useAuth() || {};
   const token    = auth.token ?? null;
+  const { clearCart } = useCart();
 
   const orderId  = normalizeText(params?.orderId);
   const amount   = normalizeNumber(params?.amount, 0);
@@ -143,6 +145,8 @@ export default function PaymentScreen() {
       // Cash is selected on the server; production returns 503 until the
       // cash collection and settlement ledger is implemented.
       await selectCashPayment(orderId, token);
+      // Clear the cart only after the backend accepts the selected payment method.
+      await Promise.resolve(clearCart());
       setStep('success');
     } catch (error) {
       setErrorMsg(error?.message || t('payment.cashUnavailable', 'Le paiement à la livraison est indisponible.'));
@@ -150,7 +154,7 @@ export default function PaymentScreen() {
     } finally {
       setLoading(false);
     }
-  }, [orderId, token, t]);
+  }, [clearCart, orderId, token, t]);
 
   const handleCardPayment = useCallback(async () => {
     setLoading(true);
@@ -161,12 +165,14 @@ export default function PaymentScreen() {
     setLoading(false);
 
     if (result.success) {
+      // Card payment is confirmed by Stripe and the backend before clearing.
+      await Promise.resolve(clearCart());
       setStep('success');
     } else {
       setErrorMsg(result.error || t('payment.paymentRefused'));
       setStep('error');
     }
-  }, [orderId, token, payWithStripe, t]);
+  }, [clearCart, orderId, token, payWithStripe, t]);
 
   const handlePay = useCallback(() => {
     if (!orderId || !selectedMethod) {
