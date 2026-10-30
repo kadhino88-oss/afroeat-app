@@ -36,7 +36,20 @@
     "tunisienne": "Tunisina",
     "epicerie": "Drogheria",
     "boutique": "Negozio",
-    "all": "Tutti"
+    "all": "Tutti",
+    "nigeriane": "Nigeriana",
+    "ghaneenne": "Ghanese",
+    "ethiopienne": "Etiope",
+    "sudafricaine": "Sudafricana",
+    "estafricaine": "Africa orientale",
+    "ouestafricaine": "Africa occidentale",
+    "afriquecentrale": "Africa centrale",
+    "fastfood": "Fast food",
+    "pizza": "Pizza",
+    "burgers": "Burger",
+    "tacos": "Tacos",
+    "grillades": "Grigliate",
+    "internationale": "Cucina internazionale"
   },
   "home": {
     "searchPlaceholder": "Cerca un piatto, un negozio, una drogheria...",
