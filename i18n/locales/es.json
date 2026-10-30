@@ -49,7 +49,9 @@
     "burgers": "Hamburguesas",
     "tacos": "Tacos",
     "grillades": "Parrilla",
-    "internationale": "Cocina internacional"
+    "internationale": "Cocina internacional",
+    "afriquedunord": "África del Norte",
+    "afriqueaustrale": "África austral"
   },
   "home": {
     "searchPlaceholder": "Buscar un plato, una tienda, una tienda de comestibles...",
