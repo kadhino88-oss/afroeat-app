@@ -203,7 +203,7 @@ const normalizeRestaurant = (data) => {
     address: normalizeText(
       data?.address || data?.location?.address || data?.fullAddress
     ),
-    isOpen: normalizeBoolean(data?.isOpen, true),
+    isOpen: normalizeBoolean(data?.isOpen, null),
     city: normalizeText(data?.city || data?.location?.city),
     country: normalizeText(data?.country || data?.location?.country),
     deliveryFee: normalizeNumber(
@@ -982,7 +982,11 @@ export default function RestaurantScreen() {
                 <Text style={styles.metaText}>
                   {restaurant.cuisine}
                   {restaurant.city ? ` • ${restaurant.city}` : ''}
-                  {!restaurant.isOpen ? ` • ${t('home.closed')}` : ` • ${t('home.open')}`}
+                  {restaurant.isOpen === true
+                    ? ` • ${t('home.open')}`
+                    : restaurant.isOpen === false
+                    ? ` • ${t('home.closed')}`
+                    : ' • Horaires à confirmer'}
                 </Text>
               </View>
 
