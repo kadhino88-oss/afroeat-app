@@ -14,7 +14,8 @@
     "check:api-config": "node --test scripts/api-config.test.cjs",
     "check:payment-route-sync": "node --test scripts/payment-route-sync.test.cjs",
     "check:explore-cuisines": "node --test scripts/explore-country-cuisine.test.cjs",
-    "check:restaurant-settings": "node --test scripts/restaurant-settings-persistence.test.cjs"
+    "check:restaurant-settings": "node --test scripts/restaurant-settings-persistence.test.cjs",
+    "check:catalog-business-type": "node --test scripts/catalog-business-type.test.cjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
