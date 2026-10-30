@@ -14,6 +14,7 @@ import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';
 import { getAllRestaurants } from '../services/restaurantService';
+import { updateMyProfile } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
@@ -147,9 +148,17 @@ export default function MapScreen() {
   const isAuthenticated = Boolean(auth.isAuthenticated);
   const authLoading = Boolean(auth.loading);
   const user = auth.user ?? null;
+  const token = auth.token;
+  const updateUser = auth.updateUser;
   const currentRole = normalizeRole(auth.role || user?.role);
+  const roleRedirect = !authLoading && isAuthenticated
+    ? getRoleRedirect(currentRole)
+    : null;
 
   const [location, setLocation] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState('');
+  const [savingAddress, setSavingAddress] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -159,14 +168,6 @@ export default function MapScreen() {
    * ROLE GATE
    * =========================================================
    */
-
-  if (!authLoading && isAuthenticated) {
-    const roleRedirect = getRoleRedirect(currentRole);
-
-    if (roleRedirect) {
-      return <Redirect href={roleRedirect} />;
-    }
-  }
 
   const getUserLocation = useCallback(async () => {
     try {
@@ -281,6 +282,110 @@ export default function MapScreen() {
     router.replace('/(tabs)/explore');
   }, []);
 
+  const handleMapPress = useCallback(async (event) => {
+    const coordinate = event?.nativeEvent?.coordinate;
+    if (
+      !Number.isFinite(coordinate?.latitude) ||
+      !Number.isFinite(coordinate?.longitude)
+    ) {
+      return;
+    }
+
+    setSelectedLocation({
+      latitude: coordinate.latitude,
+      longitude: coordinate.longitude,
+    });
+    setSelectedAddress('');
+
+    try {
+      const places = await Location.reverseGeocodeAsync(coordinate);
+      const place = places?.[0];
+      if (!place) return;
+
+      const streetLine = [place.streetNumber, place.street]
+        .filter(Boolean)
+        .join(' ');
+      const cityLine = [place.postalCode, place.city || place.subregion]
+        .filter(Boolean)
+        .join(' ');
+      const address = [
+        streetLine,
+        cityLine,
+        place.region,
+        place.country,
+      ]
+        .map((part) => normalizeText(part))
+        .filter(Boolean)
+        .filter((part, index, parts) => parts.indexOf(part) === index)
+        .join(', ');
+
+      setSelectedAddress(address);
+    } catch (error) {
+      console.log('Géocodage inverse indisponible :', error);
+    }
+  }, []);
+
+  const handleUseDeliveryAddress = useCallback(async () => {
+    if (!isAuthenticated || !token) {
+      Alert.alert(
+        'Connexion requise',
+        'Connecte-toi pour enregistrer ton adresse de livraison.',
+        [{ text: 'Se connecter', onPress: () => router.push('/auth/role') }, { text: 'Annuler' }]
+      );
+      return;
+    }
+
+    const coordinates = selectedLocation || location;
+    if (!coordinates) {
+      Alert.alert('Adresse indisponible', 'Choisis un point sur la carte ou active ta localisation.');
+      return;
+    }
+
+    setSavingAddress(true);
+    try {
+      let address = selectedAddress;
+      if (!address) {
+        const places = await Location.reverseGeocodeAsync(coordinates);
+        const place = places?.[0];
+        if (place) {
+          const streetLine = [place.streetNumber, place.street].filter(Boolean).join(' ');
+          const cityLine = [place.postalCode, place.city || place.subregion].filter(Boolean).join(' ');
+          address = [streetLine, cityLine, place.region, place.country]
+            .map((part) => normalizeText(part))
+            .filter(Boolean)
+            .filter((part, index, parts) => parts.indexOf(part) === index)
+            .join(', ');
+        }
+      }
+
+      if (!address || address.length < 5) {
+        throw new Error('Impossible de déterminer une adresse à cet endroit. Choisis un autre point.');
+      }
+
+      const response = await updateMyProfile({ address }, token);
+      if (!response?.user?._id) {
+        throw new Error('Le serveur n’a pas confirmé la mise à jour de ton adresse.');
+      }
+
+      if (typeof updateUser === 'function') {
+        await updateUser(response.user);
+      }
+
+      Alert.alert('Adresse enregistrée', address, [
+        { text: 'Continuer', onPress: () => router.back() },
+      ]);
+    } catch (error) {
+      Alert.alert('Enregistrement impossible', error?.message || 'Réessaie dans un instant.');
+    } finally {
+      setSavingAddress(false);
+    }
+  }, [isAuthenticated, token, selectedLocation, location, selectedAddress, updateUser]);
+
+
+  if (roleRedirect) {
+    return <Redirect href={roleRedirect} />;
+  }
+
   if (loading || authLoading) {
     return (
       <View style={styles.loaderContainer}>
@@ -381,7 +486,16 @@ export default function MapScreen() {
           showsUserLocation={!!location}
           showsMyLocationButton
           initialRegion={mapRegion}
+          onPress={handleMapPress}
         >
+          {selectedLocation && (
+            <Marker
+              coordinate={selectedLocation}
+              pinColor="#2457C5"
+              title="Adresse de livraison"
+              description={selectedAddress || 'Point sélectionné'}
+            />
+          )}
           {geoRestaurants.map((restaurant) => (
             <Marker
               key={restaurant._id}
@@ -417,9 +531,40 @@ export default function MapScreen() {
       </View>
 
       <View style={styles.footerInfo}>
-        <Text style={styles.footerTitle}>{t('map.detectedRestaurants')}</Text>
-        <Text style={styles.footerValue}>{geoRestaurants.length}</Text>
+        <View style={styles.addressSummary}>
+          <Text style={styles.footerTitle}>
+            {selectedAddress ? 'Adresse sélectionnée' : 'Adresse de livraison'}
+          </Text>
+          <Text style={styles.addressValue} numberOfLines={2}>
+            {selectedAddress || (selectedLocation ? 'Recherche de l’adresse…' : 'Touchez la carte pour choisir une adresse')}
+          </Text>
+        </View>
+        <View style={styles.restaurantCount}>
+          <Text style={styles.footerTitle}>{t('map.detectedRestaurants')}</Text>
+          <Text style={styles.footerValue}>{geoRestaurants.length}</Text>
+        </View>
       </View>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Enregistrer cette adresse de livraison"
+        style={({ pressed }) => [
+          styles.addressButton,
+          (savingAddress || (!selectedLocation && !location)) && styles.addressButtonDisabled,
+          pressed && !savingAddress && styles.buttonPressed,
+        ]}
+        onPress={handleUseDeliveryAddress}
+        disabled={savingAddress || (!selectedLocation && !location)}
+      >
+        {savingAddress ? (
+          <ActivityIndicator color="#FFFFFF" />
+        ) : (
+          <>
+            <Ionicons name="location" size={18} color="#FFFFFF" />
+            <Text style={styles.addressButtonText}>Utiliser cette adresse</Text>
+          </>
+        )}
+      </Pressable>
     </FadeInView>
   );
 }
@@ -527,7 +672,7 @@ const styles = StyleSheet.create({
   },
 
   footerInfo: {
-    marginTop: 16,
+    marginTop: 12,
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     paddingVertical: 14,
@@ -535,6 +680,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 14,
+  },
+
+  addressSummary: {
+    flex: 1,
+  },
+
+  addressValue: {
+    marginTop: 5,
+    fontSize: 13,
+    lineHeight: 18,
+    color: '#333333',
+    fontWeight: '600',
+  },
+
+  restaurantCount: {
+    alignItems: 'flex-end',
+  },
+
+  addressButton: {
+    marginTop: 10,
+    minHeight: 50,
+    borderRadius: 16,
+    backgroundColor: '#1E1E1E',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 16,
+  },
+
+  addressButtonDisabled: {
+    opacity: 0.55,
+  },
+
+  addressButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '800',
   },
 
   footerTitle: {
