@@ -1,4 +1,4 @@
-import { apiGet } from './apiClient';
+import { apiGet, apiPut } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
 /**
@@ -353,6 +353,22 @@ export const getMyRestaurant = async (token) => {
     throw new Error('Aucun restaurant partenaire trouvé pour ce compte.');
   }
 
+  return restaurant;
+};
+
+export const updateRestaurant = async (id, payload = {}, token) => {
+  const normalizedId = normalizeText(id);
+  if (!normalizedId) throw new Error('Identifiant restaurant manquant.');
+  if (!normalizeText(token)) throw new Error('Token requis pour modifier le restaurant.');
+
+  const endpoint = API_ENDPOINTS?.restaurants?.byId;
+  if (typeof endpoint !== 'function') {
+    throw new Error('Endpoint de modification restaurant introuvable.');
+  }
+
+  const data = await apiPut(endpoint(normalizedId), payload, token);
+  const restaurant = normalizeSingleRestaurantResponse(data);
+  if (!restaurant?._id) throw new Error('La modification du restaurant n’a pas été confirmée.');
   return restaurant;
 };
 
