@@ -49,3 +49,11 @@ for (const locale of ['de', 'en', 'es', 'fr', 'it', 'zh']) {
     assert.ok(content.cuisines.boissons.length > 0);
   });
 }
+
+test('home and Explore both expose North and Southern Africa', () => {
+  const home = fs.readFileSync(path.join(root, 'app', '(tabs)', 'index.js'), 'utf8');
+  for (const label of ['Afrique du Nord', 'Afrique australe']) {
+    assert.ok(home.includes(`'${label}'`), `home is missing ${label}`);
+    assert.ok(explore.includes(`'${label}'`), `Explore is missing ${label}`);
+  }
+});
