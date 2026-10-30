@@ -36,7 +36,20 @@
     "tunisienne": "Tunisian",
     "epicerie": "Grocery",
     "boutique": "Shop",
-    "all": "All"
+    "all": "All",
+    "nigeriane": "Nigerian",
+    "ghaneenne": "Ghanaian",
+    "ethiopienne": "Ethiopian",
+    "sudafricaine": "South African",
+    "estafricaine": "East African",
+    "ouestafricaine": "West African",
+    "afriquecentrale": "Central African",
+    "fastfood": "Fast food",
+    "pizza": "Pizza",
+    "burgers": "Burgers",
+    "tacos": "Tacos",
+    "grillades": "Grill",
+    "internationale": "International"
   },
   "home": {
     "searchPlaceholder": "Search a dish, a shop, a grocery store...",
