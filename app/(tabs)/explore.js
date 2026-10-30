@@ -127,36 +127,32 @@ const normalizeRole = (value) => {
 };
 
 const clampRating = (value) => {
-  const rating = normalizeNumber(value, 4.7);
+  if (value === null || value === undefined || value === '') return null;
 
-  if (rating < 0) return 0;
-  if (rating > 5) return 5;
+  const rating = normalizeNumber(value, null);
+  if (rating === null || rating <= 0) return null;
 
-  return rating;
+  return Math.min(5, rating);
 };
 
-const normalizeDeliveryTimeValue = (value, fallbackMinutes = 24) => {
+const normalizeDeliveryTimeValue = (value) => {
   if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
     return value;
   }
 
   const text = normalizeText(value);
-  if (!text) return fallbackMinutes;
+  if (!text) return null;
 
   const numeric = Number.parseInt(text, 10);
-  if (Number.isFinite(numeric) && numeric > 0) {
-    return numeric;
-  }
-
-  return fallbackMinutes;
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
 };
 
-const formatDeliveryTime = (value, fallbackMinutes = 24) => {
-  const minutes = normalizeDeliveryTimeValue(value, fallbackMinutes);
-  return `${minutes} min`;
+const formatDeliveryTime = (value) => {
+  const minutes = normalizeDeliveryTimeValue(value);
+  return minutes === null ? 'Délai à confirmer' : `${minutes} min`;
 };
 
-const normalizeRestaurant = (item = {}, index = 0) => {
+const normalizeRestaurant = (item = {}) => {
   const rawId =
     item?._id || item?.id || item?.restaurantId || item?.slug || '';
 
@@ -181,14 +177,12 @@ const normalizeRestaurant = (item = {}, index = 0) => {
     image,
     coverImage,
     isFeatured: normalizeBoolean(item?.isFeatured, false),
-    isOpen: normalizeBoolean(item?.isOpen, true),
+    isOpen: normalizeBoolean(item?.isOpen, null),
     rating: clampRating(item?.ratingAverage ?? item?.rating),
     deliveryTimeMinutes: normalizeDeliveryTimeValue(
       item?.deliveryTimeMinutes ??
-        item?.averagePreparationTimeMinutes ??
         item?.estimatedDeliveryTimeMinutes ??
-        item?.deliveryTime,
-      18 + index * 2
+        item?.deliveryTime
     ),
     city,
     country,
@@ -289,7 +283,7 @@ export default function ExploreScreen() {
       const extracted = extractRestaurantsFromResponse(data);
 
       const safeRestaurants = extracted
-        .map((item, index) => normalizeRestaurant(item, index))
+        .map((item) => normalizeRestaurant(item))
         .filter((item) => item?._id);
 
       setRestaurants(safeRestaurants);
@@ -365,7 +359,9 @@ export default function ExploreScreen() {
           return bOpen - aOpen;
         }
 
-        return clampRating(b?.rating) - clampRating(a?.rating);
+        const ratingA = clampRating(a?.rating) ?? -1;
+        const ratingB = clampRating(b?.rating) ?? -1;
+        return ratingB - ratingA;
       });
   }, [restaurants, query, activeFilter]);
 
@@ -584,9 +580,10 @@ export default function ExploreScreen() {
 
   const renderRestaurant = useCallback(
     ({ item }) => {
-      const isOpen = item?.isOpen !== false;
-      const rating = clampRating(item?.rating).toFixed(1);
-      const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes, 24);
+      const isOpen = item?.isOpen === true;
+      const hasOpenStatus = typeof item?.isOpen === 'boolean';
+      const rating = clampRating(item?.rating);
+      const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes);
       const imageSource = getRestaurantImageSource(item);
 
       return (
@@ -613,10 +610,12 @@ export default function ExploreScreen() {
                 {item?.name}
               </Text>
 
-              <View style={styles.ratingBadge}>
-                <Ionicons name="star" size={12} color="#D4A017" />
-                <Text style={styles.cardRating}>{rating}</Text>
-              </View>
+              {rating !== null && (
+                <View style={styles.ratingBadge}>
+                  <Ionicons name="star" size={12} color="#D4A017" />
+                  <Text style={styles.cardRating}>{rating.toFixed(1)}</Text>
+                </View>
+              )}
             </View>
 
             <Text style={styles.cardCuisine} numberOfLines={1}>
@@ -643,7 +642,11 @@ export default function ExploreScreen() {
                     isOpen ? styles.statusTextOpen : styles.statusTextClosed,
                   ]}
                 >
-                  {isOpen ? t('home.open') : t('home.closed')}
+                  {isOpen
+                    ? t('home.open')
+                    : hasOpenStatus
+                    ? t('home.closed')
+                    : 'Horaires à confirmer'}
                 </Text>
               </View>
 
