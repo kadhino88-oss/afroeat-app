@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const readSource = (relativePath) =>
-  fs.readFileSync(path.join(__dirname, '..', relativePath), 'utf8');
+  fs.readFileSync(path.join(process.cwd(), relativePath), 'utf8');
 
 test('mobile cash payment uses the canonical backend endpoint', () => {
   const api = readSource('constants/api.js');
