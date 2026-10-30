@@ -283,7 +283,7 @@ export default function ExploreScreen() {
       const extracted = extractRestaurantsFromResponse(data);
 
       const safeRestaurants = extracted
-        .map((item, index) => normalizeRestaurant(item, index))
+        .map((item) => normalizeRestaurant(item))
         .filter((item) => item?._id);
 
       setRestaurants(safeRestaurants);
