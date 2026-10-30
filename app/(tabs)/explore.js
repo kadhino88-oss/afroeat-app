@@ -13,7 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { router, Redirect } from 'expo-router';
+import { router, Redirect, useLocalSearchParams } from 'expo-router';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
 import { getAllRestaurants } from '../../services/restaurantService';
@@ -62,6 +62,7 @@ const FILTERS = [
   'Grillades',
   'Cuisine internationale',
   'Épicerie',
+  'Boissons',
   'Boutique',
 ];
 
@@ -93,6 +94,7 @@ const FILTER_SLUG_BY_LABEL = {
   'Grillades': 'grillades',
   'Cuisine internationale': 'internationale',
   Épicerie: 'epicerie',
+  Boissons: 'boissons',
   Boutique: 'boutique',
 };
 
@@ -258,6 +260,7 @@ const getRestaurantImageSource = (item) => {
 
 export default function ExploreScreen() {
   const { t } = useTranslation();
+  const routeParams = useLocalSearchParams();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const token = auth.token ?? null;
@@ -267,6 +270,17 @@ export default function ExploreScreen() {
 
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Tous');
+
+  useEffect(() => {
+    const category = String(routeParams.category ?? '').toLowerCase();
+    const categoryFilter = {
+      restaurants: 'Tous',
+      groceries: 'Épicerie',
+      drinks: 'Boissons',
+      shops: 'Boutique',
+    }[category];
+    if (categoryFilter) setActiveFilter(categoryFilter);
+  }, [routeParams.category]);
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -421,6 +435,20 @@ export default function ExploreScreen() {
         const matchesFastFood =
           normalizedFilter === 'fast-food' &&
           fastFoodTerms.some((term) => cuisineText.includes(normalizeSearch(term)));
+        const beverageTerms = [
+          'boisson', 'beverage', 'drink', 'juice', 'jus', 'smoothie', 'cocktail',
+          'coffee', 'cafe', 'tea', 'the', 'soda', 'water', 'eau', 'milkshake',
+        ];
+        const matchesBeverages =
+          normalizedFilter === 'boissons' &&
+          beverageTerms.some((term) => cuisineText.includes(normalizeSearch(term)));
+        const matchesGroceries =
+          normalizedFilter === 'epicerie' &&
+          ['grocery', 'groceries', 'epicerie', 'épicerie', 'market', 'supermarket', 'alimentaire']
+            .some((term) => cuisineText.includes(normalizeSearch(term)));
+        const matchesShops =
+          normalizedFilter === 'boutique' &&
+          ['shop', 'store', 'boutique', 'marketplace'].some((term) => cuisineText.includes(normalizeSearch(term)));
         const regionKey = normalizedFilter.replace(/[’']/g, '').replace(/\s+/g, ' ');
         const matchesAfricanRegion = (africanRegionTerms[regionKey] || []).some((term) =>
           cuisineText.includes(normalizeSearch(term))
@@ -439,6 +467,9 @@ export default function ExploreScreen() {
           cuisineText.includes(normalizedFilter) ||
           (normalizedFilter === 'africaine' && cuisineText.includes('afric')) ||
           matchesFastFood ||
+          matchesBeverages ||
+          matchesGroceries ||
+          matchesShops ||
           matchesAfricanRegion ||
           matchesCountryCuisine;
 
