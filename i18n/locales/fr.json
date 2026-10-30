@@ -51,7 +51,8 @@
     "grillades": "Grillades",
     "internationale": "Cuisine internationale",
     "afriquedunord": "Afrique du Nord",
-    "afriqueaustrale": "Afrique australe"
+    "afriqueaustrale": "Afrique australe",
+    "boissons": "Boissons"
   },
   "home": {
     "searchPlaceholder": "Rechercher un plat, une boutique, une épicerie...",
@@ -80,7 +81,8 @@
     "deliveryAddressFallback": "Livraison à domicile",
     "categories": {
       "groceries": "Épiceries",
-      "shops": "Boutiques"
+      "shops": "Boutiques",
+      "drinks": "Boissons"
     }
   },
   "checkout": {

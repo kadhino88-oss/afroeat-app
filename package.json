@@ -12,7 +12,8 @@
     "check:wallet-config": "node --test scripts/stripe-wallet-config.test.cjs",
     "check:locales": "node --test scripts/check-locales.cjs",
     "check:api-config": "node --test scripts/api-config.test.cjs",
-    "check:payment-route-sync": "node --test scripts/payment-route-sync.test.cjs"
+    "check:payment-route-sync": "node --test scripts/payment-route-sync.test.cjs",
+    "check:explore-cuisines": "node --test scripts/explore-country-cuisine.test.cjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

@@ -51,7 +51,8 @@
     "grillades": "Parrilla",
     "internationale": "Cocina internacional",
     "afriquedunord": "África del Norte",
-    "afriqueaustrale": "África austral"
+    "afriqueaustrale": "África austral",
+    "boissons": "Bebidas"
   },
   "home": {
     "searchPlaceholder": "Buscar un plato, una tienda, una tienda de comestibles...",
@@ -80,7 +81,8 @@
     "deliveryAddressFallback": "Entrega a domicilio",
     "categories": {
       "groceries": "Tiendas de comestibles",
-      "shops": "Tiendas"
+      "shops": "Tiendas",
+      "drinks": "Bebidas"
     }
   },
   "checkout": {
