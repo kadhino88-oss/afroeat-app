@@ -42,19 +42,25 @@ const CATEGORIES = [
     id: '1',
     titleKey: 'explore.restaurants',
     icon: 'silverware-fork-knife',
-    route: '/(tabs)/explore',
+    route: '/(tabs)/explore?category=restaurants',
   },
   {
     id: '2',
     titleKey: 'home.categories.groceries',
     icon: 'cart-outline',
-    route: '/(tabs)/explore',
+    route: '/(tabs)/explore?category=groceries',
   },
   {
     id: '3',
+    titleKey: 'home.categories.drinks',
+    icon: 'cup-outline',
+    route: '/(tabs)/explore?category=drinks',
+  },
+  {
+    id: '4',
     titleKey: 'home.categories.shops',
     icon: 'shopping-outline',
-    route: '/(tabs)/explore',
+    route: '/(tabs)/explore?category=shops',
   },
 ];
 
