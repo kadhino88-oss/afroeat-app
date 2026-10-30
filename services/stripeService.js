@@ -18,8 +18,10 @@ import { useStripe } from '@stripe/stripe-react-native';
 import { apiGet, apiPost } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
-// ─── Clé publique Stripe (côté frontend, NON secrète) ─────
-export const STRIPE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_STRIPE_KEY || 'pk_test_VOTRE_CLE_PUBLIQUE';
+// Aucune clé factice : sans clé publique configurée, le paiement carte reste indisponible.
+export const STRIPE_PUBLISHABLE_KEY = String(
+  process.env.EXPO_PUBLIC_STRIPE_KEY || ''
+).trim();
 
 /**
  * Crée un PaymentIntent côté backend et retourne le clientSecret.
@@ -32,14 +34,14 @@ export const createPaymentIntent = async (orderId, token) => {
   );
 
   if (!response?.clientSecret) {
-    throw new Error('Impossible d\'initialiser le paiement. Réessaie.');
+    throw new Error("Impossible d'initialiser le paiement. Réessaie.");
   }
 
   return {
-    clientSecret:    response.clientSecret,
+    clientSecret: response.clientSecret,
     paymentIntentId: response.paymentIntentId,
-    amount:          response.amount,
-    currency:        response.currency,
+    amount: response.amount,
+    currency: response.currency,
   };
 };
 
@@ -47,8 +49,7 @@ export const createPaymentIntent = async (orderId, token) => {
  * Confirme le paiement côté backend après succès Stripe.
  */
 export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
-  // NB : la route backend disponible est /payments/confirm (voir paymentRoutes.js),
-  // il n'existe pas de route /payments/orders/:id/confirm cote serveur.
+  // La route backend disponible est /payments/confirm.
   return apiPost(
     API_ENDPOINTS.payments.confirm,
     { orderId, paymentIntentId },
@@ -61,8 +62,7 @@ export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
  * An unavailable response is not treated as permission to accept a payment.
  */
 const hasConfiguredPublishableKey = () =>
-  /^pk_(test|live)_[A-Za-z0-9]+$/.test(STRIPE_PUBLISHABLE_KEY) &&
-  !STRIPE_PUBLISHABLE_KEY.includes('VOTRE_CLE');
+  /^pk_(test|live)_[A-Za-z0-9]+$/.test(STRIPE_PUBLISHABLE_KEY);
 
 export const getAvailablePaymentMethods = async (token) => {
   const response = await apiGet(API_ENDPOINTS.payments.methods, token);
@@ -101,6 +101,10 @@ export const useAfroeatPayment = () => {
 
   const pay = async ({ orderId, token, onSuccess, onError }) => {
     try {
+      if (!hasConfiguredPublishableKey()) {
+        throw new Error('Configure une clé publique Stripe valide dans EXPO_PUBLIC_STRIPE_KEY.');
+      }
+
       // 1. Créer le PaymentIntent côté backend
       const { clientSecret, paymentIntentId } = await createPaymentIntent(orderId, token);
 
