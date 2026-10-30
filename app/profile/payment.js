@@ -157,7 +157,7 @@ export default function ProfilePaymentScreen() {
           </View>
 
           <Text style={styles.title}>{t('profile.payment.title')}</Text>
-          <Text style={styles.subtitle}>{t('profile.payment.subtitle')}</Text>
+          <Text style={styles.subtitle}>Les moyens de paiement se gèrent au moment de la commande, via un parcours sécurisé.</Text>
         </View>
 
         <View style={styles.infoBox}>
