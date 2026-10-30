@@ -49,7 +49,9 @@
     "burgers": "Burgers",
     "tacos": "Tacos",
     "grillades": "Grillades",
-    "internationale": "Cuisine internationale"
+    "internationale": "Cuisine internationale",
+    "afriquedunord": "Afrique du Nord",
+    "afriqueaustrale": "Afrique australe"
   },
   "home": {
     "searchPlaceholder": "Rechercher un plat, une boutique, une épicerie...",
