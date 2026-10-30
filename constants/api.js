@@ -160,6 +160,7 @@ export const API_ENDPOINTS = {
     // Méthodes disponibles
     methods:            '/payments/methods',
     selectCash:         '/payments/select-cash',
+    cash:               '/payments/cash',
     // Historique
     history:            '/payments/history',
     // Payment Sheet (Stripe natif)
