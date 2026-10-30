@@ -298,6 +298,8 @@ export default function HomeScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const [allDishes, setAllDishes] = useState([]);
   const [selectedMood, setSelectedMood] = useState(null);
+  const [openOnly, setOpenOnly] = useState(false);
+  const [topRatedOnly, setTopRatedOnly] = useState(false);
 
   const userName = useMemo(() => {
     const fullName = `${normalizeText(user?.firstName)} ${normalizeText(
@@ -485,34 +487,29 @@ export default function HomeScreen() {
       const name = normalizeSearch(item?.name);
       const cuisine = normalizeSearch(item?.cuisine);
       const address = normalizeSearch(item?.address);
+      const matchesSearch = !query || name.includes(query) || cuisine.includes(query) || address.includes(query);
+      const matchesOpen = !openOnly || item?.isOpen !== false;
+      const matchesRating = !topRatedOnly || normalizeNumber(item?.rating, 0) >= 4.5;
 
-      if (!query) return true;
-
-      return (
-        name.includes(query) ||
-        cuisine.includes(query) ||
-        address.includes(query)
-      );
+      return matchesSearch && matchesOpen && matchesRating;
     });
 
     return filtered.sort((a, b) => {
+      if (topRatedOnly) {
+        return normalizeNumber(b?.rating, 0) - normalizeNumber(a?.rating, 0);
+      }
+
       const aFeatured = a?.isFeatured ? 1 : 0;
       const bFeatured = b?.isFeatured ? 1 : 0;
-
-      if (aFeatured !== bFeatured) {
-        return bFeatured - aFeatured;
-      }
+      if (aFeatured !== bFeatured) return bFeatured - aFeatured;
 
       const aOpen = a?.isOpen ? 1 : 0;
       const bOpen = b?.isOpen ? 1 : 0;
-
-      if (aOpen !== bOpen) {
-        return bOpen - aOpen;
-      }
+      if (aOpen !== bOpen) return bOpen - aOpen;
 
       return normalizeNumber(b?.rating, 0) - normalizeNumber(a?.rating, 0);
     });
-  }, [restaurants, search]);
+  }, [restaurants, search, openOnly, topRatedOnly]);
 
   const featuredCount = useMemo(() => {
     return filteredRestaurants.filter((item) => item?.isFeatured).length;
@@ -740,6 +737,41 @@ export default function HomeScreen() {
                 </Pressable>
               )}
             </View>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.quickFilters}
+              accessibilityLabel="Filtres rapides"
+            >
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: openOnly }}
+                style={({ pressed }) => [styles.quickFilter, openOnly && styles.quickFilterActive, pressed && styles.chipPressed]}
+                onPress={() => setOpenOnly((value) => !value)}
+              >
+                <Ionicons name="time-outline" size={15} color={openOnly ? '#FFFFFF' : '#4B463F'} />
+                <Text style={[styles.quickFilterText, openOnly && styles.quickFilterTextActive]}>Ouverts maintenant</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: topRatedOnly }}
+                style={({ pressed }) => [styles.quickFilter, topRatedOnly && styles.quickFilterActive, pressed && styles.chipPressed]}
+                onPress={() => setTopRatedOnly((value) => !value)}
+              >
+                <Ionicons name="star-outline" size={15} color={topRatedOnly ? '#FFFFFF' : '#4B463F'} />
+                <Text style={[styles.quickFilterText, topRatedOnly && styles.quickFilterTextActive]}>Notes 4,5+</Text>
+              </Pressable>
+              {(openOnly || topRatedOnly) && (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => { setOpenOnly(false); setTopRatedOnly(false); }}
+                  style={({ pressed }) => [styles.quickFilterReset, pressed && styles.chipPressed]}
+                >
+                  <Text style={styles.quickFilterResetText}>Réinitialiser</Text>
+                </Pressable>
+              )}
+            </ScrollView>
 
             <Text style={styles.sectionTitle}>{t('moods.title')}</Text>
 
@@ -1111,6 +1143,51 @@ const styles = StyleSheet.create({
     height: 52,
     color: '#1E1E1E',
     fontSize: 15,
+  },
+
+  quickFilters: {
+    paddingBottom: 20,
+    marginTop: -10,
+    alignItems: 'center',
+  },
+
+  quickFilter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E8E0D5',
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    marginRight: 8,
+  },
+
+  quickFilterActive: {
+    backgroundColor: '#1F6F43',
+    borderColor: '#1F6F43',
+  },
+
+  quickFilterText: {
+    color: '#4B463F',
+    fontWeight: '700',
+    fontSize: 12,
+    marginLeft: 6,
+  },
+
+  quickFilterTextActive: {
+    color: '#FFFFFF',
+  },
+
+  quickFilterReset: {
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+
+  quickFilterResetText: {
+    color: '#A55C28',
+    fontWeight: '800',
+    fontSize: 12,
   },
 
   sectionTitle: {
