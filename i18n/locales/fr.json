@@ -689,7 +689,8 @@
       "preparing": "Préparation",
       "on_the_way": "En livraison",
       "confirmed": "Confirmé",
-      "default": "Commande"
+      "default": "Commande",
+      "unknown": "Statut à confirmer"
     }
   },
   "cart": {
