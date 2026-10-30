@@ -49,7 +49,9 @@
     "burgers": "汉堡",
     "tacos": "塔可",
     "grillades": "烧烤",
-    "internationale": "国际美食"
+    "internationale": "国际美食",
+    "afriquedunord": "北非",
+    "afriqueaustrale": "非洲南部"
   },
   "home": {
     "searchPlaceholder": "搜索菜品、商店或杂货店...",
