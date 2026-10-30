@@ -363,10 +363,36 @@ export default function ExploreScreen() {
           city.includes(normalizedQuery) ||
           country.includes(normalizedQuery);
 
+        const fastFoodTerms = [
+          'fast food', 'fast-food', 'burger', 'hamburger', 'pizza', 'tacos',
+          'fried chicken', 'poulet frit', 'sandwich', 'kebab', 'shawarma',
+          'snack', 'hot dog', 'wrap',
+        ];
+        const africanRegionTerms = {
+          'afrique de l est': ['est-afric', 'east african', 'ethiop', 'kenyan', 'tanzan', 'somali', 'ougand'],
+          'afrique de l ouest': ['ouest-afric', 'west african', 'niger', 'ghan', 'senegal', 'ivoir', 'mali', 'benin', 'togo', 'burkina', 'guine'],
+          'afrique centrale': ['central african', 'cameroun', 'congo', 'gabonaise', 'tchad', 'centrafric'],
+        };
+        const cuisineText = normalizeSearch([
+          item?.cuisine,
+          ...(Array.isArray(item?.categories) ? item.categories : []),
+          item?.name,
+          item?.description,
+        ].filter(Boolean).join(' '));
+        const matchesFastFood =
+          normalizedFilter === 'fast-food' &&
+          fastFoodTerms.some((term) => cuisineText.includes(normalizeSearch(term)));
+        const regionKey = normalizedFilter.replace(/[’']/g, '').replace(/\s+/g, ' ');
+        const matchesAfricanRegion = (africanRegionTerms[regionKey] || []).some((term) =>
+          cuisineText.includes(normalizeSearch(term))
+        );
         const matchesFilter =
           normalizedFilter === 'tous' ||
           cuisine.includes(normalizedFilter) ||
-          (normalizedFilter === 'africaine' && cuisine.includes('afric'));
+          cuisineText.includes(normalizedFilter) ||
+          (normalizedFilter === 'africaine' && cuisineText.includes('afric')) ||
+          matchesFastFood ||
+          matchesAfricanRegion;
 
         return matchesQuery && matchesFilter;
       })
