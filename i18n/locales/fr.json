@@ -36,7 +36,20 @@
     "tunisienne": "Tunisienne",
     "epicerie": "Épicerie",
     "boutique": "Boutique",
-    "all": "Tous"
+    "all": "Tous",
+    "nigeriane": "Nigériane",
+    "ghaneenne": "Ghanéenne",
+    "ethiopienne": "Éthiopienne",
+    "sudafricaine": "Sud-africaine",
+    "estafricaine": "Afrique de l’Est",
+    "ouestafricaine": "Afrique de l’Ouest",
+    "afriquecentrale": "Afrique centrale",
+    "fastfood": "Fast-food",
+    "pizza": "Pizza",
+    "burgers": "Burgers",
+    "tacos": "Tacos",
+    "grillades": "Grillades",
+    "internationale": "Cuisine internationale"
   },
   "home": {
     "searchPlaceholder": "Rechercher un plat, une boutique, une épicerie...",
