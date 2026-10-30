@@ -955,18 +955,44 @@ export default function HomeScreen() {
             </View>
           ) : (
             <View style={styles.emptyContainer}>
-              <Ionicons name="restaurant-outline" size={48} color="#C4B7A6" />
-              <Text style={styles.emptyTitle}>{t('home.noRestaurantFound')}</Text>
+              <Ionicons
+                name={restaurants.length ? 'options-outline' : 'restaurant-outline'}
+                size={48}
+                color="#C4B7A6"
+              />
+              <Text style={styles.emptyTitle}>
+                {restaurants.length && (search.trim() || openOnly || topRatedOnly)
+                  ? 'Aucun restaurant ne correspond à ces filtres'
+                  : t('home.noRestaurantFound')}
+              </Text>
               <Text style={styles.emptyText}>
-                {t('home.emptyText')}
+                {restaurants.length && (search.trim() || openOnly || topRatedOnly)
+                  ? 'Élargis ta recherche ou réinitialise les filtres pour retrouver les restaurants disponibles.'
+                  : t('home.emptyText')}
               </Text>
 
-              <Pressable
-                style={styles.retryButton}
-                onPress={() => loadRestaurants()}
-              >
-                <Text style={styles.retryButtonText}>{t('home.retry')}</Text>
-              </Pressable>
+              {restaurants.length && (search.trim() || openOnly || topRatedOnly) ? (
+                <Pressable
+                  accessibilityRole="button"
+                  style={styles.retryButton}
+                  onPress={() => {
+                    setSearch('');
+                    setOpenOnly(false);
+                    setTopRatedOnly(false);
+                    setSelectedMood(null);
+                  }}
+                >
+                  <Text style={styles.retryButtonText}>Effacer les filtres</Text>
+                </Pressable>
+              ) : (
+                <Pressable
+                  accessibilityRole="button"
+                  style={styles.retryButton}
+                  onPress={() => loadRestaurants()}
+                >
+                  <Text style={styles.retryButtonText}>{t('home.retry')}</Text>
+                </Pressable>
+              )}
             </View>
           )
         }
