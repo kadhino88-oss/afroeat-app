@@ -278,6 +278,7 @@ export const searchRestaurants = async ({
   country = '',
   isOpen = null,
   featured = null,
+  businessType = '',
   token = null,
 } = {}) => {
   const endpoint = getRestaurantsAllEndpoint();
@@ -286,8 +287,9 @@ export const searchRestaurants = async ({
     cuisine: normalizeText(cuisine),
     city: normalizeText(city),
     country: normalizeText(country),
-    open: normalizeBoolean(isOpen, null),
+    isOpen: normalizeBoolean(isOpen, null),
     featured: normalizeBoolean(featured, null),
+    businessType: normalizeText(businessType).toLowerCase(),
   });
 
   const data = await apiGet(`${endpoint}${queryString}`, token);
