@@ -57,3 +57,12 @@ test('home and Explore both expose North and Southern Africa', () => {
     assert.ok(explore.includes(`'${label}'`), `Explore is missing ${label}`);
   }
 });
+
+test('restaurant catalog does not label partners as African cuisine when cuisine is missing', () => {
+  assert.ok(explore.includes("const cuisine = normalizeText(item?.cuisine);"));
+  assert.ok(explore.includes("name: normalizeText(item?.name, 'Restaurant'),"));
+  assert.ok(!explore.includes("'Cuisine africaine'"));
+  const service = fs.readFileSync(path.join(root, 'services', 'restaurantService.js'), 'utf8');
+  assert.ok(service.includes("cuisine: normalizeText(item?.cuisine),"));
+  assert.ok(!service.includes("cuisine: normalizeText(item?.cuisine, 'Africaine')"));
+});
