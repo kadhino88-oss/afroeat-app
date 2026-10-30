@@ -194,7 +194,7 @@ const normalizeRestaurant = (item = {}) => {
   const rawId =
     item?._id || item?.id || item?.restaurantId || item?.slug || '';
 
-  const cuisine = normalizeText(item?.cuisine, 'Cuisine africaine');
+  const cuisine = normalizeText(item?.cuisine, 'Cuisine à préciser');
   const city = normalizeText(item?.city);
   const country = normalizeText(item?.country);
   const address = normalizeText(
@@ -209,7 +209,7 @@ const normalizeRestaurant = (item = {}) => {
     ...item,
     _id: normalizeText(rawId),
     id: normalizeText(item?.id || rawId),
-    name: normalizeText(item?.name, 'Restaurant africain'),
+    name: normalizeText(item?.name, 'Restaurant'),
     cuisine,
     address,
     image,
