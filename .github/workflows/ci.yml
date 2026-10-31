@@ -2,7 +2,7 @@ name: Expo App CI
 
 on:
   push:
-    branches: [main, "fix/**", "sync/**"]
+    branches: [main, "fix/**", "sync/**", "migration/**"]
   pull_request:
     branches: [main, "sync/**"]
 
@@ -21,6 +21,8 @@ jobs:
         run: npm ci
       - name: Validate Expo SDK dependency compatibility
         run: npx expo install --check
+      - name: Run Expo Doctor
+        run: npx expo-doctor
       - name: Audit production dependencies for high and critical vulnerabilities
         run: npm audit --omit=dev --audit-level=high
       - name: Check Stripe wallet configuration safeguards
