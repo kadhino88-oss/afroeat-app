@@ -75,3 +75,12 @@ test('Explore matches common fast-food format variants', () => {
   assert.ok(categoryTerms.includes("grillades: ['grillade', 'grillades', 'grill', 'grilled', 'barbecue', 'bbq', 'braisé', 'braise']"));
   assert.ok(explore.includes('matchesCuisineFormat ||'));
 });
+
+test('homepage search includes restaurant categories and descriptions', () => {
+  const home = fs.readFileSync(path.join(root, 'app', '(tabs)', 'index.js'), 'utf8');
+  assert.ok(home.includes('const discoveryText = normalizeSearch(['));
+  assert.ok(home.includes('...(Array.isArray(item?.categories) ? item.categories : [])'));
+  assert.ok(home.includes('item?.businessType,'));
+  assert.ok(home.includes('item?.description,'));
+  assert.ok(home.includes('discoveryText.includes(query)'));
+});
