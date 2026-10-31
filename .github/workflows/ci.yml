@@ -23,6 +23,8 @@ jobs:
         run: npx expo install --check
       - name: Run Expo Doctor
         run: npx expo-doctor
+      - name: Validate native iOS and Android project generation
+        run: npx expo prebuild --no-install --platform all
       - name: Audit production dependencies for high and critical vulnerabilities
         run: npm audit --omit=dev --audit-level=high
       - name: Check Stripe wallet configuration safeguards
