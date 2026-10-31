@@ -473,12 +473,26 @@ export default function ExploreScreen() {
         const matchesCountryCuisine = (countryCuisineTerms[normalizedFilter] || []).some((term) =>
           cuisineText.includes(normalizeSearch(term))
         );
+        // Match common singular/plural and French/English variants for quick-service
+        // categories. Partner metadata remains the source of truth: no category is inferred
+        // for display, this only makes the customer's selected filter more tolerant.
+        const categoryTerms = {
+          pizza: ['pizza', 'pizzeria'],
+          burgers: ['burger', 'burgers', 'hamburger', 'cheeseburger'],
+          tacos: ['taco', 'tacos', 'tacos français'],
+          grillades: ['grillade', 'grillades', 'grill', 'grilled', 'barbecue', 'bbq', 'braisé', 'braise'],
+          internationale: ['international', 'world cuisine', 'fusion', 'cuisine du monde'],
+        };
+        const matchesCuisineFormat = (categoryTerms[normalizedFilter] || []).some((term) =>
+          cuisineText.includes(normalizeSearch(term))
+        );
         const matchesFilter =
           normalizedFilter === 'tous' ||
           cuisine.includes(normalizedFilter) ||
           cuisineText.includes(normalizedFilter) ||
           (normalizedFilter === 'africaine' && cuisineText.includes('afric')) ||
           matchesFastFood ||
+          matchesCuisineFormat ||
           matchesBeverages ||
           matchesGroceries ||
           matchesShops ||

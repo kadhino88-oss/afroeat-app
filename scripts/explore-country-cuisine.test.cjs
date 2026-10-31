@@ -66,3 +66,21 @@ test('restaurant catalog does not label partners as African cuisine when cuisine
   assert.ok(service.includes("cuisine: normalizeText(item?.cuisine, 'Cuisine à préciser'),"));
   assert.ok(!service.includes("cuisine: normalizeText(item?.cuisine, 'Africaine')"));
 });
+
+test('Explore matches common fast-food format variants', () => {
+  const categoryTerms = explore.slice(explore.indexOf('const categoryTerms = {'), explore.indexOf('const matchesCuisineFormat =', explore.indexOf('const categoryTerms = {')));
+  assert.ok(categoryTerms.includes("pizza: ['pizza', 'pizzeria']"));
+  assert.ok(categoryTerms.includes("burgers: ['burger', 'burgers', 'hamburger', 'cheeseburger']"));
+  assert.ok(categoryTerms.includes("tacos: ['taco', 'tacos', 'tacos français']"));
+  assert.ok(categoryTerms.includes("grillades: ['grillade', 'grillades', 'grill', 'grilled', 'barbecue', 'bbq', 'braisé', 'braise']"));
+  assert.ok(explore.includes('matchesCuisineFormat ||'));
+});
+
+test('homepage search includes restaurant categories and descriptions', () => {
+  const home = fs.readFileSync(path.join(root, 'app', '(tabs)', 'index.js'), 'utf8');
+  assert.ok(home.includes('const discoveryText = normalizeSearch(['));
+  assert.ok(home.includes('...(Array.isArray(item?.categories) ? item.categories : [])'));
+  assert.ok(home.includes('item?.businessType,'));
+  assert.ok(home.includes('item?.description,'));
+  assert.ok(home.includes('discoveryText.includes(query)'));
+});
