@@ -87,13 +87,29 @@ const getFallbackImage = () => {
 };
 
 const getSafeItemId = (item) => {
+  const menuItem = item?.menuItem;
+  const nestedMenuItemId =
+    menuItem && typeof menuItem === 'object'
+      ? menuItem?._id || menuItem?.id
+      : null;
+
+  const candidates = [
+    nestedMenuItemId,
+    item?._id,
+    item?.id,
+    typeof menuItem === 'string' || typeof menuItem === 'number'
+      ? menuItem
+      : null,
+    item?.menuItemId,
+    item?.productId,
+  ];
+
   return (
-    item?.menuItem ||
-    item?._id ||
-    item?.id ||
-    item?.menuItemId ||
-    item?.productId ||
-    null
+    candidates.find(
+      (value) =>
+        (typeof value === 'string' || typeof value === 'number') &&
+        String(value).trim().length > 0
+    ) ?? null
   );
 };
 
