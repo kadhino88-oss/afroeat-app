@@ -66,6 +66,8 @@
   "overrides": {
     "postcss": "^8.5.23",
     "image-size": "npm:image-size-next@1.2.2",
-    "decode-uri-component": "^0.5.1"
+    "decode-uri-component": "^0.5.1",
+    "minimatch": "^11.0.3",
+    "zod": "^4.6.7"
   }
 }
