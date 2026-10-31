@@ -110,7 +110,7 @@ const normalizeCartItem = (item) => {
   return {
     ...item,
     _id: itemId,
-    id: item?.id || itemId,
+    id: itemId,
     menuItem: itemId,
 
     name: normalizeText(item?.name || item?.title || item?.nom, 'Article'),
