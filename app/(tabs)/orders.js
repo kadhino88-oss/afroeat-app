@@ -282,7 +282,8 @@ export default function OrdersScreen() {
         setOrders(safeOrders);
       } catch (err) {
         console.log('Erreur orders :', err);
-        setOrders([]);
+        // A transient refresh failure must not erase orders already shown to the customer.
+        // On first load, the list is already empty, so no reset is needed here either.
         setError(
           normalizeText(err?.message, 'Impossible de charger les commandes.')
         );
