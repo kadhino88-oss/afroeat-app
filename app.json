@@ -7,11 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "afroeat",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0B0B0F"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bkentreprise.afroeat",
@@ -31,7 +26,12 @@
       "package": "com.bkentreprise.afroeat"
     },
     "web": {
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "splash": {
+        "image": "./assets/images/splash-icon.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#0B0B0F"
+      }
     },
     "plugins": [
       [
@@ -51,6 +51,15 @@
         {
           "icon": "./assets/images/icon.png",
           "color": "#0B0B0F"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B0B0F"
         }
       ]
     ],

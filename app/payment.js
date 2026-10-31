@@ -109,11 +109,15 @@ export default function PaymentScreen() {
 
   useEffect(() => {
     let active = true;
-    setMethodsLoading(true);
 
-    getAvailablePaymentMethods(token)
+    Promise.resolve()
+      .then(() => {
+        if (!active) return null;
+        setMethodsLoading(true);
+        return getAvailablePaymentMethods(token);
+      })
       .then((methods) => {
-        if (!active) return;
+        if (!active || !methods) return;
         const nextMethods = {
           card: methods.card === true,
           cash: methods.cash === true,

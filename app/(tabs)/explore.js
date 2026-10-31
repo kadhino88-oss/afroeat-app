@@ -279,7 +279,9 @@ export default function ExploreScreen() {
       drinks: 'Boissons',
       shops: 'Boutique',
     }[category];
-    if (categoryFilter) setActiveFilter(categoryFilter);
+    if (categoryFilter) {
+      Promise.resolve().then(() => setActiveFilter(categoryFilter));
+    }
   }, [routeParams.category]);
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -364,9 +366,13 @@ export default function ExploreScreen() {
   }, [activeFilter]);
 
   useEffect(() => {
-    if (!redirectPath) {
-      loadRestaurants(false);
-    }
+    if (redirectPath) return undefined;
+
+    const timer = setTimeout(() => {
+      void loadRestaurants(false);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [loadRestaurants, redirectPath]);
 
   /**

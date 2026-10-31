@@ -457,9 +457,13 @@ export default function HomeScreen() {
   }, [loadNearbyRestaurants]);
 
   useEffect(() => {
-    if (!redirectPath) {
-      loadRestaurants();
-    }
+    if (redirectPath) return undefined;
+
+    const timer = setTimeout(() => {
+      void loadRestaurants();
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [loadRestaurants, redirectPath]);
 
   // Charge tous les plats une fois, pour alimenter "Envie du moment".
