@@ -135,7 +135,6 @@ price: normalizeNumber(item?.price, 0),
 image: normalizeString(item?.image || item?.menuItem?.image),
 };
 };
-};
 
 const normalizeOrder = (order = {}) => {
 const deliveryLocation = order?.deliveryLocation || null;
