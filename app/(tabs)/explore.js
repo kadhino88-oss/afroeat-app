@@ -322,8 +322,6 @@ export default function ExploreScreen() {
   useEffect(() => { tokenRef.current = token; }, [token]);
 
   const loadRestaurants = useCallback(async (isRefresh = false) => {
-    // Defer state updates out of the calling effect's synchronous phase.
-    await Promise.resolve();
     try {
       if (isRefresh) {
         setRefreshing(true);
@@ -368,9 +366,13 @@ export default function ExploreScreen() {
   }, [activeFilter]);
 
   useEffect(() => {
-    if (!redirectPath) {
-      loadRestaurants(false);
-    }
+    if (redirectPath) return undefined;
+
+    const timer = setTimeout(() => {
+      void loadRestaurants(false);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [loadRestaurants, redirectPath]);
 
   /**
