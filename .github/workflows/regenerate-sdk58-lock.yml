@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - migration/expo-sdk58-reference
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
