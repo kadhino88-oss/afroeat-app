@@ -81,9 +81,19 @@ const normalizeCartItem = (item) => {
     return null;
   }
 
-  const itemId = item?._id || item?.id || item?.menuItem || item?.menuItemId;
+  const menuItem = item?.menuItem;
+  const populatedMenuItemId = isPlainObject(menuItem)
+    ? menuItem?._id || menuItem?.id
+    : null;
+  const scalarMenuItemId =
+    typeof menuItem === 'string' || typeof menuItem === 'number'
+      ? menuItem
+      : null;
+  // Prefer the actual catalog item's ID over a cart-row ID or populated object.
+  const itemId =
+    populatedMenuItemId || scalarMenuItemId || item?._id || item?.id || item?.menuItemId;
 
-  if (!itemId) {
+  if (!itemId || typeof itemId === 'object') {
     return null;
   }
 
@@ -101,7 +111,7 @@ const normalizeCartItem = (item) => {
     ...item,
     _id: itemId,
     id: item?.id || itemId,
-    menuItem: item?.menuItem || itemId,
+    menuItem: itemId,
 
     name: normalizeText(item?.name || item?.title || item?.nom, 'Article'),
     description: normalizeText(
