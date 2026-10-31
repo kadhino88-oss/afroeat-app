@@ -523,7 +523,20 @@ export default function HomeScreen() {
       const name = normalizeSearch(item?.name);
       const cuisine = normalizeSearch(item?.cuisine);
       const address = normalizeSearch(item?.address);
-      const matchesSearch = !query || name.includes(query) || cuisine.includes(query) || address.includes(query);
+      // Search across real partner metadata so homepage cuisine/category shortcuts
+      // also find fast-foods and businesses whose format is stored outside cuisine.
+      const discoveryText = normalizeSearch([
+        item?.cuisine,
+        ...(Array.isArray(item?.categories) ? item.categories : []),
+        item?.category,
+        item?.type,
+        item?.businessType,
+        item?.storeType,
+        item?.name,
+        item?.description,
+        item?.address,
+      ].filter(Boolean).join(' '));
+      const matchesSearch = !query || name.includes(query) || cuisine.includes(query) || address.includes(query) || discoveryText.includes(query);
       const matchesOpen = !openOnly || item?.isOpen === true;
       const matchesRating = !topRatedOnly || normalizeNumber(item?.rating, 0) >= 4.5;
 
