@@ -415,8 +415,6 @@ export default function HomeScreen() {
   }, []);
 
   const loadRestaurants = useCallback(async (isRefresh = false) => {
-    // Defer state updates out of the calling effect's synchronous phase.
-    await Promise.resolve();
     try {
       if (isRefresh) {
         setRefreshing(true);
@@ -459,9 +457,13 @@ export default function HomeScreen() {
   }, [loadNearbyRestaurants]);
 
   useEffect(() => {
-    if (!redirectPath) {
-      loadRestaurants();
-    }
+    if (redirectPath) return undefined;
+
+    const timer = setTimeout(() => {
+      void loadRestaurants();
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [loadRestaurants, redirectPath]);
 
   // Charge tous les plats une fois, pour alimenter "Envie du moment".
