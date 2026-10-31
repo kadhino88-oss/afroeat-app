@@ -22,8 +22,9 @@
 import { apiGet, apiPost } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
-export const STRIPE_PUBLISHABLE_KEY =
-  process.env.EXPO_PUBLIC_STRIPE_KEY || 'pk_test_VOTRE_CLE_PUBLIQUE';
+export const STRIPE_PUBLISHABLE_KEY = String(
+  process.env.EXPO_PUBLIC_STRIPE_KEY || ''
+).trim();
 
 export const createPaymentIntent = async (orderId, token) => {
   const response = await apiPost(
@@ -70,7 +71,7 @@ export const selectCashPayment = async (orderId, token) => {
     throw new Error('Commande ou session manquante.');
   }
   const response = await apiPost(
-    API_ENDPOINTS.payments.selectCash,
+    API_ENDPOINTS.payments.cash,
     { orderId },
     token
   );

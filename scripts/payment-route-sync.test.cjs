@@ -29,3 +29,10 @@ test('payment API constants do not advertise unsupported legacy routes', () => {
   assert.match(service, /API_ENDPOINTS\.payments\.methods/);
   assert.match(service, /API_ENDPOINTS\.payments\.cash/);
 });
+
+test('web cash payment uses the canonical endpoint and no placeholder Stripe key', () => {
+  const webService = readSource('services/stripeService.web.js');
+  assert.match(webService, /API_ENDPOINTS\.payments\.cash/);
+  assert.doesNotMatch(webService, /API_ENDPOINTS\.payments\.selectCash/);
+  assert.doesNotMatch(webService, /pk_test_VOTRE_CLE_PUBLIQUE/);
+});
