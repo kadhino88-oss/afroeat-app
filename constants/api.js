@@ -155,21 +155,11 @@ export const API_ENDPOINTS = {
     createIntent:       '/payments/create-payment-intent',
     // ✅ Confirmer un paiement après succès Stripe
     confirm:            '/payments/confirm',
-    // Vérification paiement
-    verify:             '/payments/verify',
-    // Méthodes disponibles
+    // Méthodes effectivement utilisées par les parcours mobiles actuels.
     methods:            '/payments/methods',
-    selectCash:         '/payments/select-cash',
     cash:               '/payments/cash',
-    // Historique
-    history:            '/payments/history',
-    // Payment Sheet (Stripe natif)
-    createPaymentSheet: '/payments/create-payment-sheet',
-    // Confirmation par commande
-    confirmOrderPayment: (orderId) => `/payments/orders/${safePathParam(orderId)}/confirm`,
-    // Remboursement admin
+    // Remboursement admin (route protégée côté backend).
     refund:             '/payments/refund',
-    refundOrderPayment: (orderId) => `/payments/orders/${safePathParam(orderId)}/refund`,
     // Stripe Connect / versements partenaires
     connectStatus:      '/payments/connect/status',
     connectOnboardingLink: '/payments/connect/onboarding-link',
