@@ -80,12 +80,36 @@ const ensureEndpointWithId = (endpoint, id, label) => {
   return resolved;
 };
 
+const resolveReferenceId = (value) => {
+  if (typeof value === 'string' || typeof value === 'number') {
+    return String(value).trim();
+  }
+
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    const nestedId = value._id ?? value.id;
+    if (typeof nestedId === 'string' || typeof nestedId === 'number') {
+      return String(nestedId).trim();
+    }
+  }
+
+  return '';
+};
+
 const normalizeOrderItem = (item = {}) => {
+  const itemId =
+    resolveReferenceId(item?._id) ||
+    resolveReferenceId(item?.id) ||
+    resolveReferenceId(item?.menuItem);
+  const menuItemId =
+    resolveReferenceId(item?.menuItem) ||
+    resolveReferenceId(item?._id) ||
+    resolveReferenceId(item?.id);
+
   return {
     ...item,
-    _id: item?._id || item?.id || item?.menuItem || '',
-    id: item?.id || item?._id || item?.menuItem || '',
-    menuItem: item?.menuItem || item?._id || item?.id || null,
+    _id: itemId,
+    id: itemId,
+    menuItem: menuItemId || null,
     name: normalizeText(item?.name || item?.title || item?.nom, 'Article'),
     description: normalizeText(item?.description),
     image: normalizeText(item?.image),
