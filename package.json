@@ -15,7 +15,8 @@
     "check:payment-route-sync": "node --test scripts/payment-route-sync.test.cjs",
     "check:explore-cuisines": "node --test scripts/explore-country-cuisine.test.cjs",
     "check:restaurant-settings": "node --test scripts/restaurant-settings-persistence.test.cjs",
-    "check:catalog-business-type": "node --test scripts/catalog-business-type.test.cjs"
+    "check:catalog-business-type": "node --test scripts/catalog-business-type.test.cjs",
+    "check:cart-populated-menu-item": "node --test scripts/cart-populated-menu-item.test.cjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
