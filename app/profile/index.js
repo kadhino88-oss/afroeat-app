@@ -12,6 +12,7 @@ import { router, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
+import AccountPrivacyLink from '../../components/AccountPrivacyLink';
 import { useAuth } from '../../context/AuthContext';
 import i18n from '../../i18n';
 
@@ -131,14 +132,6 @@ export default function ProfileHomeScreen() {
   const currentRole = normalizeRole(auth.role || user?.role);
 
   const isLoggedIn = Boolean(isAuthenticated || token || user?._id);
-
-  /**
-   * =========================================================
-   * LOADING
-   * =========================================================
-   */
-
-
   const displayName = useMemo(() => getDisplayName(user), [user]);
 
   const handleBackToProfileTab = useCallback(() => {
@@ -169,7 +162,12 @@ export default function ProfileHomeScreen() {
     router.push('/profile/help');
   }, []);
 
-  // Garde-fous placés après les hooks (règles des hooks React)
+  /**
+   * =========================================================
+   * LOADING
+   * =========================================================
+   */
+
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -337,6 +335,7 @@ export default function ProfileHomeScreen() {
               text={t('profile.home.quickHelpText')}
               onPress={handleOpenHelp}
             />
+            <AccountPrivacyLink />
           </View>
         </View>
 

@@ -15,15 +15,15 @@ import {
   StatusBar,
   TextInput,
   Alert,
-  Linking,
   LayoutAnimation,
   Platform,
   UIManager,
 } from 'react-native';
-import { router, Redirect } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
+import { createSupportTicket, getMySupportTickets } from '../../services/supportService';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -37,12 +37,6 @@ const normalizeRole = (v) => {
   if (r === 'admin' || r === 'administrator' || r === 'superadmin') return 'admin';
   return 'client';
 };
-
-// ─── CONTACT INFO ─────────────────────────────────────────
-const SUPPORT_EMAIL   = 'support@afroeat.com';
-const SUPPORT_WHATSAPP = '+33600000000';
-const SUPPORT_HOURS   = 'Lun–Dim, 8h–22h';
-
 
 // ─── Composant FAQ Item ────────────────────────────────────
 const FaqItem = ({ item, isLast }) => {
@@ -78,7 +72,6 @@ export default function HelpScreen() {
   const user        = auth.user ?? null;
   const role        = normalizeRole(auth.role || user?.role);
   const loading     = Boolean(auth.loading);
-  const isAuth      = Boolean(auth.isAuthenticated);
 
   // Formulaire réclamation
   const [subject,  setSubject]  = useState('');
@@ -86,35 +79,32 @@ export default function HelpScreen() {
   const [sending,  setSending]  = useState(false);
   const [sent,     setSent]     = useState(false);
   const [category, setCategory] = useState('commande');
+  const [lastTicket, setLastTicket] = useState(null);
+  const [tickets, setTickets] = useState([]);
+  const [ticketsLoading, setTicketsLoading] = useState(false);
+
+  useFocusEffect(useCallback(() => {
+    let isActive = true;
+    if (!auth.token) return () => { isActive = false; };
+
+    setTicketsLoading(true);
+    getMySupportTickets(auth.token)
+      .then((result) => {
+        if (isActive) setTickets(Array.isArray(result?.tickets) ? result.tickets : []);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isActive) setTicketsLoading(false);
+      });
+
+    return () => { isActive = false; };
+  }, [auth.token]));
 
   const faqs = useMemo(() => {
     if (role === 'restaurant') return t('profile.help.faqRestaurant', { returnObjects: true });
     if (role === 'livreur')    return t('profile.help.faqLivreur', { returnObjects: true });
     return t('profile.help.faqClient', { returnObjects: true });
   }, [role, t]);
-
-
-  // Redirect non-clients hors tabs
-  const redirect = useMemo(() => {
-    if (role === 'restaurant') return '/restaurant/RestaurantDashboard';
-    if (role === 'livreur')    return '/livraison';
-    if (role === 'admin')      return '/admin';
-    return null;
-  }, [role]);
-
-
-  const handleEmail = useCallback(() => {
-    Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=Support Afroeat`).catch(() => {
-      Alert.alert(t('profile.help.emailAlertTitle'), t('profile.help.emailAlertBody', { email: SUPPORT_EMAIL }));
-    });
-  }, []);
-
-  const handleWhatsApp = useCallback(() => {
-    const url = `whatsapp://send?phone=${SUPPORT_WHATSAPP.replace(/\D/g, '')}&text=Bonjour Afroeat Support,`;
-    Linking.openURL(url).catch(() => {
-      Alert.alert(t('profile.help.whatsappAlertTitle'), t('profile.help.whatsappAlertBody', { phone: SUPPORT_WHATSAPP }));
-    });
-  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (!subject.trim() || !message.trim()) {
@@ -125,14 +115,34 @@ export default function HelpScreen() {
       Alert.alert(t('profile.help.messageTooShortTitle'), t('profile.help.messageTooShortBody'));
       return;
     }
-    setSending(true);
-    // Simule envoi (à brancher sur ton API)
-    await new Promise((r) => setTimeout(r, 1500));
-    setSending(false);
-    setSent(true);
-    setSubject('');
-    setMessage('');
-  }, [subject, message]);
+    if (!auth.token) {
+      Alert.alert(t('common.error'), t('profile.help.sessionRequired'));
+      return;
+    }
+
+    try {
+      setSending(true);
+      const result = await createSupportTicket({
+        category,
+        subject: subject.trim(),
+        message: message.trim(),
+      }, auth.token);
+      const ticket = result?.ticket;
+      if (!ticket?._id) throw new Error(t('profile.help.ticketCreateError'));
+
+      setLastTicket(ticket);
+      setTickets((previous) => [ticket, ...previous.filter((item) => item._id !== ticket._id)]);
+      setSent(true);
+      setSubject('');
+      setMessage('');
+    } catch (error) {
+      Alert.alert(t('common.error'), error?.message || t('profile.help.ticketCreateError'));
+    } finally {
+      setSending(false);
+    }
+  }, [auth.token, category, message, subject, t]);
+
+  if (loading) return null;
 
   const categoriesTranslated = t('profile.help.categories', { returnObjects: true });
   const CATEGORIES = [
@@ -142,11 +152,6 @@ export default function HelpScreen() {
     { id: 'compte',     label: categoriesTranslated.compte     },
     { id: 'autre',      label: categoriesTranslated.autre      },
   ];
-
-  // Garde-fous placés après les hooks (règles des hooks React)
-  if (loading) return null;
-
-  if (redirect) return <Redirect href={redirect} />;
 
   return (
     <View style={styles.container}>
@@ -170,45 +175,10 @@ export default function HelpScreen() {
         keyboardShouldPersistTaps="handled"
       >
 
-        {/* ── Contact rapide ── */}
+        {/* ── Assistance ── */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('profile.help.contactTitle')}</Text>
           <Text style={styles.sectionSub}>{t('profile.help.supportHours')}</Text>
-
-          <View style={styles.contactRow}>
-            <Pressable
-              style={({ pressed }) => [styles.contactBtn, pressed && { opacity: 0.8 }]}
-              onPress={handleEmail}
-            >
-              <View style={[styles.contactIcon, { backgroundColor: '#EEF4FF' }]}>
-                <Ionicons name="mail-outline" size={22} color="#245EA8" />
-              </View>
-              <Text style={styles.contactLabel}>{t('profile.help.emailLabel')}</Text>
-              <Text style={styles.contactSub}>{t('profile.help.emailSub')}</Text>
-            </Pressable>
-
-            <Pressable
-              style={({ pressed }) => [styles.contactBtn, pressed && { opacity: 0.8 }]}
-              onPress={handleWhatsApp}
-            >
-              <View style={[styles.contactIcon, { backgroundColor: '#EDFAF1' }]}>
-                <Ionicons name="logo-whatsapp" size={22} color="#1F6F43" />
-              </View>
-              <Text style={styles.contactLabel}>{t('profile.help.whatsappLabel')}</Text>
-              <Text style={styles.contactSub}>{t('profile.help.whatsappSub')}</Text>
-            </Pressable>
-
-            <Pressable
-              style={({ pressed }) => [styles.contactBtn, pressed && { opacity: 0.8 }]}
-              onPress={() => router.push('/auth/reset')}
-            >
-              <View style={[styles.contactIcon, { backgroundColor: '#FFF3D8' }]}>
-                <Ionicons name="construct-outline" size={22} color="#8A6500" />
-              </View>
-              <Text style={styles.contactLabel}>{t('profile.help.diagnosticLabel')}</Text>
-              <Text style={styles.contactSub}>{t('profile.help.diagnosticSub')}</Text>
-            </Pressable>
-          </View>
         </View>
 
         {/* ── FAQ ── */}
@@ -230,6 +200,11 @@ export default function HelpScreen() {
               <Ionicons name="checkmark-circle" size={40} color="#1F6F43" />
               <Text style={styles.sentTitle}>{t('profile.help.sentTitle')}</Text>
               <Text style={styles.sentText}>{t('profile.help.sentText')}</Text>
+              {!!lastTicket?._id && (
+                <Text style={styles.ticketReference}>
+                  {t('profile.help.ticketReference', { id: String(lastTicket._id).slice(-6).toUpperCase() })}
+                </Text>
+              )}
               <Pressable
                 style={styles.sentBtn}
                 onPress={() => setSent(false)}
@@ -307,6 +282,34 @@ export default function HelpScreen() {
           )}
         </View>
 
+        {/* ── Historique des demandes ── */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('profile.help.myRequests')}</Text>
+          {ticketsLoading && tickets.length === 0 ? (
+            <Text style={styles.sectionSub}>{t('profile.help.loadingRequests')}</Text>
+          ) : tickets.length === 0 ? (
+            <Text style={styles.sectionSub}>{t('profile.help.noRequests')}</Text>
+          ) : tickets.map((ticket) => (
+            <View key={ticket._id} style={styles.ticketCard}>
+              <View style={styles.ticketHeader}>
+                <Text style={styles.ticketSubject}>{ticket.subject}</Text>
+                <Text style={styles.ticketStatus}>
+                  {t(`profile.help.status.${ticket.status}`, { defaultValue: ticket.status })}
+                </Text>
+              </View>
+              <Text style={styles.ticketDate}>
+                {ticket.createdAt ? new Date(ticket.createdAt).toLocaleDateString() : ''}
+              </Text>
+              {!!ticket.adminResponse && (
+                <View style={styles.ticketResponse}>
+                  <Text style={styles.ticketResponseLabel}>{t('profile.help.teamResponse')}</Text>
+                  <Text style={styles.ticketResponseText}>{ticket.adminResponse}</Text>
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
+
         {/* ── Infos légales ── */}
         <View style={styles.legalRow}>
           <Text style={styles.legalText}>{t('profile.help.legalText')}</Text>
@@ -358,8 +361,18 @@ const styles = StyleSheet.create({
   sentBox:         { backgroundColor: '#FFF', borderRadius: 20, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: '#C8EDD8' },
   sentTitle:       { fontSize: 18, fontWeight: '900', color: '#1F6F43', marginTop: 12, marginBottom: 8 },
   sentText:        { fontSize: 14, color: '#555', textAlign: 'center', lineHeight: 20 },
+  ticketReference: { fontSize: 12, color: '#666', marginTop: 8, fontWeight: '700' },
   sentBtn:         { marginTop: 16, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 12, backgroundColor: '#F0E9DF' },
   sentBtnText:     { fontSize: 13, fontWeight: '800', color: '#555' },
+
+  ticketCard: { backgroundColor: '#FFF', borderRadius: 16, padding: 16, borderWidth: 1, borderColor: '#EEE5DC', marginBottom: 10 },
+  ticketHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 },
+  ticketSubject: { flex: 1, fontSize: 14, fontWeight: '800', color: '#222' },
+  ticketStatus: { fontSize: 11, fontWeight: '800', color: '#8A4B12', textTransform: 'uppercase' },
+  ticketDate: { fontSize: 11, color: '#888', marginTop: 6 },
+  ticketResponse: { backgroundColor: '#F7F4FB', borderRadius: 10, padding: 12, marginTop: 12 },
+  ticketResponseLabel: { color: '#5A32A3', fontSize: 11, fontWeight: '900', marginBottom: 4 },
+  ticketResponseText: { color: '#333', fontSize: 13, lineHeight: 19 },
 
   legalRow:        { padding: 12, alignItems: 'center' },
   legalText:       { fontSize: 11, color: '#BBB', textAlign: 'center', lineHeight: 16 },

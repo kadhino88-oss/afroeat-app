@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -92,18 +92,26 @@ const extractOrdersArray = (response) => {
   return [];
 };
 
-const formatPrice = (value, currency = 'EUR') => {
+const formatPrice = (value, currency = 'EUR', locale = i18n.language) => {
   const amount = normalizeNumber(value, 0);
   const normalizedCurrency = normalizeText(currency, 'EUR').toUpperCase();
 
-  if (normalizedCurrency === 'USD') return `$${amount.toFixed(2)}`;
-  if (normalizedCurrency === 'GBP') return `£${amount.toFixed(2)}`;
-  if (normalizedCurrency === 'XOF' || normalizedCurrency === 'XAF') {
-    return `${amount.toFixed(0)} ${normalizedCurrency}`;
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: normalizedCurrency,
+      maximumFractionDigits:
+        normalizedCurrency === 'XOF' || normalizedCurrency === 'XAF' ? 0 : 2,
+    }).format(amount);
+  } catch {
+    if (normalizedCurrency === 'USD') return `$${amount.toFixed(2)}`;
+    if (normalizedCurrency === 'GBP') return `£${amount.toFixed(2)}`;
+    if (normalizedCurrency === 'XOF' || normalizedCurrency === 'XAF') {
+      return `${amount.toFixed(0)} ${normalizedCurrency}`;
+    }
+    if (normalizedCurrency === 'CAD') return `${amount.toFixed(2)} $CA`;
+    return `${amount.toFixed(2)} €`;
   }
-  if (normalizedCurrency === 'CAD') return `${amount.toFixed(2)} $CA`;
-
-  return `${amount.toFixed(2)} €`;
 };
 
 const normalizeMenuItem = (item = {}) => {
@@ -166,7 +174,7 @@ const isRestaurantPending = (user) => {
 };
 
 export default function RestaurantDashboard() {
-  const { t } = useTranslation();
+  const { t, i18n: translation } = useTranslation();
   const auth = useAuth() || {};
 
   const user = auth.user ?? null;
@@ -181,6 +189,9 @@ export default function RestaurantDashboard() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const requestIdRef = useRef(0);
+  const hasLoadedOnceRef = useRef(false);
 
   const currentRole = useMemo(
     () => normalizeRole(role || user?.role),
@@ -193,29 +204,34 @@ export default function RestaurantDashboard() {
 
   const fetchDashboardData = useCallback(
     async (silent = false) => {
+      const requestId = ++requestIdRef.current;
+
       if (!token || currentRole !== 'restaurant') {
         setRestaurant(null);
         setMenuItems([]);
         setOrders([]);
+        setLoadError('');
         setLoading(false);
         setRefreshing(false);
         return;
       }
 
       try {
-        if (silent) {
+        if (silent || hasLoadedOnceRef.current) {
           setRefreshing(true);
         } else {
           setLoading(true);
         }
 
         const restaurantResponse = await apiGet(API_ENDPOINTS.restaurants.my, token);
+        if (requestId !== requestIdRef.current) return;
         const safeRestaurant = extractRestaurantPayload(restaurantResponse);
 
         if (!safeRestaurant?._id && !safeRestaurant?.id) {
           setRestaurant(null);
           setMenuItems([]);
           setOrders([]);
+          setLoadError('');
           return;
         }
 
@@ -230,12 +246,12 @@ export default function RestaurantDashboard() {
           description: normalizeText(safeRestaurant?.description),
           phone: normalizeText(safeRestaurant?.phone),
           email: normalizeText(safeRestaurant?.email),
-          isOpen: safeRestaurant?.isOpen !== false,
+          isOpen: normalizeBoolean(safeRestaurant?.isOpen, false),
         };
 
         setRestaurant(normalizedRestaurant);
 
-        const [menuResponse, ordersResponse] = await Promise.all([
+        const [menuResult, ordersResult] = await Promise.allSettled([
           apiGet(
             `${API_ENDPOINTS.menu.byRestaurant(
               normalizedRestaurant._id
@@ -248,28 +264,38 @@ export default function RestaurantDashboard() {
           ),
         ]);
 
-        const safeMenuItems = extractMenuArray(menuResponse)
-          .map(normalizeMenuItem)
-          .filter((item) => item?._id);
+        if (requestId !== requestIdRef.current) return;
 
-        const safeOrders = extractOrdersArray(ordersResponse)
-          .map(normalizeOrder)
-          .filter((item) => item?._id);
+        if (menuResult.status === 'fulfilled') {
+          const safeMenuItems = extractMenuArray(menuResult.value)
+            .map(normalizeMenuItem)
+            .filter((item) => item?._id);
+          setMenuItems(safeMenuItems);
+        }
 
-        setMenuItems(safeMenuItems);
-        setOrders(safeOrders);
+        if (ordersResult.status === 'fulfilled') {
+          const safeOrders = extractOrdersArray(ordersResult.value)
+            .map(normalizeOrder)
+            .filter((item) => item?._id);
+          setOrders(safeOrders);
+        }
+
+        setLoadError(
+          menuResult.status === 'rejected' || ordersResult.status === 'rejected'
+            ? t('restaurant.refreshFailed')
+            : ''
+        );
       } catch (error) {
         console.log('Erreur dashboard restaurant :', error);
-        Alert.alert(
-          t('common.error'),
-          error?.message || t('restaurant.dashboard.errorLoadDashboardBody')
-        );
-        setRestaurant(null);
-        setMenuItems([]);
-        setOrders([]);
+        if (requestId === requestIdRef.current) {
+          setLoadError(t('restaurant.refreshFailed'));
+        }
       } finally {
-        setLoading(false);
-        setRefreshing(false);
+        if (requestId === requestIdRef.current) {
+          hasLoadedOnceRef.current = true;
+          setLoading(false);
+          setRefreshing(false);
+        }
       }
     },
     [token, currentRole, user, t]
@@ -278,6 +304,9 @@ export default function RestaurantDashboard() {
   useFocusEffect(
     useCallback(() => {
       fetchDashboardData(false);
+      return () => {
+        requestIdRef.current += 1;
+      };
     }, [fetchDashboardData])
   );
 
@@ -461,6 +490,21 @@ export default function RestaurantDashboard() {
         </View>
       </View>
 
+      {!!loadError && (
+        <View style={styles.refreshNotice}>
+          <Ionicons name="cloud-offline-outline" size={18} color="#9B4B2D" />
+          <Text style={styles.refreshNoticeText}>{loadError}</Text>
+          <Pressable
+            onPress={() => fetchDashboardData(true)}
+            disabled={refreshing}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.retry')}
+          >
+            <Text style={styles.refreshNoticeAction}>{t('common.retry')}</Text>
+          </Pressable>
+        </View>
+      )}
+
       <View style={styles.header}>
         <Text style={styles.eyebrow}>{t('restaurant.dashboard.eyebrow')}</Text>
         <Text style={styles.title}>{t('restaurant.dashboard.title')}</Text>
@@ -543,7 +587,11 @@ export default function RestaurantDashboard() {
 
         <View style={styles.statCard}>
           <Text style={styles.statValue}>
-            {formatPrice(dashboardStats.revenue, restaurant?.currency || 'EUR')}
+            {formatPrice(
+              dashboardStats.revenue,
+              restaurant?.currency || 'EUR',
+              translation.resolvedLanguage || translation.language
+            )}
           </Text>
           <Text style={styles.statLabel}>{t('restaurant.dashboard.statRevenueLabel')}</Text>
         </View>
@@ -595,6 +643,23 @@ export default function RestaurantDashboard() {
           <Text style={styles.emptyText}>
             {t('restaurant.dashboard.noRestaurantText')}
           </Text>
+          {!!loadError && (
+            <>
+              <Text style={styles.refreshNoticeText}>{loadError}</Text>
+              <Pressable
+                style={styles.emptyButton}
+                onPress={() => fetchDashboardData(true)}
+                disabled={refreshing}
+                accessibilityRole="button"
+              >
+                {refreshing ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.emptyButtonText}>{t('common.retry')}</Text>
+                )}
+              </Pressable>
+            </>
+          )}
         </View>
       </FadeInView>
     );
@@ -645,7 +710,11 @@ export default function RestaurantDashboard() {
               <View style={styles.priceBadge}>
                 <Ionicons name="cash-outline" size={14} color="#D96C2D" />
                 <Text style={styles.price}>
-                  {formatPrice(item?.price, restaurant?.currency || 'EUR')}
+                  {formatPrice(
+                    item?.price,
+                    restaurant?.currency || 'EUR',
+                    translation.resolvedLanguage || translation.language
+                  )}
                 </Text>
               </View>
 
@@ -749,6 +818,25 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   topActionsRight: { flexDirection: 'row', alignItems: 'center' },
+  refreshNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF0E8',
+    borderColor: '#F2C7B2',
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 16,
+    gap: 8,
+  },
+  refreshNoticeText: {
+    flex: 1,
+    color: '#77412C',
+    fontSize: 13,
+    lineHeight: 18,
+  },
+  refreshNoticeAction: { color: '#9B4B2D', fontWeight: '800', padding: 4 },
   topButton: {
     width: 44,
     height: 44,

@@ -7,9 +7,9 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
-  Image,
   Platform,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { router } from 'expo-router';
@@ -67,15 +67,14 @@ const formatPrice = (value, currency = 'EUR') => {
   const amount = normalizeNumber(value, 0);
   const safeCurrency = normalizeText(currency, 'EUR').toUpperCase();
 
-  if (safeCurrency === 'USD') return `$${amount.toFixed(2)}`;
-  if (safeCurrency === 'GBP') return `£${amount.toFixed(2)}`;
-  if (safeCurrency === 'CHF') return `CHF ${amount.toFixed(2)}`;
-  if (safeCurrency === 'XOF' || safeCurrency === 'XAF') {
-    return `${amount.toFixed(0)} ${safeCurrency}`;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: safeCurrency,
+    }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${safeCurrency}`;
   }
-  if (safeCurrency === 'CAD') return `${amount.toFixed(2)} $CA`;
-
-  return `${amount.toFixed(2)} €`;
 };
 
 const getFallbackImage = () => {
@@ -193,26 +192,29 @@ export default function CartScreen() {
   }, [safeCartItems, totals]);
 
   const delivery = useMemo(() => {
-    return Math.max(
-      0,
-      normalizeNumber(totals?.delivery, safeCartItems.length ? 2.99 : 0)
-    );
-  }, [totals, safeCartItems.length]);
+    if (totals?.delivery === null || totals?.delivery === undefined) return null;
+    return Math.max(0, normalizeNumber(totals.delivery, 0));
+  }, [totals]);
 
   const safeTotal = useMemo(() => {
     if (typeof getTotalPrice === 'function') {
-      return Math.max(0, normalizeNumber(getTotalPrice(), 0));
+      const value = getTotalPrice();
+      return value === null || value === undefined
+        ? null
+        : Math.max(0, normalizeNumber(value, 0));
     }
 
+    if (totalPrice === null || totalPrice === undefined) return null;
     if (Number.isFinite(Number(totalPrice))) {
       return Math.max(0, normalizeNumber(totalPrice, 0));
     }
 
+    if (totals?.total === null || totals?.total === undefined) return null;
     if (Number.isFinite(Number(totals?.total))) {
       return Math.max(0, normalizeNumber(totals.total, 0));
     }
 
-    return Math.max(0, subtotal + delivery);
+    return null;
   }, [delivery, getTotalPrice, subtotal, totalPrice, totals]);
 
   /**
@@ -348,7 +350,13 @@ export default function CartScreen() {
       return (
         <View style={styles.card}>
           <View style={styles.cardTopRow}>
-            <Image source={{ uri: imageUri }} style={styles.itemImage} />
+            <Image
+              source={{ uri: imageUri }}
+              style={styles.itemImage}
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={160}
+            />
 
             <View style={styles.itemInfo}>
               <Text style={styles.name} numberOfLines={1}>
@@ -549,16 +557,20 @@ export default function CartScreen() {
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>{t('checkout.delivery')}</Text>
           <Text style={styles.summaryValue}>
-            {delivery === 0
-              ? t('checkout.free')
-              : formatPrice(delivery, cartCurrency)}
+            {delivery === null
+              ? t('checkout.feeAtCheckout')
+              : delivery === 0
+                ? t('checkout.free')
+                : formatPrice(delivery, cartCurrency)}
           </Text>
         </View>
 
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
           <Text style={styles.totalValue}>
-            {formatPrice(safeTotal, cartCurrency)}
+            {safeTotal === null
+              ? t('checkout.totalAtCheckout')
+              : formatPrice(safeTotal, cartCurrency)}
           </Text>
         </View>
 

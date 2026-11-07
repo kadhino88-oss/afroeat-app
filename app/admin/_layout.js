@@ -55,7 +55,7 @@ const getAccountStatus = (user) => {
  * dans app/admin/
  *
  * Fichiers réels :
- *   index.js, AdminDashboard.js, ops.js
+ *   index.js, AdminDashboard.js, ops.js, payouts.js, support.js
  *   users.js, restaurants.js, drivers.js
  *   orders.js, audit-logs.js
  *   users-details/[id].js, restaurants-details/[id].js
@@ -144,13 +144,14 @@ export default function AdminLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="AdminDashboard" />
       <Stack.Screen name="ops" />
-      <Stack.Screen name="payouts" />
 
       {/* Blocs principaux */}
       <Stack.Screen name="users" />
       <Stack.Screen name="restaurants" />
       <Stack.Screen name="drivers" />
       <Stack.Screen name="orders" />
+      <Stack.Screen name="payouts" />
+      <Stack.Screen name="support" />
       <Stack.Screen name="audit-logs" />
 
       {/* Détails */}

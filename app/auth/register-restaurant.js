@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { registerRestaurant } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 /**
  * =========================================================
@@ -38,6 +39,17 @@ const sanitizePhone = (value) => {
   return String(value ?? '').replace(/[^\d+]/g, '').trim();
 };
 
+const isStrongPassword = (value) => {
+  const password = normalizeText(value);
+  return (
+    password.length >= 8 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /\d/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
+};
+
 /**
  * =========================================================
  * SCREEN
@@ -46,16 +58,14 @@ const sanitizePhone = (value) => {
 
 export default function RegisterRestaurantScreen() {
   const { t } = useTranslation();
+  const auth = useAuth() || {};
+  const login = auth.login;
   const [restaurantName, setRestaurantName] = useState('');
-  const [restaurantLogo, setRestaurantLogo] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
-  const [siret, setSiret] = useState('');
-  const [identityFront, setIdentityFront] = useState('');
-  const [identityBack, setIdentityBack] = useState('');
-  const [payoutMethod, setPayoutMethod] = useState('');
+  const [country, setCountry] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secure, setSecure] = useState(true);
@@ -64,29 +74,21 @@ export default function RegisterRestaurantScreen() {
   const isValid = useMemo(() => {
     return (
       normalizeText(restaurantName).length >= 2 &&
-      normalizeText(restaurantLogo).length >= 5 &&
       normalizeText(firstName).length >= 2 &&
       normalizeText(lastName).length >= 2 &&
-      sanitizePhone(phone).length >= 6 &&
+      sanitizePhone(phone).length >= 8 &&
       normalizeText(address).length >= 5 &&
-      normalizeText(siret).length >= 5 &&
-      normalizeText(identityFront).length >= 5 &&
-      normalizeText(identityBack).length >= 5 &&
-      normalizeText(payoutMethod).length >= 3 &&
+      normalizeText(country).length >= 2 &&
       isValidEmail(email) &&
-      normalizeText(password).length >= 6
+      isStrongPassword(password)
     );
   }, [
     restaurantName,
-    restaurantLogo,
     firstName,
     lastName,
     phone,
     address,
-    siret,
-    identityFront,
-    identityBack,
-    payoutMethod,
+    country,
     email,
     password,
   ]);
@@ -103,24 +105,16 @@ export default function RegisterRestaurantScreen() {
     if (loading) return;
 
     const safeRestaurantName = normalizeText(restaurantName);
-    const safeRestaurantLogo = normalizeText(restaurantLogo);
     const safeFirstName = normalizeText(firstName);
     const safeLastName = normalizeText(lastName);
     const safePhone = sanitizePhone(phone);
     const safeAddress = normalizeText(address);
-    const safeSiret = normalizeText(siret);
-    const safeIdentityFront = normalizeText(identityFront);
-    const safeIdentityBack = normalizeText(identityBack);
-    const safePayoutMethod = normalizeText(payoutMethod);
+    const safeCountry = normalizeText(country);
     const safeEmail = normalizeText(email).toLowerCase();
     const safePassword = normalizeText(password);
 
     if (safeRestaurantName.length < 2) {
       Alert.alert(t('auth.registerRestaurant.restaurantNameInvalidTitle'), t('auth.registerRestaurant.restaurantNameInvalidBody'));
-      return;
-    }
-    if (safeRestaurantLogo.length < 5) {
-      Alert.alert(t('auth.registerRestaurant.logoInvalidTitle'), t('auth.registerRestaurant.logoInvalidBody'));
       return;
     }
     if (safeFirstName.length < 2) {
@@ -131,7 +125,7 @@ export default function RegisterRestaurantScreen() {
       Alert.alert(t('auth.validation.lastNameInvalidTitle'), t('auth.registerRestaurant.managerLastNameInvalidBody'));
       return;
     }
-    if (safePhone.length < 6) {
+    if (safePhone.length < 8) {
       Alert.alert(t('auth.validation.phoneInvalidTitle'), t('auth.registerDriver.phoneInvalidBody'));
       return;
     }
@@ -139,27 +133,15 @@ export default function RegisterRestaurantScreen() {
       Alert.alert(t('auth.validation.addressInvalidTitle'), t('auth.validation.addressInvalidBody'));
       return;
     }
-    if (safeSiret.length < 5) {
-      Alert.alert(t('auth.registerRestaurant.siretInvalidTitle'), t('auth.registerRestaurant.siretInvalidBody'));
-      return;
-    }
-    if (safeIdentityFront.length < 5) {
-      Alert.alert(t('auth.registerDriver.idFrontInvalidTitle'), t('auth.registerRestaurant.idFrontInvalidBody'));
-      return;
-    }
-    if (safeIdentityBack.length < 5) {
-      Alert.alert(t('auth.registerDriver.idBackInvalidTitle'), t('auth.registerRestaurant.idBackInvalidBody'));
-      return;
-    }
-    if (safePayoutMethod.length < 3) {
-      Alert.alert(t('auth.registerDriver.payoutInvalidTitle'), t('auth.registerDriver.payoutInvalidBody'));
+    if (safeCountry.length < 2) {
+      Alert.alert(t('auth.validation.countryInvalidTitle'), t('auth.validation.countryInvalidBody'));
       return;
     }
     if (!isValidEmail(safeEmail)) {
       Alert.alert(t('auth.login.invalidEmailTitle'), t('auth.login.invalidEmailBody'));
       return;
     }
-    if (safePassword.length < 6) {
+    if (!isStrongPassword(safePassword)) {
       Alert.alert(t('auth.login.invalidPasswordTitle'), t('auth.validation.passwordTooShortBody'));
       return;
     }
@@ -167,33 +149,59 @@ export default function RegisterRestaurantScreen() {
     try {
       setLoading(true);
 
-      await registerRestaurant({
+      const registration = await registerRestaurant({
         restaurantName: safeRestaurantName,
-        restaurantLogo: safeRestaurantLogo,
         firstName: safeFirstName,
         lastName: safeLastName,
         phone: safePhone,
         address: safeAddress,
-        siret: safeSiret,
-        identityFront: safeIdentityFront,
-        identityBack: safeIdentityBack,
-        payoutMethod: safePayoutMethod,
+        country: safeCountry,
         email: safeEmail,
         password: safePassword,
         role: 'restaurant',
         accountStatus: 'pending_verification',
       });
 
+      const sessionReady =
+        typeof login === 'function' &&
+        (await login(registration?.user, registration?.token));
+
+      if (!sessionReady) {
+        Alert.alert(
+          t('auth.registerRestaurant.successTitle'),
+          t('auth.registerRestaurant.successBody'),
+          [
+            {
+              text: t('auth.validation.ok'),
+              onPress: () =>
+                router.replace({
+                  pathname: '/auth/pending-approval',
+                  params: { role: 'restaurant' },
+                }),
+            },
+          ]
+        );
+        return;
+      }
+
       Alert.alert(
-        t('auth.registerRestaurant.successTitle'),
-        t('auth.registerRestaurant.successBody'),
+        t('profile.payment.signupPromptTitle'),
+        t('profile.payment.signupPromptText'),
         [
           {
-            text: t('auth.validation.ok'),
+            text: t('profile.payment.signupSkipButton'),
             onPress: () =>
               router.replace({
                 pathname: '/auth/pending-approval',
                 params: { role: 'restaurant' },
+              }),
+          },
+          {
+            text: t('profile.payment.signupAddNowButton'),
+            onPress: () =>
+              router.replace({
+                pathname: '/profile/payment',
+                params: { fromSignup: 'true' },
               }),
           },
         ]
@@ -210,17 +218,15 @@ export default function RegisterRestaurantScreen() {
   }, [
     loading,
     restaurantName,
-    restaurantLogo,
     firstName,
     lastName,
     phone,
     address,
-    siret,
-    identityFront,
-    identityBack,
-    payoutMethod,
+    country,
     email,
     password,
+    login,
+    t,
   ]);
 
   return (
@@ -270,17 +276,6 @@ export default function RegisterRestaurantScreen() {
               editable={!loading}
             />
 
-            <Text style={styles.label}>{t('auth.registerRestaurant.logoLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={restaurantLogo}
-              onChangeText={setRestaurantLogo}
-              placeholder={t('auth.registerRestaurant.logoPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
-            />
-
             <Text style={styles.label}>{t('auth.registerRestaurant.managerFirstNameLabel')}</Text>
             <TextInput
               style={styles.input}
@@ -324,48 +319,14 @@ export default function RegisterRestaurantScreen() {
               editable={!loading}
             />
 
-            <Text style={styles.label}>{t('auth.registerRestaurant.siretLabel')}</Text>
+            <Text style={styles.label}>{t('auth.fields.country')}</Text>
             <TextInput
               style={styles.input}
-              value={siret}
-              onChangeText={setSiret}
-              placeholder={t('auth.registerRestaurant.siretPlaceholder')}
+              value={country}
+              onChangeText={setCountry}
+              placeholder={t('auth.fields.country')}
               placeholderTextColor="#888888"
               editable={!loading}
-              autoCapitalize="characters"
-            />
-
-            <Text style={styles.label}>{t('auth.registerRestaurant.idFrontLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={identityFront}
-              onChangeText={setIdentityFront}
-              placeholder={t('auth.registerDriver.uploadPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
-            />
-
-            <Text style={styles.label}>{t('auth.registerRestaurant.idBackLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={identityBack}
-              onChangeText={setIdentityBack}
-              placeholder={t('auth.registerDriver.uploadPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
-            />
-
-            <Text style={styles.label}>{t('auth.registerDriver.payoutAccountLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={payoutMethod}
-              onChangeText={setPayoutMethod}
-              placeholder={t('auth.registerDriver.payoutPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
             />
 
             <Text style={styles.label}>{t('auth.fields.email')}</Text>

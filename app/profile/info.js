@@ -95,7 +95,41 @@ const AvatarPicker = ({ user, onUploaded }) => {
       return false;
     }
     return true;
-  }, []);
+  }, [t]);
+
+  const uploadImage = useCallback(async (asset) => {
+    setLoading(true);
+    setLocalUri(asset.uri);
+    try {
+      const formData = new FormData();
+      const filename = asset.uri.split('/').pop();
+      const type     = asset.type === 'image' ? 'image/jpeg' : asset.mimeType || 'image/jpeg';
+
+      formData.append('image', {
+        uri:  Platform.OS === 'android' ? asset.uri : asset.uri.replace('file://', ''),
+        type,
+        name: filename,
+      });
+
+      const response = await apiUpload(API_ENDPOINTS.uploads.image, formData);
+      const imageUrl = response?.url || response?.imageUrl || response?.data?.url || response?.image;
+
+      if (imageUrl) {
+        if (typeof onUploaded === 'function') onUploaded(imageUrl);
+        Alert.alert(t('profile.info.photoUpdatedTitle'), t('profile.info.photoUpdatedBody'));
+      } else {
+        throw new Error(t('profile.info.missingImageUrlError'));
+      }
+    } catch (err) {
+      setLocalUri(null);
+      Alert.alert(
+        t('profile.info.uploadErrorTitle'),
+        err?.message || t('profile.info.uploadErrorFallback'),
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [onUploaded, t]);
 
   const handlePickImage = useCallback(async () => {
     const hasPermission = await requestPermission();
@@ -137,41 +171,7 @@ const AvatarPicker = ({ user, onUploaded }) => {
         { text: t('profile.info.cancel'), style: 'cancel' },
       ]
     );
-  }, [requestPermission, t]);
-
-  const uploadImage = useCallback(async (asset) => {
-    setLoading(true);
-    setLocalUri(asset.uri);
-    try {
-      const formData = new FormData();
-      const filename = asset.uri.split('/').pop();
-      const type     = asset.type === 'image' ? 'image/jpeg' : asset.mimeType || 'image/jpeg';
-
-      formData.append('image', {
-        uri:  Platform.OS === 'android' ? asset.uri : asset.uri.replace('file://', ''),
-        type,
-        name: filename,
-      });
-
-      const response = await apiUpload(API_ENDPOINTS.uploads.image, formData);
-      const imageUrl = response?.url || response?.imageUrl || response?.data?.url || response?.image;
-
-      if (imageUrl) {
-        if (typeof onUploaded === 'function') onUploaded(imageUrl);
-        Alert.alert(t('profile.info.photoUpdatedTitle'), t('profile.info.photoUpdatedBody'));
-      } else {
-        throw new Error(t('profile.info.missingImageUrlError'));
-      }
-    } catch (err) {
-      setLocalUri(null);
-      Alert.alert(
-        t('profile.info.uploadErrorTitle'),
-        err?.message || t('profile.info.uploadErrorFallback'),
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [onUploaded]);
+  }, [requestPermission, t, uploadImage]);
 
   return (
     <Pressable
@@ -213,6 +213,7 @@ export default function InfoScreen() {
   );
   const [savingAddress,  setSavingAddress]  = useState(false);
 
+  const roleRedirect = getRoleRedirect(role);
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) { router.back(); return; }
@@ -249,7 +250,19 @@ export default function InfoScreen() {
     } finally {
       setSavingAddress(false);
     }
-  }, [address, token, user, updateUser, t]);
+  }, [address, token, user, updateUser, t, setEditingAddress, setSavingAddress]);
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
+        <ActivityIndicator size="large" color="#D4A017" />
+      </View>
+    );
+  }
+
+  if (!isAuth) return <Redirect href="/auth/login?role=client" />;
+  if (roleRedirect) return <Redirect href={roleRedirect} />;
 
   const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
   const dateLocale = DATE_LOCALE_MAP[i18nInstance.language] || 'en-US';
@@ -261,21 +274,6 @@ export default function InfoScreen() {
     { key: 'role',   label: t('profile.info.accountTypeLabel'),    value: getDisplayRole(user?.role),     icon: 'shield-outline'   },
     { key: 'since',  label: t('profile.info.memberSinceLabel'),     value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString(dateLocale, { month: 'long', year: 'numeric' }) : t('profile.info.notProvided'), icon: 'calendar-outline' },
   ];
-
-  // Garde-fous placés après les hooks (règles des hooks React)
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
-        <ActivityIndicator size="large" color="#D4A017" />
-      </View>
-    );
-  }
-
-  if (!isAuth) return <Redirect href="/auth/login?role=client" />;
-
-  const roleRedirect = getRoleRedirect(role);
-  if (roleRedirect) return <Redirect href={roleRedirect} />;
 
   return (
     <FadeInView style={styles.container}>

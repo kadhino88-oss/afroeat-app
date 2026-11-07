@@ -1,0 +1,8 @@
+# Fins de ligne cohérentes quel que soit le système (évite le bruit Windows/Linux).
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.jar binary
+*.ttf binary
+*.hbc binary

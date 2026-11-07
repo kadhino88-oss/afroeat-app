@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Animated, Easing } from 'react-native';
 
 export default function FadeInView({
@@ -8,8 +8,8 @@ export default function FadeInView({
   delay = 0,
   translateY = 12,
 }) {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const translate = useRef(new Animated.Value(translateY)).current;
+  const [opacity] = useState(() => new Animated.Value(0));
+  const [translate] = useState(() => new Animated.Value(translateY));
 
   useEffect(() => {
     Animated.parallel([

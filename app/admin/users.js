@@ -330,7 +330,7 @@ const StatCard = ({ label, value, icon, tint = '#1F6F43' }) => (
 
 export default function AdminUsersScreen() {
   const { t } = useTranslation();
-  const auth = useAuth() || {};
+  const auth = useAuth();
 
   const token = auth.token;
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -575,11 +575,18 @@ export default function AdminUsersScreen() {
   const confirmToggleStatus = useCallback(
     (item) => {
       const currentUserStatus = normalizeText(item?.accountStatus).toLowerCase();
-      const nextStatus =
-        currentUserStatus === 'suspended' ? 'active' : 'suspended';
+      const shouldActivate = ['suspended', 'pending_verification', 'rejected'].includes(
+        currentUserStatus
+      );
+      const nextStatus = shouldActivate ? 'active' : 'suspended';
+      const isPendingPartner =
+        ['pending_verification', 'rejected'].includes(currentUserStatus) &&
+        ['restaurant', 'livreur'].includes(item?.role);
       const actionLabel =
         nextStatus === 'active'
-          ? t('admin.users.reactivateAction')
+          ? isPendingPartner
+            ? t('admin.userDetails.activatePartnerButton')
+            : t('admin.users.reactivateAction')
           : t('admin.users.suspendAction');
       const identity = normalizeText(
         item?.name,
@@ -1103,7 +1110,9 @@ export default function AdminUsersScreen() {
                       <>
                         <Ionicons
                           name={
-                            item?.accountStatus === 'suspended'
+                            ['suspended', 'pending_verification', 'rejected'].includes(
+                              normalizeText(item?.accountStatus).toLowerCase()
+                            )
                               ? 'checkmark-circle-outline'
                               : 'ban-outline'
                           }
@@ -1111,9 +1120,15 @@ export default function AdminUsersScreen() {
                           color="#111"
                         />
                         <Text style={styles.actionButtonText}>
-                          {item?.accountStatus === 'suspended'
-                            ? t('admin.users.reactivateButton')
-                            : t('admin.users.suspendButton')}
+                          {['pending_verification', 'rejected'].includes(
+                            normalizeText(item?.accountStatus).toLowerCase()
+                          ) && ['restaurant', 'livreur'].includes(item?.role)
+                            ? t('admin.userDetails.activatePartnerButton')
+                            : ['suspended', 'pending_verification', 'rejected'].includes(
+                                  normalizeText(item?.accountStatus).toLowerCase()
+                                )
+                              ? t('admin.users.reactivateButton')
+                              : t('admin.users.suspendButton')}
                         </Text>
                       </>
                     )}

@@ -340,11 +340,15 @@ export default function AdminDriverDetailsScreen() {
     [isAuthenticated, token, driverId, t]
   );
 
-  useEffect(() => {
+  // Réinitialise les brouillons quand on change de livreur (ajustement d'état
+  // pendant le rendu, plutôt que dans un effet).
+  const [draftDriverId, setDraftDriverId] = useState(driverId);
+  if (draftDriverId !== driverId) {
+    setDraftDriverId(driverId);
     setDraftIdentityVerified(null);
     setDraftWorkAuthorized(null);
     setVerificationNote('');
-  }, [driverId]);
+  }
 
   useFocusEffect(
     useCallback(() => {

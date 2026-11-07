@@ -5,7 +5,7 @@
  * =========================================================
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,10 +17,13 @@ import {
   Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
+import { getNotificationInboxKey } from '../services/notificationService';
 
 const DATE_LOCALE_MAP = {
   fr: 'fr-FR',
@@ -68,71 +71,76 @@ const formatRelativeTime = (dateString) => {
   return new Date(dateString).toLocaleDateString(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', { day: 'numeric', month: 'short' });
 };
 
-// ─── Données de démonstration (à remplacer par API) ───────
-const buildDemoNotifications = (user) => {
-  const now = new Date();
-  const ago = (minutes) => new Date(now.getTime() - minutes * 60000).toISOString();
+// ─── Boîte de réception locale des notifications réellement reçues ───
+const normalizeNotification = (notification) => {
+  const request = notification?.request || notification;
+  const content = request?.content || notification?.content || {};
+  const data = content?.data || notification?.data || {};
+  const createdAt =
+    notification?.date
+      ? new Date(notification.date).toISOString()
+      : notification?.createdAt || new Date().toISOString();
 
-  return [
-    {
-      id: '1',
-      type: NOTIF_TYPES.WELCOME,
-      title: i18n.t('notifications.demo.welcomeTitle', { name: user?.name || i18n.t('notifications.demo.welcomeName') }),
-      body: i18n.t('notifications.demo.welcomeBody'),
-      read: false,
-      createdAt: ago(5),
-      route: '/(tabs)',
-    },
-    {
-      id: '2',
-      type: NOTIF_TYPES.ORDER_DELIVERED,
-      title: i18n.t('notifications.demo.deliveredTitle'),
-      body: i18n.t('notifications.demo.deliveredBody'),
-      read: false,
-      createdAt: ago(35),
-      route: '/(tabs)/orders',
-    },
-    {
-      id: '3',
-      type: NOTIF_TYPES.PROMO,
-      title: i18n.t('notifications.demo.promoTitle'),
-      body: i18n.t('notifications.demo.promoBody'),
-      read: false,
-      createdAt: ago(90),
-      route: '/(tabs)/explore',
-    },
-    {
-      id: '4',
-      type: NOTIF_TYPES.ORDER_CONFIRMED,
-      title: i18n.t('notifications.demo.confirmedTitle'),
-      body: i18n.t('notifications.demo.confirmedBody'),
-      read: true,
-      createdAt: ago(300),
-      route: '/(tabs)/orders',
-    },
-    {
-      id: '5',
-      type: NOTIF_TYPES.ORDER_PREPARING,
-      title: i18n.t('notifications.demo.preparingTitle'),
-      body: i18n.t('notifications.demo.preparingBody'),
-      read: true,
-      createdAt: ago(480),
-      route: '/(tabs)/orders',
-    },
-    {
-      id: '6',
-      type: NOTIF_TYPES.SYSTEM,
-      title: i18n.t('notifications.demo.systemTitle'),
-      body: i18n.t('notifications.demo.systemBody'),
-      read: true,
-      createdAt: ago(1440),
-      route: null,
-    },
-  ];
+  const title = String(content?.title || notification?.title || '').trim();
+  const body = String(content?.body || notification?.body || '').trim();
+  if (!title && !body) return null;
+
+  const rawRoute = typeof data?.route === 'string' ? data.route.trim() : '';
+  const orderId = String(data?.orderId || data?.order?._id || '').trim();
+  // Backend order-status pushes carry orderId (not a route). Resolve it here so
+  // tapping a real delivery update opens the matching order instead of doing nothing.
+  const route = rawRoute.startsWith('/')
+    ? rawRoute
+    : orderId
+      ? `/order/${encodeURIComponent(orderId)}`
+      : null;
+  const rawType = String(data?.type || '').trim().toLowerCase();
+  const status = String(data?.status || '').trim().toLowerCase();
+  const statusType = {
+    'confirmée': NOTIF_TYPES.ORDER_CONFIRMED,
+    'en préparation': NOTIF_TYPES.ORDER_PREPARING,
+    'en livraison': NOTIF_TYPES.ORDER_DELIVERING,
+    'livrée': NOTIF_TYPES.ORDER_DELIVERED,
+    'annulée': NOTIF_TYPES.ORDER_CANCELLED,
+  }[status];
+  const type = rawType === 'order_status' ? (statusType || NOTIF_TYPES.SYSTEM) : rawType || NOTIF_TYPES.SYSTEM;
+
+  return {
+    id: String(
+      notification?.request?.identifier ||
+      notification?.identifier ||
+      data?.notificationId ||
+      `${createdAt}:${title}:${body}`
+    ),
+    type,
+    title: title || i18n.t('notifications.title'),
+    body,
+    read: false,
+    createdAt,
+    route,
+  };
+};
+
+const readInbox = async (key) => {
+  try {
+    const raw = await AsyncStorage.getItem(key);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveInbox = async (key, items) => {
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(items.slice(0, 100)));
+  } catch (error) {
+    console.warn('Impossible de sauvegarder la boîte de notifications AFROEAT.', error);
+  }
 };
 
 // ─── Composant item ────────────────────────────────────────
-const NotifItem = ({ item, onPress, onMarkRead }) => {
+const NotifItem = ({ item, onPress }) => {
   const icon = getNotifIcon(item.type);
 
   return (
@@ -167,10 +175,11 @@ export default function NotificationsScreen() {
   const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
+  const inboxKey = useMemo(() => getNotificationInboxKey(user), [user]);
 
-  const [notifications, setNotifications] = useState(() => buildDemoNotifications(user));
-  const [refreshing,    setRefreshing]    = useState(false);
-  const [filter,        setFilter]        = useState('all'); // 'all' | 'unread'
+  const [notifications, setNotifications] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [filter, setFilter] = useState('all');
 
   const unreadCount = useMemo(
     () => notifications.filter((n) => !n.read).length,
@@ -182,20 +191,83 @@ export default function NotificationsScreen() {
     return notifications;
   }, [notifications, filter]);
 
-  const handlePress = useCallback((item) => {
-    // Marquer comme lu
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === item.id ? { ...n, read: true } : n))
-    );
-    // Naviguer
-    if (item.route) {
-      router.push(item.route);
-    }
-  }, []);
+  const reloadInbox = useCallback(async () => {
+    const items = await readInbox(inboxKey);
+    setNotifications(items);
+  }, [inboxKey]);
 
-  const handleMarkAllRead = useCallback(() => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  }, []);
+  useEffect(() => {
+    let active = true;
+
+    const load = async () => {
+      const items = await readInbox(inboxKey);
+      if (active) setNotifications(items);
+    };
+
+    load();
+
+    // Only show notifications that Expo actually delivers; never fabricate
+    // demo order or promotion messages in the customer's inbox.
+    const receivedSubscription = Notifications.addNotificationReceivedListener(
+      async (notification) => {
+        const item = normalizeNotification(notification);
+        if (!item) return;
+        const previous = await readInbox(inboxKey);
+        const next = [item, ...previous.filter((entry) => entry.id !== item.id)].slice(0, 100);
+        await saveInbox(inboxKey, next);
+        if (active) setNotifications(next);
+      }
+    );
+
+    const responseSubscription = Notifications.addNotificationResponseReceivedListener(
+      async (response) => {
+        const item = normalizeNotification(response?.notification);
+        if (item) {
+          const previous = await readInbox(inboxKey);
+          const next = [item, ...previous.filter((entry) => entry.id !== item.id)].slice(0, 100);
+          await saveInbox(inboxKey, next);
+          if (active) setNotifications(next);
+        }
+        if (item?.route) router.push(item.route);
+      }
+    );
+
+    Notifications.getLastNotificationResponseAsync()
+      .then(async (response) => {
+        if (!active || !response) return;
+        const item = normalizeNotification(response?.notification);
+        if (!item) return;
+        const previous = await readInbox(inboxKey);
+        const next = [item, ...previous.filter((entry) => entry.id !== item.id)].slice(0, 100);
+        await saveInbox(inboxKey, next);
+        if (active) {
+          setNotifications(next);
+          if (item.route) router.push(item.route);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      active = false;
+      receivedSubscription.remove();
+      responseSubscription.remove();
+    };
+  }, [inboxKey]);
+
+  const handlePress = useCallback(async (item) => {
+    const next = notifications.map((n) =>
+      n.id === item.id ? { ...n, read: true } : n
+    );
+    setNotifications(next);
+    await saveInbox(inboxKey, next);
+    if (item.route) router.push(item.route);
+  }, [inboxKey, notifications]);
+
+  const handleMarkAllRead = useCallback(async () => {
+    const next = notifications.map((n) => ({ ...n, read: true }));
+    setNotifications(next);
+    await saveInbox(inboxKey, next);
+  }, [inboxKey, notifications]);
 
   const handleClearAll = useCallback(() => {
     Alert.alert(
@@ -206,19 +278,23 @@ export default function NotificationsScreen() {
         {
           text: t('notifications.clearAction'),
           style: 'destructive',
-          onPress: () => setNotifications([]),
+          onPress: async () => {
+            setNotifications([]);
+            await saveInbox(inboxKey, []);
+          },
         },
       ]
     );
-  }, []);
+  }, [inboxKey, t]);
 
-  const handleRefresh = useCallback(() => {
+  const handleRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTimeout(() => {
-      setNotifications(buildDemoNotifications(user));
+    try {
+      await reloadInbox();
+    } finally {
       setRefreshing(false);
-    }, 800);
-  }, [user]);
+    }
+  }, [reloadInbox]);
 
   return (
     <View style={styles.container}>

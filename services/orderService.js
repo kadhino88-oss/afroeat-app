@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { apiGet, apiPost, apiPut } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
@@ -235,23 +236,120 @@ export const getOrderById = async (orderId, token) => {
   return order;
 };
 
-export const createOrder = async (payload, token, idempotencyKey = null) => {
+const fingerprintPayload = (payload) => {
+  // Keep the canonical payload aligned with the backend fingerprint. Do not
+  // sort the items: order and per-item notes are part of the submitted request.
+  const canonical = JSON.stringify({
+    restaurant: String(payload?.restaurant || ''),
+    items: normalizeArray(payload?.items).map((item) => ({
+      menuItem: String(item?.menuItem || ''),
+      quantity: Number(item?.quantity || 0),
+      notes: normalizeText(item?.notes),
+    })),
+    deliveryAddress: normalizeText(payload?.deliveryAddress),
+    notes: normalizeText(payload?.notes).slice(0, 500),
+  });
+
+  let hash = 2166136261;
+  for (let i = 0; i < canonical.length; i += 1) {
+    hash ^= canonical.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(16);
+};
+
+const getOrCreateIdempotencyKey = async (payload) => {
+  const storageKey = `@afroeat/pending-order:${fingerprintPayload(payload)}`;
+  let key = null;
+  try {
+    key = await AsyncStorage.getItem(storageKey);
+    if (!key) {
+      key = `afroeat-${Date.now()}-${Math.random().toString(36).slice(2, 14)}`;
+      await AsyncStorage.setItem(storageKey, key);
+    }
+  } catch {
+    // If local persistence is unavailable, the in-flight request guard below
+    // still prevents duplicate requests during the current app session.
+    key = `afroeat-${Date.now()}-${Math.random().toString(36).slice(2, 14)}`;
+  }
+  return { key, storageKey };
+};
+
+// Prevent two rapid taps from racing through AsyncStorage and receiving two
+// different idempotency keys for the same checkout payload.
+const inFlightOrderRequests = new Map();
+
+export const createOrder = async (payload, token) => {
   const endpoint = ensureEndpoint(API_ENDPOINTS?.orders?.create, 'orders.create');
-  const options = idempotencyKey
-    ? { headers: { 'Idempotency-Key': String(idempotencyKey) } }
-    : {};
-  const response = await apiPost(endpoint, payload, token, options);
+  const storageKey = `@afroeat/pending-order:${fingerprintPayload(payload)}`;
 
-  const order = normalizeOrderPayload(response);
+  if (inFlightOrderRequests.has(storageKey)) {
+    return inFlightOrderRequests.get(storageKey);
+  }
 
-  if (order?._id) {
+  const requestPromise = (async () => {
+    const { key } = await getOrCreateIdempotencyKey(payload);
+
+    // Keep the key if the request fails or the response cannot be identified.
+    // A retry can then recover the original order instead of creating a duplicate.
+    const response = await apiPost(
+      endpoint,
+      { ...payload, idempotencyKey: key },
+      token,
+      { headers: { 'Idempotency-Key': key } }
+    );
+
+    const order = normalizeOrderPayload(response);
+    if (!order?._id) {
+      throw new Error(
+        'Réponse de création de commande invalide : identifiant introuvable. Réessaie pour récupérer la commande existante.'
+      );
+    }
+
+    // Keep the idempotency key until the payment/order flow is completed.
+    // If the app loses the response or the user returns to checkout, a second
+    // submit with the same cart must recover the original order, not create a
+    // second payable order. The key is cleared after the server confirms the
+    // selected payment method.
+
     return {
       ...normalizeObject(response),
       order,
     };
-  }
+  })();
 
-  return response;
+  inFlightOrderRequests.set(storageKey, requestPromise);
+  try {
+    return await requestPromise;
+  } finally {
+    if (inFlightOrderRequests.get(storageKey) === requestPromise) {
+      inFlightOrderRequests.delete(storageKey);
+    }
+  }
+};
+
+/**
+ * Clear local idempotency keys only after the server has accepted the order's
+ * payment method (Stripe confirmation or cash-on-delivery acceptance). This
+ * allows a later, intentional purchase with the same cart to create a new order.
+ */
+export const clearPendingOrderKeys = async () => {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const pendingKeys = normalizeArray(keys).filter((key) =>
+      String(key).startsWith('@afroeat/pending-order:')
+    );
+    if (pendingKeys.length) await AsyncStorage.multiRemove(pendingKeys);
+    return pendingKeys.length;
+  } catch {
+    // Cleanup failure must not turn a confirmed payment into a reported failure.
+    return 0;
+  }
+};
+
+export const getOrderQuote = async (payload, token) => {
+  const endpoint = ensureEndpoint(API_ENDPOINTS?.orders?.quote, 'orders.quote');
+  return apiPost(endpoint, payload, token);
 };
 
 export const updateOrderStatus = async (orderId, status, token) => {

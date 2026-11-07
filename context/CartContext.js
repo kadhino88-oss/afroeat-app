@@ -218,7 +218,10 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    hydrate();
+    const timer = setTimeout(() => {
+      void hydrate();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [hydrate]);
 
   /**
@@ -407,14 +410,11 @@ export const CartProvider = ({ children }) => {
       );
     }, 0);
 
-    const delivery = cartItems.length > 0 ? 2.99 : 0;
-    const total = Number((subtotal + delivery).toFixed(2));
-
     return {
       items,
       subtotal: Number(subtotal.toFixed(2)),
-      delivery,
-      total,
+      delivery: null,
+      total: null,
     };
   }, [cartItems]);
 

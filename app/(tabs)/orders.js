@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
   StatusBar,
   RefreshControl,
+  ScrollView,
 } from 'react-native';
-import { router, Redirect } from 'expo-router';
+import { router, Redirect, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
@@ -126,7 +127,7 @@ const normalizeStatus = (value) => {
     return 'confirmed';
   }
 
-  return 'unknown';
+  return 'pending';
 };
 
 const normalizeOrder = (item = {}) => {
@@ -155,20 +156,25 @@ const normalizeOrder = (item = {}) => {
   };
 };
 
-const formatPrice = (value, currency = 'EUR') => {
+const formatPrice = (value, currency = 'EUR', locale = 'fr') => {
   const amount = normalizeNumber(value, 0);
-  const c = normalizeText(currency, 'EUR').toUpperCase();
+  const normalizedCurrency = normalizeText(currency, 'EUR').toUpperCase();
 
-  if (c === 'USD') return `$${amount.toFixed(2)}`;
-  if (c === 'GBP') return `£${amount.toFixed(2)}`;
-  if (c === 'CHF') return `CHF ${amount.toFixed(2)}`;
-  if (c === 'XOF' || c === 'XAF') return `${amount.toFixed(0)} ${c}`;
-  if (c === 'CAD') return `${amount.toFixed(2)} $CA`;
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: normalizedCurrency,
+    }).format(amount);
+  } catch {
+    const formattedAmount = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 2,
+    }).format(amount);
 
-  return `${amount.toFixed(2)} €`;
+    return `${formattedAmount} ${normalizedCurrency}`;
+  }
 };
 
-const formatDate = (value) => {
+const formatDate = (value, locale = 'fr') => {
   if (!value) return '';
 
   try {
@@ -176,18 +182,17 @@ const formatDate = (value) => {
 
     if (Number.isNaN(date.getTime())) return '';
 
-    return date.toLocaleDateString('fr-FR', {
+    return new Intl.DateTimeFormat(locale, {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
-    });
+    }).format(date);
   } catch {
     return '';
   }
 };
 
 const getStatusColor = (s) => {
-  if (s === 'unknown') return '#777777';
   if (s === 'delivered') return '#1F6F43';
   if (s === 'cancelled') return '#B63B3B';
   if (s === 'pending') return '#D4A017';
@@ -198,7 +203,6 @@ const getStatusColor = (s) => {
 };
 
 const getStatusBg = (s) => {
-  if (s === 'unknown') return '#F4F4F4';
   if (s === 'delivered') return '#E8F5ED';
   if (s === 'cancelled') return '#FDECEC';
   if (s === 'pending') return '#FFF3D8';
@@ -215,12 +219,10 @@ const getStatusLabel = (s) => {
   if (s === 'preparing') return 'Préparation';
   if (s === 'on_the_way') return 'En livraison';
   if (s === 'confirmed') return 'Confirmé';
-  if (s === 'unknown') return 'Statut à confirmer';
   return 'Commande';
 };
 
 const getStatusIcon = (s) => {
-  if (s === 'unknown') return 'help-circle-outline';
   if (s === 'delivered') return 'checkmark-circle-outline';
   if (s === 'cancelled') return 'close-circle-outline';
   if (s === 'pending') return 'time-outline';
@@ -247,7 +249,8 @@ const extractOrdersFromResponse = (response) => {
  */
 
 export default function OrdersScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language || 'fr';
   const auth = useAuth() || {};
   const token = auth.token;
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -256,15 +259,23 @@ export default function OrdersScreen() {
   const currentRole = normalizeRole(auth.role || user?.role);
 
   const [orders, setOrders] = useState([]);
+  const [orderFilter, setOrderFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [initialLoaded, setInitialLoaded] = useState(false);
   const [error, setError] = useState('');
+  const latestLoadIdRef = useRef(0);
+  const hasLoadedOnceRef = useRef(false);
 
   const loadOrders = useCallback(
     async (isRefresh = false) => {
+      const loadId = ++latestLoadIdRef.current;
+      const showRefreshIndicator = isRefresh || hasLoadedOnceRef.current;
+
       try {
-        if (isRefresh) {
+        // After the first load, refresh in the background instead of hiding
+        // the order list behind a full-screen spinner on every tab focus.
+        if (showRefreshIndicator) {
           setRefreshing(true);
         } else {
           setLoading(true);
@@ -279,32 +290,43 @@ export default function OrdersScreen() {
           .map(normalizeOrder)
           .filter((item) => item?._id);
 
-        setOrders(safeOrders);
+        // Ignore stale responses if a newer refresh completed first.
+        if (loadId === latestLoadIdRef.current) {
+          setOrders(safeOrders);
+        }
       } catch (err) {
         console.log('Erreur orders :', err);
-        // A transient refresh failure must not erase orders already shown to the customer.
-        // On first load, the list is already empty, so no reset is needed here either.
-        setError(
-          normalizeText(err?.message, 'Impossible de charger les commandes.')
-        );
-      } finally {
-        if (isRefresh) {
-          setRefreshing(false);
-        } else {
-          setLoading(false);
+        // Keep already loaded orders visible if a refresh fails (e.g. a
+        // temporary network outage). The error message still tells the user.
+        if (loadId === latestLoadIdRef.current) {
+          setError(
+            normalizeText(err?.message, 'Impossible de charger les commandes.')
+          );
         }
-
-        setInitialLoaded(true);
+      } finally {
+        if (loadId === latestLoadIdRef.current) {
+          setRefreshing(false);
+          setLoading(false);
+          hasLoadedOnceRef.current = true;
+          setInitialLoaded(true);
+        }
       }
     },
     [token]
   );
 
-  useEffect(() => {
-    if (!authLoading && isAuthenticated && currentRole === 'client') {
-      loadOrders();
-    }
-  }, [authLoading, isAuthenticated, currentRole, loadOrders]);
+  // Refresh the list every time the user returns to the Orders tab.
+  // This picks up payment confirmation and restaurant/driver status changes
+  // without forcing the customer to pull-to-refresh manually.
+  useFocusEffect(
+    useCallback(() => {
+      if (!authLoading && isAuthenticated && currentRole === 'client') {
+        loadOrders();
+      }
+
+      return undefined;
+    }, [authLoading, isAuthenticated, currentRole, loadOrders])
+  );
 
   const sortedOrders = useMemo(() => {
     return [...orders].sort((a, b) => {
@@ -327,8 +349,26 @@ export default function OrdersScreen() {
       return normalizeStatus(o?.status) === 'delivered';
     }).length;
 
-    return { total, active, delivered };
+    return { total, active, delivered, history: total - active };
   }, [sortedOrders]);
+
+  const visibleOrders = useMemo(() => {
+    if (orderFilter === 'active') {
+      return sortedOrders.filter((item) => {
+        const status = normalizeStatus(item?.status);
+        return status !== 'delivered' && status !== 'cancelled';
+      });
+    }
+
+    if (orderFilter === 'history') {
+      return sortedOrders.filter((item) => {
+        const status = normalizeStatus(item?.status);
+        return status === 'delivered' || status === 'cancelled';
+      });
+    }
+
+    return sortedOrders;
+  }, [orderFilter, sortedOrders]);
 
   const handleRefresh = useCallback(() => {
     loadOrders(true);
@@ -385,6 +425,7 @@ export default function OrdersScreen() {
       <Pressable
         style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
         onPress={() => handleOpenOrder(id)}
+        accessibilityRole="button"
       >
         <View style={styles.cardTop}>
           <Text style={styles.orderId}>
@@ -418,7 +459,7 @@ export default function OrdersScreen() {
         </Text>
 
         <Text style={styles.date}>
-          {formatDate(item?.createdAt) || t('orders.dateUnavailable')}
+          {formatDate(item?.createdAt, locale) || t('orders.dateUnavailable')}
         </Text>
 
         {!!normalizeText(item?.deliveryAddress) && (
@@ -430,7 +471,7 @@ export default function OrdersScreen() {
         <View style={styles.cardFooter}>
           <View>
             <Text style={styles.total}>
-              {formatPrice(item?.totalPrice, item?.currency)}
+              {formatPrice(item?.totalPrice, item?.currency, locale)}
             </Text>
             <Text style={styles.metaText}>
               {t('orders.items', { count: Math.max(0, normalizeNumber(item?.itemsCount, 0)) })}
@@ -454,7 +495,7 @@ export default function OrdersScreen() {
       <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
 
       <FlatList
-        data={sortedOrders}
+        data={visibleOrders}
         keyExtractor={(item, index) =>
           item?._id?.toString() || index.toString()
         }
@@ -500,6 +541,60 @@ export default function OrdersScreen() {
               </View>
             </View>
 
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.filtersContent}
+              style={styles.filtersScroll}
+            >
+              {[
+                { key: 'all', label: t('orders.filterAll'), count: stats.total },
+                {
+                  key: 'active',
+                  label: t('orders.filterActive'),
+                  count: stats.active,
+                },
+                {
+                  key: 'history',
+                  label: t('orders.filterHistory'),
+                  count: stats.history,
+                },
+              ].map((filter) => {
+                const selected = orderFilter === filter.key;
+
+                return (
+                  <Pressable
+                    key={filter.key}
+                    style={[
+                      styles.filterChip,
+                      selected && styles.filterChipSelected,
+                    ]}
+                    onPress={() => setOrderFilter(filter.key)}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected }}
+                    accessibilityLabel={`${filter.label}, ${filter.count}`}
+                  >
+                    <Text
+                      style={[
+                        styles.filterChipText,
+                        selected && styles.filterChipTextSelected,
+                      ]}
+                    >
+                      {filter.label}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.filterCount,
+                        selected && styles.filterCountSelected,
+                      ]}
+                    >
+                      {filter.count}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+
             {!!error && (
               <View style={styles.errorCard}>
                 <Ionicons name="warning-outline" size={18} color="#B63B3B" />
@@ -509,22 +604,70 @@ export default function OrdersScreen() {
           </View>
         }
         ListEmptyComponent={
-          <View style={styles.empty}>
-            <Ionicons name="receipt-outline" size={48} color="#C4B7A6" />
-            <Text style={styles.emptyTitle}>{t('orders.empty')}</Text>
-            <Text style={styles.emptyText}>
-              {t('orders.emptyText')}
-            </Text>
-            <Pressable
-              style={({ pressed }) => [
-                styles.exploreButton,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={handleExplore}
-            >
-              <Text style={styles.exploreButtonText}>{t('orders.exploreAfroeat')}</Text>
-            </Pressable>
-          </View>
+          sortedOrders.length > 0 ? (
+            <View style={styles.empty}>
+              <Ionicons name="filter-outline" size={48} color="#C4B7A6" />
+              <Text style={styles.emptyTitle}>
+                {t('orders.noMatchingOrders')}
+              </Text>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.exploreButton,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={() => setOrderFilter('all')}
+                accessibilityRole="button"
+              >
+                <Text style={styles.exploreButtonText}>
+                  {t('orders.showAllOrders')}
+                </Text>
+              </Pressable>
+            </View>
+          ) : error ? (
+            <View style={styles.empty}>
+              <Ionicons
+                name="cloud-offline-outline"
+                size={48}
+                color="#C4B7A6"
+              />
+              <Text style={styles.emptyTitle}>{t('orders.loadFailed')}</Text>
+              <Text style={styles.emptyText}>{t('orders.tryAgain')}</Text>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.exploreButton,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={handleRefresh}
+                accessibilityRole="button"
+                disabled={refreshing}
+              >
+                {refreshing ? (
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.exploreButtonText}>
+                    {t('orders.retry')}
+                  </Text>
+                )}
+              </Pressable>
+            </View>
+          ) : (
+            <View style={styles.empty}>
+              <Ionicons name="receipt-outline" size={48} color="#C4B7A6" />
+              <Text style={styles.emptyTitle}>{t('orders.empty')}</Text>
+              <Text style={styles.emptyText}>{t('orders.emptyText')}</Text>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.exploreButton,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={handleExplore}
+              >
+                <Text style={styles.exploreButtonText}>
+                  {t('orders.exploreAfroeat')}
+                </Text>
+              </Pressable>
+            </View>
+          )
         }
       />
     </FadeInView>
@@ -621,6 +764,53 @@ const styles = StyleSheet.create({
     color: '#777777',
     textTransform: 'uppercase',
     letterSpacing: 0.3,
+  },
+
+  filtersScroll: {
+    marginBottom: 14,
+  },
+
+  filtersContent: {
+    flexDirection: 'row',
+    paddingRight: 4,
+  },
+
+  filterChip: {
+    minHeight: 42,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E8E0D7',
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    marginRight: 8,
+  },
+
+  filterChipSelected: {
+    backgroundColor: '#1F6F43',
+    borderColor: '#1F6F43',
+  },
+
+  filterChipText: {
+    color: '#555555',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+
+  filterChipTextSelected: {
+    color: '#FFFFFF',
+  },
+
+  filterCount: {
+    marginLeft: 7,
+    color: '#777777',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+
+  filterCountSelected: {
+    color: '#DDF4E6',
   },
 
   errorCard: {

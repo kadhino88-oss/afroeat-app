@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
+  AppState,
   ActivityIndicator,
   Alert,
-  AppState,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -24,17 +24,16 @@ import {
 
 export default function PayoutsScreen() {
   const { t } = useTranslation();
-  const auth = useAuth() || {};
-  const [countryCode, setCountryCode] = useState(String(auth.user?.countryCode || '').toUpperCase());
+  const auth = useAuth();
+  const [countryCode, setCountryCode] = useState(
+    String(auth.user?.countryCode || '').toUpperCase()
+  );
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [opening, setOpening] = useState(false);
 
   const loadStatus = useCallback(async () => {
-    if (!auth.token) {
-      setLoading(false);
-      return;
-    }
+    if (!auth.token) return;
     try {
       const result = await getStripeConnectStatus(auth.token);
       setStatus(result);
@@ -46,11 +45,15 @@ export default function PayoutsScreen() {
     }
   }, [auth.token, t]);
 
-  useFocusEffect(useCallback(() => { loadStatus(); }, [loadStatus]));
+  useFocusEffect(
+    useCallback(() => {
+      loadStatus();
+    }, [loadStatus])
+  );
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active') loadStatus();
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') loadStatus();
     });
     return () => subscription.remove();
   }, [loadStatus]);
@@ -82,7 +85,7 @@ export default function PayoutsScreen() {
     }
   };
 
-  const openDashboard = async () => {
+  const openStripeDashboard = async () => {
     try {
       setOpening(true);
       const result = await createStripeConnectDashboardLink(auth.token);
@@ -96,40 +99,46 @@ export default function PayoutsScreen() {
     }
   };
 
-  const accountReady = Boolean(status?.accountReady || status?.connected);
-  const statusLabel = accountReady && (status?.payoutsFeatureEnabled === false || status?.countryAllowed === false)
-    ? t('payouts.statusPlatformPaused')
-    : status?.connected
-      ? t('payouts.statusConnected')
-      : status?.detailsSubmitted
-        ? t('payouts.statusReview')
-        : t('payouts.statusIncomplete');
+  const statusLabel = status?.connected
+    ? t('payouts.statusConnected')
+    : status?.detailsSubmitted
+      ? t('payouts.statusReview')
+      : t('payouts.statusIncomplete');
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-      <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.back}>
-        <Ionicons name="arrow-back" size={21} color="#222" />
+      <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={21} color="#1E1E1E" />
       </Pressable>
+
       <Text style={styles.eyebrow}>AFROEAT</Text>
       <Text style={styles.title}>{t('payouts.title')}</Text>
       <Text style={styles.body}>{t('payouts.intro')}</Text>
 
-      <View style={styles.card}>
-        {loading ? <ActivityIndicator color="#1F6F43" /> : (
+      <View style={styles.statusCard}>
+        {loading ? (
+          <ActivityIndicator color="#1F6F43" />
+        ) : (
           <>
             <View style={styles.statusRow}>
-              <Ionicons name={status?.connected ? 'checkmark-circle' : 'time-outline'} size={23} color={status?.connected ? '#1F6F43' : '#A65D17'} />
+              <Ionicons
+                name={status?.connected ? 'checkmark-circle' : 'time-outline'}
+                size={23}
+                color={status?.connected ? '#1F6F43' : '#A65D17'}
+              />
               <Text style={styles.statusText}>{statusLabel}</Text>
             </View>
             {Number(status?.requirementsDueCount) > 0 && (
-              <Text style={styles.small}>{t('payouts.requirementsDue', { count: status.requirementsDueCount })}</Text>
+              <Text style={styles.bodySmall}>
+                {t('payouts.requirementsDue', { count: status.requirementsDueCount })}
+              </Text>
             )}
           </>
         )}
       </View>
 
-      {!accountReady && (
-        <View style={styles.card}>
+      {!status?.connected && (
+        <View style={styles.formCard}>
           <Text style={styles.label}>{t('payouts.countryLabel')}</Text>
           <TextInput
             value={countryCode}
@@ -143,30 +152,34 @@ export default function PayoutsScreen() {
             accessibilityLabel={t('payouts.countryLabel')}
             style={styles.input}
           />
-          <Text style={styles.small}>{t('payouts.countryHelp')}</Text>
+          <Text style={styles.bodySmall}>{t('payouts.countryHelp')}</Text>
         </View>
       )}
 
       <Pressable
         accessibilityRole="button"
-        disabled={loading || opening || accountReady}
+        disabled={loading || opening || Boolean(status?.connected)}
         onPress={startOnboarding}
-        style={({ pressed }) => [styles.primary, pressed && styles.pressed, (loading || opening || accountReady) && styles.disabled]}
+        style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed, (loading || opening || status?.connected) && styles.disabled]}
       >
-        {opening ? <ActivityIndicator color="#fff" /> : <Ionicons name="wallet-outline" size={19} color="#fff" />}
-        <Text style={styles.primaryText}>{status?.detailsSubmitted ? t('payouts.continueButton') : t('payouts.connectButton')}</Text>
+        {opening ? <ActivityIndicator color="#FFFFFF" /> : <Ionicons name="wallet-outline" size={19} color="#FFFFFF" />}
+        <Text style={styles.primaryButtonText}>
+          {status?.detailsSubmitted ? t('payouts.continueButton') : t('payouts.connectButton')}
+        </Text>
       </Pressable>
 
-      {accountReady && (
-        <Pressable accessibilityRole="link" disabled={opening} onPress={openDashboard} style={styles.link}>
+      {status?.connected && (
+        <Pressable accessibilityRole="link" disabled={opening} onPress={openStripeDashboard} style={styles.refreshButton}>
           <Ionicons name="open-outline" size={18} color="#1F6F43" />
-          <Text style={styles.linkText}>{t('payouts.manageButton')}</Text>
+          <Text style={styles.refreshText}>{t('payouts.manageButton')}</Text>
         </Pressable>
       )}
-      <Pressable accessibilityRole="button" disabled={loading || opening} onPress={loadStatus} style={styles.link}>
+
+      <Pressable accessibilityRole="button" disabled={loading || opening} onPress={loadStatus} style={styles.refreshButton}>
         <Ionicons name="refresh-outline" size={18} color="#1F6F43" />
-        <Text style={styles.linkText}>{t('payouts.refreshButton')}</Text>
+        <Text style={styles.refreshText}>{t('payouts.refreshButton')}</Text>
       </Pressable>
+
       <View style={styles.notice}>
         <Ionicons name="lock-closed-outline" size={19} color="#8A4B12" />
         <Text style={styles.noticeText}>{t('payouts.secureNotice')}</Text>
@@ -179,22 +192,23 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#FFF8F0' },
   content: { padding: 22, paddingBottom: 48 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFF8F0' },
-  back: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', marginBottom: 22 },
+  backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', marginBottom: 22 },
   eyebrow: { color: '#1F6F43', fontWeight: '900', letterSpacing: 1.2, marginBottom: 8 },
   title: { fontSize: 28, lineHeight: 34, color: '#1E1E1E', fontWeight: '900', marginBottom: 10 },
   body: { color: '#615D57', fontSize: 15, lineHeight: 22, marginBottom: 18 },
-  small: { color: '#6B655E', fontSize: 13, lineHeight: 19, marginTop: 8 },
-  card: { backgroundColor: '#fff', borderRadius: 16, padding: 18, marginBottom: 14 },
+  bodySmall: { color: '#6B655E', fontSize: 13, lineHeight: 19, marginTop: 8 },
+  statusCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 14, minHeight: 68, justifyContent: 'center' },
   statusRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  statusText: { color: '#22221F', fontSize: 16, fontWeight: '800', flex: 1 },
+  statusText: { color: '#22221F', fontSize: 16, fontWeight: '800' },
+  formCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 16 },
   label: { color: '#282621', fontWeight: '800', marginBottom: 8 },
   input: { borderWidth: 1, borderColor: '#DDD8D0', borderRadius: 11, minHeight: 50, paddingHorizontal: 14, fontSize: 16, color: '#22221F' },
-  primary: { minHeight: 54, borderRadius: 13, backgroundColor: '#1F6F43', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 16 },
-  primaryText: { color: '#fff', fontSize: 15, fontWeight: '900' },
+  primaryButton: { minHeight: 54, borderRadius: 13, backgroundColor: '#1F6F43', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 16 },
+  primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   disabled: { opacity: 0.55 },
   pressed: { opacity: 0.82 },
-  link: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 },
-  linkText: { color: '#1F6F43', fontWeight: '800' },
+  refreshButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 },
+  refreshText: { color: '#1F6F43', fontWeight: '800' },
   notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, backgroundColor: '#FFF1DD', borderRadius: 12, padding: 14, marginTop: 8 },
   noticeText: { flex: 1, color: '#6D4A1A', fontSize: 13, lineHeight: 19 },
 });

@@ -107,8 +107,7 @@ const normalizeRestaurant = (item) => {
       item?.deliveryFee !== undefined && item?.deliveryFee !== null
         ? normalizeNumber(item.deliveryFee, null)
         : null,
-    // Unknown opening status stays unknown; never infer that a restaurant is open.
-    isOpen: normalizeBoolean(item?.isOpen, null),
+    isOpen: normalizeBoolean(item?.isOpen, true) !== false,
     isFeatured: normalizeBoolean(item?.isFeatured, false) === true,
     owner: item?.owner || null,
     location: item?.location || null,
@@ -358,21 +357,26 @@ export const getMyRestaurant = async (token) => {
   return restaurant;
 };
 
-export const updateRestaurant = async (id, payload = {}, token) => {
+export const updateMyRestaurant = async (id, payload, token) => {
   const normalizedId = normalizeText(id);
-  if (!normalizedId) throw new Error('Identifiant restaurant manquant.');
-  if (!normalizeText(token)) throw new Error('Token requis pour modifier le restaurant.');
-
-  const endpoint = API_ENDPOINTS?.restaurants?.byId;
-  if (typeof endpoint !== 'function') {
-    throw new Error('Endpoint de modification restaurant introuvable.');
+  if (!normalizedId || !normalizeText(token)) {
+    throw new Error('Identifiant restaurant et session requis.');
   }
 
-  const data = await apiPut(endpoint(normalizedId), payload, token);
+  const endpoint = getRestaurantByIdEndpoint(normalizedId);
+  const data = await apiPut(endpoint, payload, token);
   const restaurant = normalizeSingleRestaurantResponse(data);
-  if (!restaurant?._id) throw new Error('La modification du restaurant n’a pas été confirmée.');
+
+  if (!restaurant?._id) {
+    throw new Error('Impossible de mettre à jour le restaurant.');
+  }
+
   return restaurant;
 };
+
+// Nom utilisé par l'écran des réglages du restaurant (même comportement).
+export const updateRestaurant = (id, payload = {}, token) =>
+  updateMyRestaurant(id, payload, token);
 
 /**
  * =========================================================

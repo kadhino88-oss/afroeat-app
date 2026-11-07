@@ -250,42 +250,63 @@ const request = async (
     isJson = true,
     headers = {},
     timeout = DEFAULT_TIMEOUT,
+    retries = method === 'GET' ? 1 : 0,
   } = {}
 ) => {
   const url = buildUrl(endpoint);
-  const { signal, clear } = createTimeoutSignal(timeout);
+  const maxRetries = Math.max(0, Math.min(1, Number(retries) || 0));
+  let attempt = 0;
 
-  try {
-    const options = {
-      method,
-      headers: buildHeaders(token, isJson, headers),
-      signal,
-    };
+  while (true) {
+    const { signal, clear } = createTimeoutSignal(timeout);
 
-    if (body !== null && body !== undefined) {
-      options.body = isJson ? JSON.stringify(body) : body;
-    }
+    try {
+      const options = {
+        method,
+        headers: buildHeaders(token, isJson, headers),
+        signal,
+      };
 
-    const response = await fetch(url, options);
-    return await handleResponse(response);
-  } catch (error) {
-    if (error?.name === 'AbortError') {
-      throw new Error('La requête a expiré. Vérifie ta connexion et réessaie.');
-    }
+      if (body !== null && body !== undefined) {
+        options.body = isJson ? JSON.stringify(body) : body;
+      }
 
-    if (
-      error?.message === 'Network request failed' ||
-      error?.message?.toLowerCase?.().includes('network') ||
-      error?.message?.toLowerCase?.().includes('failed to fetch')
-    ) {
-      throw new Error(
-        'Impossible de contacter le serveur. Vérifie ta connexion.'
+      const response = await fetch(url, options);
+      return await handleResponse(response);
+    } catch (error) {
+      const isTimeout = error?.name === 'AbortError';
+      const errorMessage = error?.message?.toLowerCase?.() || '';
+      const isNetworkFailure =
+        errorMessage === 'network request failed' ||
+        errorMessage.includes('failed to fetch') ||
+        errorMessage.includes('network');
+      const isTransientServerError = [502, 503, 504].includes(
+        Number(error?.status)
       );
-    }
 
-    throw error;
-  } finally {
-    clear();
+      if (
+        (isTimeout || isNetworkFailure || isTransientServerError) &&
+        attempt < maxRetries
+      ) {
+        attempt += 1;
+        await new Promise((resolve) => setTimeout(resolve, 300 * attempt));
+        continue;
+      }
+
+      if (isTimeout) {
+        throw new Error('La requête a expiré. Vérifie ta connexion et réessaie.');
+      }
+
+      if (isNetworkFailure) {
+        throw new Error(
+          'Impossible de contacter le serveur. Vérifie ta connexion.'
+        );
+      }
+
+      throw error;
+    } finally {
+      clear();
+    }
   }
 };
 

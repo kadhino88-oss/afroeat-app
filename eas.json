@@ -4,18 +4,28 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_APP_ENV": "development"
+        "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
       }
     },
     "preview": {
+      "environment": "preview",
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_APP_ENV": "preview"
+        "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
+        "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "true",
+        "EXPO_PUBLIC_ENABLE_APPLE_PAY": "true",
+        "EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER": "merchant.com.afroeat"
       }
     },
     "production": {
+      "environment": "production",
+      "distribution": "store",
+      "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_APP_ENV": "production"
+        "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
+        "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "true",
+        "EXPO_PUBLIC_ENABLE_APPLE_PAY": "true",
+        "EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER": "merchant.com.afroeat"
       }
     }
   }

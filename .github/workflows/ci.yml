@@ -18,7 +18,7 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
       - name: Validate Expo SDK dependency compatibility
         run: npx expo install --check
       - name: Audit production dependencies for high and critical vulnerabilities

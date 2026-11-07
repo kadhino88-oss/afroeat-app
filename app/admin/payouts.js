@@ -4,7 +4,6 @@ import {
   Alert,
   Pressable,
   RefreshControl,
-  Redirect,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { router, useFocusEffect } from 'expo-router';
+import { Redirect, router, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { useAuth } from '../../context/AuthContext';
@@ -24,14 +23,11 @@ import {
 
 const formatMoney = (amount, currency) => {
   const value = Number(amount);
-  if (!Number.isFinite(value)) return String(amount || 0) + ' ' + String(currency || '');
+  if (!Number.isFinite(value)) return String(amount || 0) + ' ' + currency;
   try {
-    return new Intl.NumberFormat(undefined, {
-      style: 'currency',
-      currency: String(currency || 'EUR').toUpperCase(),
-    }).format(value);
+    return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(value);
   } catch {
-    return value.toFixed(2) + ' ' + String(currency || 'EUR');
+    return value.toFixed(2) + ' ' + currency;
   }
 };
 
@@ -40,69 +36,60 @@ export default function AdminPayoutsScreen() {
   const auth = useAuth() || {};
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [busyId, setBusyId] = useState('');
-  const [notes, setNotes] = useState({});
+  const [retryingId, setRetryingId] = useState('');
+  const [resolutionNotes, setResolutionNotes] = useState({});
 
-  const loadOrders = useCallback(async (isRefresh = false) => {
-    if (!auth.token) {
-      setLoading(false);
-      return;
-    }
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
+  const loadOrders = useCallback(async () => {
+    if (!auth.token) return;
     try {
+      setLoading(true);
       const result = await getPayoutReconciliation(auth.token);
       setOrders(Array.isArray(result?.orders) ? result.orders : []);
     } catch (error) {
       Alert.alert(t('common.error'), error?.message || t('payouts.reconciliationLoadError'));
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, [auth.token, t]);
 
   useFocusEffect(useCallback(() => { loadOrders(); }, [loadOrders]));
 
-  if (auth.loading) {
-    return <View style={styles.center}><ActivityIndicator size="large" color="#5A32A3" /></View>;
-  }
+  if (auth.loading) return <View style={styles.center}><ActivityIndicator color="#5A32A3" size="large" /></View>;
   if (!auth.isAuthenticated || !auth.token) return <Redirect href="/auth/login?role=admin" />;
-  if (!['admin', 'administrator', 'superadmin', 'super-admin'].includes(String(auth.role || auth.user?.role || '').toLowerCase())) {
-    return <Redirect href="/(tabs)" />;
-  }
+  if (String(auth.role || auth.user?.role || '').toLowerCase() !== 'admin') return <Redirect href="/(tabs)" />;
 
   const retry = async (orderId) => {
     try {
-      setBusyId(orderId);
+      setRetryingId(orderId);
       const result = await retryPayoutReconciliation(orderId, auth.token);
-      Alert.alert('AFROEAT', result?.success ? t('payouts.retryDone') : t('payouts.retryFailed'));
-      await loadOrders(true);
+      if (result?.success) {
+        Alert.alert(t('payouts.reconciliationTitle'), t('payouts.retryDone'));
+      } else {
+        Alert.alert(t('payouts.reconciliationTitle'), t('payouts.retryFailed'));
+      }
+      await loadOrders();
     } catch (error) {
-      Alert.alert(t('common.error'), error?.message || t('payouts.retryFailed'));
-      await loadOrders(true);
+      Alert.alert(t('payouts.reconciliationTitle'), error?.message || t('payouts.retryFailed'));
     } finally {
-      setBusyId('');
+      setRetryingId('');
     }
   };
 
   const resolve = async (orderId) => {
-    const note = String(notes[orderId] || '').trim();
-    if (note.length < 10 || note.length > 500) {
-      Alert.alert(t('common.error'), t('payouts.resolutionNoteError'));
+    const note = String(resolutionNotes[orderId] || '').trim();
+    if (note.length < 10) {
+      Alert.alert(t('payouts.reconciliationTitle'), t('payouts.resolutionNoteError'));
       return;
     }
     try {
-      setBusyId(orderId);
+      setRetryingId(orderId);
       await resolvePayoutReconciliation(orderId, note, auth.token);
-      setNotes((current) => ({ ...current, [orderId]: '' }));
-      Alert.alert('AFROEAT', t('payouts.retryDone'));
-      await loadOrders(true);
+      setResolutionNotes((previous) => ({ ...previous, [orderId]: '' }));
+      await loadOrders();
     } catch (error) {
-      Alert.alert(t('common.error'), error?.message || t('payouts.retryFailed'));
-      await loadOrders(true);
+      Alert.alert(t('payouts.reconciliationTitle'), error?.message || t('payouts.retryFailed'));
     } finally {
-      setBusyId('');
+      setRetryingId('');
     }
   };
 
@@ -110,67 +97,59 @@ export default function AdminPayoutsScreen() {
     <ScrollView
       style={styles.screen}
       contentContainerStyle={styles.content}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => loadOrders(true)} />}
+      refreshControl={<RefreshControl refreshing={loading && orders.length > 0} onRefresh={loadOrders} />}
     >
-      <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.back}>
-        <Ionicons name="arrow-back" size={21} color="#28212F" />
+      <Pressable onPress={() => router.back()} style={styles.backButton} accessibilityRole="button">
+        <Ionicons name="arrow-back" size={21} color="#1E1E1E" />
       </Pressable>
       <Text style={styles.eyebrow}>AFROEAT · ADMIN</Text>
       <Text style={styles.title}>{t('payouts.reconciliationTitle')}</Text>
       <Text style={styles.subtitle}>{t('payouts.reconciliationSubtitle')}</Text>
 
-      {loading ? <ActivityIndicator size="large" color="#5A32A3" /> : orders.length === 0 ? (
-        <View style={styles.empty}>
-          <Ionicons name="checkmark-circle-outline" size={30} color="#1F6F43" />
+      {loading && orders.length === 0 ? (
+        <ActivityIndicator color="#5A32A3" size="large" style={styles.loader} />
+      ) : orders.length === 0 ? (
+        <View style={styles.emptyCard}>
+          <Ionicons name="checkmark-circle-outline" size={32} color="#1F6F43" />
           <Text style={styles.emptyText}>{t('payouts.reconciliationEmpty')}</Text>
         </View>
-      ) : orders.map((order) => {
-        const orderId = String(order.orderId || order._id || '');
-        const busy = busyId === orderId;
-        return (
-          <View key={orderId} style={styles.card}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.orderId} numberOfLines={1}>{orderId}</Text>
-              <Text style={styles.amount}>{formatMoney(order.totalPrice, order.currency)}</Text>
-            </View>
-            <Text style={styles.meta}>{order.paymentMethod || '—'} · {order.paymentStatus || '—'} · {order.status || '—'}</Text>
-            {!!order.reason && <Text style={styles.reason}>{order.reason}</Text>}
-
-            <Pressable
-              accessibilityRole="button"
-              disabled={busy}
-              onPress={() => retry(orderId)}
-              style={({ pressed }) => [styles.primary, pressed && styles.pressed, busy && styles.disabled]}
-            >
-              {busy ? <ActivityIndicator color="#fff" /> : <Ionicons name="refresh-outline" size={18} color="#fff" />}
-              <Text style={styles.primaryText}>{t('payouts.reconciliationRetry')}</Text>
-            </Pressable>
-
-            <TextInput
-              value={notes[orderId] || ''}
-              onChangeText={(value) => setNotes((current) => ({ ...current, [orderId]: value.slice(0, 500) }))}
-              multiline
-              maxLength={500}
-              placeholder={t('payouts.resolutionNotePlaceholder')}
-              placeholderTextColor="#8A8494"
-              style={styles.note}
-              accessibilityLabel={t('payouts.resolutionNotePlaceholder')}
-            />
-            <Pressable
-              accessibilityRole="button"
-              disabled={busy}
-              onPress={() => resolve(orderId)}
-              style={({ pressed }) => [styles.secondary, pressed && styles.pressed, busy && styles.disabled]}
-            >
-              <Text style={styles.secondaryText}>{t('payouts.reconciliationResolve')}</Text>
-            </Pressable>
+      ) : orders.map((order) => (
+        <View key={order.orderId} style={styles.card}>
+          <View style={styles.cardTop}>
+            <Text style={styles.orderId}>{t('payouts.orderRef')} {order.orderId.slice(-8).toUpperCase()}</Text>
+            <Text style={styles.amount}>{formatMoney(order.totalPrice, order.currency)}</Text>
           </View>
-        );
-      })}
-      <Pressable accessibilityRole="button" disabled={loading || refreshing} onPress={() => loadOrders(true)} style={styles.refresh}>
-        <Ionicons name="refresh-outline" size={18} color="#5A32A3" />
-        <Text style={styles.refreshText}>{t('payouts.refreshButton')}</Text>
-      </Pressable>
+          <Text style={styles.reason}>{order.reason || t('payouts.retryFailed')}</Text>
+          <Text style={styles.meta}>{order.status} · {order.paymentStatus} · {order.payoutStatus}</Text>
+          <TextInput
+            value={resolutionNotes[order.orderId] || ''}
+            onChangeText={(value) => setResolutionNotes((previous) => ({ ...previous, [order.orderId]: value }))}
+            placeholder={t('payouts.resolutionNotePlaceholder')}
+            placeholderTextColor="#8C8984"
+            multiline
+            maxLength={500}
+            editable={retryingId !== order.orderId}
+            style={styles.noteInput}
+          />
+          <Pressable
+            accessibilityRole="button"
+            disabled={retryingId === order.orderId}
+            onPress={() => retry(order.orderId)}
+            style={({ pressed }) => [styles.retryButton, pressed && styles.pressed, retryingId === order.orderId && styles.disabled]}
+          >
+            {retryingId === order.orderId ? <ActivityIndicator color="#FFFFFF" /> : <Ionicons name="refresh-outline" size={17} color="#FFFFFF" />}
+            <Text style={styles.retryText}>{t('payouts.reconciliationRetry')}</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            disabled={retryingId === order.orderId}
+            onPress={() => resolve(order.orderId)}
+            style={styles.resolveButton}
+          >
+            <Text style={styles.resolveText}>{t('payouts.reconciliationResolve')}</Text>
+          </Pressable>
+        </View>
+      ))}
     </ScrollView>
   );
 }
@@ -178,26 +157,25 @@ export default function AdminPayoutsScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#F7F4FB' },
   content: { padding: 20, paddingBottom: 48 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F4FB' },
-  back: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', marginBottom: 20 },
-  eyebrow: { color: '#5A32A3', fontSize: 11, letterSpacing: 1.1, fontWeight: '900', marginBottom: 8 },
-  title: { color: '#2B2238', fontSize: 25, lineHeight: 31, fontWeight: '900', marginBottom: 8 },
-  subtitle: { color: '#665D72', fontSize: 14, lineHeight: 20, marginBottom: 18 },
-  empty: { backgroundColor: '#fff', borderRadius: 16, padding: 24, alignItems: 'center', gap: 10 },
-  emptyText: { color: '#3E3748', textAlign: 'center', fontWeight: '700' },
-  card: { backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 14 },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
-  orderId: { color: '#4C4359', fontSize: 12, flex: 1, fontWeight: '700' },
-  amount: { color: '#2B2238', fontWeight: '900', fontSize: 15 },
-  meta: { color: '#777083', fontSize: 12, marginTop: 8, marginBottom: 10 },
-  reason: { color: '#8D3B2F', fontSize: 13, lineHeight: 18, marginBottom: 12 },
-  primary: { minHeight: 45, borderRadius: 11, backgroundColor: '#5A32A3', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 12 },
-  primaryText: { color: '#fff', fontWeight: '800' },
-  note: { borderWidth: 1, borderColor: '#DDD6E8', borderRadius: 10, minHeight: 72, padding: 10, color: '#2B2238', marginTop: 12, textAlignVertical: 'top' },
-  secondary: { borderWidth: 1, borderColor: '#5A32A3', minHeight: 42, borderRadius: 10, alignItems: 'center', justifyContent: 'center', marginTop: 8, paddingHorizontal: 12 },
-  secondaryText: { color: '#5A32A3', fontWeight: '800', fontSize: 13 },
-  refresh: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8, minHeight: 46 },
-  refreshText: { color: '#5A32A3', fontWeight: '800' },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F7F4FB' },
+  backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center', marginBottom: 18 },
+  eyebrow: { color: '#5A32A3', fontSize: 12, fontWeight: '900', letterSpacing: 1, marginBottom: 8 },
+  title: { color: '#211B2D', fontSize: 26, fontWeight: '900', marginBottom: 6 },
+  subtitle: { color: '#625D69', fontSize: 14, lineHeight: 21, marginBottom: 18 },
+  loader: { marginTop: 34 },
+  emptyCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 22, alignItems: 'center', gap: 10 },
+  emptyText: { color: '#33303A', textAlign: 'center', fontWeight: '700' },
+  card: { backgroundColor: '#FFFFFF', borderRadius: 15, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#E9E3F1' },
+  cardTop: { flexDirection: 'row', justifyContent: 'space-between', gap: 8, marginBottom: 10 },
+  orderId: { color: '#393244', fontWeight: '900' },
+  amount: { color: '#1F6F43', fontWeight: '900' },
+  reason: { color: '#582D2D', fontSize: 14, lineHeight: 20, marginBottom: 8 },
+  meta: { color: '#77717D', fontSize: 12, marginBottom: 14 },
+  retryButton: { backgroundColor: '#5A32A3', borderRadius: 10, minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  retryText: { color: '#FFFFFF', fontWeight: '800' },
+  noteInput: { borderWidth: 1, borderColor: '#DDD8E5', borderRadius: 10, minHeight: 76, padding: 11, color: '#282621', marginBottom: 10, textAlignVertical: 'top' },
+  resolveButton: { minHeight: 42, alignItems: 'center', justifyContent: 'center', marginTop: 4 },
+  resolveText: { color: '#5A32A3', fontWeight: '800' },
+  pressed: { opacity: 0.8 },
   disabled: { opacity: 0.55 },
-  pressed: { opacity: 0.82 },
 });

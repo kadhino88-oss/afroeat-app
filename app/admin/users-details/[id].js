@@ -263,7 +263,7 @@ export default function AdminUserDetailsScreen() {
   const params = useLocalSearchParams();
   const userId = getSafeParam(params?.id);
 
-  const auth = useAuth() || {};
+  const auth = useAuth();
   const token = auth.token;
   const role = auth.role;
   const currentUser = auth.user ?? null;
@@ -357,12 +357,17 @@ export default function AdminUserDetailsScreen() {
       return;
     }
 
-    const nextStatus =
-      user.accountStatus === 'suspended' ? 'active' : 'suspended';
-    const actionLabel =
-      nextStatus === 'active'
-        ? t('admin.users.reactivateAction')
-        : t('admin.users.suspendAction');
+    const currentStatus = normalizeText(user?.accountStatus).toLowerCase();
+    const shouldActivate = ['pending_verification', 'rejected', 'suspended'].includes(currentStatus);
+    const nextStatus = shouldActivate ? 'active' : 'suspended';
+    const isPendingPartner =
+      ['pending_verification', 'rejected'].includes(currentStatus) &&
+      ['restaurant', 'livreur'].includes(user?.role);
+    const actionLabel = shouldActivate
+      ? isPendingPartner
+        ? t('admin.userDetails.activatePartnerButton')
+        : t('admin.users.reactivateAction')
+      : t('admin.users.suspendAction');
     const identity = normalizeText(user?.name, user?.email || t('admin.users.defaultAccountIdentity'));
 
     Alert.alert(
@@ -562,6 +567,14 @@ export default function AdminUserDetailsScreen() {
             label={t('admin.userDetails.roleFieldLabel')}
             value={getRoleLabel(user?.role, t)}
           />
+          {user?.role === 'restaurant' &&
+          normalizeText(user?.restaurantProfile?.businessName) ? (
+            <InfoRow
+              icon="storefront-outline"
+              label={t('auth.registerRestaurant.restaurantNameLabel')}
+              value={normalizeText(user.restaurantProfile.businessName)}
+            />
+          ) : null}
           <InfoRow
             icon="shield-checkmark-outline"
             label={t('admin.userDetails.accountStatusFieldLabel')}
@@ -627,7 +640,9 @@ export default function AdminUserDetailsScreen() {
           <Pressable
             style={[
               styles.primaryButton,
-              user?.accountStatus === 'suspended' && styles.successButton,
+              ['suspended', 'pending_verification', 'rejected'].includes(
+                normalizeText(user?.accountStatus).toLowerCase()
+              ) && styles.successButton,
             ]}
             onPress={toggleStatus}
             disabled={updating}
@@ -638,7 +653,9 @@ export default function AdminUserDetailsScreen() {
               <>
                 <Ionicons
                   name={
-                    user?.accountStatus === 'suspended'
+                    ['suspended', 'pending_verification', 'rejected'].includes(
+                      normalizeText(user?.accountStatus).toLowerCase()
+                    )
                       ? 'checkmark-circle-outline'
                       : 'ban-outline'
                   }
@@ -646,9 +663,13 @@ export default function AdminUserDetailsScreen() {
                   color="#111111"
                 />
                 <Text style={styles.primaryButtonText}>
-                  {user?.accountStatus === 'suspended'
-                    ? t('admin.userDetails.reactivateAccountButton')
-                    : t('admin.userDetails.suspendAccountButton')}
+                  {['pending_verification', 'rejected'].includes(
+                    normalizeText(user?.accountStatus).toLowerCase()
+                  ) && ['restaurant', 'livreur'].includes(user?.role)
+                    ? t('admin.userDetails.activatePartnerButton')
+                    : user?.accountStatus === 'suspended'
+                      ? t('admin.userDetails.reactivateAccountButton')
+                      : t('admin.userDetails.suspendAccountButton')}
                 </Text>
               </>
             )}
