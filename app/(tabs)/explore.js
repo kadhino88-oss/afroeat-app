@@ -21,7 +21,7 @@ import PlaceBrandMark from '../../components/PlaceBrandMark';
 import { getAllMenuItems } from '../../services/menuService';
 import { getNearbyPlaces } from '../../services/placeService';
 import { matchesAfricanPlaceSearch } from '../../services/placeSearch';
-import { getNearbyRestaurants } from '../../services/restaurantService';
+import { getAllRestaurants, searchRestaurants, getNearbyRestaurants } from '../../services/restaurantService';
 import {
   DEFAULT_NEARBY_CENTER,
   DEFAULT_NEARBY_RADIUS,
@@ -116,9 +116,24 @@ const FILTERS = [
   'Marocaine',
   'Algérienne',
   'Tunisienne',
-  'Épicerie',
-  'Boutique',
+  'Nigériane',
+  'Ghanéenne',
+  'Éthiopienne',
+  'Sud-africaine',
+  'Afrique de l’Est',
+  'Afrique de l’Ouest',
+  'Afrique centrale',
+  'Afrique du Nord',
+  'Afrique australe',
   'Fast-food',
+  'Pizza',
+  'Burgers',
+  'Tacos',
+  'Grillades',
+  'Cuisine internationale',
+  'Épicerie',
+  'Boissons',
+  'Boutique',
   'Salon afro',
 ];
 
@@ -131,6 +146,10 @@ const AFRICAN_CUISINE_FILTERS = [
   'Marocaine',
   'Algérienne',
   'Tunisienne',
+  'Nigériane',
+  'Ghanéenne',
+  'Éthiopienne',
+  'Sud-africaine',
 ];
 
 // Valeurs FILTERS en francais (cles de filtre) ; slug pour affichage traduit.
@@ -145,8 +164,23 @@ const FILTER_SLUG_BY_LABEL = {
   Marocaine: 'marocaine',
   Algérienne: 'algerienne',
   Tunisienne: 'tunisienne',
+  'Nigériane': 'nigeriane',
+  'Ghanéenne': 'ghaneenne',
+  'Éthiopienne': 'ethiopienne',
+  'Sud-africaine': 'sudafricaine',
+  'Afrique de l’Est': 'estafricaine',
+  'Afrique de l’Ouest': 'ouestafricaine',
+  'Afrique centrale': 'afriquecentrale',
+  'Afrique du Nord': 'afriquedunord',
+  'Afrique australe': 'afriqueaustrale',
   Épicerie: 'epicerie',
+  Boissons: 'boissons',
   Boutique: 'boutique',
+  'Pizza': 'pizza',
+  'Burgers': 'burgers',
+  'Tacos': 'tacos',
+  'Grillades': 'grillades',
+  'Cuisine internationale': 'internationale',
   'Fast-food': 'fastFood',
   'Salon afro': 'africanSalon',
 };
@@ -190,6 +224,9 @@ const resolveExploreFilter = (value) => {
     'restaurants africains': 'Africaine',
     restaurants: 'Africaine',
     restaurant: 'Africaine',
+    groceries: 'Épicerie',
+    drinks: 'Boissons',
+    shops: 'Boutique',
     'epiceries africaines': 'Épicerie',
     'epicerie africaine': 'Épicerie',
     epiceries: 'Épicerie',
@@ -202,6 +239,104 @@ const resolveExploreFilter = (value) => {
   };
   if (aliases[normalized]) return aliases[normalized];
   return FILTERS.find((filter) => normalizeSearch(filter) === normalized) || 'Tous';
+};
+
+// ---------------------------------------------------------------------------
+// Règles de correspondance des filtres (reprises de la version GitHub).
+// Les métadonnées réelles du partenaire restent la source de vérité : on ne
+// déduit aucune catégorie pour l'affichage, on rend seulement le filtre choisi
+// par le client plus tolérant (pluriels, variantes FR/EN, pays et régions).
+// ---------------------------------------------------------------------------
+const FAST_FOOD_TERMS = [
+    'fast food', 'fast-food', 'burger', 'hamburger', 'pizza', 'tacos',
+    'fried chicken', 'poulet frit', 'sandwich', 'kebab', 'shawarma',
+    'snack', 'hot dog', 'wrap',
+  ];
+
+const AFRICAN_REGION_TERMS = {
+    'afrique de l est': [
+      'est-afric', 'east african', 'ethiop', 'kenyan', 'kenya', 'tanzan', 'tanzania',
+      'somali', 'somalia', 'ougand', 'uganda', 'rwand', 'burund', 'eritrea',
+      'djibouti', 'sudan', 'sudanais', 'south sudan', 'malgache', 'madagascar',
+      'seychell', 'comor', 'maurice', 'mauritian',
+    ],
+    'afrique de l ouest': [
+      'ouest-afric', 'west african', 'nigerian', 'nigeria', 'ghan', 'senegal',
+      'ivoir', 'cote d ivoire', 'mali', 'malien', 'benin', 'beninois', 'togo',
+      'togolais', 'burkina', 'burkinabe', 'guine', 'guinea', 'sierra leone',
+      'liberia', 'liberien', 'gambia', 'gambian', 'mauritania', 'mauritanien',
+      'nigerien', 'cape verde', 'cap verdien',
+    ],
+    'afrique du nord': [
+      'north african', 'north africa', 'maghrebi', 'maghreb', 'maroc', 'moroccan', 'marocaine',
+      'alger', 'algerian', 'algerienne', 'tunisi', 'tunisian', 'egypt', 'egyptian', 'egyptien',
+      'libya', 'libyan', 'libyen', 'western sahara', 'sahara occidental',
+    ],
+    'afrique australe': [
+      'southern african', 'southern africa', 'south african', 'south africa', 'sud-afric', 'sud afric',
+      'namib', 'botswana', 'zimbabwe', 'zambia', 'zambian', 'mozambique', 'mozambicain',
+      'malawi', 'lesotho', 'eswatini', 'swazi', 'madagascar', 'malgache', 'maurice', 'mauritian',
+    ],
+    'afrique centrale': [
+      'central african', 'cameroun', 'cameroon', 'congo', 'congolais', 'gabon',
+      'gabonaise', 'tchad', 'chad', 'centrafric', 'central african republic',
+      'guinee equatoriale', 'equatorial guinea', 'sao tome', 'angola', 'angolais',
+      'rdc', 'republique democratique du congo',
+    ],
+  };
+
+const matchesExtendedFilter = (normalizedFilter, item) => {
+  const cuisineText = normalizeSearch([
+    item?.cuisine,
+    ...(Array.isArray(item?.categories) ? item.categories : []),
+    item?.category,
+    item?.type,
+    item?.businessType,
+    item?.storeType,
+    item?.name,
+    item?.description,
+  ].filter(Boolean).join(' '));
+  const includesAny = (terms) =>
+    terms.some((term) => cuisineText.includes(normalizeSearch(term)));
+
+  const matchesFastFood = normalizedFilter === 'fast-food' && includesAny(FAST_FOOD_TERMS);
+  const beverageTerms = [
+    'boisson', 'beverage', 'drink', 'juice', 'jus', 'smoothie', 'cocktail',
+    'coffee', 'cafe', 'tea', 'the', 'soda', 'water', 'eau', 'milkshake',
+  ];
+  const matchesBeverages = normalizedFilter === 'boissons' && includesAny(beverageTerms);
+  const matchesGroceries =
+    normalizedFilter === 'epicerie' &&
+    includesAny(['grocery', 'groceries', 'epicerie', 'épicerie', 'market', 'supermarket', 'alimentaire']);
+  const matchesShops =
+    normalizedFilter === 'boutique' &&
+    includesAny(['shop', 'store', 'boutique', 'marketplace']);
+  const regionKey = normalizedFilter.replace(/[’']/g, '').replace(/\s+/g, ' ');
+  const matchesAfricanRegion = includesAny(AFRICAN_REGION_TERMS[regionKey] || []);
+  const countryCuisineTerms = {
+    malienne: ['malian', 'mali', 'malienne', 'malien'],
+    algerienne: ['algerian', 'algeria', 'algerienne', 'algerien', 'algérienne'],
+    tunisienne: ['tunisian', 'tunisia', 'tunisienne', 'tunisien'],
+  };
+  const matchesCountryCuisine = includesAny(countryCuisineTerms[normalizedFilter] || []);
+  const categoryTerms = {
+    pizza: ['pizza', 'pizzeria'],
+    burgers: ['burger', 'burgers', 'hamburger', 'cheeseburger'],
+    tacos: ['taco', 'tacos', 'tacos français'],
+    grillades: ['grillade', 'grillades', 'grill', 'grilled', 'barbecue', 'bbq', 'braisé', 'braise'],
+    internationale: ['international', 'world cuisine', 'fusion', 'cuisine du monde'],
+  };
+  const matchesCuisineFormat = includesAny(categoryTerms[normalizedFilter] || []);
+
+  return (
+    matchesFastFood ||
+    matchesCuisineFormat ||
+    matchesBeverages ||
+    matchesGroceries ||
+    matchesShops ||
+    matchesAfricanRegion ||
+    matchesCountryCuisine
+  );
 };
 
 const normalizeNumber = (value, fallback = 0) => {
@@ -300,7 +435,7 @@ const normalizeRestaurant = (item = {}) => {
   const rawId =
     item?._id || item?.id || item?.restaurantId || item?.slug || '';
 
-  const cuisine = normalizeText(item?.cuisine, 'Cuisine africaine');
+  const cuisine = normalizeText(item?.cuisine, 'Cuisine à préciser');
   const city = normalizeText(item?.city);
   const country = normalizeText(item?.country);
   const address = normalizeText(
@@ -315,7 +450,7 @@ const normalizeRestaurant = (item = {}) => {
     ...item,
     _id: normalizeText(rawId),
     id: normalizeText(item?.id || rawId),
-    name: normalizeText(item?.name, 'Restaurant africain'),
+    name: normalizeText(item?.name, 'Restaurant'),
     cuisine,
     address,
     image,
@@ -632,6 +767,47 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
     }
   }, [getSearchCoordinates]);
 
+  // Épiceries, boissons et boutiques : filtrées côté serveur (par type de commerce),
+  // avec repli sur la liste complète si le serveur ne sait pas filtrer.
+  const [categoryRestaurants, setCategoryRestaurants] = useState(null);
+  const loadCategoryRestaurants = useCallback(async () => {
+    const businessTypeByFilter = {
+      'Épicerie': 'grocery',
+      'Boissons': 'drinks',
+      'Boutique': 'shop',
+    };
+    const businessType = businessTypeByFilter[activeFilter];
+    if (!businessType) {
+      setCategoryRestaurants(null);
+      return;
+    }
+
+    try {
+      let data;
+      try {
+        data = await searchRestaurants({ businessType, token: tokenRef.current });
+      } catch {
+        data = await getAllRestaurants(tokenRef.current);
+      }
+      setCategoryRestaurants(
+        extractRestaurantsFromResponse(data)
+          .map((item) => normalizeRestaurant(item))
+          .filter((item) => item?._id)
+      );
+    } catch (error) {
+      console.log('Erreur explore catégorie :', error);
+      setCategoryRestaurants(null);
+    }
+  }, [activeFilter]);
+
+  useEffect(() => {
+    if (redirectPath) return undefined;
+    const categoryTimer = setTimeout(() => {
+      loadCategoryRestaurants();
+    }, 0);
+    return () => clearTimeout(categoryTimer);
+  }, [loadCategoryRestaurants, redirectPath]);
+
   useEffect(() => {
     if (redirectPath) return undefined;
 
@@ -673,11 +849,12 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
   );
 
   const directoryItems = useMemo(() => {
+    const partners = categoryRestaurants ?? restaurants;
     const uniquePublicPlaces = publicPlaces.filter(
-      (place) => !restaurants.some((partner) => isSameDirectoryPlace(partner, place))
+      (place) => !partners.some((partner) => isSameDirectoryPlace(partner, place))
     );
-    return [...restaurants, ...uniquePublicPlaces];
-  }, [publicPlaces, restaurants]);
+    return [...partners, ...uniquePublicPlaces];
+  }, [publicPlaces, restaurants, categoryRestaurants]);
 
   const filteredRestaurants = useMemo(() => {
     const normalizedFilter = normalizeSearch(activeFilter);
@@ -699,7 +876,8 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           (normalizedFilter === 'epicerie' && item?.category === 'african-grocery') ||
           (normalizedFilter === 'boutique' && ['african-business', 'african-salon'].includes(item?.category)) ||
           (normalizedFilter === 'fast-food' && item?.category === 'african-fast-food') ||
-          (normalizedFilter === 'salon afro' && item?.category === 'african-salon');
+          (normalizedFilter === 'salon afro' && item?.category === 'african-salon') ||
+          matchesExtendedFilter(normalizedFilter, item);
         const matchesAvailability =
           !openOnly || (!isPublicDirectoryPlace(item) && item?.isOpen === true);
 

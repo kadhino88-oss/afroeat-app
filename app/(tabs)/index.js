@@ -42,19 +42,25 @@ const CATEGORIES = [
     id: '1',
     titleKey: 'explore.restaurants',
     icon: 'silverware-fork-knife',
-    route: '/(tabs)/explore',
+    route: '/(tabs)/explore?category=restaurants',
   },
   {
     id: '2',
     titleKey: 'home.categories.groceries',
     icon: 'cart-outline',
-    route: '/(tabs)/explore',
+    route: '/(tabs)/explore?category=groceries',
   },
   {
     id: '3',
+    titleKey: 'home.categories.drinks',
+    icon: 'cup-outline',
+    route: '/(tabs)/explore?category=drinks',
+  },
+  {
+    id: '4',
     titleKey: 'home.categories.shops',
     icon: 'shopping-outline',
-    route: '/(tabs)/explore',
+    route: '/(tabs)/explore?category=shops',
   },
 ];
 
@@ -68,6 +74,21 @@ const CUISINES = [
   'Marocaine',
   'Algérienne',
   'Tunisienne',
+  'Nigériane',
+  'Ghanéenne',
+  'Éthiopienne',
+  'Sud-africaine',
+  'Afrique de l’Est',
+  'Afrique de l’Ouest',
+  'Afrique centrale',
+  'Afrique du Nord',
+  'Afrique australe',
+  'Fast-food',
+  'Pizza',
+  'Burgers',
+  'Tacos',
+  'Grillades',
+  'Cuisine internationale',
   'Épicerie',
   'Boutique',
 ];
@@ -85,6 +106,21 @@ const CUISINE_SLUG_BY_LABEL = {
   Marocaine: 'marocaine',
   Algérienne: 'algerienne',
   Tunisienne: 'tunisienne',
+  'Nigériane': 'nigeriane',
+  'Ghanéenne': 'ghaneenne',
+  'Éthiopienne': 'ethiopienne',
+  'Sud-africaine': 'sudafricaine',
+  'Afrique de l’Est': 'estafricaine',
+  'Afrique de l’Ouest': 'ouestafricaine',
+  'Afrique centrale': 'afriquecentrale',
+  'Afrique du Nord': 'afriquedunord',
+  'Afrique australe': 'afriqueaustrale',
+  'Fast-food': 'fastfood',
+  'Pizza': 'pizza',
+  'Burgers': 'burgers',
+  'Tacos': 'tacos',
+  'Grillades': 'grillades',
+  'Cuisine internationale': 'internationale',
   Épicerie: 'epicerie',
   Boutique: 'boutique',
 };
@@ -727,7 +763,22 @@ export default function HomeScreen() {
         );
       }
 
-      return matchesAfricanPlaceSearch(item, search, t);
+      // Recherche sur les métadonnées réelles du partenaire (catégories, type de
+      // commerce, description) : les raccourcis d'accueil trouvent aussi les
+      // fast-foods et commerces dont le format n'est pas stocké dans « cuisine ».
+      const discoveryText = normalizeSearch([
+        item?.cuisine,
+        ...(Array.isArray(item?.categories) ? item.categories : []),
+        item?.category,
+        item?.type,
+        item?.businessType,
+        item?.storeType,
+        item?.name,
+        item?.description,
+        item?.address,
+      ].filter(Boolean).join(' '));
+
+      return matchesAfricanPlaceSearch(item, search, t) || discoveryText.includes(query);
     });
 
     return filtered.sort((a, b) => {
