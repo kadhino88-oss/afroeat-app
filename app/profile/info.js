@@ -213,19 +213,6 @@ export default function InfoScreen() {
   );
   const [savingAddress,  setSavingAddress]  = useState(false);
 
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
-        <ActivityIndicator size="large" color="#D4A017" />
-      </View>
-    );
-  }
-
-  if (!isAuth) return <Redirect href="/auth/login?role=client" />;
-
-  const roleRedirect = getRoleRedirect(role);
-  if (roleRedirect) return <Redirect href={roleRedirect} />;
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) { router.back(); return; }
@@ -274,6 +261,21 @@ export default function InfoScreen() {
     { key: 'role',   label: t('profile.info.accountTypeLabel'),    value: getDisplayRole(user?.role),     icon: 'shield-outline'   },
     { key: 'since',  label: t('profile.info.memberSinceLabel'),     value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString(dateLocale, { month: 'long', year: 'numeric' }) : t('profile.info.notProvided'), icon: 'calendar-outline' },
   ];
+
+  // Garde-fous placés après les hooks (règles des hooks React)
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
+        <ActivityIndicator size="large" color="#D4A017" />
+      </View>
+    );
+  }
+
+  if (!isAuth) return <Redirect href="/auth/login?role=client" />;
+
+  const roleRedirect = getRoleRedirect(role);
+  if (roleRedirect) return <Redirect href={roleRedirect} />;
 
   return (
     <FadeInView style={styles.container}>

@@ -70,6 +70,21 @@ export default function ProfileAddressScreen() {
   const loading = Boolean(auth.loading);
   const role = normalizeRole(auth.role || user?.role);
 
+
+  const address =
+    normalizeText(
+      user?.address ||
+        user?.adresse ||
+        user?.deliveryAddress ||
+        user?.profile?.address
+    ) || t('profile.address.noAddress');
+
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) return router.back();
+    router.replace('/(tabs)/profile');
+  }, []);
+
+  // Garde-fous placés après les hooks (règles des hooks React)
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -86,19 +101,6 @@ export default function ProfileAddressScreen() {
 
   const roleRedirect = getRoleRedirect(role);
   if (roleRedirect) return <Redirect href={roleRedirect} />;
-
-  const address =
-    normalizeText(
-      user?.address ||
-        user?.adresse ||
-        user?.deliveryAddress ||
-        user?.profile?.address
-    ) || t('profile.address.noAddress');
-
-  const handleBack = useCallback(() => {
-    if (router.canGoBack()) return router.back();
-    router.replace('/(tabs)/profile');
-  }, []);
 
   return (
     <FadeInView style={styles.container}>

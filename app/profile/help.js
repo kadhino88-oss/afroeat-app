@@ -93,7 +93,6 @@ export default function HelpScreen() {
     return t('profile.help.faqClient', { returnObjects: true });
   }, [role, t]);
 
-  if (loading) return null;
 
   // Redirect non-clients hors tabs
   const redirect = useMemo(() => {
@@ -103,7 +102,6 @@ export default function HelpScreen() {
     return null;
   }, [role]);
 
-  if (redirect) return <Redirect href={redirect} />;
 
   const handleEmail = useCallback(() => {
     Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=Support Afroeat`).catch(() => {
@@ -144,6 +142,11 @@ export default function HelpScreen() {
     { id: 'compte',     label: categoriesTranslated.compte     },
     { id: 'autre',      label: categoriesTranslated.autre      },
   ];
+
+  // Garde-fous placés après les hooks (règles des hooks React)
+  if (loading) return null;
+
+  if (redirect) return <Redirect href={redirect} />;
 
   return (
     <View style={styles.container}>

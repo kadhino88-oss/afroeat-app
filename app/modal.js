@@ -113,9 +113,6 @@ export default function ModalScreen() {
 
   const roleRedirect = isAuthenticated ? getRoleRedirect(currentRole) : null;
 
-  if (roleRedirect) {
-    return <Redirect href={roleRedirect} />;
-  }
 
   const safeNotifications = useMemo(
     () =>
@@ -135,6 +132,11 @@ export default function ModalScreen() {
 
     router.replace('/(tabs)/index');
   }, []);
+
+  // Garde-fous placés après les hooks (règles des hooks React)
+  if (roleRedirect) {
+    return <Redirect href={roleRedirect} />;
+  }
 
   return (
     <FadeInView style={styles.container}>

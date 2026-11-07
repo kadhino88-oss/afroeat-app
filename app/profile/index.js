@@ -138,31 +138,6 @@ export default function ProfileHomeScreen() {
    * =========================================================
    */
 
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>{t('profile.home.loaderText')}</Text>
-      </View>
-    );
-  }
-
-  /**
-   * =========================================================
-   * AUTH / ROLE GATE
-   * =========================================================
-   */
-
-  if (!isLoggedIn) {
-    return <Redirect href="/auth/role" />;
-  }
-
-  const roleRedirect = getRoleRedirect(currentRole);
-
-  if (roleRedirect) {
-    return <Redirect href={roleRedirect} />;
-  }
 
   const displayName = useMemo(() => getDisplayName(user), [user]);
 
@@ -193,6 +168,33 @@ export default function ProfileHomeScreen() {
   const handleOpenHelp = useCallback(() => {
     router.push('/profile/help');
   }, []);
+
+  // Garde-fous placés après les hooks (règles des hooks React)
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <ActivityIndicator size="large" color="#D4A017" />
+        <Text style={styles.loaderText}>{t('profile.home.loaderText')}</Text>
+      </View>
+    );
+  }
+
+  /**
+   * =========================================================
+   * AUTH / ROLE GATE
+   * =========================================================
+   */
+
+  if (!isLoggedIn) {
+    return <Redirect href="/auth/role" />;
+  }
+
+  const roleRedirect = getRoleRedirect(currentRole);
+
+  if (roleRedirect) {
+    return <Redirect href={roleRedirect} />;
+  }
 
   return (
     <FadeInView style={styles.container}>

@@ -117,39 +117,6 @@ export default function FavoritesScreen() {
    * =========================================================
    */
 
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
-        <Text style={styles.loaderText}>{t('favorites.loading')}</Text>
-      </View>
-    );
-  }
-
-  /**
-   * =========================================================
-   * AUTH GATE
-   * =========================================================
-   */
-
-  if (!isAuthenticated) {
-    return <Redirect href="/auth/role" />;
-  }
-
-  /**
-   * =========================================================
-   * SÉPARATION STRUCTURELLE DES BLOCS
-   * =========================================================
-   * Cet écran favoris appartient au bloc client.
-   * Les autres rôles sont redirigés vers leur espace dédié.
-   */
-
-  const roleRedirect = getRoleRedirect(role);
-
-  if (roleRedirect) {
-    return <Redirect href={roleRedirect} />;
-  }
 
   /**
    * =========================================================
@@ -213,6 +180,41 @@ export default function FavoritesScreen() {
       </Pressable>
     );
   };
+
+  // Garde-fous placés après les hooks (règles des hooks React)
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <ActivityIndicator size="large" color="#D4A017" />
+        <Text style={styles.loaderText}>{t('favorites.loading')}</Text>
+      </View>
+    );
+  }
+
+  /**
+   * =========================================================
+   * AUTH GATE
+   * =========================================================
+   */
+
+  if (!isAuthenticated) {
+    return <Redirect href="/auth/role" />;
+  }
+
+  /**
+   * =========================================================
+   * SÉPARATION STRUCTURELLE DES BLOCS
+   * =========================================================
+   * Cet écran favoris appartient au bloc client.
+   * Les autres rôles sont redirigés vers leur espace dédié.
+   */
+
+  const roleRedirect = getRoleRedirect(role);
+
+  if (roleRedirect) {
+    return <Redirect href={roleRedirect} />;
+  }
 
   return (
     <FadeInView style={styles.container}>
