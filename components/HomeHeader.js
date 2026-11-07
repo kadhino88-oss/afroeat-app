@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,10 @@ import {
   Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
+import { getUnreadNotificationCount } from '../services/notificationService';
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
@@ -29,22 +31,20 @@ const getBadgeValue = (value) => {
 export default function HomeHeader({
   userName = 'Bonjour',
   locationText = 'Livraison à domicile',
-  notificationCount = 0,
   avatarUri = '',
+  user = null,
 }) {
   const router = useRouter();
+  const { t } = useTranslation();
   const cart = useCart() || {};
 
   const getTotalItems =
     typeof cart.getTotalItems === 'function' ? cart.getTotalItems : null;
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const safeCartCount = useMemo(() => {
     return Math.max(0, normalizeNumber(getTotalItems ? getTotalItems() : 0, 0));
   }, [getTotalItems]);
-
-  const safeNotificationCount = useMemo(() => {
-    return Math.max(0, normalizeNumber(notificationCount, 0));
-  }, [notificationCount]);
 
   const safeUserName = useMemo(() => {
     return normalizeText(userName, 'Bonjour');
@@ -57,6 +57,25 @@ export default function HomeHeader({
   const safeAvatarUri = useMemo(() => {
     return normalizeText(avatarUri);
   }, [avatarUri]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      getUnreadNotificationCount(user).then((count) => {
+        if (isActive) setNotificationCount(count);
+      });
+
+      return () => {
+        isActive = false;
+      };
+    }, [user?._id, user?.id, user?.email])
+  );
+
+  const safeNotificationCount = Math.max(
+    0,
+    normalizeNumber(notificationCount, 0)
+  );
 
   return (
     <View style={styles.wrapper}>
@@ -74,13 +93,15 @@ export default function HomeHeader({
 
           <View style={styles.brandTextWrap}>
             <Text style={styles.brandName}>AFROEAT</Text>
-            <Text style={styles.brandTagline}>Premium African Delivery</Text>
+            <Text style={styles.brandTagline}>{t('home.brandTagline')}</Text>
           </View>
         </View>
 
         <View style={styles.actionsRow}>
           <TouchableOpacity
             style={styles.iconBtn}
+            accessibilityRole="button"
+            accessibilityLabel={t('notifications.title')}
             onPress={() => router.push('/notifications')}
             activeOpacity={0.85}
           >
@@ -96,6 +117,8 @@ export default function HomeHeader({
 
           <TouchableOpacity
             style={styles.iconBtn}
+            accessibilityRole="button"
+            accessibilityLabel={t('cart.title')}
             onPress={() => router.push('/cart')}
             activeOpacity={0.85}
           >
@@ -111,6 +134,8 @@ export default function HomeHeader({
 
           <TouchableOpacity
             style={styles.avatarBtn}
+            accessibilityRole="button"
+            accessibilityLabel={t('nav.profile')}
             onPress={() => router.push('/profile')}
             activeOpacity={0.85}
           >
@@ -133,7 +158,7 @@ export default function HomeHeader({
         </View>
 
         <View style={styles.locationContent}>
-          <Text style={styles.locationLabel}>Livrer à</Text>
+          <Text style={styles.locationLabel}>{t('home.deliverTo')}</Text>
           <Text style={styles.locationValue} numberOfLines={1}>
             {safeLocationText}
           </Text>
@@ -146,9 +171,7 @@ export default function HomeHeader({
 
       <View style={styles.bottom}>
         <Text style={styles.greeting}>{safeUserName}</Text>
-        <Text style={styles.subtitle}>
-          Qu’est-ce qu’on mange aujourd’hui ?
-        </Text>
+        <Text style={styles.subtitle}>{t('home.headerPrompt')}</Text>
       </View>
     </View>
   );

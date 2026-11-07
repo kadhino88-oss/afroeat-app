@@ -7,29 +7,29 @@ import {
   Pressable,
   TextInput,
   ScrollView,
-  Image,
   ActivityIndicator,
   StatusBar,
   RefreshControl,
+  Platform,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { router, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
 import * as Location from 'expo-location';
-import { getAllRestaurants, getNearbyRestaurants } from '../../services/restaurantService';
+import { getNearbyRestaurants } from '../../services/restaurantService';
+import { getNearbyPlaces } from '../../services/placeService';
+import { matchesAfricanPlaceSearch } from '../../services/placeSearch';
+import {
+  DEFAULT_NEARBY_CENTER,
+  DEFAULT_NEARBY_RADIUS,
+  loadNearbyRadius,
+} from '../../services/nearbySearchSettings';
 import { getAllMenuItems } from '../../services/menuService';
 import { useTranslation } from 'react-i18next';
-import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-
-/**
- * =========================================================
- * ASSETS
- * =========================================================
- */
-
-const LOGO_IMAGE = require('../assets/images/icon.png');
+import PlaceBrandMark from '../../components/PlaceBrandMark';
 
 /**
  * =========================================================
@@ -42,25 +42,19 @@ const CATEGORIES = [
     id: '1',
     titleKey: 'explore.restaurants',
     icon: 'silverware-fork-knife',
-    route: '/(tabs)/explore?category=restaurants',
+    route: '/(tabs)/explore',
   },
   {
     id: '2',
     titleKey: 'home.categories.groceries',
     icon: 'cart-outline',
-    route: '/(tabs)/explore?category=groceries',
+    route: '/(tabs)/explore',
   },
   {
     id: '3',
-    titleKey: 'home.categories.drinks',
-    icon: 'cup-outline',
-    route: '/(tabs)/explore?category=drinks',
-  },
-  {
-    id: '4',
     titleKey: 'home.categories.shops',
     icon: 'shopping-outline',
-    route: '/(tabs)/explore?category=shops',
+    route: '/(tabs)/explore',
   },
 ];
 
@@ -74,21 +68,6 @@ const CUISINES = [
   'Marocaine',
   'Algérienne',
   'Tunisienne',
-  'Nigériane',
-  'Ghanéenne',
-  'Éthiopienne',
-  'Sud-africaine',
-  'Afrique de l’Est',
-  'Afrique de l’Ouest',
-  'Afrique centrale',
-  'Afrique du Nord',
-  'Afrique australe',
-  'Fast-food',
-  'Pizza',
-  'Burgers',
-  'Tacos',
-  'Grillades',
-  'Cuisine internationale',
   'Épicerie',
   'Boutique',
 ];
@@ -106,21 +85,6 @@ const CUISINE_SLUG_BY_LABEL = {
   Marocaine: 'marocaine',
   Algérienne: 'algerienne',
   Tunisienne: 'tunisienne',
-  'Nigériane': 'nigeriane',
-  'Ghanéenne': 'ghaneenne',
-  'Éthiopienne': 'ethiopienne',
-  'Sud-africaine': 'sudafricaine',
-  'Afrique de l’Est': 'estafricaine',
-  'Afrique de l’Ouest': 'ouestafricaine',
-  'Afrique centrale': 'afriquecentrale',
-  'Afrique du Nord': 'afriquedunord',
-  'Afrique australe': 'afriqueaustrale',
-  'Fast-food': 'fastfood',
-  'Pizza': 'pizza',
-  'Burgers': 'burgers',
-  'Tacos': 'tacos',
-  'Grillades': 'grillades',
-  'Cuisine internationale': 'internationale',
   Épicerie: 'epicerie',
   Boutique: 'boutique',
 };
@@ -254,40 +218,139 @@ const getAfricanFoodImage = (cuisine) => {
   return 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=1200&auto=format&fit=crop';
 };
 
-const normalizeRestaurant = (item = {}, index = 0) => {
+const normalizeRestaurant = (item = {}) => {
+  const isPublicListing =
+    item?.isPublicListing === true ||
+    ['openstreetmap', 'public-directory'].includes(item?.source);
+  const rawDeliveryTime = item?.deliveryTime ?? item?.estimatedDeliveryTime;
   return {
     ...item,
     _id: item?._id || item?.id || '',
     id: item?.id || item?._id || '',
     name: normalizeText(item?.name, 'Restaurant africain'),
-    cuisine: normalizeText(item?.cuisine, 'Cuisine africaine'),
+    cuisine: normalizeText(
+      item?.cuisine,
+      isPublicListing ? '' : 'Cuisine africaine'
+    ),
     address: normalizeText(
       item?.address || item?.location || item?.city,
       'Adresse non disponible'
     ),
-    image: normalizeText(item?.image),
-    coverImage: normalizeText(item?.coverImage),
-    isOpen: normalizeBoolean(item?.isOpen, null),
+    image: normalizeText(item?.image || item?.imageUrl),
+    coverImage: normalizeText(item?.coverImage || item?.image || item?.imageUrl),
+    isOpen:
+      isPublicListing && item?.isOpen == null
+        ? null
+        : normalizeBoolean(item?.isOpen, true),
     isFeatured: normalizeBoolean(item?.isFeatured, false),
-    rating: normalizeNumber(
-      item?.ratingAverage ?? item?.rating,
-      4.7
-    ),
-    deliveryTime: normalizeText(
-      item?.deliveryTime ||
-        item?.estimatedDeliveryTime ||
-        item?.averagePreparationTimeMinutes
-          ? `${normalizeNumber(
-              item?.deliveryTime ||
-                item?.estimatedDeliveryTime ||
-                item?.averagePreparationTimeMinutes,
-              20 + index * 3
-            )} min`
-          : `${20 + index * 3} min`
-    ),
-    deliveryFee: normalizeText(item?.deliveryFee, '2.99 €'),
+    rating: normalizeNumber(item?.ratingAverage ?? item?.rating, 0),
+    ratingCount: normalizeNumber(item?.ratingCount, 0),
+    distanceKm:
+      item?.distanceKm === null || item?.distanceKm === undefined
+        ? null
+        : normalizeNumber(item.distanceKm, null),
+    deliveryTime:
+      rawDeliveryTime === null || rawDeliveryTime === undefined || rawDeliveryTime === ''
+        ? ''
+        : typeof rawDeliveryTime === 'number'
+          ? `${rawDeliveryTime} min`
+          : normalizeText(rawDeliveryTime),
+    deliveryFee: item?.deliveryFee ?? null,
     currency: normalizeText(item?.currency, 'EUR'),
   };
+};
+
+const isPublicDirectoryPlace = (item) =>
+  item?.isPublicListing === true ||
+  ['openstreetmap', 'public-directory'].includes(item?.source);
+
+const getDishRestaurantId = (dish) =>
+  normalizeText(
+    dish?.restaurant?._id ||
+      dish?.restaurantId ||
+      (typeof dish?.restaurant === 'string' ? dish.restaurant : '')
+  );
+
+const resolveHomeSearchArea = async () => {
+  try {
+    const { status } = await Location.getForegroundPermissionsAsync();
+    if (status === 'granted') {
+      const position = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+      const latitude = Number(position?.coords?.latitude);
+      const longitude = Number(position?.coords?.longitude);
+      if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+        return {
+          coordinates: { latitude, longitude },
+          usingDefaultArea: false,
+        };
+      }
+    }
+  } catch {
+    // Use the configured starter area when device location is unavailable.
+  }
+
+  return {
+    coordinates: DEFAULT_NEARBY_CENTER,
+    usingDefaultArea: true,
+  };
+};
+
+const sortNearbyRestaurants = (items) =>
+  [...items].sort((first, second) => {
+    const firstDistance = Number.isFinite(first?.distanceKm)
+      ? first.distanceKm
+      : Number.POSITIVE_INFINITY;
+    const secondDistance = Number.isFinite(second?.distanceKm)
+      ? second.distanceKm
+      : Number.POSITIVE_INFINITY;
+    return firstDistance - secondDistance;
+  });
+
+const getNearbyRestaurantKey = (item) => {
+  const name = normalizeSearch(item?.name);
+  const location = normalizeSearch(item?.address || item?.city);
+  return `${name}|${location}`;
+};
+
+const uniqueNearbyRestaurants = (items) => {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = getNearbyRestaurantKey(item);
+    if (key === '|' || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+const formatDeliveryFee = (value, currency, freeLabel) => {
+  if (value === null || value === undefined || value === '') return '';
+  const amount = Number(value);
+  if (!Number.isFinite(amount)) return normalizeText(value);
+  if (amount === 0) return freeLabel;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: normalizeText(currency, 'EUR').toUpperCase(),
+    }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${normalizeText(currency, 'EUR').toUpperCase()}`;
+  }
+};
+
+const formatPrice = (value, currency = 'EUR') => {
+  const amount = normalizeNumber(value, 0);
+  const safeCurrency = normalizeText(currency, 'EUR').toUpperCase();
+
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: safeCurrency,
+    }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${safeCurrency}`;
+  }
 };
 
 const extractRestaurantsPayload = (data) => {
@@ -308,11 +371,7 @@ const extractRestaurantsPayload = (data) => {
 
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const cart = useCart() || {};
   const auth = useAuth() || {};
-
-  const getTotalItems =
-    typeof cart.getTotalItems === 'function' ? cart.getTotalItems : null;
 
   const { user, isAuthenticated, loading: authLoading, role, token } = auth;
 
@@ -323,19 +382,18 @@ export default function HomeScreen() {
   const tokenRef = useRef(token);
   useEffect(() => { tokenRef.current = token; }, [token]);
 
-  const cartCount = useMemo(() => {
-    return getTotalItems ? getTotalItems() : 0;
-  }, [getTotalItems]);
-
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [publicDirectoryLoading, setPublicDirectoryLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [usingDefaultSearchArea, setUsingDefaultSearchArea] = useState(true);
+  const [searchRadius, setSearchRadius] = useState(DEFAULT_NEARBY_RADIUS);
   const [allDishes, setAllDishes] = useState([]);
   const [selectedMood, setSelectedMood] = useState(null);
-  const [openOnly, setOpenOnly] = useState(false);
-  const [topRatedOnly, setTopRatedOnly] = useState(false);
+  const restaurantsRequestId = useRef(0);
+  const hasSearchQuery = normalizeSearch(search).length > 0;
 
   const userName = useMemo(() => {
     const fullName = `${normalizeText(user?.firstName)} ${normalizeText(
@@ -368,6 +426,46 @@ export default function HomeScreen() {
     );
   }, [user]);
 
+  const restaurantCurrencies = useMemo(
+    () =>
+      new Map(
+        restaurants.map((restaurant) => [
+          String(restaurant._id),
+          restaurant.currency,
+        ])
+      ),
+    [restaurants]
+  );
+
+  const getDishCurrency = useCallback(
+    (dish) => {
+      const restaurantRef = dish?.restaurant;
+      const restaurantId =
+        restaurantRef?._id ||
+        dish?.restaurantId ||
+        (typeof restaurantRef === 'string' ? restaurantRef : null);
+
+      return (
+        dish?.currency ||
+        restaurantRef?.currency ||
+        restaurantCurrencies.get(String(restaurantId)) ||
+        'EUR'
+      );
+    },
+    [restaurantCurrencies]
+  );
+
+  const nearbyPartnerIds = useMemo(
+    () =>
+      new Set(
+        restaurants
+          .filter((restaurant) => !isPublicDirectoryPlace(restaurant))
+          .map((restaurant) => String(restaurant?._id || ''))
+          .filter(Boolean)
+      ),
+    [restaurants]
+  );
+
   const redirectPath = useMemo(() => {
     if (authLoading || !isAuthenticated) return null;
 
@@ -386,35 +484,11 @@ export default function HomeScreen() {
     return null;
   }, [authLoading, isAuthenticated, currentRole]);
 
-  // Tente de detecter automatiquement les restaurants africains a
-  // proximite via le GPS (France, Suisse, ou tout autre pays ou l'app est
-  // utilisee) ; si la permission est refusee, le GPS echoue, ou qu'aucun
-  // restaurant n'est trouve a proximite (nouvelle zone encore peu couverte),
-  // on retombe silencieusement sur la liste complete - jamais un ecran vide.
-  const loadNearbyRestaurants = useCallback(async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') return null;
-
-    const position = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Balanced,
-    });
-
-    const nearby = await getNearbyRestaurants({
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      maxDistance: 15,
-      token: tokenRef.current,
-    });
-
-    const extracted = extractRestaurantsPayload(nearby);
-    const safeNearby = extracted
-      .map(normalizeRestaurant)
-      .filter((item) => item?._id);
-
-    return safeNearby.length > 0 ? safeNearby : null;
-  }, []);
-
   const loadRestaurants = useCallback(async (isRefresh = false) => {
+    const requestId = ++restaurantsRequestId.current;
+    let partnerError = null;
+    let directoryError = null;
+
     try {
       if (isRefresh) {
         setRefreshing(true);
@@ -422,44 +496,134 @@ export default function HomeScreen() {
         setLoading(true);
       }
 
+      setPublicDirectoryLoading(true);
       setErrorMessage('');
+      const [radius, searchArea] = await Promise.all([
+        loadNearbyRadius(),
+        resolveHomeSearchArea(),
+      ]);
+      if (requestId !== restaurantsRequestId.current) return;
 
-      let safeRestaurants = null;
+      setSearchRadius(radius);
+      setUsingDefaultSearchArea(searchArea.usingDefaultArea);
 
-      try {
-        safeRestaurants = await loadNearbyRestaurants();
-      } catch (geoError) {
-        console.log('Détection de proximité indisponible :', geoError);
+      const requestLocation = {
+        ...searchArea.coordinates,
+        token: tokenRef.current,
+      };
+
+      const partnerRequest = getNearbyRestaurants({
+        ...requestLocation,
+        maxDistance: radius,
+      })
+        .then((data) => {
+          const partners = extractRestaurantsPayload(data)
+            .map(normalizeRestaurant)
+            .filter((item) => item?._id && !isPublicDirectoryPlace(item));
+          if (requestId !== restaurantsRequestId.current) return;
+
+          setRestaurants((current) => {
+            if (requestId !== restaurantsRequestId.current) return current;
+            const publicPlaces = current.filter(isPublicDirectoryPlace);
+            const partnerKeys = new Set(
+              partners.map(getNearbyRestaurantKey).filter((key) => key !== '|')
+            );
+            return sortNearbyRestaurants(uniqueNearbyRestaurants([
+              ...partners,
+              ...publicPlaces.filter(
+                (item) => !partnerKeys.has(getNearbyRestaurantKey(item))
+              ),
+            ]));
+          });
+        })
+        .catch((error) => {
+          partnerError = error;
+          console.log('Restaurants partenaires proches indisponibles :', error);
+        })
+        .finally(() => {
+          if (requestId === restaurantsRequestId.current) setLoading(false);
+        });
+
+      const directoryRequest = getNearbyPlaces({
+        ...searchArea.coordinates,
+        radius,
+        token: tokenRef.current,
+      })
+        .then((payload) => {
+          const publicPlaces = [
+            ...(Array.isArray(payload?.restaurants) ? payload.restaurants : []),
+            ...(Array.isArray(payload?.fastFoods) ? payload.fastFoods : []),
+            ...(Array.isArray(payload?.groceries) ? payload.groceries : []),
+            ...(Array.isArray(payload?.businesses) ? payload.businesses : []),
+          ]
+            .map((place) =>
+              normalizeRestaurant({
+                ...place,
+                isPublicListing: true,
+                image: place?.imageUrl || place?.image,
+                coverImage: place?.imageUrl || place?.image,
+              })
+            )
+            .filter((item) => item?._id);
+          if (requestId !== restaurantsRequestId.current) return;
+
+          setRestaurants((current) => {
+            if (requestId !== restaurantsRequestId.current) return current;
+            const partners = current.filter(
+              (item) => !isPublicDirectoryPlace(item)
+            );
+            const partnerKeys = new Set(
+              partners.map(getNearbyRestaurantKey).filter((key) => key !== '|')
+            );
+            return sortNearbyRestaurants([
+              ...partners,
+              ...uniqueNearbyRestaurants(publicPlaces).filter(
+                (item) => !partnerKeys.has(getNearbyRestaurantKey(item))
+              ),
+            ]);
+          });
+        })
+        .catch((error) => {
+          directoryError = error;
+          console.log('Annuaire public proche indisponible :', error);
+        })
+        .finally(() => {
+          if (requestId === restaurantsRequestId.current) {
+            setPublicDirectoryLoading(false);
+          }
+        });
+
+      await Promise.all([partnerRequest, directoryRequest]);
+      if (
+        requestId === restaurantsRequestId.current &&
+        partnerError &&
+        directoryError
+      ) {
+        setErrorMessage(
+          partnerError?.message ||
+            directoryError?.message ||
+            'Impossible de charger les commerces à proximité.'
+        );
       }
-
-      if (!safeRestaurants) {
-        const data = await getAllRestaurants(tokenRef.current);
-        const extracted = extractRestaurantsPayload(data);
-        safeRestaurants = extracted
-          .map(normalizeRestaurant)
-          .filter((item) => item?._id);
-      }
-
-      setRestaurants(safeRestaurants);
     } catch (error) {
-      console.log('Erreur restaurants :', error);
-      setRestaurants([]);
-      setErrorMessage(
-        error?.message || 'Impossible de charger les restaurants.'
-      );
+      if (requestId !== restaurantsRequestId.current) return;
+      console.log('Erreur recherche à proximité :', error);
+      setErrorMessage(error?.message || 'Impossible de charger les commerces à proximité.');
     } finally {
-      if (isRefresh) {
+      if (requestId === restaurantsRequestId.current) {
         setRefreshing(false);
-      } else {
         setLoading(false);
+        setPublicDirectoryLoading(false);
       }
     }
-  }, [loadNearbyRestaurants]);
+  }, []);
 
   useEffect(() => {
     if (!redirectPath) {
-      loadRestaurants();
+      const timer = setTimeout(() => loadRestaurants(), 0);
+      return () => clearTimeout(timer);
     }
+    return undefined;
   }, [loadRestaurants, redirectPath]);
 
   // Charge tous les plats une fois, pour alimenter "Envie du moment".
@@ -491,6 +655,7 @@ export default function HomeScreen() {
     return allDishes
       .filter((dish) => {
         if (dish?.available === false) return false;
+        if (!nearbyPartnerIds.has(getDishRestaurantId(dish))) return false;
 
         const haystack = normalizeSearch(
           [dish?.name, dish?.description, dish?.category, dish?.story]
@@ -501,7 +666,42 @@ export default function HomeScreen() {
         return mood.keywords.some((keyword) => haystack.includes(keyword));
       })
       .slice(0, 10);
-  }, [allDishes, selectedMood]);
+  }, [allDishes, nearbyPartnerIds, selectedMood]);
+
+  const matchingDishes = useMemo(() => {
+    const query = normalizeSearch(search);
+    if (query.length < 2) return [];
+
+    const queryWords = query.split(/\s+/).filter(Boolean);
+
+    return allDishes
+      .filter((dish) => {
+        if (dish?.available === false || dish?.isAvailable === false) {
+          return false;
+        }
+        if (!nearbyPartnerIds.has(getDishRestaurantId(dish))) return false;
+
+        const searchableText = normalizeSearch(
+          [
+            dish?.name,
+            dish?.description,
+            dish?.category,
+            dish?.cuisine,
+            dish?.story,
+            dish?.restaurant?.name,
+            dish?.restaurantName,
+          ]
+            .filter(Boolean)
+            .join(' ')
+        );
+
+        return (
+          searchableText.includes(query) ||
+          queryWords.every((word) => searchableText.includes(word))
+        );
+      })
+      .slice(0, 8);
+  }, [allDishes, nearbyPartnerIds, search]);
 
   const handleMoodPress = useCallback((moodId) => {
     setSelectedMood((current) => (current === moodId ? null : moodId));
@@ -520,49 +720,45 @@ export default function HomeScreen() {
     const query = normalizeSearch(search);
 
     const filtered = restaurants.filter((item) => {
-      const name = normalizeSearch(item?.name);
-      const cuisine = normalizeSearch(item?.cuisine);
-      const address = normalizeSearch(item?.address);
-      // Search across real partner metadata so homepage cuisine/category shortcuts
-      // also find fast-foods and businesses whose format is stored outside cuisine.
-      const discoveryText = normalizeSearch([
-        item?.cuisine,
-        ...(Array.isArray(item?.categories) ? item.categories : []),
-        item?.category,
-        item?.type,
-        item?.businessType,
-        item?.storeType,
-        item?.name,
-        item?.description,
-        item?.address,
-      ].filter(Boolean).join(' '));
-      const matchesSearch = !query || name.includes(query) || cuisine.includes(query) || address.includes(query) || discoveryText.includes(query);
-      const matchesOpen = !openOnly || item?.isOpen === true;
-      const matchesRating = !topRatedOnly || normalizeNumber(item?.rating, 0) >= 4.5;
+      if (!query) {
+        return (
+          !isPublicDirectoryPlace(item) ||
+          ['restaurant', 'african-fast-food'].includes(item?.category)
+        );
+      }
 
-      return matchesSearch && matchesOpen && matchesRating;
+      return matchesAfricanPlaceSearch(item, search, t);
     });
 
     return filtered.sort((a, b) => {
-      if (topRatedOnly) {
-        return normalizeNumber(b?.rating, 0) - normalizeNumber(a?.rating, 0);
+      const aOpen = a?.isOpen ? 1 : 0;
+      const bOpen = b?.isOpen ? 1 : 0;
+
+      if (aOpen !== bOpen) {
+        return bOpen - aOpen;
+      }
+
+      const aHasDistance = Number.isFinite(a?.distanceKm);
+      const bHasDistance = Number.isFinite(b?.distanceKm);
+
+      if (aHasDistance !== bHasDistance) {
+        return aHasDistance ? -1 : 1;
+      }
+
+      if (aHasDistance && bHasDistance && a.distanceKm !== b.distanceKm) {
+        return a.distanceKm - b.distanceKm;
       }
 
       const aFeatured = a?.isFeatured ? 1 : 0;
       const bFeatured = b?.isFeatured ? 1 : 0;
-      if (aFeatured !== bFeatured) return bFeatured - aFeatured;
 
-      const aOpen = a?.isOpen ? 1 : 0;
-      const bOpen = b?.isOpen ? 1 : 0;
-      if (aOpen !== bOpen) return bOpen - aOpen;
+      if (aFeatured !== bFeatured) {
+        return bFeatured - aFeatured;
+      }
 
       return normalizeNumber(b?.rating, 0) - normalizeNumber(a?.rating, 0);
     });
-  }, [restaurants, search, openOnly, topRatedOnly]);
-
-  const featuredCount = useMemo(() => {
-    return filteredRestaurants.filter((item) => item?.isFeatured).length;
-  }, [filteredRestaurants]);
+  }, [restaurants, search, t]);
 
   const handleCuisinePress = useCallback((value) => {
     setSearch(value);
@@ -572,36 +768,69 @@ export default function HomeScreen() {
     router.push(routeValue);
   }, []);
 
-  const handleOpenRestaurant = useCallback((restaurantId) => {
-    if (!restaurantId) return;
-    router.push(`/restaurant/${restaurantId}`);
+  const handleOpenRestaurant = useCallback((restaurant) => {
+    if (!restaurant?._id) return;
+    if (isPublicDirectoryPlace(restaurant)) {
+      router.push({
+        pathname: '/place/[id]',
+        params: {
+          id: String(restaurant._id),
+          source: String(restaurant.source || ''),
+          name: String(restaurant.name || ''),
+          category: String(restaurant.category || 'restaurant'),
+          address: String(restaurant.address || ''),
+          cuisine: String(restaurant.cuisine || ''),
+          origin: String(restaurant.origin || ''),
+          city: String(restaurant.city || ''),
+          country: String(restaurant.country || ''),
+          distanceKm: String(restaurant.distanceKm ?? ''),
+          phone: String(restaurant.phone || ''),
+          email: String(restaurant.email || ''),
+          website: String(restaurant.website || ''),
+          menuUrl: String(restaurant.menuUrl || ''),
+          logoUrl: String(restaurant.logoUrl || ''),
+          imageUrl: String(restaurant.imageUrl || restaurant.image || ''),
+          openingHours: String(restaurant.openingHours || ''),
+          description: String(restaurant.description || ''),
+          brand: String(restaurant.brand || ''),
+          operator: String(restaurant.operator || ''),
+          osmUrl: String(restaurant.osmUrl || ''),
+        },
+      });
+      return;
+    }
+    router.push(`/restaurant/${restaurant._id}`);
   }, []);
 
   const renderRestaurant = useCallback(
     ({ item }) => {
+      const isPublicListing = isPublicDirectoryPlace(item);
       const isOpen = item?.isOpen === true;
-      const hasOpenStatus = typeof item?.isOpen === 'boolean';
-      const rating = normalizeNumber(item?.rating, null);
-      const hasRating = rating !== null && rating > 0;
-      const deliveryTime = normalizeText(item?.deliveryTime);
-      const rawDeliveryFee = item?.deliveryFee;
-      const hasDeliveryFee =
-        rawDeliveryFee !== null &&
-        rawDeliveryFee !== undefined &&
-        rawDeliveryFee !== '' &&
-        Number.isFinite(Number(rawDeliveryFee)) &&
-        Number(rawDeliveryFee) >= 0;
-      const currencyCandidate = normalizeText(item?.currency, 'CHF').toUpperCase();
-      const currency = /^[A-Z]{3}$/.test(currencyCandidate) ? currencyCandidate : 'CHF';
-      const deliveryFee = !hasDeliveryFee
-        ? 'Frais à confirmer'
-        : Number(rawDeliveryFee) === 0
-        ? 'Livraison offerte'
-        : new Intl.NumberFormat('fr-CH', {
-            style: 'currency',
-            currency,
-            maximumFractionDigits: 2,
-          }).format(Number(rawDeliveryFee));
+      const hasOpeningStatus = typeof item?.isOpen === 'boolean';
+      const hasRating = normalizeNumber(item?.ratingCount, 0) > 0;
+      const rating = normalizeNumber(item?.rating, 0).toFixed(1);
+      const publicCategoryLabel =
+        item?.category === 'african-fast-food'
+          ? t('publicPlace.fastFood')
+          : item?.category === 'african-grocery'
+            ? t('publicPlace.grocery')
+            : item?.category === 'african-salon'
+              ? t('publicPlace.salon')
+              : item?.category === 'restaurant'
+                ? t('publicPlace.restaurant')
+                : t('publicPlace.business');
+      const cuisineLabel = normalizeText(item?.cuisine, publicCategoryLabel);
+      const deliveryTime = isPublicListing
+        ? ''
+        : normalizeText(item?.deliveryTime, t('home.timeUnavailable'));
+      const deliveryFee = isPublicListing
+        ? ''
+        : formatDeliveryFee(item?.deliveryFee, item?.currency, t('home.deliveryFree'));
+      const distanceText = Number.isFinite(item?.distanceKm)
+        ? item.distanceKm < 1
+          ? `${Math.round(item.distanceKm * 1000)} m`
+          : `${item.distanceKm.toFixed(1)} km`
+        : '';
 
       return (
         <Pressable
@@ -611,47 +840,62 @@ export default function HomeScreen() {
             styles.restaurantCard,
             pressed && styles.restaurantCardPressed,
           ]}
-          onPress={() => handleOpenRestaurant(item?._id)}
+          onPress={() => handleOpenRestaurant(item)}
         >
           <View style={styles.restaurantImageWrapper}>
-            <Image
-              source={{
-                uri:
-                  item?.image ||
-                  item?.coverImage ||
-                  getAfricanFoodImage(item?.cuisine),
-              }}
-              style={styles.restaurantImage}
-            />
+            {isPublicListing ? (
+              <View style={styles.publicBrandPanel}>
+                <PlaceBrandMark
+                  logoUrl={item?.logoUrl}
+                  website={item?.website}
+                  category={item?.category}
+                  size={78}
+                />
+                <Text style={styles.publicListingLabel}>
+                  {t('publicPlace.publicListing')}
+                </Text>
+              </View>
+            ) : (
+              <Image
+                source={{
+                  uri:
+                    item?.image ||
+                    item?.coverImage ||
+                    getAfricanFoodImage(item?.cuisine),
+                }}
+                style={styles.restaurantImage}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={180}
+              />
+            )}
 
             {hasRating && (
               <View style={styles.badge}>
                 <Ionicons name="star" size={13} color="#D4A017" />
-                <Text style={styles.badgeText}>{rating.toFixed(1)}</Text>
+                <Text style={styles.badgeText}>{rating}</Text>
               </View>
             )}
 
-            <View
-              style={[
-                styles.statusBadge,
-                isOpen ? styles.statusBadgeOpen : styles.statusBadgeClosed,
-              ]}
-            >
-              <Text
+            {hasOpeningStatus ? (
+              <View
                 style={[
-                  styles.statusBadgeText,
-                  isOpen
-                    ? styles.statusBadgeTextOpen
-                    : styles.statusBadgeTextClosed,
+                  styles.statusBadge,
+                  isOpen ? styles.statusBadgeOpen : styles.statusBadgeClosed,
                 ]}
               >
-                {isOpen
-                  ? t('home.open')
-                  : hasOpenStatus
-                  ? t('home.closed')
-                  : 'Horaires à confirmer'}
-              </Text>
-            </View>
+                <Text
+                  style={[
+                    styles.statusBadgeText,
+                    isOpen
+                      ? styles.statusBadgeTextOpen
+                      : styles.statusBadgeTextClosed,
+                  ]}
+                >
+                  {isOpen ? t('home.open') : t('home.closed')}
+                </Text>
+              </View>
+            ) : null}
 
             {!!item?.isFeatured && (
               <View style={styles.featuredBadge}>
@@ -666,13 +910,11 @@ export default function HomeScreen() {
               <Text style={styles.restaurantName} numberOfLines={1}>
                 {item?.name}
               </Text>
-              <Text style={styles.deliveryTime}>
-                {deliveryTime || 'Délai à confirmer'}
-              </Text>
+              <Text style={styles.deliveryTime}>{deliveryTime}</Text>
             </View>
 
             <Text style={styles.restaurantCuisine} numberOfLines={1}>
-              {item?.cuisine}
+              {cuisineLabel}
             </Text>
 
             <View style={styles.restaurantMetaRow}>
@@ -682,17 +924,27 @@ export default function HomeScreen() {
               </Text>
             </View>
 
-            <View style={styles.restaurantFooterRow}>
-              <View style={styles.deliveryFeeBadge}>
-                <Ionicons name="bicycle-outline" size={14} color="#1F6F43" />
-                <Text style={styles.deliveryFeeText}>{deliveryFee}</Text>
+            {!!deliveryFee || !!distanceText ? (
+              <View style={styles.restaurantFooterRow}>
+                {!!deliveryFee && (
+                  <View style={styles.deliveryFeeBadge}>
+                    <Ionicons name="bicycle-outline" size={14} color="#1F6F43" />
+                    <Text style={styles.deliveryFeeText}>{deliveryFee}</Text>
+                  </View>
+                )}
+                {!!distanceText && (
+                  <View style={styles.distanceBadge}>
+                    <Ionicons name="navigate-outline" size={13} color="#6B5D4D" />
+                    <Text style={styles.distanceText}>{distanceText}</Text>
+                  </View>
+                )}
               </View>
-            </View>
+            ) : null}
           </View>
         </Pressable>
       );
     },
-    [handleOpenRestaurant]
+    [handleOpenRestaurant, t]
   );
 
   if (redirectPath) {
@@ -710,6 +962,12 @@ export default function HomeScreen() {
         }
         renderItem={renderRestaurant}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        initialNumToRender={5}
+        maxToRenderPerBatch={6}
+        windowSize={8}
+        removeClippedSubviews={Platform.OS === 'android'}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -723,69 +981,40 @@ export default function HomeScreen() {
               userName={userName}
               locationText={userAddress}
               avatarUri={userAvatar}
+              user={user}
             />
 
             <View style={styles.heroCard}>
-              <View style={styles.heroTopRow}>
-                <View style={styles.heroTextWrapper}>
-                  <View style={styles.heroMiniBadge}>
-                    <Ionicons
-                      name="sparkles-outline"
-                      size={14}
-                      color="#D4A017"
-                    />
-                    <Text style={styles.heroMiniBadgeText}>{t('home.premiumPartner')}</Text>
-                  </View>
-
-                  <Text style={styles.heroTitle}>
-                    {t('home.heroTitle')}
-                  </Text>
-                  <Text style={styles.heroSubtitle}>
-                    {t('home.heroSubtitle')}
-                  </Text>
-
-                  <Pressable
-                    style={({ pressed }) => [
-                      styles.heroButton,
-                      pressed && styles.heroButtonPressed,
-                    ]}
-                    onPress={() => router.push('/(tabs)/explore')}
-                  >
-                    <Text style={styles.heroButtonText}>
-                      {t('home.heroButton')}
-                    </Text>
-                  </Pressable>
-                </View>
-
-                <View style={styles.heroLogoWrap}>
-                  <Image source={LOGO_IMAGE} style={styles.heroLogo} />
-                </View>
-              </View>
-
               <Image
                 source={{
                   uri: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop',
                 }}
                 style={styles.heroImage}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={220}
               />
-
-              <View style={styles.heroStatsRow}>
-                <View style={styles.heroStatCard}>
-                  <Text style={styles.heroStatValue}>{restaurants.length}</Text>
-                  <Text style={styles.heroStatLabel}>{t('home.partners')}</Text>
+              <View style={styles.heroImageShade} />
+              <View style={styles.heroTextWrapper}>
+                <View style={styles.heroMiniBadge}>
+                  <Ionicons name="sparkles-outline" size={14} color="#F4C95D" />
+                  <Text style={styles.heroMiniBadgeText}>{t('home.heroEyebrow')}</Text>
                 </View>
 
-                <View style={styles.heroStatCard}>
-                  <Text style={styles.heroStatValue}>{featuredCount}</Text>
-                  <Text style={styles.heroStatLabel}>{t('home.premium')}</Text>
-                </View>
+                <Text style={styles.heroTitle}>{t('home.heroTitle')}</Text>
+                <Text style={styles.heroSubtitle}>{t('home.heroSubtitle')}</Text>
 
-                <View style={styles.heroStatCard}>
-                  <Text style={styles.heroStatValue}>
-                    {filteredRestaurants.length}
-                  </Text>
-                  <Text style={styles.heroStatLabel}>{t('home.results')}</Text>
-                </View>
+                <Pressable
+                  accessibilityRole="button"
+                  style={({ pressed }) => [
+                    styles.heroButton,
+                    pressed && styles.heroButtonPressed,
+                  ]}
+                  onPress={() => router.push('/(tabs)/explore')}
+                >
+                  <Text style={styles.heroButtonText}>{t('home.heroButton')}</Text>
+                  <Ionicons name="arrow-forward" size={16} color="#173725" />
+                </Pressable>
               </View>
             </View>
 
@@ -805,6 +1034,7 @@ export default function HomeScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="search"
+                accessibilityLabel={t('home.searchPlaceholder')}
               />
               {!!search && (
                 <Pressable onPress={() => setSearch('')}>
@@ -813,204 +1043,230 @@ export default function HomeScreen() {
               )}
             </View>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.quickFilters}
-              accessibilityLabel="Filtres rapides"
-            >
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ selected: openOnly }}
-                style={({ pressed }) => [styles.quickFilter, openOnly && styles.quickFilterActive, pressed && styles.chipPressed]}
-                onPress={() => setOpenOnly((value) => !value)}
-              >
-                <Ionicons name="time-outline" size={15} color={openOnly ? '#FFFFFF' : '#4B463F'} />
-                <Text style={[styles.quickFilterText, openOnly && styles.quickFilterTextActive]}>Ouverts maintenant</Text>
-              </Pressable>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ selected: topRatedOnly }}
-                style={({ pressed }) => [styles.quickFilter, topRatedOnly && styles.quickFilterActive, pressed && styles.chipPressed]}
-                onPress={() => setTopRatedOnly((value) => !value)}
-              >
-                <Ionicons name="star-outline" size={15} color={topRatedOnly ? '#FFFFFF' : '#4B463F'} />
-                <Text style={[styles.quickFilterText, topRatedOnly && styles.quickFilterTextActive]}>Notes 4,5+</Text>
-              </Pressable>
-              {(openOnly || topRatedOnly) && (
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => { setOpenOnly(false); setTopRatedOnly(false); }}
-                  style={({ pressed }) => [styles.quickFilterReset, pressed && styles.chipPressed]}
-                >
-                  <Text style={styles.quickFilterResetText}>Réinitialiser</Text>
-                </Pressable>
-              )}
-            </ScrollView>
-
-            <Text style={styles.sectionTitle}>{t('moods.title')}</Text>
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.chipsContainer}
-            >
-              {MOODS.map((mood) => {
-                const isActive = selectedMood === mood.id;
-
-                return (
-                  <Pressable
-                    key={mood.id}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Plats ${t(`moods.${mood.id}`)}`}
-                    style={({ pressed }) => [
-                      styles.chip,
-                      isActive && styles.chipActive,
-                      pressed && styles.chipPressed,
-                    ]}
-                    onPress={() => handleMoodPress(mood.id)}
-                  >
-                    <Text
-                      style={[
-                        styles.chipText,
-                        isActive && styles.chipTextActive,
-                      ]}
-                    >
-                      {mood.emoji} {t(`moods.${mood.id}`)}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
-
-            {!!selectedMood && (
-              moodDishes.length > 0 ? (
+            {!!search && matchingDishes.length > 0 && (
+              <View style={styles.searchDishesSection}>
+                <View style={styles.searchDishesHeading}>
+                  <Text style={styles.sectionTitle}>{t('home.dishResults')}</Text>
+                  <View style={styles.searchDishCount}>
+                    <Text style={styles.searchDishCountText}>{matchingDishes.length}</Text>
+                  </View>
+                </View>
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.moodDishesContainer}
+                  contentContainerStyle={styles.searchDishesContainer}
                 >
-                  {moodDishes.map((dish) => (
+                  {matchingDishes.map((dish) => (
                     <Pressable
                       key={dish._id || dish.id}
+                      accessibilityRole="button"
+                      accessibilityLabel={`${dish.name}, ${t('home.dishResults')}`}
                       style={({ pressed }) => [
-                        styles.moodDishCard,
-                        pressed && styles.moodDishCardPressed,
+                        styles.searchDishCard,
+                        pressed && styles.searchDishCardPressed,
                       ]}
                       onPress={() => handleMoodDishPress(dish)}
                     >
                       <Image
-                        source={
-                          dish.image
-                            ? { uri: dish.image }
-                            : require('../assets/images/react-logo.png')
-                        }
-                        style={styles.moodDishImage}
+                        source={{
+                          uri: dish.image || getAfricanFoodImage(dish.cuisine),
+                        }}
+                        style={styles.searchDishImage}
+                        contentFit="cover"
+                        cachePolicy="memory-disk"
+                        transition={160}
                       />
-                      <Text style={styles.moodDishName} numberOfLines={1}>
+                      <Text style={styles.searchDishName} numberOfLines={1}>
                         {dish.name}
                       </Text>
-                      <Text style={styles.moodDishRestaurant} numberOfLines={1}>
-                        {dish?.restaurant?.name || 'Restaurant AFROEAT'}
+                      <Text style={styles.searchDishRestaurant} numberOfLines={1}>
+                        {dish?.restaurant?.name || dish?.restaurantName || dish?.cuisine || ''}
                       </Text>
-                      <Text style={styles.moodDishPrice}>
-                        {Number(dish.price || 0).toFixed(2)} €
+                      <Text style={styles.searchDishPrice}>
+                        {formatPrice(
+                          dish.price,
+                          getDishCurrency(dish)
+                        )}
                       </Text>
                     </Pressable>
                   ))}
                 </ScrollView>
-              ) : (
-                <Text style={styles.moodEmptyText}>
-                  {t('moods.empty')}
-                </Text>
-              )
+              </View>
             )}
 
-            <Text style={styles.sectionTitle}>{t('home.exploreTitle')}</Text>
+            {!hasSearchQuery && (
+              <>
+                <Text style={styles.sectionTitle}>{t('moods.title')}</Text>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoriesContainer}
-            >
-              {CATEGORIES.map((item) => (
-                <Pressable
-                  key={item.id}
-                  style={({ pressed }) => [
-                    styles.categoryCard,
-                    pressed && styles.categoryCardPressed,
-                  ]}
-                  onPress={() => handleCategoryPress(item.route)}
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.chipsContainer}
                 >
-                  <View style={styles.categoryIconWrapper}>
-                    <MaterialCommunityIcons
-                      name={item.icon}
-                      size={24}
-                      color="#D4A017"
-                    />
-                  </View>
-                  <Text style={styles.categoryText}>{t(item.titleKey)}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
+                  {MOODS.map((mood) => {
+                    const isActive = selectedMood === mood.id;
 
-            <View style={styles.sectionTitleRow}>
-              <Text style={styles.sectionTitle}>{t('home.popularCategories')}</Text>
-              {!!search && (
-                <Pressable onPress={() => setSearch('')}>
-                  <Text style={styles.clearText}>{t('home.clear')}</Text>
-                </Pressable>
-              )}
-            </View>
+                    return (
+                      <Pressable
+                        key={mood.id}
+                        accessibilityRole="button"
+                        accessibilityLabel={`Plats ${t(`moods.${mood.id}`)}`}
+                        style={({ pressed }) => [
+                          styles.chip,
+                          isActive && styles.chipActive,
+                          pressed && styles.chipPressed,
+                        ]}
+                        onPress={() => handleMoodPress(mood.id)}
+                      >
+                        <Text
+                          style={[
+                            styles.chipText,
+                            isActive && styles.chipTextActive,
+                          ]}
+                        >
+                          {mood.emoji} {t(`moods.${mood.id}`)}
+                        </Text>
+                      </Pressable>
+                    );
+                })}
+                </ScrollView>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.chipsContainer}
-            >
-              {CUISINES.map((item, index) => {
-                const isActive =
-                  normalizeSearch(search) === normalizeSearch(item);
-
-                return (
-                  <Pressable
-                    key={`${item}-${index}`}
-                    style={({ pressed }) => [
-                      styles.chip,
-                      isActive && styles.chipActive,
-                      pressed && styles.chipPressed,
-                    ]}
-                    onPress={() => handleCuisinePress(item)}
-                  >
-                    <Text
-                      style={[
-                        styles.chipText,
-                        isActive && styles.chipTextActive,
-                      ]}
+                {!!selectedMood && (
+                  moodDishes.length > 0 ? (
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={styles.moodDishesContainer}
                     >
-                      {t(`cuisines.${CUISINE_SLUG_BY_LABEL[item] || ''}`, item)}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
+                      {moodDishes.map((dish) => (
+                        <Pressable
+                          key={dish._id || dish.id}
+                          style={({ pressed }) => [
+                            styles.moodDishCard,
+                            pressed && styles.moodDishCardPressed,
+                          ]}
+                          onPress={() => handleMoodDishPress(dish)}
+                        >
+                          <Image
+                            source={{
+                              uri: dish.image || getAfricanFoodImage(dish.cuisine),
+                            }}
+                            style={styles.moodDishImage}
+                            contentFit="cover"
+                            cachePolicy="memory-disk"
+                            transition={160}
+                          />
+                          <Text style={styles.moodDishName} numberOfLines={1}>
+                            {dish.name}
+                          </Text>
+                          <Text style={styles.moodDishRestaurant} numberOfLines={1}>
+                            {dish?.restaurant?.name ||
+                              dish?.restaurantName ||
+                              dish?.cuisine ||
+                              t('restaurant.profile.restaurantFallbackName')}
+                          </Text>
+                          <Text style={styles.moodDishPrice}>
+                            {formatPrice(dish.price, getDishCurrency(dish))}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </ScrollView>
+                  ) : (
+                    <Text style={styles.moodEmptyText}>{t('moods.empty')}</Text>
+                  )
+                )}
+              </>
+            )}
 
-            <View style={styles.offerCard}>
-              <View style={styles.offerTextWrapper}>
-                <Text style={styles.offerTitle}>{t('home.offerTitle')}</Text>
-                <Text style={styles.offerSubtitle}>
-                  {t('home.offerSubtitle')}
+            {!hasSearchQuery && (
+              <>
+                <Text style={styles.sectionTitle}>{t('home.exploreTitle')}</Text>
+
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.categoriesContainer}
+                >
+                  {CATEGORIES.map((item) => (
+                    <Pressable
+                      key={item.id}
+                      style={({ pressed }) => [
+                        styles.categoryCard,
+                        pressed && styles.categoryCardPressed,
+                      ]}
+                      onPress={() => handleCategoryPress(item.route)}
+                    >
+                      <View style={styles.categoryIconWrapper}>
+                        <MaterialCommunityIcons
+                          name={item.icon}
+                          size={24}
+                          color="#D4A017"
+                        />
+                      </View>
+                      <Text style={styles.categoryText}>{t(item.titleKey)}</Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+
+                <Text style={styles.sectionTitle}>
+                  {t('home.popularCategories')}
                 </Text>
-              </View>
-              <Ionicons name="gift-outline" size={32} color="#FFFFFF" />
-            </View>
 
-            <View style={styles.listHeaderRow}>
-              <Text style={styles.sectionTitle}>{t('home.popularRestaurants')}</Text>
-              <Pressable onPress={() => router.push('/(tabs)/explore')}>
-                <Text style={styles.seeAll}>{t('home.seeAll')}</Text>
-              </Pressable>
-            </View>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.chipsContainer}
+                >
+                  {CUISINES.map((item, index) => {
+                    const isActive =
+                      normalizeSearch(search) === normalizeSearch(item);
+
+                    return (
+                      <Pressable
+                        key={`${item}-${index}`}
+                        style={({ pressed }) => [
+                          styles.chip,
+                          isActive && styles.chipActive,
+                          pressed && styles.chipPressed,
+                        ]}
+                        onPress={() => handleCuisinePress(item)}
+                      >
+                        <Text
+                          style={[
+                            styles.chipText,
+                            isActive && styles.chipTextActive,
+                          ]}
+                        >
+                          {t(`cuisines.${CUISINE_SLUG_BY_LABEL[item] || ''}`, item)}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </ScrollView>
+              </>
+            )}
+
+            {(!hasSearchQuery ||
+              filteredRestaurants.length > 0 ||
+              loading ||
+              errorMessage) && (
+              <View style={styles.listHeaderRow}>
+                <Text style={styles.sectionTitle}>
+                  {hasSearchQuery
+                    ? t('home.restaurantResults')
+                    : t('home.popularRestaurants')}
+                </Text>
+                <Pressable onPress={() => router.push('/(tabs)/explore')}>
+                  <Text style={styles.seeAll}>{t('home.seeAll')}</Text>
+                </Pressable>
+              </View>
+            )}
+
+            {usingDefaultSearchArea && !hasSearchQuery ? (
+              <Text style={styles.nearbyNotice}>
+                {t('explore.defaultAreaNotice', { distance: searchRadius })}
+              </Text>
+            ) : null}
 
             {!!errorMessage && !loading && (
               <View style={styles.errorCard}>
@@ -1021,53 +1277,29 @@ export default function HomeScreen() {
           </View>
         }
         ListEmptyComponent={
-          loading ? (
+          loading || publicDirectoryLoading ? (
             <View style={styles.loaderWrapper}>
               <ActivityIndicator size="large" color="#D4A017" />
               <Text style={styles.loaderText}>
                 {t('home.loadingRestaurants')}
               </Text>
             </View>
+          ) : matchingDishes.length > 0 ? (
+            <View style={styles.dishOnlySpacer} />
           ) : (
             <View style={styles.emptyContainer}>
-              <Ionicons
-                name={restaurants.length ? 'options-outline' : 'restaurant-outline'}
-                size={48}
-                color="#C4B7A6"
-              />
-              <Text style={styles.emptyTitle}>
-                {restaurants.length && (search.trim() || openOnly || topRatedOnly)
-                  ? 'Aucun restaurant ne correspond à ces filtres'
-                  : t('home.noRestaurantFound')}
-              </Text>
+              <Ionicons name="restaurant-outline" size={48} color="#C4B7A6" />
+              <Text style={styles.emptyTitle}>{t('home.noRestaurantFound')}</Text>
               <Text style={styles.emptyText}>
-                {restaurants.length && (search.trim() || openOnly || topRatedOnly)
-                  ? 'Élargis ta recherche ou réinitialise les filtres pour retrouver les restaurants disponibles.'
-                  : t('home.emptyText')}
+                {t('home.emptyText')}
               </Text>
 
-              {restaurants.length && (search.trim() || openOnly || topRatedOnly) ? (
-                <Pressable
-                  accessibilityRole="button"
-                  style={styles.retryButton}
-                  onPress={() => {
-                    setSearch('');
-                    setOpenOnly(false);
-                    setTopRatedOnly(false);
-                    setSelectedMood(null);
-                  }}
-                >
-                  <Text style={styles.retryButtonText}>Effacer les filtres</Text>
-                </Pressable>
-              ) : (
-                <Pressable
-                  accessibilityRole="button"
-                  style={styles.retryButton}
-                  onPress={() => loadRestaurants()}
-                >
-                  <Text style={styles.retryButtonText}>{t('home.retry')}</Text>
-                </Pressable>
-              )}
+              <Pressable
+                style={styles.retryButton}
+                onPress={() => loadRestaurants()}
+              >
+                <Text style={styles.retryButtonText}>{t('home.retry')}</Text>
+              </Pressable>
             </View>
           )
         }
@@ -1093,45 +1325,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#1F6F43',
     borderRadius: 28,
     padding: 20,
-    marginBottom: 24,
+    marginBottom: 20,
     overflow: 'hidden',
-    minHeight: 260,
-  },
-
-  heroTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    zIndex: 2,
+    minHeight: 244,
+    justifyContent: 'center',
   },
 
   heroTextWrapper: {
-    flex: 1,
-    paddingRight: 12,
-    maxWidth: '72%',
-  },
-
-  heroLogoWrap: {
-    width: 62,
-    height: 62,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255,255,255,0.92)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-
-  heroLogo: {
-    width: 42,
-    height: 42,
-    resizeMode: 'contain',
+    maxWidth: '80%',
+    zIndex: 2,
   },
 
   heroMiniBadge: {
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: 'rgba(255,255,255,0.13)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.16)',
     paddingHorizontal: 10,
@@ -1142,24 +1351,24 @@ const styles = StyleSheet.create({
 
   heroMiniBadgeText: {
     marginLeft: 6,
-    color: '#FFFFFF',
+    color: '#FFF7E6',
     fontSize: 12,
     fontWeight: '800',
   },
 
   heroTitle: {
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: '900',
     color: '#FFFFFF',
-    marginBottom: 10,
-    lineHeight: 30,
+    marginBottom: 8,
+    lineHeight: 31,
   },
 
   heroSubtitle: {
     fontSize: 14,
     color: '#EDE7DD',
     lineHeight: 21,
-    marginBottom: 18,
+    marginBottom: 16,
   },
 
   heroButton: {
@@ -1168,6 +1377,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderRadius: 14,
     alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 
   heroButtonPressed: {
@@ -1182,42 +1394,16 @@ const styles = StyleSheet.create({
 
   heroImage: {
     position: 'absolute',
-    right: -6,
-    bottom: 0,
-    width: 158,
-    height: 158,
-    borderTopLeftRadius: 30,
+    right: -20,
+    bottom: -16,
+    width: 200,
+    height: 200,
+    opacity: 0.58,
   },
 
-  heroStatsRow: {
-    marginTop: 28,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    zIndex: 2,
-  },
-
-  heroStatCard: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.95)',
-    borderRadius: 18,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    alignItems: 'center',
-    marginHorizontal: 4,
-  },
-
-  heroStatValue: {
-    fontSize: 18,
-    fontWeight: '900',
-    color: '#111111',
-    marginBottom: 3,
-  },
-
-  heroStatLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: '#6F675F',
-    textTransform: 'uppercase',
+  heroImageShade: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(10,43,25,0.27)',
   },
 
   searchWrapper: {
@@ -1246,68 +1432,91 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
 
-  quickFilters: {
-    paddingBottom: 20,
-    marginTop: -10,
-    alignItems: 'center',
+  searchDishesSection: {
+    marginTop: -4,
+    marginBottom: 20,
   },
 
-  quickFilter: {
+  searchDishesHeading: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 12,
+  },
+
+  searchDishCount: {
+    minWidth: 24,
+    height: 24,
+    paddingHorizontal: 7,
+    borderRadius: 12,
+    marginLeft: 8,
+    marginBottom: 14,
+    backgroundColor: '#E8F2EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  searchDishCountText: {
+    color: '#1F6F43',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+
+  searchDishesContainer: {
+    paddingBottom: 4,
+    paddingRight: 4,
+  },
+
+  searchDishCard: {
+    width: 158,
+    marginRight: 12,
+    padding: 9,
+    borderRadius: 18,
     backgroundColor: '#FFFFFF',
-    borderColor: '#E8E0D5',
     borderWidth: 1,
-    borderRadius: 999,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    marginRight: 8,
+    borderColor: '#F0E6D9',
+    shadowColor: '#000000',
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
   },
 
-  quickFilterActive: {
-    backgroundColor: '#1F6F43',
-    borderColor: '#1F6F43',
+  searchDishCardPressed: {
+    opacity: 0.84,
+    transform: [{ scale: 0.98 }],
   },
 
-  quickFilterText: {
-    color: '#4B463F',
-    fontWeight: '700',
-    fontSize: 12,
-    marginLeft: 6,
+  searchDishImage: {
+    width: '100%',
+    height: 94,
+    borderRadius: 12,
+    marginBottom: 8,
+    backgroundColor: '#F3EDE4',
   },
 
-  quickFilterTextActive: {
-    color: '#FFFFFF',
-  },
-
-  quickFilterReset: {
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-  },
-
-  quickFilterResetText: {
-    color: '#A55C28',
+  searchDishName: {
+    fontSize: 13,
     fontWeight: '800',
-    fontSize: 12,
+    color: '#1E1E1E',
+  },
+
+  searchDishRestaurant: {
+    marginTop: 3,
+    fontSize: 11,
+    color: '#82796E',
+  },
+
+  searchDishPrice: {
+    marginTop: 6,
+    fontSize: 13,
+    color: '#1F6F43',
+    fontWeight: '900',
   },
 
   sectionTitle: {
     fontSize: 20,
     fontWeight: '800',
     color: '#1E1E1E',
-    marginBottom: 14,
-  },
-
-  sectionTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  clearText: {
-    color: '#D4A017',
-    fontWeight: '800',
-    fontSize: 14,
     marginBottom: 14,
   },
 
@@ -1441,34 +1650,6 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
 
-  offerCard: {
-    backgroundColor: '#D96C2D',
-    borderRadius: 24,
-    padding: 20,
-    marginBottom: 28,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-
-  offerTextWrapper: {
-    flex: 1,
-    paddingRight: 16,
-  },
-
-  offerTitle: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '800',
-    marginBottom: 6,
-  },
-
-  offerSubtitle: {
-    color: '#FFF3E8',
-    fontSize: 14,
-    lineHeight: 20,
-  },
-
   listHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1506,6 +1687,29 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 190,
     backgroundColor: '#F3EDE4',
+  },
+
+  publicBrandPanel: {
+    width: '100%',
+    height: 190,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: '#F5EFE8',
+  },
+
+  publicListingLabel: {
+    color: '#6D6358',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+
+  nearbyNotice: {
+    marginTop: -8,
+    marginBottom: 14,
+    color: '#655B50',
+    fontSize: 12,
+    lineHeight: 17,
   },
 
   badge: {
@@ -1635,11 +1839,32 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
 
+  distanceBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 8,
+    backgroundColor: '#F7F4EF',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+  },
+
+  distanceText: {
+    marginLeft: 5,
+    color: '#6B5D4D',
+    fontWeight: '700',
+    fontSize: 12,
+  },
+
   deliveryFeeText: {
     marginLeft: 6,
     color: '#1F6F43',
     fontWeight: '700',
     fontSize: 12,
+  },
+
+  dishOnlySpacer: {
+    height: 16,
   },
 
   loaderWrapper: {

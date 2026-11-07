@@ -203,6 +203,24 @@ const ensureValidPassword = (password) => {
   return safePassword;
 };
 
+const ensureStrongPassword = (password) => {
+  const safePassword = ensureValidPassword(password);
+
+  if (
+    safePassword.length < 8 ||
+    !/[A-Z]/.test(safePassword) ||
+    !/[a-z]/.test(safePassword) ||
+    !/\d/.test(safePassword) ||
+    !/[^A-Za-z0-9]/.test(safePassword)
+  ) {
+    throw new Error(
+      'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.'
+    );
+  }
+
+  return safePassword;
+};
+
 export const loginUser = async ({ email, password, role = 'client' }) => {
   const payload = {
     email: ensureValidEmail(email),
@@ -247,10 +265,10 @@ export const registerClient = async (payload = {}) => {
     lastName,
     name: normalizeText(`${firstName} ${lastName}`),
     email: ensureValidEmail(payload?.email),
-    password: ensureValidPassword(payload?.password),
+    password: ensureStrongPassword(payload?.password),
     phone: sanitizePhone(payload?.phone),
     address: normalizeText(payload?.address),
-    accountStatus: 'active',
+    country: normalizeText(payload?.country),
     onboardingStatus: 'completed',
   };
 
@@ -267,17 +285,11 @@ export const registerRestaurant = async (payload = {}) => {
     lastName,
     name: normalizeText(`${firstName} ${lastName}`),
     email: ensureValidEmail(payload?.email),
-    password: ensureValidPassword(payload?.password),
+    password: ensureStrongPassword(payload?.password),
     phone: sanitizePhone(payload?.phone),
     address: normalizeText(payload?.address),
+    country: normalizeText(payload?.country),
     restaurantName: normalizeText(payload?.restaurantName),
-    restaurantLogo: normalizeText(payload?.restaurantLogo),
-    siret: normalizeText(payload?.siret),
-    identityFront: normalizeText(payload?.identityFront),
-    identityBack: normalizeText(payload?.identityBack),
-    payoutMethod: normalizeText(payload?.payoutMethod),
-    accountStatus: 'pending',
-    onboardingStatus: 'pending',
   };
 
   return apiPost(API_ENDPOINTS.auth.register, body);
@@ -293,18 +305,10 @@ export const registerDriver = async (payload = {}) => {
     lastName,
     name: normalizeText(`${firstName} ${lastName}`),
     email: ensureValidEmail(payload?.email),
-    password: ensureValidPassword(payload?.password),
+    password: ensureStrongPassword(payload?.password),
     phone: sanitizePhone(payload?.phone),
     address: normalizeText(payload?.address),
     country: normalizeText(payload?.country),
-    documentType: normalizeText(payload?.documentType),
-    identityFront: normalizeText(payload?.identityFront),
-    identityBack: normalizeText(payload?.identityBack),
-    selfie: normalizeText(payload?.selfie),
-    payoutMethod: normalizeText(payload?.payoutMethod),
-    membershipPaymentMethod: normalizeText(payload?.membershipPaymentMethod),
-    accountStatus: 'pending',
-    onboardingStatus: 'pending',
   };
 
   return apiPost(API_ENDPOINTS.auth.register, body);

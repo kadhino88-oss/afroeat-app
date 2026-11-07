@@ -1,4 +1,5 @@
-import React, { useMemo, useState, useCallback, useRef } from 'react';
+
+import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,15 +9,15 @@ import {
   FlatList,
   ActivityIndicator,
   StatusBar,
-  Image,
   Platform,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { createOrder } from '../services/orderService';
+import { createOrder, getOrderQuote } from '../services/orderService';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -39,8 +40,8 @@ const normalizeArray = (value) => {
   return Array.isArray(value) ? value : [];
 };
 
-// Montants proposes pour le don "Afro Impact" - le client choisit,
-// rien n'est ajoute par defaut (0 = pas de don).
+const EMPTY_TOTALS = Object.freeze({});
+
 const normalizeRole = (value) => {
   const role = normalizeText(value, 'client').toLowerCase();
 
@@ -71,15 +72,14 @@ const formatPrice = (value, currency = 'EUR') => {
   const amount = normalizeNumber(value, 0);
   const safeCurrency = normalizeText(currency, 'EUR').toUpperCase();
 
-  if (safeCurrency === 'USD') return `$${amount.toFixed(2)}`;
-  if (safeCurrency === 'GBP') return `£${amount.toFixed(2)}`;
-  if (safeCurrency === 'CHF') return `CHF ${amount.toFixed(2)}`;
-  if (safeCurrency === 'XOF' || safeCurrency === 'XAF') {
-    return `${amount.toFixed(0)} ${safeCurrency}`;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: safeCurrency,
+    }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${safeCurrency}`;
   }
-  if (safeCurrency === 'CAD') return `${amount.toFixed(2)} $CA`;
-
-  return `${amount.toFixed(2)} €`;
 };
 
 const getFallbackImage = () => {
@@ -87,29 +87,13 @@ const getFallbackImage = () => {
 };
 
 const getSafeItemId = (item) => {
-  const menuItem = item?.menuItem;
-  const nestedMenuItemId =
-    menuItem && typeof menuItem === 'object'
-      ? menuItem?._id || menuItem?.id
-      : null;
-
-  const candidates = [
-    nestedMenuItemId,
-    item?._id,
-    item?.id,
-    typeof menuItem === 'string' || typeof menuItem === 'number'
-      ? menuItem
-      : null,
-    item?.menuItemId,
-    item?.productId,
-  ];
-
   return (
-    candidates.find(
-      (value) =>
-        (typeof value === 'string' || typeof value === 'number') &&
-        String(value).trim().length > 0
-    ) ?? null
+    item?.menuItem ||
+    item?._id ||
+    item?.id ||
+    item?.menuItemId ||
+    item?.productId ||
+    null
   );
 };
 
@@ -139,6 +123,10 @@ const getOrderIdFromResponse = (response) => {
   return (
     response?.order?._id ||
     response?.order?.id ||
+    response?.data?.order?._id ||
+    response?.data?.order?.id ||
+    response?.data?._id ||
+    response?.data?.id ||
     response?._id ||
     response?.id ||
     null
@@ -157,8 +145,7 @@ export default function CheckoutScreen() {
   const auth = useAuth() || {};
 
   const cartItems = cart.cartItems;
-  const totals = cart.totals || {};
-  const getTotalPrice = cart.getTotalPrice;
+  const totals = cart.totals || EMPTY_TOTALS;
   const getRestaurantName = cart.getRestaurantName;
   const getRestaurantId = cart.getRestaurantId;
 
@@ -167,8 +154,12 @@ export default function CheckoutScreen() {
   const isAuthenticated = Boolean(auth.isAuthenticated);
   const role = normalizeRole(auth.role || user?.role);
 
-  const idempotencyRequestRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const orderInProgressRef = useRef(false);
+  const [quote, setQuote] = useState(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
+  const [quoteError, setQuoteError] = useState('');
+  const [quoteRetryVersion, setQuoteRetryVersion] = useState(0);
 
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
   const isClient = role === 'client';
@@ -231,7 +222,7 @@ export default function CheckoutScreen() {
     return buildOrderItemsPayload(safeCartItems);
   }, [safeCartItems]);
 
-  const subtotal = useMemo(() => {
+  const localSubtotal = useMemo(() => {
     if (Number.isFinite(Number(totals?.subtotal))) {
       return Math.max(0, normalizeNumber(totals.subtotal, 0));
     }
@@ -245,16 +236,19 @@ export default function CheckoutScreen() {
     }, 0);
   }, [safeCartItems, totals]);
 
-  const delivery = useMemo(() => {
-    return Math.max(
-      0,
-      normalizeNumber(totals?.delivery, safeCartItems.length ? 2.99 : 0)
-    );
-  }, [totals, safeCartItems.length]);
+  const subtotal = Number.isFinite(Number(quote?.itemsSubtotal))
+    ? Number(quote.itemsSubtotal)
+    : localSubtotal;
 
-  const totalPrice = useMemo(() => {
-    return Number((subtotal + delivery).toFixed(2));
-  }, [subtotal, delivery]);
+  const delivery = Number.isFinite(Number(quote?.deliveryFee))
+    ? Number(quote.deliveryFee)
+    : null;
+
+  const totalPrice = Number.isFinite(Number(quote?.totalPrice))
+    ? Number(quote.totalPrice)
+    : null;
+
+  const quoteCurrency = normalizeText(quote?.currency, currency);
 
   const totalItems = useMemo(() => {
     return safeCartItems.reduce((sum, item) => {
@@ -265,6 +259,81 @@ export default function CheckoutScreen() {
   const hasValidAddress = useMemo(() => {
     return normalizeText(deliveryAddress).length >= 5;
   }, [deliveryAddress]);
+
+  const handleRetryQuote = useCallback(() => {
+    if (quoteLoading) return;
+    setQuote(null);
+    setQuoteError('');
+    setQuoteRetryVersion((current) => current + 1);
+  }, [quoteLoading]);
+
+  useEffect(() => {
+    let isActive = true;
+    const timer = setTimeout(() => {
+      if (
+        !isLoggedIn ||
+        !isClient ||
+        !restaurantId ||
+        normalizedItems.length === 0
+      ) {
+        setQuote(null);
+        setQuoteLoading(false);
+        setQuoteError('');
+        return;
+      }
+
+      setQuote(null);
+      setQuoteError('');
+      setQuoteLoading(true);
+
+      getOrderQuote(
+        {
+          restaurant: restaurantId,
+          items: normalizedItems.map(({ menuItem, quantity }) => ({
+            menuItem,
+            quantity,
+          })),
+        },
+        token
+      )
+        .then((result) => {
+          if (!result?.quote) {
+            throw new Error(t('checkout.quoteUnavailable'));
+          }
+
+          if (isActive) setQuote(result.quote);
+        })
+        .catch((error) => {
+          if (isActive) {
+            setQuoteError(error?.message || t('checkout.quoteUnavailable'));
+          }
+        })
+        .finally(() => {
+          if (isActive) setQuoteLoading(false);
+        });
+    }, 0);
+
+    return () => {
+      isActive = false;
+      clearTimeout(timer);
+    };
+  }, [
+    isClient,
+    isLoggedIn,
+    normalizedItems,
+    quoteRetryVersion,
+    restaurantId,
+    t,
+    token,
+  ]);
+
+  const pricedItems = useMemo(
+    () =>
+      Array.isArray(quote?.items) && quote.items.length
+        ? quote.items
+        : safeCartItems,
+    [quote, safeCartItems]
+  );
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -283,16 +352,31 @@ export default function CheckoutScreen() {
     router.replace('/(tabs)/explore');
   }, []);
 
-  const handleGoToAddressMap = useCallback(() => {
-    router.push('/map');
+  const handleGoToProfile = useCallback(() => {
+    router.push('/(tabs)/profile');
   }, []);
 
+  /**
+   * =========================================================
+   * CREATE ORDER AND OPEN PAYMENT
+   * =========================================================
+   *
+   * Important:
+   * - The cart is not cleared here.
+   * - The order ID is required before navigating to payment.
+   * - Payment.js is responsible for handling payment completion.
+   */
+
   const handleOrder = useCallback(async () => {
+    // The state update is asynchronous; a ref blocks a second tap immediately.
+    if (orderInProgressRef.current) return;
+
     if (!isLoggedIn) {
       Alert.alert(
         t('checkout.alertLoginRequiredTitle'),
         t('checkout.alertLoginRequiredBody')
       );
+
       router.push('/auth/role');
       return;
     }
@@ -311,7 +395,18 @@ export default function CheckoutScreen() {
     }
 
     if (normalizedItems.length === 0) {
-      Alert.alert(t('checkout.alertEmptyCartTitle'), t('checkout.alertEmptyCartBody'));
+      Alert.alert(
+        t('checkout.alertEmptyCartTitle'),
+        t('checkout.alertEmptyCartBody')
+      );
+      return;
+    }
+
+    if (!quote || quoteLoading) {
+      Alert.alert(
+        t('checkout.error'),
+        quoteError || t('checkout.quoteUnavailable')
+      );
       return;
     }
 
@@ -324,9 +419,11 @@ export default function CheckoutScreen() {
     }
 
     try {
+      orderInProgressRef.current = true;
       setLoading(true);
 
-      const isValidMongoId = (id) => /^[a-f\d]{24}$/i.test(String(id || ''));
+      const isValidMongoId = (id) =>
+        /^[a-f\d]{24}$/i.test(String(id || ''));
 
       const hasFallbackItems = normalizedItems.some(
         (item) => !isValidMongoId(item?.menuItem)
@@ -341,61 +438,90 @@ export default function CheckoutScreen() {
         return;
       }
 
-      // Send item IDs and quantities only. The API reloads menu records and
-      // calculates authoritative prices, delivery fees, currency and totals.
       const payload = {
         restaurant: restaurantId,
-        items: normalizedItems.map((item) => ({
-          menuItem: item.menuItem,
-          quantity: item.quantity,
-        })),
+        items: normalizedItems,
+        quotedTotal: quote.totalPrice,
+        quotedCurrency: quote.currency,
         deliveryAddress: normalizeText(deliveryAddress),
+        deliveryAddressDetails: {
+          address: normalizeText(deliveryAddress),
+          fullAddress: normalizeText(deliveryAddress),
+        },
         notes: '',
       };
 
-      const requestSignature = JSON.stringify(payload);
-      if (
-        !idempotencyRequestRef.current ||
-        idempotencyRequestRef.current.signature !== requestSignature
-      ) {
-        idempotencyRequestRef.current = {
-          signature: requestSignature,
-          key: `afroeat_${Date.now()}_${Math.random().toString(36).slice(2, 14)}`,
-        };
-      }
-
-      // Keep the same key while retrying the exact same checkout after a timeout.
-      const response = await createOrder(
-        payload,
-        token,
-        idempotencyRequestRef.current.key
-      );
-      const createdOrder = response?.order || response?.data?.order || null;
+      const response = await createOrder(payload, token);
+      const createdOrder = response?.order || response?.data?.order || response?.data || response;
       const orderId = getOrderIdFromResponse(response);
-      const serverAmount = Number(createdOrder?.totalPrice);
-      const serverCurrency = normalizeText(createdOrder?.currency, currency).toUpperCase();
 
-      if (!orderId || !Number.isFinite(serverAmount) || serverAmount < 0 || !serverCurrency) {
-        throw new Error('Le serveur n’a pas retourné le montant confirmé de la commande.');
+      if (!orderId) {
+        throw new Error(
+          'La commande a été créée, mais son identifiant est introuvable. Vérifie tes commandes avant de réessayer.'
+        );
       }
 
-      // Do not clear the cart here: order creation is not payment confirmation.
-      // Keep it available if the payment is declined or the payment API fails.
+      const serverAmount = Number(
+        createdOrder?.totalPrice ??
+          createdOrder?.financials?.totalPrice ??
+          createdOrder?.total ??
+          quote?.totalPrice
+      );
 
-      Alert.alert(t('checkout.alertOrderCreatedTitle'), t('checkout.alertOrderCreatedBody'));
+      if (!Number.isFinite(serverAmount) || serverAmount < 0) {
+        throw new Error(t('checkout.quoteUnavailable'));
+      }
+
+      const paymentAmount = serverAmount;
+
+      const paymentCurrency = normalizeText(
+        createdOrder?.currency ||
+          createdOrder?.financials?.currency ||
+          createdOrder?.currencyCode,
+        quoteCurrency
+      ).toUpperCase();
 
       router.replace({
         pathname: '/payment',
         params: {
-          orderId,
-          amount: String(serverAmount),
-          currency: serverCurrency,
+          orderId: String(orderId),
+          amount: String(paymentAmount),
+          currency: paymentCurrency,
         },
       });
+
       return;
     } catch (error) {
+      if (error?.data?.code === 'QUOTE_CHANGED') {
+        try {
+          const refreshedQuote = await getOrderQuote(
+            {
+              restaurant: restaurantId,
+              items: normalizedItems.map(({ menuItem, quantity }) => ({
+                menuItem,
+                quantity,
+              })),
+            },
+            token
+          );
+
+          setQuote(refreshedQuote?.quote || null);
+
+          Alert.alert(
+            t('checkout.quoteChangedTitle'),
+            t('checkout.quoteChangedBody')
+          );
+
+          return;
+        } catch {
+          setQuote(null);
+          setQuoteError(t('checkout.quoteUnavailable'));
+        }
+      }
+
       const msg = error?.message || '';
       const status = error?.status;
+
       let title = t('checkout.alertOrderFailedTitle');
       let body = msg || t('checkout.alertOrderFailedBody');
 
@@ -417,20 +543,22 @@ export default function CheckoutScreen() {
 
       Alert.alert(title, body);
     } finally {
+      orderInProgressRef.current = false;
       setLoading(false);
     }
   }, [
-    currency,
-    delivery,
     deliveryAddress,
     hasValidAddress,
     isClient,
     isLoggedIn,
     normalizedItems,
+    quote,
+    quoteCurrency,
+    quoteError,
+    quoteLoading,
     restaurantId,
+    t,
     token,
-    totalPrice,
-    user,
   ]);
 
   if (!isLoggedIn) {
@@ -440,13 +568,25 @@ export default function CheckoutScreen() {
 
         <View style={styles.guestHeroCard}>
           <View style={styles.guestBadge}>
-            <Ionicons name="sparkles-outline" size={16} color="#8A6500" />
-            <Text style={styles.guestBadgeText}>{t('checkout.guestPremiumTitle')}</Text>
+            <Ionicons
+              name="sparkles-outline"
+              size={16}
+              color="#8A6500"
+            />
+            <Text style={styles.guestBadgeText}>
+              {t('checkout.guestPremiumTitle')}
+            </Text>
           </View>
 
-          <Ionicons name="lock-closed-outline" size={54} color="#C4B7A6" />
+          <Ionicons
+            name="lock-closed-outline"
+            size={54}
+            color="#C4B7A6"
+          />
 
-          <Text style={styles.emptyTitle}>{t('checkout.loginRequired')}</Text>
+          <Text style={styles.emptyTitle}>
+            {t('checkout.loginRequired')}
+          </Text>
 
           <Text style={styles.emptyText}>
             {t('checkout.guestPremiumText')}
@@ -458,7 +598,9 @@ export default function CheckoutScreen() {
             style={styles.primaryButton}
             onPress={handleGoToLogin}
           >
-            <Text style={styles.primaryButtonText}>{t('checkout.login')}</Text>
+            <Text style={styles.primaryButtonText}>
+              {t('checkout.login')}
+            </Text>
           </Pressable>
 
           <Pressable
@@ -467,7 +609,9 @@ export default function CheckoutScreen() {
             style={styles.secondaryButton}
             onPress={handleBack}
           >
-            <Text style={styles.secondaryButtonText}>{t('checkout.backToCart')}</Text>
+            <Text style={styles.secondaryButtonText}>
+              {t('checkout.backToCart')}
+            </Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -480,9 +624,15 @@ export default function CheckoutScreen() {
         <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
 
         <View style={styles.guestHeroCard}>
-          <Ionicons name="shield-outline" size={54} color="#C65D2E" />
+          <Ionicons
+            name="shield-outline"
+            size={54}
+            color="#C65D2E"
+          />
 
-          <Text style={styles.emptyTitle}>{t('checkout.clientOnly')}</Text>
+          <Text style={styles.emptyTitle}>
+            {t('checkout.clientOnly')}
+          </Text>
 
           <Text style={styles.emptyText}>
             {t('checkout.clientOnlyText')}
@@ -494,7 +644,9 @@ export default function CheckoutScreen() {
             style={styles.primaryButton}
             onPress={handleBack}
           >
-            <Text style={styles.primaryButtonText}>{t('checkout.backToCart')}</Text>
+            <Text style={styles.primaryButtonText}>
+              {t('checkout.backToCart')}
+            </Text>
           </Pressable>
         </View>
       </FadeInView>
@@ -524,31 +676,42 @@ export default function CheckoutScreen() {
       </View>
 
       <FlatList
-        data={safeCartItems}
+        data={pricedItems}
         keyExtractor={(item, index) =>
           `${item?._safeId || item?._id || item?.menuItem || item?.id || 'item'}-${index}`
         }
         renderItem={({ item }) => {
-          const quantity = Math.max(0, normalizeNumber(item?.quantity, 0));
+          const quantity = Math.max(
+            0,
+            normalizeNumber(item?.quantity, 0)
+          );
+
           const price = Math.max(0, normalizeNumber(item?.price, 0));
           const lineTotal = quantity * price;
           const imageUri = normalizeText(item?.image, getFallbackImage());
 
           return (
             <View style={styles.item}>
-              <Image source={{ uri: imageUri }} style={styles.itemImage} />
+              <Image
+                source={{ uri: imageUri }}
+                style={styles.itemImage}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={160}
+              />
 
               <View style={styles.itemLeft}>
                 <Text style={styles.name} numberOfLines={1}>
                   {item?.name || item?.nom || 'Plat'}
                 </Text>
+
                 <Text style={styles.details}>
-                  {quantity} x {formatPrice(price, currency)}
+                  {quantity} x {formatPrice(price, quoteCurrency)}
                 </Text>
               </View>
 
               <Text style={styles.lineTotal}>
-                {formatPrice(lineTotal, currency)}
+                {formatPrice(lineTotal, quoteCurrency)}
               </Text>
             </View>
           );
@@ -557,17 +720,31 @@ export default function CheckoutScreen() {
           <View>
             {!!restaurantName && safeCartItems.length > 0 && (
               <View style={styles.infoCard}>
-                <Ionicons name="restaurant-outline" size={18} color="#1F6F43" />
+                <Ionicons
+                  name="restaurant-outline"
+                  size={18}
+                  color="#1F6F43"
+                />
+
                 <Text style={styles.infoText} numberOfLines={1}>
-                  {t('checkout.orderingAt', { restaurant: restaurantName })}
+                  {t('checkout.orderingAt', {
+                    restaurant: restaurantName,
+                  })}
                 </Text>
               </View>
             )}
 
             <View style={styles.addressCard}>
               <View style={styles.addressHeader}>
-                <Ionicons name="location-outline" size={18} color="#D96C2D" />
-                <Text style={styles.addressTitle}>{t('checkout.deliveryAddress')}</Text>
+                <Ionicons
+                  name="location-outline"
+                  size={18}
+                  color="#D96C2D"
+                />
+
+                <Text style={styles.addressTitle}>
+                  {t('checkout.deliveryAddress')}
+                </Text>
               </View>
 
               <Text
@@ -583,30 +760,78 @@ export default function CheckoutScreen() {
 
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel={t('checkout.editAddress')}
+                accessibilityLabel={t('checkout.viewProfile')}
                 style={styles.addressAction}
-                onPress={handleGoToAddressMap}
+                onPress={handleGoToProfile}
               >
-                <Text style={styles.addressActionText}>{t('checkout.editAddress')}</Text>
-                <Ionicons name="chevron-forward" size={16} color="#1F6F43" />
+                <Text style={styles.addressActionText}>
+                  {t('checkout.viewProfile')}
+                </Text>
+
+                <Ionicons
+                  name="chevron-forward"
+                  size={16}
+                  color="#1F6F43"
+                />
               </Pressable>
             </View>
 
             <View style={styles.paymentPreviewCard}>
               <View style={styles.paymentPreviewHeader}>
-                <Ionicons name="card-outline" size={18} color="#2457C5" />
-                <Text style={styles.paymentPreviewTitle}>{t('checkout.securePayment')}</Text>
+                <Ionicons
+                  name="card-outline"
+                  size={18}
+                  color="#2457C5"
+                />
+
+                <Text style={styles.paymentPreviewTitle}>
+                  {t('checkout.securePayment')}
+                </Text>
               </View>
+
               <Text style={styles.paymentPreviewText}>
-                {t('checkout.paymentPreviewText')}
+                {quoteLoading
+                  ? t('checkout.quoteLoading')
+                  : quote
+                    ? t('checkout.paymentPreviewText')
+                    : t('checkout.quoteUnavailable')}
               </Text>
+
+              {!!quoteError && (
+                <View style={styles.quoteErrorActions}>
+                  <Text style={styles.quoteError}>{quoteError}</Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={t('checkout.retryQuote')}
+                    style={({ pressed }) => [
+                      styles.retryQuoteButton,
+                      pressed && styles.buttonPressed,
+                    ]}
+                    onPress={handleRetryQuote}
+                    disabled={quoteLoading}
+                  >
+                    <Ionicons name="refresh-outline" size={15} color="#1F6F43" />
+                    <Text style={styles.retryQuoteText}>
+                      {t('checkout.retryQuote')}
+                    </Text>
+                  </Pressable>
+                </View>
+              )}
             </View>
           </View>
         }
         ListEmptyComponent={
           <View style={styles.emptyBox}>
-            <Ionicons name="basket-outline" size={52} color="#C4B7A6" />
-            <Text style={styles.emptyTitle}>{t('checkout.emptyCart')}</Text>
+            <Ionicons
+              name="basket-outline"
+              size={52}
+              color="#C4B7A6"
+            />
+
+            <Text style={styles.emptyTitle}>
+              {t('checkout.emptyCart')}
+            </Text>
+
             <Text style={styles.emptyText}>
               {t('checkout.emptyCartText')}
             </Text>
@@ -617,7 +842,9 @@ export default function CheckoutScreen() {
               style={styles.primaryButton}
               onPress={handleGoToExplore}
             >
-              <Text style={styles.primaryButtonText}>{t('checkout.exploreRestaurants')}</Text>
+              <Text style={styles.primaryButtonText}>
+                {t('checkout.exploreRestaurants')}
+              </Text>
             </Pressable>
           </View>
         }
@@ -627,26 +854,51 @@ export default function CheckoutScreen() {
 
       <View style={styles.footer}>
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>{t('checkout.items')}</Text>
+          <Text style={styles.summaryLabel}>
+            {t('checkout.items')}
+          </Text>
           <Text style={styles.summaryValue}>{totalItems}</Text>
         </View>
 
         <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>{t('checkout.subtotal')}</Text>
-          <Text style={styles.summaryValue}>{formatPrice(subtotal, currency)}</Text>
-        </View>
-
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>{t('checkout.delivery')}</Text>
+          <Text style={styles.summaryLabel}>
+            {t('checkout.subtotal')}
+          </Text>
           <Text style={styles.summaryValue}>
-            {delivery === 0 ? t('checkout.free') : formatPrice(delivery, currency)}
+            {formatPrice(subtotal, quoteCurrency)}
           </Text>
         </View>
 
+        <View style={styles.summaryRow}>
+          <Text style={styles.summaryLabel}>
+            {t('checkout.delivery')}
+          </Text>
+
+          <Text style={styles.summaryValue}>
+            {delivery === null
+              ? quoteLoading
+                ? t('checkout.quoteLoading')
+                : t('checkout.feeAtCheckout')
+              : delivery === 0
+                ? t('checkout.free')
+                : formatPrice(delivery, quoteCurrency)}
+          </Text>
+        </View>
 
         <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
-          <Text style={styles.totalValue}>{formatPrice(totalPrice, currency)}</Text>
+          <Text style={styles.totalLabel}>
+            {t('checkout.total')}
+          </Text>
+
+          <Text style={styles.totalValue}>
+            {quoteLoading
+              ? t('checkout.quoteLoading')
+              : totalPrice === null
+                ? quoteError
+                  ? t('checkout.quoteUnavailable')
+                  : t('checkout.totalAtCheckout')
+                : formatPrice(totalPrice, quoteCurrency)}
+          </Text>
         </View>
 
         {!hasValidAddress && safeCartItems.length > 0 && (
@@ -654,7 +906,12 @@ export default function CheckoutScreen() {
             onPress={() => router.push('/profile/info')}
             style={styles.addressWarningBlock}
           >
-            <Ionicons name="warning-outline" size={16} color="#B04A00" />
+            <Ionicons
+              name="warning-outline"
+              size={16}
+              color="#B04A00"
+            />
+
             <Text style={styles.footerHelperText}>
               {t('checkout.addressMissing')}{' '}
               <Text style={styles.footerHelperLink}>
@@ -669,21 +926,36 @@ export default function CheckoutScreen() {
           accessibilityLabel={t('checkout.placeOrder')}
           style={({ pressed }) => [
             styles.button,
-            (loading || safeCartItems.length === 0 || !hasValidAddress) &&
-              styles.buttonDisabled,
+            (
+              loading ||
+              quoteLoading ||
+              !quote ||
+              safeCartItems.length === 0 ||
+              !hasValidAddress
+            ) && styles.buttonDisabled,
             pressed &&
               !loading &&
+              !quoteLoading &&
+              Boolean(quote) &&
               safeCartItems.length > 0 &&
               hasValidAddress &&
               styles.buttonPressed,
           ]}
           onPress={handleOrder}
-          disabled={loading || safeCartItems.length === 0 || !hasValidAddress}
+          disabled={
+            loading ||
+            quoteLoading ||
+            !quote ||
+            safeCartItems.length === 0 ||
+            !hasValidAddress
+          }
         >
           {loading ? (
             <ActivityIndicator color="#1E1E1E" />
           ) : (
-            <Text style={styles.buttonText}>{t('checkout.placeOrder')}</Text>
+            <Text style={styles.buttonText}>
+              {t('checkout.placeOrder')}
+            </Text>
           )}
         </Pressable>
       </View>
@@ -872,6 +1144,36 @@ const styles = StyleSheet.create({
     color: '#4F5F88',
     fontSize: 14,
     lineHeight: 21,
+  },
+
+  quoteError: {
+    color: '#9B342E',
+    fontSize: 12,
+    lineHeight: 17,
+  },
+
+  quoteErrorActions: {
+    marginTop: 8,
+    alignItems: 'flex-start',
+  },
+
+  retryQuoteButton: {
+    marginTop: 8,
+    minHeight: 36,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 11,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#D6EAD9',
+  },
+
+  retryQuoteText: {
+    marginLeft: 6,
+    color: '#1F6F43',
+    fontSize: 12,
+    fontWeight: '800',
   },
 
   listContent: {

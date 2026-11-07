@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   StatusBar,
   ScrollView,
   RefreshControl,
-  Alert,
 } from 'react-native';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -350,13 +349,17 @@ export default function RestaurantOrderDetailsScreen() {
   const orderId = Array.isArray(params?.id) ? params.id[0] : params?.id;
 
   const isMountedRef = useRef(true);
+  const requestIdRef = useRef(0);
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadError, setLoadError] = useState('');
 
   const fetchOrder = useCallback(
-    async (manual = false) => {
+    async (manual = false, silent = false) => {
+      const requestId = ++requestIdRef.current;
+
       if (!token || !isAuthenticated || !orderId) {
         if (isMountedRef.current) {
           setLoading(false);
@@ -366,7 +369,9 @@ export default function RestaurantOrderDetailsScreen() {
       }
 
       try {
-        if (manual) {
+        if (silent) {
+          // Background polling should not interrupt the current screen.
+        } else if (manual) {
           setRefreshing(true);
         } else {
           setLoading(true);
@@ -383,17 +388,18 @@ export default function RestaurantOrderDetailsScreen() {
           throw new Error(t('restaurant.orderDetails.notFoundTitle'));
         }
 
-        if (isMountedRef.current) {
+        if (isMountedRef.current && requestId === requestIdRef.current) {
           setOrder(found);
+          setLoadError('');
         }
       } catch (error) {
         console.log('RestaurantOrderDetailsScreen fetchOrder error:', error);
 
-        if (manual) {
-          Alert.alert(t('common.error'), error?.message || t('restaurant.orderDetails.errorRefreshBody'));
+        if (isMountedRef.current && requestId === requestIdRef.current) {
+          setLoadError(t('restaurant.refreshFailed'));
         }
       } finally {
-        if (isMountedRef.current) {
+        if (isMountedRef.current && requestId === requestIdRef.current) {
           setLoading(false);
           setRefreshing(false);
         }
@@ -404,24 +410,19 @@ export default function RestaurantOrderDetailsScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      isMountedRef.current = true;
       fetchOrder(false);
-    }, [fetchOrder])
-  );
+      const interval = token && orderId
+        ? setInterval(() => fetchOrder(false, true), LIVE_REFRESH_MS)
+        : null;
 
-  useEffect(() => {
-    isMountedRef.current = true;
-
-    if (!token || !orderId) return undefined;
-
-    const interval = setInterval(() => {
-      fetchOrder(true);
-    }, LIVE_REFRESH_MS);
-
-    return () => {
-      clearInterval(interval);
+      return () => {
+        if (interval) clearInterval(interval);
+        requestIdRef.current += 1;
       isMountedRef.current = false;
-    };
-  }, [fetchOrder, token, orderId]);
+      };
+    }, [fetchOrder, token, orderId])
+  );
 
   const currency = useMemo(() => getCurrency(order), [order]);
 
@@ -465,6 +466,24 @@ export default function RestaurantOrderDetailsScreen() {
           {t('restaurant.orderDetails.notFoundText')}
         </Text>
 
+        {!!loadError && (
+          <>
+            <Text style={styles.refreshNoticeText}>{loadError}</Text>
+            <Pressable
+              style={styles.primaryButton}
+              onPress={() => fetchOrder(true)}
+              disabled={refreshing}
+              accessibilityRole="button"
+            >
+              {refreshing ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.primaryButtonText}>{t('common.retry')}</Text>
+              )}
+            </Pressable>
+          </>
+        )}
+
         <Pressable style={styles.primaryButton} onPress={() => router.back()}>
           <Text style={styles.primaryButtonText}>{t('livraison.tracking.backButton')}</Text>
         </Pressable>
@@ -488,6 +507,13 @@ export default function RestaurantOrderDetailsScreen() {
         }
         showsVerticalScrollIndicator={false}
       >
+        {!!loadError && (
+          <View style={styles.refreshNotice}>
+            <Ionicons name="cloud-offline-outline" size={18} color="#9B4B2D" />
+            <Text style={styles.refreshNoticeText}>{loadError}</Text>
+          </View>
+        )}
+
         {/* HEADER */}
         <View style={styles.header}>
           <Pressable style={styles.backButton} onPress={() => router.back()}>
@@ -658,6 +684,27 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     paddingBottom: 32,
+  },
+
+  refreshNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF0E8',
+    borderColor: '#F2C7B2',
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    gap: 8,
+  },
+  refreshNoticeText: {
+    color: '#77412C',
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: 'center',
   },
 
   loader: {

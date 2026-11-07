@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,12 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import { useLocalSearchParams, router, Redirect } from 'expo-router';
+import {
+  useLocalSearchParams,
+  useFocusEffect,
+  router,
+  Redirect,
+} from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
@@ -31,6 +36,8 @@ const normalizeNumber = (value, fallback = 0) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 };
+
+const LIVE_REFRESH_INTERVAL_MS = 15000;
 
 const normalizeRole = (value) => {
   const role = normalizeText(value, 'client').toLowerCase();
@@ -180,47 +187,78 @@ const getStatusIcon = (status) => {
   }
 };
 
-const formatPrice = (value, currency = 'EUR') => {
+const formatPrice = (value, currency = 'EUR', locale = 'fr') => {
   const amount = normalizeNumber(value, 0);
   const normalizedCurrency = normalizeText(currency, 'EUR').toUpperCase();
 
-  if (normalizedCurrency === 'USD') return `$${amount.toFixed(2)}`;
-  if (normalizedCurrency === 'GBP') return `£${amount.toFixed(2)}`;
-  if (normalizedCurrency === 'XOF' || normalizedCurrency === 'XAF') {
-    return `${amount.toFixed(0)} ${normalizedCurrency}`;
-  }
-  if (normalizedCurrency === 'CAD') return `${amount.toFixed(2)} $CA`;
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: normalizedCurrency,
+    }).format(amount);
+  } catch {
+    const formattedAmount = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 2,
+    }).format(amount);
 
-  return `${amount.toFixed(2)} €`;
+    return `${formattedAmount} ${normalizedCurrency}`;
+  }
 };
 
-const formatDate = (value) => {
-  if (!value) return 'Date inconnue';
+const formatDate = (value, locale = 'fr') => {
+  if (!value) return '—';
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return 'Date inconnue';
+    return '—';
   }
 
-  return date.toLocaleString('fr-FR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
+  } catch {
+    return date.toLocaleString();
+  }
 };
 
-const formatCoordinates = (tracking) => {
-  const lat = tracking?.location?.lat;
-  const lng = tracking?.location?.lng;
+const formatDistance = (value, locale = 'fr') => {
+  if (value === null || value === undefined || value === '') return null;
 
-  if (!Number.isFinite(Number(lat)) || !Number.isFinite(Number(lng))) {
-    return 'Position non disponible';
+  const distance = Number(value);
+
+  if (!Number.isFinite(distance) || distance < 0) {
+    return null;
   }
 
-  return `${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}`;
+  try {
+    return `${new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 1,
+    }).format(distance)} km`;
+  } catch {
+    return `${distance.toFixed(1)} km`;
+  }
+};
+
+const formatTime = (value, locale = 'fr') => {
+  if (!value) return null;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
+  } catch {
+    return date.toLocaleTimeString();
+  }
 };
 
 const extractOrderPayload = (response) => {
@@ -267,14 +305,6 @@ const normalizeOrder = (order) => {
   };
 };
 
-const STEPS = [
-  'Commande reçue',
-  'Confirmée',
-  'Préparation',
-  'En livraison',
-  'Livrée',
-];
-
 /**
  * =========================================================
  * SCREEN
@@ -282,7 +312,8 @@ const STEPS = [
  */
 
 export default function OrderDetailScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language || 'fr';
   const STEPS = [
     t('order.steps.received'),
     t('order.steps.confirmed'),
@@ -293,30 +324,23 @@ export default function OrderDetailScreen() {
   const params = useLocalSearchParams();
   const { token, isAuthenticated, user, role, loading: authLoading } =
     useAuth();
+  const rawOrderId = Array.isArray(params?.id) ? params.id[0] : params?.id;
+  const safeOrderId = normalizeText(rawOrderId) || null;
 
   const [order, setOrder] = useState(null);
   const [tracking, setTracking] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const requestInFlightRef = useRef(false);
+  const hasOrderRef = useRef(false);
+  const loadedOrderIdRef = useRef(null);
 
   const currentRole = useMemo(() => {
     return normalizeRole(role || user?.role || 'client');
   }, [role, user]);
 
-  const safeOrderId = useMemo(() => {
-    const rawId = Array.isArray(params?.id) ? params.id[0] : params?.id;
-    return normalizeText(rawId) || null;
-  }, [params]);
-
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
-
-  /**
-   * =========================================================
-   * AUTH
-   * =========================================================
-   */
-
 
   /**
    * =========================================================
@@ -325,34 +349,65 @@ export default function OrderDetailScreen() {
    */
 
   const load = useCallback(
-    async (manualRefresh = false) => {
-      if (authLoading) return;
+    async (manualRefresh = false, silent = false) => {
+      if (authLoading || requestInFlightRef.current) return;
 
-      if (!isLoggedIn || !token || !safeOrderId || currentRole !== 'client') {
+      if (!safeOrderId) {
         setOrder(null);
         setTracking(null);
-        setErrorMessage('');
+        hasOrderRef.current = false;
+        setErrorMessage('Commande introuvable.');
         setLoading(false);
         setRefreshing(false);
         return;
       }
 
+      if (loadedOrderIdRef.current !== safeOrderId) {
+        loadedOrderIdRef.current = safeOrderId;
+        hasOrderRef.current = false;
+        setOrder(null);
+        setTracking(null);
+      }
+
+      if (!isLoggedIn || !token || !safeOrderId || currentRole !== 'client') {
+        if (!silent) {
+          setOrder(null);
+          setTracking(null);
+          hasOrderRef.current = false;
+          setErrorMessage('');
+          setLoading(false);
+          setRefreshing(false);
+        }
+        return;
+      }
+
+      requestInFlightRef.current = true;
+
       try {
         if (manualRefresh) {
           setRefreshing(true);
-        } else {
+        } else if (!silent && !hasOrderRef.current) {
           setLoading(true);
         }
 
-        setErrorMessage('');
+        if (!silent) setErrorMessage('');
 
-        const [orderRes, trackingRes] = await Promise.all([
+        const [orderResult, trackingResult] = await Promise.allSettled([
           getOrderById(safeOrderId, token),
           getOrderTracking(safeOrderId, token),
         ]);
 
-        const safeOrder = normalizeOrder(extractOrderPayload(orderRes));
-        const safeTracking = extractTrackingPayload(trackingRes);
+        if (orderResult.status === 'rejected') {
+          throw orderResult.reason;
+        }
+
+        const safeOrder = normalizeOrder(
+          extractOrderPayload(orderResult.value)
+        );
+        const safeTracking =
+          trackingResult.status === 'fulfilled'
+            ? extractTrackingPayload(trackingResult.value)
+            : null;
 
         if (!safeOrder?._id) {
           throw new Error('Commande introuvable.');
@@ -360,36 +415,31 @@ export default function OrderDetailScreen() {
 
         setOrder(safeOrder);
         setTracking(safeTracking || null);
+        hasOrderRef.current = true;
       } catch (err) {
-        console.log('Erreur order detail:', err);
-        setOrder(null);
-        setTracking(null);
-        setErrorMessage(
-          err?.message || 'Impossible de charger cette commande.'
-        );
-
-        if (manualRefresh) {
-          Alert.alert(
-            'Erreur',
+        if (!silent) {
+          setErrorMessage(
             err?.message || 'Impossible de charger cette commande.'
           );
+
+          if (manualRefresh) {
+            Alert.alert(
+              'Erreur',
+              err?.message || 'Impossible de charger cette commande.'
+            );
+          }
         }
       } finally {
-        setLoading(false);
-        setRefreshing(false);
+        requestInFlightRef.current = false;
+
+        if (!silent) {
+          setLoading(false);
+          setRefreshing(false);
+        }
       }
     },
     [authLoading, currentRole, isLoggedIn, safeOrderId, token]
   );
-
-  useEffect(() => {
-    if (safeOrderId) {
-      load(false);
-    } else {
-      setLoading(false);
-      setErrorMessage('Commande introuvable.');
-    }
-  }, [safeOrderId, load]);
 
   /**
    * =========================================================
@@ -415,6 +465,45 @@ export default function OrderDetailScreen() {
   }, [items, order]);
 
   const step = getStatusStep(order?.status);
+  const isTerminal =
+    normalizeStatus(order?.status) === 'delivered' ||
+    normalizeStatus(order?.status) === 'cancelled';
+  const isOnTheWay = normalizeStatus(order?.status) === 'on_the_way';
+  useFocusEffect(
+    useCallback(() => {
+      void load(false);
+
+      if (
+        authLoading ||
+        !isLoggedIn ||
+        !token ||
+        !safeOrderId ||
+        currentRole !== 'client' ||
+        isTerminal
+      ) {
+        return undefined;
+      }
+
+      const refreshTimer = setInterval(() => {
+        if (isTerminal) {
+          clearInterval(refreshTimer);
+          return;
+        }
+
+        void load(false, true);
+      }, LIVE_REFRESH_INTERVAL_MS);
+
+      return () => clearInterval(refreshTimer);
+    }, [
+      authLoading,
+      currentRole,
+      isLoggedIn,
+      isTerminal,
+      load,
+      safeOrderId,
+      token,
+    ])
+  );
 
   const itemCount = useMemo(() => {
     return items.reduce((sum, item) => {
@@ -424,11 +513,10 @@ export default function OrderDetailScreen() {
 
   /**
    * =========================================================
-   * LOADING
+   * AUTH
    * =========================================================
    */
 
-  // Garde-fous placés après les hooks (règles des hooks React)
   if (!authLoading && !isAuthenticated) {
     return <Redirect href="/auth/role" />;
   }
@@ -446,6 +534,12 @@ export default function OrderDetailScreen() {
       return <Redirect href="/admin" />;
     }
   }
+
+  /**
+   * =========================================================
+   * LOADING
+   * =========================================================
+   */
 
   if (authLoading || loading) {
     return (
@@ -527,7 +621,9 @@ export default function OrderDetailScreen() {
           <Text style={styles.subtitle}>
             {t('order.orderNumber', { number: String(order?._id || '').slice(-6).toUpperCase() })}
           </Text>
-          <Text style={styles.subMeta}>{formatDate(order?.createdAt)}</Text>
+          <Text style={styles.subMeta}>
+            {formatDate(order?.createdAt, locale)}
+          </Text>
         </View>
 
         <View style={styles.statusCard}>
@@ -566,7 +662,7 @@ export default function OrderDetailScreen() {
             <View style={styles.metaBadge}>
               <Ionicons name="cash-outline" size={14} color="#D96C2D" />
               <Text style={styles.metaBadgeText}>
-                {formatPrice(total, order?.currency)}
+                {formatPrice(total, order?.currency, locale)}
               </Text>
             </View>
 
@@ -579,24 +675,54 @@ export default function OrderDetailScreen() {
           </View>
         </View>
 
-        <View style={styles.liveCard}>
-          <View style={styles.liveHeader}>
-            <Ionicons name="radio-outline" size={18} color="#2457C5" />
-            <Text style={styles.liveTitle}>{t('order.realtime')}</Text>
-          </View>
+        {isOnTheWay && (
+          <View style={styles.liveCard}>
+            <View style={styles.liveHeader}>
+              <Ionicons name="radio-outline" size={18} color="#2457C5" />
+              <Text style={styles.liveTitle}>{t('order.realtime')}</Text>
+            </View>
 
-          <View style={styles.liveRow}>
-            <Text style={styles.liveLabel}>{t('order.trackingStatus')}</Text>
-            <Text style={styles.liveValue}>
-              {tracking ? t('order.active') : t('order.unavailable')}
-            </Text>
-          </View>
+            <View style={styles.liveRow}>
+              <Text style={styles.liveLabel}>{t('order.trackingStatus')}</Text>
+              <Text style={styles.liveValue}>
+                {tracking?.trackingEnabled && tracking?.driverLocation
+                  ? t('order.active')
+                  : t('order.unavailable')}
+              </Text>
+            </View>
 
-          <View style={styles.liveRow}>
-            <Text style={styles.liveLabel}>{t('order.driverPosition')}</Text>
-            <Text style={styles.liveValue}>{formatCoordinates(tracking)}</Text>
+            <View style={styles.liveRow}>
+              <Text style={styles.liveLabel}>{t('order.deliveryEta')}</Text>
+              <Text style={styles.liveValue}>
+                {Number.isFinite(Number(tracking?.etaMinutes)) &&
+                Number(tracking?.etaMinutes) > 0
+                  ? t('order.etaMinutes', {
+                      minutes: Number(tracking.etaMinutes),
+                    })
+                  : t('order.unavailable')}
+              </Text>
+            </View>
+
+            <View style={styles.liveRow}>
+              <Text style={styles.liveLabel}>
+                {t('order.remainingDistance')}
+              </Text>
+              <Text style={styles.liveValue}>
+                {formatDistance(tracking?.distanceKm, locale) ||
+                  t('order.unavailable')}
+              </Text>
+            </View>
+
+            {!!tracking?.driverLocation &&
+              !!formatTime(tracking?.lastLocationUpdateAt, locale) && (
+                <Text style={styles.liveUpdatedAt}>
+                  {t('order.locationUpdatedAt', {
+                    time: formatTime(tracking.lastLocationUpdateAt, locale),
+                  })}
+                </Text>
+              )}
           </View>
-        </View>
+        )}
 
         <View style={styles.timelineCard}>
           <Text style={styles.timelineTitle}>{t('order.progress')}</Text>
@@ -604,7 +730,9 @@ export default function OrderDetailScreen() {
           {STEPS.map((label, index) => {
             const isDone =
               normalizeStatus(order?.status) !== 'cancelled' && index + 1 <= step;
-            const isCurrent = index + 1 === step;
+            const isCurrent =
+              normalizeStatus(order?.status) !== 'cancelled' &&
+              index + 1 === step;
 
             return (
               <View key={label} style={styles.timelineRow}>
@@ -672,7 +800,7 @@ export default function OrderDetailScreen() {
                   </View>
 
                   <Text style={styles.itemPrice}>
-                    {formatPrice(lineTotal, order?.currency)}
+                    {formatPrice(lineTotal, order?.currency, locale)}
                   </Text>
                 </View>
               );
@@ -686,7 +814,7 @@ export default function OrderDetailScreen() {
           <View style={styles.totalRow}>
             <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
             <Text style={styles.totalValue}>
-              {formatPrice(total, order?.currency)}
+              {formatPrice(total, order?.currency, locale)}
             </Text>
           </View>
         </View>
@@ -901,6 +1029,13 @@ const styles = StyleSheet.create({
     color: '#2457C5',
     fontSize: 13,
     fontWeight: '900',
+    textAlign: 'right',
+  },
+
+  liveUpdatedAt: {
+    marginTop: 8,
+    color: '#7180A2',
+    fontSize: 11,
     textAlign: 'right',
   },
 

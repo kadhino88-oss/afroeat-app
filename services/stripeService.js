@@ -1,32 +1,47 @@
+
 /**
  * =========================================================
  * STRIPE SERVICE — AFROEAT FRONTEND
  * services/stripeService.js
  *
- * Installation requise :
+ * Dépendance :
  *   npx expo install @stripe/stripe-react-native
  *
- * Dans app/_layout.js, entourer AppStack avec StripeProvider :
- *   import { StripeProvider } from '@stripe/stripe-react-native';
- *   <StripeProvider publishableKey={STRIPE_PUBLISHABLE_KEY}>
- *     <AppStack />
- *   </StripeProvider>
+ * Configuration :
+ *   STRIPE_PUBLISHABLE_KEY dans app/_layout.js via StripeProvider.
+ *   EXPO_PUBLIC_STRIPE_KEY dans l'environnement Expo.
  * =========================================================
  */
 
 import { useStripe } from '@stripe/stripe-react-native';
-import { apiGet, apiPost } from './apiClient';
+import * as Linking from 'expo-linking';
+import Constants from 'expo-constants';
+import { apiPost } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
-// Aucune clé factice : sans clé publique configurée, le paiement carte reste indisponible.
-export const STRIPE_PUBLISHABLE_KEY = String(
-  process.env.EXPO_PUBLIC_STRIPE_KEY || ''
-).trim();
+// Clé publique Stripe uniquement. Ne jamais mettre la clé secrète
+// Stripe dans l'application mobile.
+export const STRIPE_PUBLISHABLE_KEY =
+  process.env.EXPO_PUBLIC_STRIPE_KEY ||
+  'pk_test_VOTRE_CLE_PUBLIQUE';
 
 /**
- * Crée un PaymentIntent côté backend et retourne le clientSecret.
+ * Crée un PaymentIntent auprès du backend.
+ * Le serveur reste responsable du montant et de la devise.
  */
 export const createPaymentIntent = async (orderId, token) => {
+  if (!orderId) {
+    throw new Error('Identifiant de commande manquant.');
+  }
+
+  if (!token) {
+    throw new Error('Tu dois être connecté pour effectuer un paiement.');
+  }
+
+  if (!API_ENDPOINTS?.payments?.createIntent) {
+    throw new Error('La route de création du paiement est mal configurée.');
+  }
+
   const response = await apiPost(
     API_ENDPOINTS.payments.createIntent,
     { orderId },
@@ -34,22 +49,50 @@ export const createPaymentIntent = async (orderId, token) => {
   );
 
   if (!response?.clientSecret) {
-    throw new Error("Impossible d'initialiser le paiement. Réessaie.");
+    throw new Error(
+      response?.message ||
+      'Impossible d’initialiser le paiement. Réessaie.'
+    );
   }
 
   return {
     clientSecret: response.clientSecret,
-    paymentIntentId: response.paymentIntentId,
+    paymentIntentId: response.paymentIntentId || null,
+    customerSessionClientSecret:
+      response.customerSessionClientSecret || null,
     amount: response.amount,
     currency: response.currency,
   };
 };
 
 /**
- * Confirme le paiement côté backend après succès Stripe.
+ * Demande au backend de vérifier le paiement Stripe.
+ *
+ * Le backend doit récupérer le PaymentIntent auprès de Stripe,
+ * vérifier son statut, son montant, sa devise et son lien avec
+ * la commande avant de marquer la commande comme payée.
  */
-export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
-  // La route backend disponible est /payments/confirm.
+export const confirmOrderPayment = async (
+  orderId,
+  paymentIntentId,
+  token
+) => {
+  if (!orderId || !paymentIntentId) {
+    throw new Error(
+      'Informations manquantes pour confirmer le paiement.'
+    );
+  }
+
+  if (!token) {
+    throw new Error(
+      'Session expirée. Reconnecte-toi pour vérifier le paiement.'
+    );
+  }
+
+  if (!API_ENDPOINTS?.payments?.confirm) {
+    throw new Error('La route de confirmation du paiement est mal configurée.');
+  }
+
   return apiPost(
     API_ENDPOINTS.payments.confirm,
     { orderId, paymentIntentId },
@@ -58,82 +101,148 @@ export const confirmOrderPayment = async (orderId, paymentIntentId, token) => {
 };
 
 /**
- * Read the payment options authorized by the backend for this environment.
- * An unavailable response is not treated as permission to accept a payment.
+ * Hook principal de paiement AFROEAT.
+ *
+ * Flux :
+ * 1. Création du PaymentIntent côté serveur.
+ * 2. Confirmation du paiement via Stripe.
+ * 3. Vérification du paiement par le backend.
+ *
+ * IMPORTANT :
+ * Le panier ne doit pas être vidé ici. C'est à l'écran appelant
+ * de le vider uniquement après une confirmation serveur réussie.
  */
-const hasConfiguredPublishableKey = () =>
-  /^pk_(test|live)_[A-Za-z0-9]+$/.test(STRIPE_PUBLISHABLE_KEY);
+const getStripeReturnURL = () =>
+  Constants.appOwnership === 'expo'
+    ? Linking.createURL('/--/')
+    : Linking.createURL('');
 
-export const getAvailablePaymentMethods = async (token) => {
-  const response = await apiGet(API_ENDPOINTS.payments.methods, token);
-  const methods = response?.methods || {};
-  return {
-    card: methods.card === true && hasConfiguredPublishableKey(),
-    cash: methods.cash === true,
-  };
-};
-
-/**
- * Select cash-on-delivery only when the backend explicitly accepts it.
- * The backend rejects this method in production until the settlement ledger exists.
- */
-export const selectCashPayment = async (orderId, token) => {
-  if (!orderId || !token) {
-    throw new Error('Commande ou session manquante.');
-  }
-  const response = await apiPost(
-    API_ENDPOINTS.payments.cash,
-    { orderId },
-    token
-  );
-  if (response?.success !== true || response?.paymentMethod !== 'cash') {
-    throw new Error('Le paiement à la livraison n’a pas été confirmé par le serveur.');
-  }
-  return response;
-};
-
-/**
- * Hook principal de paiement Afroeat.
- * Gère le flow complet : intent → confirm → webhook.
- */
 export const useAfroeatPayment = () => {
-  const { confirmPayment, loading } = useStripe();
+  const { initPaymentSheet, presentPaymentSheet, loading } = useStripe();
 
-  const pay = async ({ orderId, token, onSuccess, onError }) => {
+  const pay = async ({
+    orderId,
+    token,
+    onSuccess,
+    onError,
+  } = {}) => {
     try {
-      if (!hasConfiguredPublishableKey()) {
-        throw new Error('Configure une clé publique Stripe valide dans EXPO_PUBLIC_STRIPE_KEY.');
+      if (!orderId) {
+        throw new Error('Aucune commande à payer.');
       }
 
-      // 1. Créer le PaymentIntent côté backend
-      const { clientSecret, paymentIntentId } = await createPaymentIntent(orderId, token);
+      if (!token) {
+        throw new Error(
+          'Tu dois être connecté pour effectuer un paiement.'
+        );
+      }
 
-      // 2. Présenter le formulaire de paiement Stripe
-      const { error, paymentIntent } = await confirmPayment(clientSecret, {
-        paymentMethodType: 'Card',
-        paymentMethodData: {
-          billingDetails: {},
-        },
+      if (
+        typeof initPaymentSheet !== 'function' ||
+        typeof presentPaymentSheet !== 'function'
+      ) {
+        throw new Error(
+          'Le formulaire sécurisé Stripe n’est pas disponible sur cet appareil.'
+        );
+      }
+
+      // Le backend détermine le montant et renvoie le secret client ainsi que
+      // l'identifiant exact du PaymentIntent à confirmer ensuite côté serveur.
+      const {
+        clientSecret,
+        paymentIntentId,
+        customerSessionClientSecret,
+      } = await createPaymentIntent(orderId, token);
+
+      if (!paymentIntentId) {
+        throw new Error(
+          'Stripe n’a pas retourné l’identifiant du paiement. Aucun paiement n’a été confirmé.'
+        );
+      }
+
+      // PaymentSheet collecte les informations de carte dans l'interface native
+      // Stripe et gère les étapes d'authentification comme 3D Secure.
+      const { error: initializationError } = await initPaymentSheet({
+        merchantDisplayName: 'AFROEAT',
+        paymentIntentClientSecret: clientSecret,
+        ...(customerSessionClientSecret
+          ? { customerSessionClientSecret }
+          : {}),
+        returnURL: getStripeReturnURL(),
+        allowsDelayedPaymentMethods: false,
       });
 
-      if (error) {
-        throw new Error(error.message || 'Paiement refusé.');
+      if (initializationError) {
+        throw new Error(
+          initializationError.localizedMessage ||
+          initializationError.message ||
+          'Impossible d’ouvrir le formulaire de paiement Stripe.'
+        );
       }
 
-      if (paymentIntent?.status !== 'Succeeded') {
-        throw new Error('Paiement non finalisé. Réessaie.');
+      const { error: presentationError, didCancel } =
+        await presentPaymentSheet();
+
+      if (didCancel || presentationError?.code === 'Canceled') {
+        return {
+          success: false,
+          canceled: true,
+        };
       }
 
-      // 3. Confirmer côté backend (double vérification)
-      await confirmOrderPayment(orderId, paymentIntentId, token);
+      if (presentationError) {
+        throw new Error(
+          presentationError.localizedMessage ||
+          presentationError.message ||
+          'Le paiement a échoué. Tu peux réessayer.'
+        );
+      }
 
-      if (typeof onSuccess === 'function') onSuccess(paymentIntent);
+      // La confirmation serveur récupère l'état réel auprès de Stripe avant
+      // que l'application n'annonce le paiement comme réussi.
+      const serverConfirmation = await confirmOrderPayment(
+        orderId,
+        paymentIntentId,
+        token
+      );
 
-      return { success: true, paymentIntent };
+      if (!serverConfirmation?.success) {
+        throw new Error(
+          serverConfirmation?.message ||
+          'Stripe a traité le paiement, mais AFROEAT n’a pas pu confirmer la commande. Vérifie son état avant de réessayer.'
+        );
+      }
+
+      if (typeof onSuccess === 'function') {
+        await onSuccess({
+          id: paymentIntentId,
+          status: 'Succeeded',
+          serverConfirmation,
+        });
+      }
+
+      return {
+        success: true,
+        paymentIntentId,
+        serverConfirmation,
+      };
     } catch (err) {
-      const message = err?.message || 'Une erreur est survenue lors du paiement.';
-      if (typeof onError === 'function') onError(message);
-      return { success: false, error: message };
+      const message =
+        err?.message ||
+        'Une erreur est survenue lors du paiement.';
+
+      if (typeof onError === 'function') {
+        try {
+          onError(message);
+        } catch (callbackError) {
+          // Une erreur d'affichage ne doit pas masquer l'erreur initiale.
+        }
+      }
+
+      return {
+        success: false,
+        error: message,
+      };
     }
   };
 

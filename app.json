@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "Afroeat",
@@ -7,11 +8,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "afroeat",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0B0B0F"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.bkentreprise.afroeat",
@@ -37,13 +33,27 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "AFROEAT a besoin de votre position pour la livraison"
+          "locationAlwaysAndWhenInUsePermission": false,
+          "locationAlwaysPermission": false,
+          "locationWhenInUsePermission": "Allow Afroeat to use your location while you use the app to find nearby restaurants and deliver your order.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false,
+          "isAndroidForegroundServiceEnabled": false
         }
       ],
       [
         "@stripe/stripe-react-native",
         {
-          "enableGooglePay": false
+          "merchantIdentifier": "merchant.com.afroeat",
+          "enableGooglePay": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Afroeat to access selected photos for your profile or restaurant.",
+          "cameraPermission": false,
+          "microphonePermission": false
         }
       ],
       [

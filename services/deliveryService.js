@@ -96,36 +96,12 @@ return null;
 return { lat, lng };
 };
 
-const resolveReferenceId = (value) => {
-if (typeof value === 'string' || typeof value === 'number') {
-return String(value).trim();
-}
-
-if (value && typeof value === 'object' && !Array.isArray(value)) {
-const nestedId = value._id ?? value.id;
-if (typeof nestedId === 'string' || typeof nestedId === 'number') {
-return String(nestedId).trim();
-}
-}
-
-return '';
-};
-
 const normalizeOrderItem = (item = {}) => {
-const itemId =
-resolveReferenceId(item?._id) ||
-resolveReferenceId(item?.id) ||
-resolveReferenceId(item?.menuItem);
-const menuItemId =
-resolveReferenceId(item?.menuItem) ||
-resolveReferenceId(item?._id) ||
-resolveReferenceId(item?.id);
-
 return {
 ...item,
-_id: itemId || null,
-id: itemId || null,
-menuItem: menuItemId || null,
+_id: item?._id || item?.id || item?.menuItem || null,
+id: item?.id || item?._id || item?.menuItem || null,
+menuItem: item?.menuItem || item?._id || item?.id || null,
 name: normalizeString(
 item?.name || item?.menuItem?.name || item?.title,
 'Article'

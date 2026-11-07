@@ -35,6 +35,17 @@ const isValidEmail = (value) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
+const isStrongPassword = (value) => {
+  const password = normalizeText(value);
+  return (
+    password.length >= 8 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /\d/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
+};
+
 const sanitizePhone = (value) => {
   return String(value ?? '').replace(/[^\d+]/g, '').trim();
 };
@@ -49,6 +60,7 @@ export default function RegisterClientScreen() {
   const { t } = useTranslation();
   const auth = useAuth() || {};
   const setSelectedRole = auth.setSelectedRole;
+  const login = auth.login;
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -64,11 +76,11 @@ export default function RegisterClientScreen() {
     return (
       normalizeText(firstName).length >= 2 &&
       normalizeText(lastName).length >= 2 &&
-      sanitizePhone(phone).length >= 6 &&
+      sanitizePhone(phone).length >= 8 &&
       normalizeText(address).length >= 5 &&
       normalizeText(country).length >= 2 &&
       isValidEmail(email) &&
-      normalizeText(password).length >= 6
+      isStrongPassword(password)
     );
   }, [firstName, lastName, phone, address, country, email, password]);
 
@@ -102,7 +114,7 @@ export default function RegisterClientScreen() {
       return;
     }
 
-    if (!safePhone || safePhone.length < 6) {
+    if (!safePhone || safePhone.length < 8) {
       Alert.alert(t('auth.validation.phoneInvalidTitle'), t('auth.validation.phoneInvalidBody'));
       return;
     }
@@ -122,7 +134,7 @@ export default function RegisterClientScreen() {
       return;
     }
 
-    if (!safePassword || safePassword.length < 6) {
+    if (!isStrongPassword(safePassword)) {
       Alert.alert(
         t('auth.login.invalidPasswordTitle'),
         t('auth.validation.passwordTooShortBody')
@@ -137,7 +149,7 @@ export default function RegisterClientScreen() {
         await setSelectedRole('client');
       }
 
-      await registerClient({
+      const registration = await registerClient({
         firstName: safeFirstName,
         lastName: safeLastName,
         phone: safePhone,
@@ -148,16 +160,42 @@ export default function RegisterClientScreen() {
         role: 'client',
       });
 
+      const sessionReady =
+        typeof login === 'function' &&
+        (await login(registration?.user, registration?.token));
+
+      if (!sessionReady) {
+        Alert.alert(
+          t('auth.registerClient.successTitle'),
+          t('auth.registerClient.successBody'),
+          [
+            {
+              text: t('auth.validation.ok'),
+              onPress: () =>
+                router.replace({
+                  pathname: '/auth/login',
+                  params: { role: 'client' },
+                }),
+            },
+          ]
+        );
+        return;
+      }
+
       Alert.alert(
-        t('auth.registerClient.successTitle'),
-        t('auth.registerClient.successBody'),
+        t('profile.payment.signupPromptTitle'),
+        t('profile.payment.signupPromptText'),
         [
           {
-            text: t('auth.validation.ok'),
+            text: t('profile.payment.signupSkipButton'),
+            onPress: () => router.replace('/(tabs)/explore'),
+          },
+          {
+            text: t('profile.payment.signupAddNowButton'),
             onPress: () =>
               router.replace({
-                pathname: '/auth/login',
-                params: { role: 'client' },
+                pathname: '/profile/payment',
+                params: { fromSignup: 'true' },
               }),
           },
         ]
@@ -181,6 +219,8 @@ export default function RegisterClientScreen() {
     email,
     password,
     setSelectedRole,
+    login,
+    t,
   ]);
 
   return (

@@ -306,7 +306,10 @@ export function AuthProvider({ children }) {
   }, [clearStoredSession, resetLocalState]);
 
   useEffect(() => {
-    hydrateAuth();
+    const timer = setTimeout(() => {
+      void hydrateAuth();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [hydrateAuth]);
 
   /**

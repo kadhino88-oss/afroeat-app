@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   TextInput,
   Animated,
@@ -31,7 +31,7 @@ export default function PremiumInput({
   maxLength,
 }) {
   const [isFocused, setIsFocused] = useState(false);
-  const borderAnim = useRef(new Animated.Value(0)).current;
+  const [borderAnim] = useState(() => new Animated.Value(0));
 
   const safeLabel = useMemo(() => normalizeText(label), [label]);
   const safePlaceholder = useMemo(

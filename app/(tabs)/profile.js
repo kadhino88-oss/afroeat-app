@@ -481,7 +481,7 @@ export default function ProfileScreen() {
             icon="card-outline"
             label={t('profile.home.quickPaymentTitle')}
             subtitle={t('profile.menu.paymentSubtitle')}
-            onPress={() => router.push('/profile/payement')}
+            onPress={() => router.push('/profile/payment')}
           />
         </View>
 

@@ -2,21 +2,16 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_APP_ENV": "development"
-      }
+      "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "env": {
-        "EXPO_PUBLIC_APP_ENV": "preview"
-      }
+      "environment": "preview",
+      "distribution": "internal"
     },
     "production": {
-      "env": {
-        "EXPO_PUBLIC_APP_ENV": "production"
-      }
+      "environment": "production",
+      "distribution": "store",
+      "autoIncrement": true
     }
   }
 }

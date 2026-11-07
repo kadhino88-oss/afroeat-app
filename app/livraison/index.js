@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
   StatusBar,
+  Linking,
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,12 +20,8 @@ import { useAuth } from '../../context/AuthContext';
 import {
   getAssignedOrders,
   updateDeliveryStatus,
-  getDeliveryStats,
   getNextDeliveryStatus,
   canDriverUpdateStatus,
-  calculateDistanceKm,
-  calculateETA,
-  formatEtaLabel,
   updateDriverLocation,
 } from '../../services/deliveryService';
 
@@ -34,6 +31,8 @@ import {
 
 const LIVE_REFRESH_MS = 12000;
 const LOCATION_PUSH_MS = 15000;
+const EMPTY_AUTH = Object.freeze({});
+const EMPTY_ORDERS = Object.freeze([]);
 
 /**
  * HELPERS
@@ -60,11 +59,20 @@ const normalizeNumber = (v, f = 0) => {
   return Number.isFinite(n) ? n : f;
 };
 
-const formatPrice = (v, c = 'EUR') => {
+const formatPrice = (v, c = 'EUR', locale = 'fr') => {
   const amount = normalizeNumber(v);
-  if (c === 'USD') return `$${amount.toFixed(2)}`;
-  if (c === 'XOF' || c === 'XAF') return `${amount.toFixed(0)} ${c}`;
-  return `${amount.toFixed(2)} €`;
+  const currency = String(c || 'EUR').toUpperCase();
+
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+    }).format(amount);
+  } catch {
+    return `${new Intl.NumberFormat(locale, {
+      maximumFractionDigits: 2,
+    }).format(amount)} ${currency}`;
+  }
 };
 
 const getItemsCount = (items = []) =>
@@ -82,8 +90,8 @@ const DELIVERY_STATUS_SLUG = {
  */
 
 export default function LivreurDashboardScreen() {
-  const { t } = useTranslation();
-  const auth = useAuth() || {};
+  const { t, i18n } = useTranslation();
+  const auth = useAuth() || EMPTY_AUTH;
 
   const user = auth.user ?? null;
   const role = auth.role;
@@ -105,22 +113,20 @@ export default function LivreurDashboardScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [updatingId, setUpdatingId] = useState(null);
-
-  const [driverPosition, setDriverPosition] = useState(null);
+  const [loadError, setLoadError] = useState('');
+  const [locationPermissionNeeded, setLocationPermissionNeeded] = useState(false);
 
   const liveTimer = useRef(null);
   const gpsTimer = useRef(null);
+  const requestIdRef = useRef(0);
+  const hasLoadedOrdersRef = useRef(false);
+  const locationPermissionRequestedRef = useRef(false);
+  const locationUpdateInFlightRef = useRef(false);
 
-  const safeOrders = Array.isArray(orders) ? orders : [];
-
-  const stats = useMemo(() => getDeliveryStats(safeOrders), [safeOrders]);
+  const safeOrders = Array.isArray(orders) ? orders : EMPTY_ORDERS;
 
   const activeOrder = useMemo(() => {
-    return (
-      safeOrders.find((o) => o.status === 'En livraison') ||
-      safeOrders.find((o) => o.status === 'En préparation') ||
-      null
-    );
+    return safeOrders.find((o) => o.status === 'En livraison') || null;
   }, [safeOrders]);
 
   /**
@@ -128,25 +134,37 @@ export default function LivreurDashboardScreen() {
    */
 
   const fetchOrders = useCallback(async (manual = false) => {
+    const requestId = ++requestIdRef.current;
+
     if (!isAuthenticated || !token || !isDriverRole(currentRole)) {
       setOrders([]);
       setLoading(false);
+      setRefreshing(false);
       return;
     }
 
     try {
-      manual ? setRefreshing(true) : setLoading(true);
+      if (manual || hasLoadedOrdersRef.current) setRefreshing(true);
+      else setLoading(true);
+      setLoadError('');
 
       const data = await getAssignedOrders(token);
-      setOrders(Array.isArray(data) ? data : []);
+      if (requestId === requestIdRef.current) {
+        setOrders(Array.isArray(data) ? data : []);
+      }
     } catch (e) {
       console.log(e);
-      setOrders([]);
+      if (requestId === requestIdRef.current) {
+        setLoadError(t('livraison.loadErrorBody'));
+      }
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      if (requestId === requestIdRef.current) {
+        setLoading(false);
+        setRefreshing(false);
+        hasLoadedOrdersRef.current = true;
+      }
     }
-  }, [token, currentRole, isAuthenticated]);
+  }, [token, currentRole, isAuthenticated, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -168,11 +186,32 @@ export default function LivreurDashboardScreen() {
    */
 
   const syncLocation = useCallback(async () => {
-    if (!activeOrder?._id || !token) return;
+    if (
+      !activeOrder?._id ||
+      !token ||
+      locationUpdateInFlightRef.current
+    ) {
+      return;
+    }
+
+    locationUpdateInFlightRef.current = true;
 
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') return;
+      let permission = await Location.getForegroundPermissionsAsync();
+
+      if (permission.status !== 'granted' && permission.canAskAgain) {
+        if (!locationPermissionRequestedRef.current) {
+          locationPermissionRequestedRef.current = true;
+          permission = await Location.requestForegroundPermissionsAsync();
+        }
+      }
+
+      if (permission.status !== 'granted') {
+        setLocationPermissionNeeded(true);
+        return;
+      }
+
+      setLocationPermissionNeeded(false);
 
       const loc = await Location.getCurrentPositionAsync({});
       const coords = {
@@ -180,11 +219,11 @@ export default function LivreurDashboardScreen() {
         lng: loc.coords.longitude,
       };
 
-      setDriverPosition(coords);
-
       await updateDriverLocation(activeOrder._id, coords, token);
     } catch (e) {
       console.log(e);
+    } finally {
+      locationUpdateInFlightRef.current = false;
     }
   }, [activeOrder, token]);
 
@@ -217,13 +256,14 @@ export default function LivreurDashboardScreen() {
       setUpdatingId(order._id);
 
       const updated = await updateDeliveryStatus(order._id, next, token);
+      setLoadError('');
 
       setOrders((prev) =>
         prev.map((o) =>
           o._id === order._id ? updated || { ...o, status: next } : o
         )
       );
-    } catch (e) {
+    } catch (_error) {
       Alert.alert(t('livraison.updateErrorTitle'), t('livraison.updateErrorBody'));
     } finally {
       setUpdatingId(null);
@@ -273,6 +313,75 @@ export default function LivreurDashboardScreen() {
         keyExtractor={(i) => i._id}
         refreshing={refreshing}
         onRefresh={() => fetchOrders(true)}
+        ListHeaderComponent={
+          <View>
+            {!!loadError && (
+              <View style={styles.errorBanner}>
+                <Ionicons
+                  name="cloud-offline-outline"
+                  size={17}
+                  color="#9A3412"
+                />
+                <Text style={styles.errorText}>{loadError}</Text>
+                <Pressable
+                  onPress={() => fetchOrders(true)}
+                  disabled={refreshing}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('restaurant.retry')}
+                >
+                  {refreshing ? (
+                    <ActivityIndicator size="small" color="#1F6F43" />
+                  ) : (
+                    <Text style={styles.retryText}>{t('restaurant.retry')}</Text>
+                  )}
+                </Pressable>
+              </View>
+            )}
+
+            {activeOrder && locationPermissionNeeded && (
+              <View style={styles.locationNotice}>
+                <Ionicons name="location-outline" size={18} color="#9A3412" />
+                <Text style={styles.locationNoticeText}>
+                  {t('livraison.locationPermissionUnavailable')}
+                </Text>
+                <Pressable
+                  onPress={() => Linking.openSettings()}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('livraison.openLocationSettings')}
+                >
+                  <Text style={styles.retryText}>
+                    {t('livraison.openLocationSettings')}
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+          </View>
+        }
+        ListEmptyComponent={
+          !loadError ? (
+            <View style={styles.emptyState}>
+              <Ionicons name="bicycle-outline" size={42} color="#C9B8A3" />
+              <Text style={styles.emptyTitle}>{t('livraison.noDeliveries')}</Text>
+              <Text style={styles.emptyText}>
+                {t('livraison.noDeliveriesHint')}
+              </Text>
+              <Pressable
+                style={styles.emptyRefreshButton}
+                onPress={() => fetchOrders(true)}
+                disabled={refreshing}
+                accessibilityRole="button"
+              >
+                {refreshing ? (
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.emptyRefreshText}>
+                    {t('restaurant.retry')}
+                  </Text>
+                )}
+              </Pressable>
+            </View>
+          ) : null
+        }
         renderItem={({ item }) => {
           const next = getNextDeliveryStatus(item.status);
           const canUpdate = canDriverUpdateStatus(item.status);
@@ -287,7 +396,9 @@ export default function LivreurDashboardScreen() {
                 #{String(item._id).slice(-6)}
               </Text>
 
-              <Text>{formatPrice(item.totalPrice)}</Text>
+              <Text>
+                {formatPrice(item.totalPrice, item.currency, i18n.language)}
+              </Text>
 
               <Text>{t('livraison.itemsCount', { count: getItemsCount(item.items) })}</Text>
 
@@ -302,7 +413,9 @@ export default function LivreurDashboardScreen() {
                       <ActivityIndicator />
                     ) : (
                       <Text style={styles.primary}>
-                        {t(`livraison.status.${DELIVERY_STATUS_SLUG[next] || 'confirmed'}`, next)}
+                        {item.paymentMethod === 'cash' && next === 'Livrée'
+                          ? t('livraison.confirmCashAndDelivered')
+                          : t(`livraison.status.${DELIVERY_STATUS_SLUG[next] || 'confirmed'}`, next)}
                       </Text>
                     )}
                   </Pressable>
@@ -360,5 +473,86 @@ const styles = StyleSheet.create({
   primary: {
     color: '#D96C2D',
     fontWeight: '900',
+  },
+
+  errorBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF2E4',
+    borderRadius: 14,
+    padding: 12,
+    margin: 12,
+  },
+
+  errorText: {
+    flex: 1,
+    color: '#7A4A24',
+    fontSize: 12,
+    fontWeight: '700',
+    marginHorizontal: 8,
+  },
+
+  retryText: {
+    color: '#1F6F43',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+
+  locationNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF2E4',
+    borderRadius: 14,
+    padding: 12,
+    marginHorizontal: 12,
+    marginBottom: 12,
+  },
+
+  locationNoticeText: {
+    flex: 1,
+    color: '#7A4A24',
+    fontSize: 12,
+    lineHeight: 17,
+    fontWeight: '700',
+    marginHorizontal: 8,
+  },
+
+  emptyState: {
+    alignItems: 'center',
+    paddingHorizontal: 28,
+    paddingTop: 54,
+  },
+
+  emptyTitle: {
+    color: '#1F1F1F',
+    fontSize: 18,
+    fontWeight: '900',
+    textAlign: 'center',
+    marginTop: 14,
+  },
+
+  emptyText: {
+    color: '#777777',
+    fontSize: 14,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 7,
+  },
+
+  emptyRefreshButton: {
+    minWidth: 110,
+    minHeight: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1F6F43',
+    borderRadius: 13,
+    paddingHorizontal: 16,
+    marginTop: 18,
+  },
+
+  emptyRefreshText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '800',
   },
 });

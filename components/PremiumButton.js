@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Animated,
   Pressable,
@@ -72,7 +72,7 @@ export default function PremiumButton({
   fullWidth = true,
   small = false,
 }) {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const [scaleAnim] = useState(() => new Animated.Value(1));
 
   const isDisabled = Boolean(disabled || loading);
   const variantStyles = useMemo(() => getVariantStyles(variant), [variant]);

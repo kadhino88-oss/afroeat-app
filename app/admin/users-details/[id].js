@@ -20,6 +20,7 @@ import { useAuth } from '../../../context/AuthContext';
 import {
   getAdminUserById,
   updateAdminUserStatus,
+  updateAdminUserVerification,
 } from '../../../services/adminService';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
@@ -263,7 +264,7 @@ export default function AdminUserDetailsScreen() {
   const params = useLocalSearchParams();
   const userId = getSafeParam(params?.id);
 
-  const auth = useAuth() || {};
+  const auth = useAuth();
   const token = auth.token;
   const role = auth.role;
   const currentUser = auth.user ?? null;
@@ -357,12 +358,17 @@ export default function AdminUserDetailsScreen() {
       return;
     }
 
-    const nextStatus =
-      user.accountStatus === 'suspended' ? 'active' : 'suspended';
-    const actionLabel =
-      nextStatus === 'active'
-        ? t('admin.users.reactivateAction')
-        : t('admin.users.suspendAction');
+    const currentStatus = normalizeText(user?.accountStatus).toLowerCase();
+    const shouldActivate = ['pending_verification', 'rejected', 'suspended'].includes(currentStatus);
+    const nextStatus = shouldActivate ? 'active' : 'suspended';
+    const isPendingPartner =
+      ['pending_verification', 'rejected'].includes(currentStatus) &&
+      ['restaurant', 'livreur'].includes(user?.role);
+    const actionLabel = shouldActivate
+      ? isPendingPartner
+        ? t('admin.userDetails.activatePartnerButton')
+        : t('admin.users.reactivateAction')
+      : t('admin.users.suspendAction');
     const identity = normalizeText(user?.name, user?.email || t('admin.users.defaultAccountIdentity'));
 
     Alert.alert(
@@ -391,6 +397,42 @@ export default function AdminUserDetailsScreen() {
               );
             } catch (error) {
               console.log('Erreur mise à jour utilisateur :', error);
+              Alert.alert(
+                t('common.error'),
+                error?.message || t('admin.userDetails.actionImpossibleAlert')
+              );
+            } finally {
+              setUpdating(false);
+            }
+          },
+        },
+      ]
+    );
+  }, [token, user, t]);
+
+  const verifyPartner = useCallback(() => {
+    if (!token || !user?._id) {
+      Alert.alert(t('common.error'), t('admin.userDetails.actionImpossibleAlert'));
+      return;
+    }
+
+    Alert.alert(
+      t('admin.userDetails.verifyPartnerTitle'),
+      t('admin.userDetails.verifyPartnerConfirm'),
+      [
+        { text: t('admin.users.cancelAction'), style: 'cancel' },
+        {
+          text: t('admin.userDetails.verifyPartnerButton'),
+          onPress: async () => {
+            try {
+              setUpdating(true);
+              const result = await updateAdminUserVerification(user._id, token);
+              setUser((previous) => ({ ...(previous || {}), ...(result.user || {}) }));
+              Alert.alert(
+                t('common.success'),
+                result.message || t('admin.userDetails.verifyPartnerSuccess')
+              );
+            } catch (error) {
               Alert.alert(
                 t('common.error'),
                 error?.message || t('admin.userDetails.actionImpossibleAlert')
@@ -562,6 +604,14 @@ export default function AdminUserDetailsScreen() {
             label={t('admin.userDetails.roleFieldLabel')}
             value={getRoleLabel(user?.role, t)}
           />
+          {user?.role === 'restaurant' &&
+          normalizeText(user?.restaurantProfile?.businessName) ? (
+            <InfoRow
+              icon="storefront-outline"
+              label={t('auth.registerRestaurant.restaurantNameLabel')}
+              value={normalizeText(user.restaurantProfile.businessName)}
+            />
+          ) : null}
           <InfoRow
             icon="shield-checkmark-outline"
             label={t('admin.userDetails.accountStatusFieldLabel')}
@@ -601,6 +651,26 @@ export default function AdminUserDetailsScreen() {
               value={normalizeText(user?.address)}
             />
           )}
+          {['restaurant', 'livreur'].includes(user?.role) &&
+          (!user?.isIdentityVerified ||
+            (user?.role === 'livreur' && !user?.isWorkAuthorized)) ? (
+            <Pressable
+              style={styles.primaryButton}
+              onPress={verifyPartner}
+              disabled={updating}
+            >
+              {updating ? (
+                <ActivityIndicator size="small" color="#111111" />
+              ) : (
+                <>
+                  <Ionicons name="shield-checkmark-outline" size={18} color="#111111" />
+                  <Text style={styles.primaryButtonText}>
+                    {t('admin.userDetails.verifyPartnerButton')}
+                  </Text>
+                </>
+              )}
+            </Pressable>
+          ) : null}
         </View>
 
         <View style={styles.sectionCard}>
@@ -627,7 +697,9 @@ export default function AdminUserDetailsScreen() {
           <Pressable
             style={[
               styles.primaryButton,
-              user?.accountStatus === 'suspended' && styles.successButton,
+              ['suspended', 'pending_verification', 'rejected'].includes(
+                normalizeText(user?.accountStatus).toLowerCase()
+              ) && styles.successButton,
             ]}
             onPress={toggleStatus}
             disabled={updating}
@@ -638,7 +710,9 @@ export default function AdminUserDetailsScreen() {
               <>
                 <Ionicons
                   name={
-                    user?.accountStatus === 'suspended'
+                    ['suspended', 'pending_verification', 'rejected'].includes(
+                      normalizeText(user?.accountStatus).toLowerCase()
+                    )
                       ? 'checkmark-circle-outline'
                       : 'ban-outline'
                   }
@@ -646,9 +720,13 @@ export default function AdminUserDetailsScreen() {
                   color="#111111"
                 />
                 <Text style={styles.primaryButtonText}>
-                  {user?.accountStatus === 'suspended'
-                    ? t('admin.userDetails.reactivateAccountButton')
-                    : t('admin.userDetails.suspendAccountButton')}
+                  {['pending_verification', 'rejected'].includes(
+                    normalizeText(user?.accountStatus).toLowerCase()
+                  ) && ['restaurant', 'livreur'].includes(user?.role)
+                    ? t('admin.userDetails.activatePartnerButton')
+                    : user?.accountStatus === 'suspended'
+                      ? t('admin.userDetails.reactivateAccountButton')
+                      : t('admin.userDetails.suspendAccountButton')}
                 </Text>
               </>
             )}

@@ -1,16 +1,18 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
-  Image,
+  TextInput,
+  ScrollView,
   ActivityIndicator,
   StatusBar,
   Pressable,
   Alert,
   RefreshControl,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { useLocalSearchParams, useFocusEffect, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { apiGet } from '../../services/apiClient';
@@ -18,19 +20,12 @@ import { API_ENDPOINTS } from '../../constants/api';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import {
+  addFavoriteRestaurant,
+  getFavoriteRestaurants,
+  removeFavoriteRestaurant,
+} from '../../services/favoriteService';
 import i18n from '../../i18n';
-
-/**
- * =========================================================
- * CONFIG DEBUG / FALLBACK
- * =========================================================
- * Temporairement activé pour débloquer l’app si l’API menu renvoie vide.
- * Mets à false plus tard quand la vraie data sera 100% stable.
- */
-
-const ENABLE_LOCAL_MENU_FALLBACK = String(
-  process.env.EXPO_PUBLIC_ENABLE_LOCAL_MENU_FALLBACK || ''
-).trim().toLowerCase() === 'true';
 
 /**
  * =========================================================
@@ -39,7 +34,7 @@ const ENABLE_LOCAL_MENU_FALLBACK = String(
  */
 
 const LOGO_IMAGE = require('../../assets/images/icon.png');
-const FALLBACK_RESTAURANT_IMAGE = require('../../assets/images/react-logo.png');
+const FALLBACK_RESTAURANT_IMAGE = require('../../assets/images/icon.png');
 
 /**
  * =========================================================
@@ -51,6 +46,12 @@ const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
   return normalized || fallback;
 };
+
+const normalizeSearchText = (value, locale = 'fr') =>
+  String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase(locale);
 
 const normalizeNumber = (value, fallback = 0) => {
   const parsed = Number(value);
@@ -188,141 +189,29 @@ const normalizeRestaurant = (data) => {
         data?.cover ||
         data?.banner
     ),
-    rating: normalizeNumber(data?.ratingAverage ?? data?.rating, null),
-    deliveryTime: normalizeNumber(
-      data?.averagePreparationTimeMinutes ??
-        data?.estimatedDeliveryTimeMinutes ??
-        data?.deliveryTime ??
-        data?.preparationTime,
-      null
+    rating: normalizeNumber(data?.ratingAverage ?? data?.rating, 0),
+    ratingCount: normalizeNumber(data?.ratingCount, 0),
+    preparationTime: normalizeNumber(
+      data?.averagePreparationTimeMinutes ?? data?.preparationTime,
+      0
     ),
     cuisine: normalizeText(
       data?.cuisine || data?.cuisineType || data?.category,
-      'Africaine'
+      i18n.t('cuisines.africaine', 'Africaine')
     ),
     address: normalizeText(
       data?.address || data?.location?.address || data?.fullAddress
     ),
-    isOpen: normalizeBoolean(data?.isOpen, null),
+    isOpen: normalizeBoolean(data?.isOpen, false),
     city: normalizeText(data?.city || data?.location?.city),
     country: normalizeText(data?.country || data?.location?.country),
     deliveryFee: normalizeNumber(
       data?.deliveryFee ?? data?.fees?.delivery ?? data?.shippingFee,
-      null
+      0
     ),
     currency: normalizeText(data?.currency, 'EUR'),
     description: normalizeText(data?.description),
   };
-};
-
-const buildLocalFallbackMenu = (restaurant) => {
-  const restaurantId = restaurant?._id || restaurant?.id || 'fallback-restaurant';
-  const cuisine = restaurant?.cuisine || 'Africaine';
-
-  return [
-    {
-      _id: `fallback-${restaurantId}-1`,
-      id: `fallback-${restaurantId}-1`,
-      name: i18n.t('restaurant.menuScreen.demoMenu.braisedChicken.name'),
-      description: i18n.t('restaurant.menuScreen.demoMenu.braisedChicken.description'),
-      category: 'Plats principaux',
-      price: 13.9,
-      image: '',
-      restaurantId,
-      restaurant: restaurantId,
-      restaurantName: restaurant?.name || 'Restaurant',
-      quantity: 1,
-      available: true,
-      isPopular: true,
-      isRecommended: true,
-      cuisine,
-    },
-    {
-      _id: `fallback-${restaurantId}-2`,
-      id: `fallback-${restaurantId}-2`,
-      name: i18n.t('restaurant.menuScreen.demoMenu.attiekeFish.name'),
-      description: i18n.t('restaurant.menuScreen.demoMenu.attiekeFish.description'),
-      category: 'Plats principaux',
-      price: 14.5,
-      image: '',
-      restaurantId,
-      restaurant: restaurantId,
-      restaurantName: restaurant?.name || 'Restaurant',
-      quantity: 1,
-      available: true,
-      isPopular: true,
-      isRecommended: false,
-      cuisine,
-    },
-    {
-      _id: `fallback-${restaurantId}-3`,
-      id: `fallback-${restaurantId}-3`,
-      name: i18n.t('restaurant.menuScreen.demoMenu.alloco.name'),
-      description: i18n.t('restaurant.menuScreen.demoMenu.alloco.description'),
-      category: 'Accompagnements',
-      price: 5.5,
-      image: '',
-      restaurantId,
-      restaurant: restaurantId,
-      restaurantName: restaurant?.name || 'Restaurant',
-      quantity: 1,
-      available: true,
-      isPopular: true,
-      isRecommended: false,
-      cuisine,
-    },
-    {
-      _id: `fallback-${restaurantId}-4`,
-      id: `fallback-${restaurantId}-4`,
-      name: i18n.t('restaurant.menuScreen.demoMenu.yassaChicken.name'),
-      description: i18n.t('restaurant.menuScreen.demoMenu.yassaChicken.description'),
-      category: 'Plats principaux',
-      price: 15.9,
-      image: '',
-      restaurantId,
-      restaurant: restaurantId,
-      restaurantName: restaurant?.name || 'Restaurant',
-      quantity: 1,
-      available: true,
-      isPopular: false,
-      isRecommended: true,
-      cuisine,
-    },
-    {
-      _id: `fallback-${restaurantId}-5`,
-      id: `fallback-${restaurantId}-5`,
-      name: i18n.t('restaurant.menuScreen.demoMenu.bissap.name'),
-      description: i18n.t('restaurant.menuScreen.demoMenu.bissap.description'),
-      category: 'Boissons',
-      price: 3.9,
-      image: '',
-      restaurantId,
-      restaurant: restaurantId,
-      restaurantName: restaurant?.name || 'Restaurant',
-      quantity: 1,
-      available: true,
-      isPopular: true,
-      isRecommended: true,
-      cuisine,
-    },
-    {
-      _id: `fallback-${restaurantId}-6`,
-      id: `fallback-${restaurantId}-6`,
-      name: i18n.t('restaurant.menuScreen.demoMenu.thiakry.name'),
-      description: i18n.t('restaurant.menuScreen.demoMenu.thiakry.description'),
-      category: 'Desserts',
-      price: 5.9,
-      image: '',
-      restaurantId,
-      restaurant: restaurantId,
-      restaurantName: restaurant?.name || 'Restaurant',
-      quantity: 1,
-      available: true,
-      isPopular: false,
-      isRecommended: true,
-      cuisine,
-    },
-  ];
 };
 
 const normalizeMenuItem = (item, restaurant, index = 0) => {
@@ -361,7 +250,7 @@ const normalizeMenuItem = (item, restaurant, index = 0) => {
     name: normalizeText(item?.name || item?.title || item?.label, i18n.t('restaurant.menuScreen.dishFallback')),
     description: normalizeText(
       item?.description || item?.details || item?.summary,
-      'Aucune description'
+      i18n.t('restaurant.descriptionUnavailable')
     ),
     story: normalizeText(item?.story, ''),
     category: normalizeText(
@@ -370,7 +259,7 @@ const normalizeMenuItem = (item, restaurant, index = 0) => {
         item?.group ||
         item?.menuCategory ||
         item?.type,
-      'Autres'
+      i18n.t('restaurant.addMenuItem.categories.other', 'Autres')
     ),
     price,
     image: normalizeText(
@@ -400,19 +289,17 @@ const dedupeMenuItems = (items) => {
   return Array.from(map.values());
 };
 
-const formatDeliveryTime = (value) => {
+const formatPreparationTime = (value) => {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) {
-    return i18n.t('restaurant.deliveryTimeUnavailable', {
-      defaultValue: 'Délai à confirmer',
-    });
+    return i18n.t('restaurant.preparationTimeUnavailable');
   }
-  return `${parsed} min`;
+  return i18n.t('restaurant.preparationTimeMinutes', { count: parsed });
 };
 
 const formatRating = (value) => {
-  const parsed = normalizeNumber(value, null);
-  return parsed !== null && parsed > 0 ? parsed.toFixed(1) : '';
+  const parsed = normalizeNumber(value, 0);
+  return parsed.toFixed(1);
 };
 
 const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
@@ -424,6 +311,13 @@ const CATEGORY_SLUG_BY_LABEL = {
   'Boissons': 'drinks',
   'Snacks': 'snacks',
   'Autres': 'other',
+};
+
+const getMenuCategoryLabel = (category, translate) => {
+  const categorySlug = CATEGORY_SLUG_BY_LABEL[category];
+  return categorySlug
+    ? translate(`restaurant.addMenuItem.categories.${categorySlug}`, category)
+    : category;
 };
 
 const formatPrice = (value, currency = 'EUR') => {
@@ -497,6 +391,8 @@ export default function RestaurantScreen() {
 
   const auth = useAuth() || {};
   const token = auth.token ?? null;
+  const favoriteRole = String(auth.role || auth.user?.role || 'client').toLowerCase();
+  const canUseFavorites = !token || favoriteRole === 'client';
 
   const cart = useCart() || {};
   const addToCart = cart.addToCart;
@@ -508,7 +404,12 @@ export default function RestaurantScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [addingId, setAddingId] = useState(null);
-  const [menuSource, setMenuSource] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteBusy, setFavoriteBusy] = useState(false);
+  const requestIdRef = useRef(0);
+  const hasLoadedOnceRef = useRef(false);
+  const [menuSearch, setMenuSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   const cartCount = useMemo(() => {
     return typeof getTotalItems === 'function'
@@ -524,17 +425,22 @@ export default function RestaurantScreen() {
 
   const fetchData = useCallback(
     async (isManualRefresh = false) => {
+      const requestId = ++requestIdRef.current;
+      const showRefreshIndicator = isManualRefresh || hasLoadedOnceRef.current;
+
       try {
         if (!id) {
-          setErrorMessage('Restaurant introuvable.');
-          setRestaurant(null);
-          setMenu([]);
-          setLoading(false);
-          setRefreshing(false);
+          if (requestId === requestIdRef.current) {
+            setErrorMessage('Restaurant introuvable.');
+            setRestaurant(null);
+            setMenu([]);
+            setLoading(false);
+            setRefreshing(false);
+          }
           return;
         }
 
-        if (isManualRefresh) {
+        if (showRefreshIndicator) {
           setRefreshing(true);
         } else {
           setLoading(true);
@@ -564,18 +470,12 @@ export default function RestaurantScreen() {
         const menuFromEndpoint = extractMenuArray(safeMenuResponse);
         const menuFromRestaurant = extractEmbeddedRestaurantMenu(rawRestaurantPayload);
 
-        let source = '';
         let primaryMenuSource = [];
 
         if (menuFromEndpoint.length > 0) {
           primaryMenuSource = menuFromEndpoint;
-          source = 'api-menu';
         } else if (menuFromRestaurant.length > 0) {
           primaryMenuSource = menuFromRestaurant;
-          source = 'restaurant-embedded';
-        } else if (ENABLE_LOCAL_MENU_FALLBACK) {
-          primaryMenuSource = buildLocalFallbackMenu(normalizedRestaurant);
-          source = 'local-fallback';
         }
 
         const normalizedMenu = dedupeMenuItems(
@@ -585,17 +485,26 @@ export default function RestaurantScreen() {
             .filter((item) => item?._id)
         );
 
-
-        setRestaurant(normalizedRestaurant);
-        setMenu(normalizedMenu);
-        setMenuSource(source);
+        if (requestId === requestIdRef.current) {
+          setRestaurant(normalizedRestaurant);
+          setMenu(normalizedMenu);
+        }
       } catch (error) {
-        setRestaurant(null);
-        setMenu([]);
-        setErrorMessage(error?.message || 'Impossible de charger ce restaurant.');
+        if (requestId === requestIdRef.current) {
+          if (!hasLoadedOnceRef.current) {
+            setRestaurant(null);
+            setMenu([]);
+          }
+          setErrorMessage(
+            error?.message || 'Impossible de charger ce restaurant.'
+          );
+        }
       } finally {
-        setLoading(false);
-        setRefreshing(false);
+        if (requestId === requestIdRef.current) {
+          setLoading(false);
+          setRefreshing(false);
+          hasLoadedOnceRef.current = true;
+        }
       }
     },
     [id, token]
@@ -605,6 +514,31 @@ export default function RestaurantScreen() {
     useCallback(() => {
       fetchData(false);
     }, [fetchData])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!token || !id || favoriteRole !== 'client') {
+        setIsFavorite(false);
+        return undefined;
+      }
+
+      let isCurrent = true;
+      getFavoriteRestaurants(token)
+        .then((restaurants) => {
+          if (!isCurrent) return;
+          setIsFavorite(restaurants.some(
+            (item) => String(item?._id || item?.id) === String(id)
+          ));
+        })
+        .catch(() => {
+          if (isCurrent) setIsFavorite(false);
+        });
+
+      return () => {
+        isCurrent = false;
+      };
+    }, [favoriteRole, id, token])
   );
 
   /**
@@ -626,18 +560,34 @@ export default function RestaurantScreen() {
     router.push('/cart');
   }, []);
 
+  const handleToggleFavorite = useCallback(async () => {
+    if (!token) {
+      router.push('/auth/role');
+      return;
+    }
+    if (!restaurant?._id || favoriteBusy) return;
+
+    setFavoriteBusy(true);
+    try {
+      if (isFavorite) {
+        await removeFavoriteRestaurant(restaurant._id, token);
+        setIsFavorite(false);
+      } else {
+        await addFavoriteRestaurant(restaurant._id, token);
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      Alert.alert(
+        t('common.error'),
+        error?.message || t('restaurant.favoriteError')
+      );
+    } finally {
+      setFavoriteBusy(false);
+    }
+  }, [token, restaurant, favoriteBusy, isFavorite, t]);
+
   const handleAddToCart = useCallback(
     async (item) => {
-      if (menuSource === 'local-fallback') {
-        Alert.alert(
-          t('restaurant.error'),
-          t('restaurant.demoMenuUnavailable', {
-            defaultValue: 'Ce menu de démonstration ne permet pas de passer une vraie commande.',
-          })
-        );
-        return;
-      }
-
       if (
         !item?._id ||
         !restaurant?._id ||
@@ -693,6 +643,7 @@ export default function RestaurantScreen() {
           price,
           quantity: 1,
           currency: restaurant.currency || 'EUR',
+          deliveryFee: restaurant.deliveryFee,
         };
 
         await Promise.resolve(addToCart(cartItem));
@@ -706,7 +657,7 @@ export default function RestaurantScreen() {
         setAddingId(null);
       }
     },
-    [addToCart, restaurant, addingId, menuSource, t]
+    [addToCart, restaurant, addingId, t]
   );
 
   /**
@@ -715,8 +666,34 @@ export default function RestaurantScreen() {
    * =========================================================
    */
 
+  const menuCategories = useMemo(() => {
+    return Array.from(
+      new Set(menu.map((item) => normalizeText(item?.category, 'Autres')))
+    );
+  }, [menu]);
+
+  const filteredMenu = useMemo(() => {
+    const locale = i18n.language || 'fr';
+    const query = normalizeSearchText(menuSearch.trim(), locale);
+
+    return menu.filter((item) => {
+      if (
+        categoryFilter !== 'all' &&
+        normalizeText(item?.category, 'Autres') !== categoryFilter
+      ) {
+        return false;
+      }
+
+      if (!query) return true;
+
+      return [item?.name, item?.description, item?.category, item?.story]
+        .filter(Boolean)
+        .some((value) => normalizeSearchText(value, locale).includes(query));
+    });
+  }, [categoryFilter, i18n.language, menu, menuSearch]);
+
   const menuByCategory = useMemo(() => {
-    return menu.reduce((acc, item) => {
+    return filteredMenu.reduce((acc, item) => {
       const category = normalizeText(item?.category, 'Autres');
 
       if (!acc[category]) {
@@ -726,7 +703,7 @@ export default function RestaurantScreen() {
       acc[category].push(item);
       return acc;
     }, {});
-  }, [menu]);
+  }, [filteredMenu]);
 
   const flatMenu = useMemo(() => {
     const categories = Object.keys(menuByCategory);
@@ -765,10 +742,7 @@ export default function RestaurantScreen() {
   const renderItem = useCallback(
     ({ item }) => {
       if (item?._type === 'category') {
-        const categorySlug = CATEGORY_SLUG_BY_LABEL[item.title];
-        const categoryLabel = categorySlug
-          ? t(`restaurant.addMenuItem.categories.${categorySlug}`, item.title)
-          : item.title;
+        const categoryLabel = getMenuCategoryLabel(item.title, t);
         return <Text style={styles.categoryTitle}>{categoryLabel}</Text>;
       }
 
@@ -778,7 +752,13 @@ export default function RestaurantScreen() {
       return (
         <View style={styles.card}>
           <View style={styles.cardContent}>
-            <Image source={itemImageSource} style={styles.itemImage} />
+            <Image
+              source={itemImageSource}
+              style={styles.itemImage}
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={160}
+            />
 
             <View style={styles.textContent}>
               <Text style={styles.itemName}>{item.name}</Text>
@@ -851,7 +831,7 @@ export default function RestaurantScreen() {
    * =========================================================
    */
 
-  if (loading) {
+  if (loading || (!restaurant && refreshing)) {
     return (
       <View style={styles.loader}>
         <StatusBar barStyle="light-content" />
@@ -887,7 +867,13 @@ export default function RestaurantScreen() {
       <StatusBar barStyle="light-content" />
 
       <View style={styles.heroWrapper}>
-        <Image source={heroImageSource} style={styles.cover} />
+        <Image
+          source={heroImageSource}
+          style={styles.cover}
+          contentFit="cover"
+          cachePolicy="memory-disk"
+          transition={180}
+        />
 
         <View style={styles.overlay} />
         <View style={styles.overlaySoft} />
@@ -905,8 +891,37 @@ export default function RestaurantScreen() {
 
           <View style={styles.topBarRight}>
             <View style={styles.logoBubble}>
-              <Image source={LOGO_IMAGE} style={styles.logoImage} />
+              <Image
+                source={LOGO_IMAGE}
+                style={styles.logoImage}
+                contentFit="contain"
+              />
             </View>
+
+            {canUseFavorites ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t(isFavorite ? 'restaurant.removeFavorite' : 'restaurant.addFavorite')}
+                disabled={favoriteBusy}
+                style={({ pressed }) => [
+                  styles.iconBtn,
+                  styles.favoriteIconBtn,
+                  pressed && styles.buttonPressed,
+                  favoriteBusy && styles.buttonPressed,
+                ]}
+                onPress={handleToggleFavorite}
+              >
+                {favoriteBusy ? (
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                ) : (
+                  <Ionicons
+                    name={isFavorite ? 'heart' : 'heart-outline'}
+                    size={19}
+                    color={isFavorite ? '#FF7866' : '#FFFFFF'}
+                  />
+                )}
+              </Pressable>
+            ) : null}
 
             <Pressable
               style={({ pressed }) => [
@@ -928,17 +943,21 @@ export default function RestaurantScreen() {
         </View>
 
         <View style={styles.heroBottomContent}>
-          <View style={styles.heroBadge}>
-            <Ionicons name="sparkles-outline" size={13} color="#111111" />
-            <Text style={styles.heroBadgeText}>{t('restaurant.premiumRestaurant')}</Text>
-          </View>
+          {restaurant.isFeatured ? (
+            <View style={styles.heroBadge}>
+              <Ionicons name="sparkles-outline" size={13} color="#111111" />
+              <Text style={styles.heroBadgeText}>{t('restaurant.premiumRestaurant')}</Text>
+            </View>
+          ) : null}
 
           <Text style={styles.heroTitle}>{restaurant.name}</Text>
 
           <Text style={styles.heroMeta}>
-            {formatRating(restaurant.rating)
-              ? `⭐ ${formatRating(restaurant.rating)} • ${formatDeliveryTime(restaurant.deliveryTime)}`
-              : formatDeliveryTime(restaurant.deliveryTime)}
+            {restaurant.ratingCount > 0
+              ? `⭐ ${formatRating(restaurant.rating)} (${restaurant.ratingCount})`
+              : t('restaurant.ratingUnavailable')}
+            {' • '}
+            {formatPreparationTime(restaurant.preparationTime)}
           </Text>
         </View>
       </View>
@@ -959,6 +978,28 @@ export default function RestaurantScreen() {
         }
         ListHeaderComponent={
           <View style={styles.header}>
+            {!!errorMessage && (
+              <View style={styles.refreshWarning}>
+                <Ionicons
+                  name="cloud-offline-outline"
+                  size={18}
+                  color="#A85A24"
+                />
+                <Text style={styles.refreshWarningText}>
+                  {t('restaurant.refreshFailed')}
+                </Text>
+                <Pressable
+                  onPress={() => fetchData(true)}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('restaurant.retry')}
+                >
+                  <Text style={styles.refreshRetryText}>
+                    {t('restaurant.retry')}
+                  </Text>
+                </Pressable>
+              </View>
+            )}
+
             <View style={styles.quickStatsRow}>
               <View style={styles.quickStatCard}>
                 <Text style={styles.quickStatValue}>{menu.length}</Text>
@@ -972,7 +1013,7 @@ export default function RestaurantScreen() {
 
               <View style={styles.quickStatCard}>
                 <Text style={styles.quickStatValue}>{featuredItemsCount}</Text>
-                <Text style={styles.quickStatLabel}>{t('restaurant.premium')}</Text>
+                  <Text style={styles.quickStatLabel}>{t('restaurant.featuredDishes')}</Text>
               </View>
             </View>
 
@@ -982,11 +1023,7 @@ export default function RestaurantScreen() {
                 <Text style={styles.metaText}>
                   {restaurant.cuisine}
                   {restaurant.city ? ` • ${restaurant.city}` : ''}
-                  {restaurant.isOpen === true
-                    ? ` • ${t('home.open')}`
-                    : restaurant.isOpen === false
-                    ? ` • ${t('home.closed')}`
-                    : ' • Horaires à confirmer'}
+                  {!restaurant.isOpen ? ` • ${t('home.closed')}` : ` • ${t('home.open')}`}
                 </Text>
               </View>
 
@@ -1000,9 +1037,7 @@ export default function RestaurantScreen() {
               <View style={styles.metaRow}>
                 <Ionicons name="card-outline" size={16} color="#245EA8" />
                 <Text style={styles.metaText}>
-                  {restaurant.deliveryFee === null || restaurant.deliveryFee === undefined
-                    ? t('restaurant.deliveryFeeUnavailable', { defaultValue: 'Frais à confirmer' })
-                    : t('restaurant.deliveryFee', { amount: formatPrice(restaurant.deliveryFee, restaurant.currency) })}
+                  {t('restaurant.deliveryFee', { amount: formatPrice(restaurant.deliveryFee, restaurant.currency) })}
                 </Text>
               </View>
 
@@ -1015,12 +1050,95 @@ export default function RestaurantScreen() {
 
             <Text style={styles.menuSectionTitle}>{t('restaurant.menu')}</Text>
 
+            <View style={styles.menuSearchBox}>
+              <Ionicons name="search-outline" size={18} color="#8A8278" />
+              <TextInput
+                value={menuSearch}
+                onChangeText={setMenuSearch}
+                placeholder={t('restaurant.searchMenu')}
+                placeholderTextColor="#9B938A"
+                style={styles.menuSearchInput}
+                returnKeyType="search"
+                accessibilityLabel={t('restaurant.searchMenu')}
+              />
+              {!!menuSearch && (
+                <Pressable
+                  onPress={() => setMenuSearch('')}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('restaurant.clearMenuSearch')}
+                >
+                  <Ionicons name="close-circle" size={19} color="#8A8278" />
+                </Pressable>
+              )}
+            </View>
+
+            {menuCategories.length > 1 && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.categoryFilters}
+              >
+                {[
+                  { key: 'all', label: t('restaurant.allCategories') },
+                  ...menuCategories.map((category) => ({
+                    key: category,
+                    label: getMenuCategoryLabel(category, t),
+                  })),
+                ].map((category) => {
+                  const selected = categoryFilter === category.key;
+
+                  return (
+                    <Pressable
+                      key={category.key}
+                      style={[
+                        styles.categoryFilter,
+                        selected && styles.categoryFilterSelected,
+                      ]}
+                      onPress={() => setCategoryFilter(category.key)}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                    >
+                      <Text
+                        style={[
+                          styles.categoryFilterText,
+                          selected && styles.categoryFilterTextSelected,
+                        ]}
+                      >
+                        {category.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            )}
+
             {menu.length === 0 ? (
               <View style={styles.emptyState}>
                 <Text style={styles.emptyTitle}>{t('restaurant.noDishAvailable')}</Text>
                 <Text style={styles.emptyText}>
                   {t('restaurant.noDishText')}
                 </Text>
+              </View>
+            ) : filteredMenu.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Text style={styles.emptyTitle}>
+                  {t('restaurant.menuNoResults')}
+                </Text>
+                <Text style={styles.emptyText}>
+                  {t('restaurant.menuNoResultsText')}
+                </Text>
+                <Pressable
+                  style={styles.clearFiltersButton}
+                  onPress={() => {
+                    setMenuSearch('');
+                    setCategoryFilter('all');
+                  }}
+                  accessibilityRole="button"
+                >
+                  <Text style={styles.clearFiltersText}>
+                    {t('restaurant.clearMenuFilters')}
+                  </Text>
+                </Pressable>
               </View>
             ) : null}
           </View>
@@ -1089,6 +1207,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+  },
+
+  favoriteIconBtn: {
+    marginRight: 10,
   },
 
   logoBubble: {
@@ -1172,6 +1294,34 @@ const styles = StyleSheet.create({
   header: {
     padding: 16,
     paddingBottom: 8,
+  },
+
+  refreshWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF2E4',
+    borderColor: '#F0D4B8',
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 14,
+  },
+
+  refreshWarningText: {
+    flex: 1,
+    marginLeft: 8,
+    marginRight: 8,
+    color: '#7A4A24',
+    fontSize: 12,
+    lineHeight: 17,
+    fontWeight: '600',
+  },
+
+  refreshRetryText: {
+    color: '#1F6F43',
+    fontSize: 12,
+    fontWeight: '800',
   },
 
   quickStatsRow: {
@@ -1259,6 +1409,74 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: '#1F1F1F',
     marginBottom: 4,
+  },
+
+  menuSearchBox: {
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E9E1D8',
+    borderRadius: 15,
+    paddingHorizontal: 13,
+    marginTop: 10,
+    marginBottom: 12,
+  },
+
+  menuSearchInput: {
+    flex: 1,
+    color: '#1F1F1F',
+    fontSize: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 9,
+  },
+
+  categoryFilters: {
+    flexDirection: 'row',
+    paddingBottom: 12,
+    paddingRight: 4,
+  },
+
+  categoryFilter: {
+    minHeight: 36,
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E9E1D8',
+    borderRadius: 999,
+    paddingHorizontal: 13,
+    marginRight: 8,
+  },
+
+  categoryFilterSelected: {
+    backgroundColor: '#1F6F43',
+    borderColor: '#1F6F43',
+  },
+
+  categoryFilterText: {
+    color: '#655E56',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+
+  categoryFilterTextSelected: {
+    color: '#FFFFFF',
+  },
+
+  clearFiltersButton: {
+    alignSelf: 'center',
+    backgroundColor: '#1F6F43',
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginTop: 4,
+  },
+
+  clearFiltersText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '800',
   },
 
   categoryTitle: {

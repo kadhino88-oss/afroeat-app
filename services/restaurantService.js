@@ -94,7 +94,7 @@ const normalizeRestaurant = (item) => {
     _id: item?._id || item?.id || null,
     id: item?.id || item?._id || null,
     name: normalizeText(item?.name || item?.title, 'Restaurant'),
-    cuisine: normalizeText(item?.cuisine, 'Cuisine à préciser'),
+    cuisine: normalizeText(item?.cuisine, 'Africaine'),
     address: normalizeText(item?.address),
     image: normalizeText(item?.image || item?.coverImage),
     coverImage: normalizeText(item?.coverImage || item?.image),
@@ -107,8 +107,7 @@ const normalizeRestaurant = (item) => {
       item?.deliveryFee !== undefined && item?.deliveryFee !== null
         ? normalizeNumber(item.deliveryFee, null)
         : null,
-    // Unknown opening status stays unknown; never infer that a restaurant is open.
-    isOpen: normalizeBoolean(item?.isOpen, null),
+    isOpen: normalizeBoolean(item?.isOpen, true) !== false,
     isFeatured: normalizeBoolean(item?.isFeatured, false) === true,
     owner: item?.owner || null,
     location: item?.location || null,
@@ -278,7 +277,6 @@ export const searchRestaurants = async ({
   country = '',
   isOpen = null,
   featured = null,
-  businessType = '',
   token = null,
 } = {}) => {
   const endpoint = getRestaurantsAllEndpoint();
@@ -287,9 +285,8 @@ export const searchRestaurants = async ({
     cuisine: normalizeText(cuisine),
     city: normalizeText(city),
     country: normalizeText(country),
-    isOpen: normalizeBoolean(isOpen, null),
+    open: normalizeBoolean(isOpen, null),
     featured: normalizeBoolean(featured, null),
-    businessType: normalizeText(businessType).toLowerCase(),
   });
 
   const data = await apiGet(`${endpoint}${queryString}`, token);
@@ -358,19 +355,20 @@ export const getMyRestaurant = async (token) => {
   return restaurant;
 };
 
-export const updateRestaurant = async (id, payload = {}, token) => {
+export const updateMyRestaurant = async (id, payload, token) => {
   const normalizedId = normalizeText(id);
-  if (!normalizedId) throw new Error('Identifiant restaurant manquant.');
-  if (!normalizeText(token)) throw new Error('Token requis pour modifier le restaurant.');
-
-  const endpoint = API_ENDPOINTS?.restaurants?.byId;
-  if (typeof endpoint !== 'function') {
-    throw new Error('Endpoint de modification restaurant introuvable.');
+  if (!normalizedId || !normalizeText(token)) {
+    throw new Error('Identifiant restaurant et session requis.');
   }
 
-  const data = await apiPut(endpoint(normalizedId), payload, token);
+  const endpoint = getRestaurantByIdEndpoint(normalizedId);
+  const data = await apiPut(endpoint, payload, token);
   const restaurant = normalizeSingleRestaurantResponse(data);
-  if (!restaurant?._id) throw new Error('La modification du restaurant n’a pas été confirmée.');
+
+  if (!restaurant?._id) {
+    throw new Error('Impossible de mettre à jour le restaurant.');
+  }
+
   return restaurant;
 };
 

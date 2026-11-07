@@ -1,14 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   FlatList,
   Pressable,
   ActivityIndicator,
   StatusBar,
   RefreshControl,
-  Alert,
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -43,6 +43,12 @@ const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
   return normalized || fallback;
 };
+
+const normalizeSearchText = (value) =>
+  normalizeText(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 
 const normalizeNumber = (value, fallback = 0) => {
   const parsed = Number(value);
@@ -83,16 +89,23 @@ const normalizeOrder = (order = {}) => ({
     : 0,
 });
 
-const formatPrice = (value, currency = 'EUR') => {
+const formatPrice = (value, currency = 'EUR', locale = i18n.language) => {
   const amount = normalizeNumber(value, 0);
   const c = normalizeText(currency, 'EUR').toUpperCase();
 
-  if (c === 'USD') return `$${amount.toFixed(2)}`;
-  if (c === 'GBP') return `£${amount.toFixed(2)}`;
-  if (c === 'XOF' || c === 'XAF') return `${amount.toFixed(0)} ${c}`;
-  if (c === 'CAD') return `${amount.toFixed(2)} $CA`;
-
-  return `${amount.toFixed(2)} €`;
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: c,
+      maximumFractionDigits: c === 'XOF' || c === 'XAF' ? 0 : 2,
+    }).format(amount);
+  } catch {
+    if (c === 'USD') return `$${amount.toFixed(2)}`;
+    if (c === 'GBP') return `£${amount.toFixed(2)}`;
+    if (c === 'XOF' || c === 'XAF') return `${amount.toFixed(0)} ${c}`;
+    if (c === 'CAD') return `${amount.toFixed(2)} $CA`;
+    return `${amount.toFixed(2)} €`;
+  }
 };
 
 const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
@@ -127,7 +140,7 @@ const getStatusStyle = (status) => {
 };
 
 export default function RestaurantOrders() {
-  const { t } = useTranslation();
+  const { t, i18n: translation } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const role = normalizeRole(auth.role || user?.role);
@@ -137,73 +150,105 @@ export default function RestaurantOrders() {
   const [restaurant, setRestaurant] = useState(null);
   const [orders, setOrders] = useState([]);
   const [activeStatus, setActiveStatus] = useState('Toutes');
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadError, setLoadError] = useState('');
+  const requestIdRef = useRef(0);
+  const hasLoadedOnceRef = useRef(false);
 
   const canAccess = isAuthenticated && role === 'restaurant';
 
   const load = useCallback(async (manual = false) => {
+    const requestId = ++requestIdRef.current;
+
     if (!token || role !== 'restaurant') {
       setRestaurant(null);
       setOrders([]);
+      setLoadError('');
       setLoading(false);
       setRefreshing(false);
       return;
     }
 
     try {
-      manual ? setRefreshing(true) : setLoading(true);
+      if (manual || hasLoadedOnceRef.current) setRefreshing(true);
+      else setLoading(true);
 
       const restaurantResponse = await apiGet(API_ENDPOINTS.restaurants.my, token);
+      if (requestId !== requestIdRef.current) return;
       const safeRestaurant = extractRestaurantPayload(restaurantResponse);
 
       if (!safeRestaurant?._id && !safeRestaurant?.id) {
         setRestaurant(null);
         setOrders([]);
+        setLoadError('');
         return;
       }
 
       const restaurantId = safeRestaurant?._id || safeRestaurant?.id;
-
-      const ordersResponse = await apiGet(
-        API_ENDPOINTS.orders.restaurantOrders(restaurantId),
-        token
-      );
-
       setRestaurant({
         ...safeRestaurant,
         _id: restaurantId,
         name: normalizeText(safeRestaurant?.name, t('restaurant.menuScreen.restaurantNameFallback')),
       });
 
+      const ordersResponse = await apiGet(
+        API_ENDPOINTS.orders.restaurantOrders(restaurantId),
+        token
+      );
+
+      if (requestId !== requestIdRef.current) return;
+
       setOrders(
         extractOrdersArray(ordersResponse)
           .map(normalizeOrder)
           .filter((item) => item?._id)
       );
+      setLoadError('');
     } catch (error) {
       console.log('Erreur restaurant orders :', error);
-      Alert.alert(
-        t('common.error'),
-        error?.message || t('restaurant.orders.errorLoadBody')
-      );
-      setOrders([]);
+      if (requestId === requestIdRef.current) {
+        setLoadError(t('restaurant.refreshFailed'));
+      }
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      if (requestId === requestIdRef.current) {
+        hasLoadedOnceRef.current = true;
+        setLoading(false);
+        setRefreshing(false);
+      }
     }
   }, [role, token, t]);
 
   useFocusEffect(
     useCallback(() => {
       load(false);
+      return () => {
+        requestIdRef.current += 1;
+      };
     }, [load])
   );
 
   const filteredOrders = useMemo(() => {
-    if (activeStatus === 'Toutes') return orders;
-    return orders.filter((item) => normalizeText(item?.status) === activeStatus);
-  }, [orders, activeStatus]);
+    const query = normalizeSearchText(searchQuery);
+    return orders.filter((item) => {
+      const matchesStatus = activeStatus === 'Toutes' || normalizeText(item?.status) === activeStatus;
+      if (!matchesStatus) return false;
+      if (!query) return true;
+
+      const searchable = [
+        item?._id,
+        item?.orderNumber,
+        item?.customerName,
+        item?.deliveryPersonName,
+        item?.status,
+      ]
+        .map(normalizeSearchText)
+        .join(' ');
+
+      return searchable.includes(query);
+    });
+  }, [orders, activeStatus, searchQuery]);
 
   const stats = useMemo(() => {
     return {
@@ -257,6 +302,21 @@ export default function RestaurantOrders() {
               </Pressable>
             </View>
 
+            {!!loadError && (
+              <View style={styles.refreshNotice}>
+                <Ionicons name="cloud-offline-outline" size={18} color="#9B4B2D" />
+                <Text style={styles.refreshNoticeText}>{loadError}</Text>
+                <Pressable
+                  onPress={() => load(true)}
+                  disabled={refreshing}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('common.retry')}
+                >
+                  <Text style={styles.refreshNoticeAction}>{t('common.retry')}</Text>
+                </Pressable>
+              </View>
+            )}
+
             <View style={styles.header}>
               <Text style={styles.eyebrow}>{t('restaurant.settings.eyebrow')}</Text>
               <Text style={styles.title}>{t('restaurant.orders.title')}</Text>
@@ -286,6 +346,29 @@ export default function RestaurantOrders() {
                 <Text style={styles.statValue}>{stats.delivered}</Text>
                 <Text style={styles.statLabel}>{t('restaurant.orders.deliveredStatLabel')}</Text>
               </View>
+            </View>
+
+            <View style={styles.searchBox}>
+              <Ionicons name="search-outline" size={19} color="#8B8177" />
+              <TextInput
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                placeholder={t('restaurant.orders.searchPlaceholder')}
+                placeholderTextColor="#9A9188"
+                style={styles.searchInput}
+                returnKeyType="search"
+                accessibilityLabel={t('restaurant.orders.searchPlaceholder')}
+              />
+              {!!searchQuery && (
+                <Pressable
+                  onPress={() => setSearchQuery('')}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('restaurant.orders.clearSearch')}
+                  hitSlop={8}
+                >
+                  <Ionicons name="close-circle" size={19} color="#8B8177" />
+                </Pressable>
+              )}
             </View>
 
             <Text style={styles.filterTitle}>{t('restaurant.orders.filterTitle')}</Text>
@@ -350,7 +433,11 @@ export default function RestaurantOrders() {
                 <View style={styles.metaBadge}>
                   <Ionicons name="cash-outline" size={14} color="#D96C2D" />
                   <Text style={styles.metaBadgeText}>
-                    {formatPrice(item?.totalPrice, item?.currency || 'EUR')}
+                    {formatPrice(
+                      item?.totalPrice,
+                      item?.currency || 'EUR',
+                      translation.resolvedLanguage || translation.language
+                    )}
                   </Text>
                 </View>
 
@@ -367,10 +454,28 @@ export default function RestaurantOrders() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Ionicons name="receipt-outline" size={54} color="#C8BBAA" />
-            <Text style={styles.emptyTitle}>{t('restaurant.orders.emptyTitle')}</Text>
-            <Text style={styles.emptyText}>
-              {t('restaurant.orders.emptyText')}
+            <Text style={styles.emptyTitle}>
+              {searchQuery.trim() || activeStatus !== 'Toutes'
+                ? t('restaurant.orders.searchNoResultsTitle')
+                : t('restaurant.orders.emptyTitle')}
             </Text>
+            <Text style={styles.emptyText}>
+              {searchQuery.trim() || activeStatus !== 'Toutes'
+                ? t('restaurant.orders.searchNoResultsText')
+                : t('restaurant.orders.emptyText')}
+            </Text>
+            {(searchQuery.trim() || activeStatus !== 'Toutes') && (
+              <Pressable
+                style={styles.clearFiltersButton}
+                onPress={() => {
+                  setSearchQuery('');
+                  setActiveStatus('Toutes');
+                }}
+                accessibilityRole="button"
+              >
+                <Text style={styles.clearFiltersText}>{t('restaurant.orders.clearFilters')}</Text>
+              </Pressable>
+            )}
           </View>
         }
       />
@@ -404,8 +509,41 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 3,
   },
+  refreshNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF0E8',
+    borderColor: '#F2C7B2',
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 16,
+    gap: 8,
+  },
+  refreshNoticeText: { flex: 1, color: '#77412C', fontSize: 13, lineHeight: 18 },
+  refreshNoticeAction: { color: '#9B4B2D', fontWeight: '800', padding: 4 },
 
   header: { marginBottom: 18 },
+  searchBox: {
+    minHeight: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E8DED2',
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    marginBottom: 16,
+  },
+  searchInput: {
+    flex: 1,
+    minWidth: 0,
+    color: '#1E1E1E',
+    fontSize: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+  },
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
@@ -566,4 +704,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 22,
   },
+  clearFiltersButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+    borderRadius: 12,
+    backgroundColor: '#1F6F43',
+    marginTop: 4,
+  },
+  clearFiltersText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },
 });

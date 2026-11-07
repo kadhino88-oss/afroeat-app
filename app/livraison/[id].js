@@ -100,7 +100,8 @@ export default function LivraisonOrderDetailsScreen() {
     }
 
     try {
-      manual ? setRefreshing(true) : setLoading(true);
+      if (manual) setRefreshing(true);
+      else setLoading(true);
 
       const data = await getDeliveryOrderById(orderId, token);
 
@@ -113,7 +114,7 @@ export default function LivraisonOrderDetailsScreen() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [orderId, token, currentRole]);
+  }, [orderId, token, currentRole, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -155,7 +156,7 @@ export default function LivraisonOrderDetailsScreen() {
         ...(updated || {}),
         status: updated?.status || nextStatus,
       }));
-    } catch (e) {
+    } catch (_error) {
       Alert.alert(t('common.error'), t('livraison.orderDetail.errorUpdateBody'));
     } finally {
       setUpdating(false);
@@ -255,7 +256,11 @@ export default function LivraisonOrderDetailsScreen() {
             {updating ? (
               <ActivityIndicator />
             ) : (
-              <Text style={styles.primaryText}>{t(`livraison.status.${DELIVERY_STATUS_SLUG[nextStatus] || 'confirmed'}`, nextStatus)}</Text>
+              <Text style={styles.primaryText}>
+                {order.paymentMethod === 'cash' && nextStatus === 'Livrée'
+                  ? t('livraison.confirmCashAndDelivered')
+                  : t(`livraison.status.${DELIVERY_STATUS_SLUG[nextStatus] || 'confirmed'}`, nextStatus)}
+              </Text>
             )}
           </Pressable>
         )}

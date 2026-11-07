@@ -4,17 +4,20 @@ import {
   Text,
   StyleSheet,
   Pressable,
+  TextInput,
   ActivityIndicator,
   ScrollView,
   StatusBar,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
+import AccountPrivacyLink from '../../components/AccountPrivacyLink';
 import { useAuth } from '../../context/AuthContext';
-import { getMyRestaurant } from '../../services/restaurantService';
+import { getMyRestaurant, updateMyRestaurant } from '../../services/restaurantService';
 import i18n from '../../i18n';
 
 const normalizeText = (v, f = '') => {
@@ -64,6 +67,9 @@ const normalizeRestaurant = (data) => {
     country: normalizeText(r.country),
     currency: normalizeText(r.currency, 'EUR'),
     deliveryFee: Number.isFinite(Number(r.deliveryFee)) ? Number(r.deliveryFee) : 0,
+    averagePreparationTimeMinutes: Number.isFinite(Number(r.averagePreparationTimeMinutes)) && Number(r.averagePreparationTimeMinutes) > 0
+      ? Number(r.averagePreparationTimeMinutes)
+      : null,
     isOpen: normalizeBoolean(r.isOpen, true),
   };
 };
@@ -111,7 +117,7 @@ const MetaRow = ({ icon, label, value, valueStyle, multiline = false }) => (
 
 export default function RestaurantProfile() {
   const { t } = useTranslation();
-  const auth = useAuth() || {};
+  const auth = useAuth();
 
   const user = auth.user ?? null;
   const role = auth.role;
@@ -132,6 +138,8 @@ export default function RestaurantProfile() {
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [preparationTimeInput, setPreparationTimeInput] = useState('');
+  const [savingPreparationTime, setSavingPreparationTime] = useState(false);
 
   const restaurantId = restaurant?._id || null;
   const openState = getOpenState(restaurant);
@@ -145,10 +153,15 @@ export default function RestaurantProfile() {
     }
 
     try {
-      manual ? setRefreshing(true) : setLoading(true);
+      if (manual) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
       const data = await getMyRestaurant(token);
       const safe = normalizeRestaurant(data);
       setRestaurant(safe?._id ? safe : null);
+      setPreparationTimeInput(safe?.averagePreparationTimeMinutes ? String(safe.averagePreparationTimeMinutes) : '');
     } catch (e) {
       console.log('Erreur profile restaurant :', e);
       setRestaurant(null);
@@ -157,6 +170,32 @@ export default function RestaurantProfile() {
       setRefreshing(false);
     }
   }, [token, currentRole]);
+
+  const savePreparationTime = useCallback(async () => {
+    const rawValue = preparationTimeInput.trim();
+    const minutes = rawValue === '' ? null : Number(rawValue);
+    if (minutes !== null && (!Number.isInteger(minutes) || minutes < 1 || minutes > 300)) {
+      Alert.alert(t('restaurant.profile.preparationTimeInvalidTitle'), t('restaurant.profile.preparationTimeInvalidBody'));
+      return;
+    }
+
+    setSavingPreparationTime(true);
+    try {
+      const updated = await updateMyRestaurant(
+        restaurantId,
+        { averagePreparationTimeMinutes: minutes },
+        token
+      );
+      const safe = normalizeRestaurant(updated);
+      setRestaurant(safe);
+      setPreparationTimeInput(safe?.averagePreparationTimeMinutes ? String(safe.averagePreparationTimeMinutes) : '');
+      Alert.alert(t('restaurant.profile.preparationTimeSavedTitle'), t('restaurant.profile.preparationTimeSavedBody'));
+    } catch (error) {
+      Alert.alert(t('common.error'), error?.message || t('restaurant.profile.preparationTimeSaveError'));
+    } finally {
+      setSavingPreparationTime(false);
+    }
+  }, [preparationTimeInput, restaurantId, token, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -343,6 +382,29 @@ export default function RestaurantProfile() {
           />
         </InfoCard>
 
+        <InfoCard title={t('restaurant.profile.preparationTimeTitle')}>
+          <Text style={styles.preparationHelp}>{t('restaurant.profile.preparationTimeHelp')}</Text>
+          <TextInput
+            value={preparationTimeInput}
+            onChangeText={setPreparationTimeInput}
+            keyboardType="number-pad"
+            maxLength={3}
+            placeholder={t('restaurant.profile.preparationTimePlaceholder')}
+            placeholderTextColor="#8B857D"
+            style={styles.preparationInput}
+            accessibilityLabel={t('restaurant.profile.preparationTimeLabel')}
+          />
+          <Pressable
+            style={[styles.preparationButton, savingPreparationTime && styles.preparationButtonDisabled]}
+            onPress={savePreparationTime}
+            disabled={savingPreparationTime}
+          >
+            {savingPreparationTime ? <ActivityIndicator size="small" color="#111111" /> : (
+              <Text style={styles.preparationButtonText}>{t('restaurant.profile.preparationTimeSaveButton')}</Text>
+            )}
+          </Pressable>
+        </InfoCard>
+
         <View style={styles.actionsBlock}>
           <Pressable
             style={styles.primaryButton}
@@ -359,7 +421,6 @@ export default function RestaurantProfile() {
             <Ionicons name="receipt-outline" size={18} color="#1F6F43" />
             <Text style={styles.secondaryButtonText}>{t('restaurant.profile.viewOrdersButton')}</Text>
           </Pressable>
-
           <Pressable
             style={styles.secondaryButton}
             onPress={() => router.push('/account/payouts')}
@@ -368,6 +429,7 @@ export default function RestaurantProfile() {
             <Text style={styles.secondaryButtonText}>{t('payouts.profileLink')}</Text>
           </Pressable>
         </View>
+        <AccountPrivacyLink />
       </ScrollView>
     </FadeInView>
   );
@@ -481,6 +543,11 @@ const styles = StyleSheet.create({
     color: '#111',
     marginBottom: 14,
   },
+  preparationHelp: { color: '#6B655E', fontSize: 13, lineHeight: 19, marginBottom: 12 },
+  preparationInput: { backgroundColor: '#FFF8F0', borderWidth: 1, borderColor: '#E6D8C8', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, color: '#111111', fontSize: 16 },
+  preparationButton: { minHeight: 46, borderRadius: 14, backgroundColor: '#FFC857', justifyContent: 'center', alignItems: 'center', marginTop: 12 },
+  preparationButtonDisabled: { opacity: 0.65 },
+  preparationButtonText: { color: '#111111', fontWeight: '900', fontSize: 14 },
 
   metaRow: {
     flexDirection: 'row',

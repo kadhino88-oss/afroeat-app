@@ -1,17 +1,70 @@
 import { Platform } from 'react-native';
-import apiConfig from './apiConfig';
+import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 
-const APP_ENV = String(process.env.EXPO_PUBLIC_APP_ENV || 'development')
-  .trim()
-  .toLowerCase();
+const LOCAL_PORT = '5000';
+const getExpoDevelopmentHost = () => {
+  // Expo Go / development builds expose the Metro host. On a physical phone,
+  // this is the computer's reachable LAN address, unlike localhost (the phone).
+  const hostUri =
+    Constants.expoConfig?.hostUri ||
+    Constants.manifest2?.extra?.expoClient?.hostUri ||
+    Constants.manifest?.debuggerHost ||
+    '';
 
-const apiConfiguration = apiConfig.resolveApiConfig({
-  appEnv: APP_ENV,
-  configuredApiUrl: process.env.EXPO_PUBLIC_API_URL || '',
-  localIp: process.env.EXPO_PUBLIC_LOCAL_IP || '192.168.1.121',
-  localPort: process.env.EXPO_PUBLIC_API_PORT || '5000',
-  platform: Platform.OS,
-});
+  if (!hostUri) return '';
+
+  try {
+    const normalizedUri = /^https?:\/\//i.test(hostUri)
+      ? hostUri
+      : `http://${hostUri}`;
+    return new URL(normalizedUri).hostname;
+  } catch {
+    return String(hostUri).split(':')[0].trim();
+  }
+};
+
+// Expo's host URI is the preferred source on a physical device. If Expo
+// cannot expose it (for example after a deep link/reload), use the LAN address
+// configured for this development setup rather than silently falling back to
+// localhost, which points back to the phone and causes Network request failed.
+// Override this fallback with EXPO_PUBLIC_API_HOST on another Wi-Fi network.
+const DEV_HOST = String(
+  process.env.EXPO_PUBLIC_API_HOST ||
+    (Platform.OS === 'android' && !Device.isDevice
+      ? '10.0.2.2'
+      : getExpoDevelopmentHost()) ||
+    (Device.isDevice ? '192.168.1.22' : 'localhost')
+).trim();
+const DEV_PROTOCOL = String(process.env.EXPO_PUBLIC_API_PROTOCOL || 'http').trim();
+const ENV_API_URL = String(process.env.EXPO_PUBLIC_API_URL || '').trim();
+const IS_PRODUCTION = !__DEV__;
+
+/**
+ * =========================================================
+ * HELPERS
+ * =========================================================
+ */
+
+const isLocalhost = (value) => {
+  const host = String(value ?? '').trim().toLowerCase();
+  return host === 'localhost' || host === '127.0.0.1';
+};
+
+const sanitizeHost = (value) => {
+  return String(value ?? '')
+    .trim()
+    .replace(/^https?:\/\//, '')
+    .replace(/\/+$/, '');
+};
+
+const normalizeApiBaseUrl = (value) => {
+  const normalized = String(value || '').trim().replace(/\/+$/, '');
+  if (!/^https?:\/\//i.test(normalized)) {
+    throw new Error('EXPO_PUBLIC_API_URL doit commencer par http:// ou https://');
+  }
+  return /\/api$/i.test(normalized) ? normalized : `${normalized}/api`;
+};
 
 export const safePathParam = (value) => {
   const normalized = String(value ?? '').trim();
@@ -36,16 +89,48 @@ const buildQueryString = (params = {}) => {
   return query ? `?${query}` : '';
 };
 
-export const API_BASE_URL = apiConfiguration.baseUrl;
-export const API_URL = API_BASE_URL;
+const getDevHost = () => {
+  const host = sanitizeHost(DEV_HOST);
+  if (!host) throw new Error('EXPO_PUBLIC_API_HOST est vide.');
+  if (Platform.OS === 'android' && isLocalhost(host)) return '10.0.2.2';
+  return host;
+};
+
+const getBaseUrl = () => {
+  if (ENV_API_URL) {
+    const baseUrl = normalizeApiBaseUrl(ENV_API_URL);
+    if (IS_PRODUCTION && !baseUrl.toLowerCase().startsWith('https://')) {
+      throw new Error('La production Afroeat doit utiliser une URL API HTTPS.');
+    }
+    return baseUrl;
+  }
+
+  if (IS_PRODUCTION) {
+    throw new Error(
+      'EXPO_PUBLIC_API_URL doit être configurée pour chaque build de préproduction et de production.'
+    );
+  }
+  const host = getDevHost();
+  return `${DEV_PROTOCOL}://${host}:${LOCAL_PORT}/api`;
+};
+
+/**
+ * =========================================================
+ * BASE URL / CONFIG
+ * =========================================================
+ */
+
+export const API_BASE_URL = getBaseUrl();
+export const API_URL      = API_BASE_URL;
+const parsedBaseUrl = new URL(API_BASE_URL);
 
 export const API_CONFIG = {
-  baseUrl: API_BASE_URL,
-  timeout: 15000,
-  isProduction: apiConfiguration.isProduction,
-  protocol: apiConfiguration.protocol,
-  host: apiConfiguration.host,
-  port: apiConfiguration.port,
+  baseUrl:      API_BASE_URL,
+  timeout:      15000,
+  isProduction: IS_PRODUCTION,
+  protocol:     parsedBaseUrl.protocol.replace(':', ''),
+  host:         parsedBaseUrl.hostname,
+  port:         parsedBaseUrl.port || null,
 };
 
 /**
@@ -68,6 +153,8 @@ export const API_ENDPOINTS = {
     verifyIdentity: '/users/verify-identity',
     updateProfile:  '/users/me',
     profile:        '/users/me',
+    deleteAccount:  '/users/me/account',
+    accountDeletionPage: '/users/account-deletion',
   },
 
   // ─── Users ──────────────────────────────────────────────
@@ -75,6 +162,9 @@ export const API_ENDPOINTS = {
     byId:       (id)       => `/users/${safePathParam(id)}`,
     updateById: (id)       => `/users/${safePathParam(id)}`,
     drivers:    (params = {}) => `/users/drivers${buildQueryString(params)}`,
+    favoriteRestaurants: '/users/me/favorites',
+    addFavoriteRestaurant: (id) => `/users/me/favorites/${safePathParam(id)}`,
+    removeFavoriteRestaurant: (id) => `/users/me/favorites/${safePathParam(id)}`,
   },
 
   // ─── Restaurants ────────────────────────────────────────
@@ -90,6 +180,14 @@ export const API_ENDPOINTS = {
     orders:  (restaurantId) => `/restaurants/${safePathParam(restaurantId)}/orders`,
   },
 
+  // ─── Nearby places ─────────────────────────────────────
+  places: {
+    nearby: (params = {}) =>
+      `/places/nearby${buildQueryString(params)}`,
+    groceriesNearby: (params = {}) =>
+      `/places/groceries/nearby${buildQueryString(params)}`,
+  },
+
   // ─── Menu ───────────────────────────────────────────────
   menu: {
     all:          '/menu',
@@ -102,6 +200,7 @@ export const API_ENDPOINTS = {
 
   // ─── Orders ─────────────────────────────────────────────
   orders: {
+    quote:            '/orders/quote',
     all:             '/orders',
     create:          '/orders',
     myOrders:        '/orders',
@@ -151,16 +250,32 @@ export const API_ENDPOINTS = {
 
   // ─── Payments ───────────────────────────────────────────
   payments: {
-    // ✅ Créer un PaymentIntent Stripe
+    // Paiement natif par PaymentIntent et paiement web hébergé par Stripe Checkout.
     createIntent:       '/payments/create-payment-intent',
+    checkout:           '/payments/checkout',
+    cash:               '/payments/cash',
     // ✅ Confirmer un paiement après succès Stripe
     confirm:            '/payments/confirm',
-    // Méthodes effectivement utilisées par les parcours mobiles actuels.
+    // Vérification paiement
+    verify:             '/payments/verify',
+    // Méthodes disponibles
     methods:            '/payments/methods',
-    cash:               '/payments/cash',
-    // Remboursement admin (route protégée côté backend).
+    // Historique
+    history:            '/payments/history',
+    // Payment Sheet (Stripe natif)
+    createPaymentSheet: '/payments/create-payment-sheet',
+    // Gestion des cartes enregistrées du compte client.
+    cards: '/payments/cards',
+    createCardSetupIntent: '/payments/cards/setup-intent',
+    setDefaultCard: (paymentMethodId) =>
+      `/payments/cards/${safePathParam(paymentMethodId)}/default`,
+    removeCard: (paymentMethodId) =>
+      `/payments/cards/${safePathParam(paymentMethodId)}`,
+    // Confirmation par commande
+    confirmOrderPayment: (orderId) => `/payments/orders/${safePathParam(orderId)}/confirm`,
+    // Remboursement admin
     refund:             '/payments/refund',
-    // Stripe Connect / versements partenaires
+    refundOrderPayment: (orderId) => `/payments/orders/${safePathParam(orderId)}/refund`,
     connectStatus:      '/payments/connect/status',
     connectOnboardingLink: '/payments/connect/onboarding-link',
     connectDashboardLink: '/payments/connect/dashboard-link',

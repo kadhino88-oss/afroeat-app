@@ -1,4 +1,5 @@
-import apiClient from './apiClient';
+import apiClient, { apiDelete } from './apiClient';
+import { API_ENDPOINTS } from '../constants/api';
 
 /**
  * =========================================================
@@ -22,4 +23,13 @@ export const registerUser = async (payload) => {
       "Erreur lors de l'inscription"
     );
   }
+};
+
+export const deleteMyAccount = async (password, token) => {
+  const response = await apiDelete(API_ENDPOINTS.auth.deleteAccount, token, {
+    body: { password, confirmation: true },
+    isJson: true,
+  });
+
+  return response?.data || response;
 };

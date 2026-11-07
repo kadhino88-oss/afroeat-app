@@ -9,14 +9,27 @@ import {
   StatusBar,
   ActivityIndicator,
   RefreshControl,
-  Image,
   Platform,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Redirect, useLocalSearchParams } from 'expo-router';
+import * as Location from 'expo-location';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
-import { getAllRestaurants, searchRestaurants } from '../../services/restaurantService';
+import PlaceBrandMark from '../../components/PlaceBrandMark';
+import { getAllMenuItems } from '../../services/menuService';
+import { getNearbyPlaces } from '../../services/placeService';
+import { matchesAfricanPlaceSearch } from '../../services/placeSearch';
+import { getNearbyRestaurants } from '../../services/restaurantService';
+import {
+  DEFAULT_NEARBY_CENTER,
+  DEFAULT_NEARBY_RADIUS,
+  NEARBY_RADIUS_OPTIONS,
+  loadNearbyRadius,
+  normalizeNearbyRadius,
+  saveNearbyRadius,
+} from '../../services/nearbySearchSettings';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
@@ -26,8 +39,65 @@ import { useTranslation } from 'react-i18next';
  * =========================================================
  */
 
-const LOGO_IMAGE = require('../assets/images/icon.png');
-const FALLBACK_RESTAURANT_IMAGE = require('../assets/images/react-logo.png');
+const FALLBACK_RESTAURANT_IMAGE = {
+  uri: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop',
+};
+
+const withTimeout = (promise, timeoutMs, message) =>
+  new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error(message)), timeoutMs);
+    Promise.resolve(promise).then(
+      (value) => {
+        clearTimeout(timeout);
+        resolve(value);
+      },
+      (error) => {
+        clearTimeout(timeout);
+        reject(error);
+      }
+    );
+  });
+
+const resolveNearbyCoordinates = async () => {
+  let permissionGranted = false;
+
+  try {
+    const permission = await withTimeout(
+      Location.getForegroundPermissionsAsync(),
+      8000,
+      'La vérification de la localisation a expiré.'
+    );
+    permissionGranted = permission?.status === 'granted';
+
+    if (permissionGranted) {
+      const position = await withTimeout(
+        Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        }),
+        12000,
+        'La position GPS n’a pas répondu à temps.'
+      );
+      const latitude = position?.coords?.latitude;
+      const longitude = position?.coords?.longitude;
+
+      if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
+        return {
+          coordinates: { latitude, longitude },
+          usingDefaultArea: false,
+          permissionGranted,
+        };
+      }
+    }
+  } catch (error) {
+    console.log('Position indisponible pour explorer :', error);
+  }
+
+  return {
+    coordinates: DEFAULT_NEARBY_CENTER,
+    usingDefaultArea: true,
+    permissionGranted,
+  };
+};
 
 /**
  * =========================================================
@@ -40,30 +110,27 @@ const FILTERS = [
   'Ivoirienne',
   'Sénégalaise',
   'Congolaise',
+  'Malienne',
   'Africaine',
   'Camerounaise',
   'Marocaine',
-  'Malienne',
   'Algérienne',
   'Tunisienne',
-  'Nigériane',
-  'Ghanéenne',
-  'Éthiopienne',
-  'Sud-africaine',
-  'Afrique de l’Est',
-  'Afrique de l’Ouest',
-  'Afrique centrale',
-  'Afrique du Nord',
-  'Afrique australe',
-  'Fast-food',
-  'Pizza',
-  'Burgers',
-  'Tacos',
-  'Grillades',
-  'Cuisine internationale',
   'Épicerie',
-  'Boissons',
   'Boutique',
+  'Fast-food',
+  'Salon afro',
+];
+
+const AFRICAN_CUISINE_FILTERS = [
+  'Ivoirienne',
+  'Sénégalaise',
+  'Congolaise',
+  'Malienne',
+  'Camerounaise',
+  'Marocaine',
+  'Algérienne',
+  'Tunisienne',
 ];
 
 // Valeurs FILTERS en francais (cles de filtre) ; slug pour affichage traduit.
@@ -72,30 +139,30 @@ const FILTER_SLUG_BY_LABEL = {
   Ivoirienne: 'ivoirienne',
   Sénégalaise: 'senegalaise',
   Congolaise: 'congolaise',
+  Malienne: 'malienne',
   Africaine: 'africaine',
   Camerounaise: 'camerounaise',
   Marocaine: 'marocaine',
-  Malienne: 'malienne',
   Algérienne: 'algerienne',
   Tunisienne: 'tunisienne',
-  'Nigériane': 'nigeriane',
-  'Ghanéenne': 'ghaneenne',
-  'Éthiopienne': 'ethiopienne',
-  'Sud-africaine': 'sudafricaine',
-  'Afrique de l’Est': 'estafricaine',
-  'Afrique de l’Ouest': 'ouestafricaine',
-  'Afrique centrale': 'afriquecentrale',
-  'Afrique du Nord': 'afriquedunord',
-  'Afrique australe': 'afriqueaustrale',
-  'Fast-food': 'fastfood',
-  'Pizza': 'pizza',
-  'Burgers': 'burgers',
-  'Tacos': 'tacos',
-  'Grillades': 'grillades',
-  'Cuisine internationale': 'internationale',
   Épicerie: 'epicerie',
-  Boissons: 'boissons',
   Boutique: 'boutique',
+  'Fast-food': 'fastFood',
+  'Salon afro': 'africanSalon',
+};
+
+const isPublicDirectoryPlace = (item) =>
+  item?.source === 'openstreetmap' || item?.source === 'public-directory';
+
+const getPublicPlaceTypeLabel = (category, t) => {
+  const keyByCategory = {
+    restaurant: 'restaurant',
+    'african-fast-food': 'fastFood',
+    'african-grocery': 'grocery',
+    'african-salon': 'salon',
+    'african-business': 'business',
+  };
+  return t(`publicPlace.${keyByCategory[category] || 'business'}`);
 };
 
 /**
@@ -114,6 +181,27 @@ const normalizeSearch = (value) => {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
+};
+
+const resolveExploreFilter = (value) => {
+  const normalized = normalizeSearch(value);
+  const aliases = {
+    'restaurant africain': 'Africaine',
+    'restaurants africains': 'Africaine',
+    restaurants: 'Africaine',
+    restaurant: 'Africaine',
+    'epiceries africaines': 'Épicerie',
+    'epicerie africaine': 'Épicerie',
+    epiceries: 'Épicerie',
+    'boutiques & salons afro': 'Boutique',
+    'commerces africains': 'Boutique',
+    boutique: 'Boutique',
+    'fast food africain': 'Fast-food',
+    'fast foods africains': 'Fast-food',
+    'salon afro': 'Salon afro',
+  };
+  if (aliases[normalized]) return aliases[normalized];
+  return FILTERS.find((filter) => normalizeSearch(filter) === normalized) || 'Tous';
 };
 
 const normalizeNumber = (value, fallback = 0) => {
@@ -165,12 +253,12 @@ const normalizeRole = (value) => {
 };
 
 const clampRating = (value) => {
-  if (value === null || value === undefined || value === '') return null;
+  const rating = normalizeNumber(value, 0);
 
-  const rating = normalizeNumber(value, null);
-  if (rating === null || rating <= 0) return null;
+  if (rating < 0) return 0;
+  if (rating > 5) return 5;
 
-  return Math.min(5, rating);
+  return rating;
 };
 
 const normalizeDeliveryTimeValue = (value) => {
@@ -182,19 +270,37 @@ const normalizeDeliveryTimeValue = (value) => {
   if (!text) return null;
 
   const numeric = Number.parseInt(text, 10);
-  return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
+  if (Number.isFinite(numeric) && numeric > 0) {
+    return numeric;
+  }
+
+  return null;
 };
 
-const formatDeliveryTime = (value) => {
+const formatDeliveryTime = (value, unavailableLabel) => {
   const minutes = normalizeDeliveryTimeValue(value);
-  return minutes === null ? 'Délai à confirmer' : `${minutes} min`;
+  return minutes ? `${minutes} min` : unavailableLabel;
+};
+
+const formatPrice = (value, currency = 'EUR') => {
+  const amount = normalizeNumber(value, 0);
+  const safeCurrency = normalizeText(currency, 'EUR').toUpperCase();
+
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency: safeCurrency,
+    }).format(amount);
+  } catch {
+    return `${amount.toFixed(2)} ${safeCurrency}`;
+  }
 };
 
 const normalizeRestaurant = (item = {}) => {
   const rawId =
     item?._id || item?.id || item?.restaurantId || item?.slug || '';
 
-  const cuisine = normalizeText(item?.cuisine, 'Cuisine à préciser');
+  const cuisine = normalizeText(item?.cuisine, 'Cuisine africaine');
   const city = normalizeText(item?.city);
   const country = normalizeText(item?.country);
   const address = normalizeText(
@@ -209,14 +315,15 @@ const normalizeRestaurant = (item = {}) => {
     ...item,
     _id: normalizeText(rawId),
     id: normalizeText(item?.id || rawId),
-    name: normalizeText(item?.name, 'Restaurant'),
+    name: normalizeText(item?.name, 'Restaurant africain'),
     cuisine,
     address,
     image,
     coverImage,
     isFeatured: normalizeBoolean(item?.isFeatured, false),
-    isOpen: normalizeBoolean(item?.isOpen, null),
+    isOpen: normalizeBoolean(item?.isOpen, false),
     rating: clampRating(item?.ratingAverage ?? item?.rating),
+    ratingCount: normalizeNumber(item?.ratingCount, 0),
     deliveryTimeMinutes: normalizeDeliveryTimeValue(
       item?.deliveryTimeMinutes ??
         item?.estimatedDeliveryTimeMinutes ??
@@ -242,14 +349,91 @@ const getRestaurantRoute = (restaurantId) => {
   return safeId ? `/restaurant/${safeId}` : null;
 };
 
+const getDishRestaurantId = (dish) => {
+  const restaurantRef = dish?.restaurant;
+  return normalizeText(
+    restaurantRef?._id ||
+      restaurantRef?.id ||
+      dish?.restaurantId ||
+      (typeof restaurantRef === 'string' ? restaurantRef : '')
+  );
+};
+
 const getRestaurantImageSource = (item) => {
-  const imageUri = normalizeText(item?.coverImage || item?.image);
+  const imageUri = normalizeText(
+    isPublicDirectoryPlace(item)
+      ? item?.imageUrl
+      : item?.coverImage || item?.image
+  );
 
   if (imageUri) {
     return { uri: imageUri };
   }
 
   return FALLBACK_RESTAURANT_IMAGE;
+};
+
+const normalizePublicPlace = (item = {}, category) => {
+  const id = normalizeText(item?.id || item?._id);
+  if (!id) return null;
+
+  return {
+    ...item,
+    _id: id,
+    id,
+    source: item?.source || 'openstreetmap',
+    category: item?.category || category,
+    name: normalizeText(item?.name, 'Commerce africain référencé'),
+    cuisine: normalizeText(item?.cuisine),
+    address: normalizeText(item?.address, item?.city || 'Adresse non disponible'),
+    city: normalizeText(item?.city),
+    isOpen: null,
+    isFeatured: false,
+    rating: 0,
+    ratingCount: 0,
+    distanceKm: normalizeNumber(item?.distanceKm, null),
+  };
+};
+
+const isSameDirectoryPlace = (partner, publicPlace) => {
+  if (normalizeSearch(partner?.name) !== normalizeSearch(publicPlace?.name)) {
+    return false;
+  }
+
+  const partnerAddress = normalizeSearch(partner?.address);
+  const publicAddress = normalizeSearch(publicPlace?.address);
+  if (
+    partnerAddress &&
+    publicAddress &&
+    partnerAddress !== 'adresse non disponible' &&
+    publicAddress !== 'adresse non disponible' &&
+    partnerAddress === publicAddress
+  ) {
+    return true;
+  }
+
+  const readCoordinate = (value) => {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  };
+  const partnerLatitude = readCoordinate(partner?.latitude ?? partner?.location?.latitude);
+  const partnerLongitude = readCoordinate(partner?.longitude ?? partner?.location?.longitude);
+  const publicLatitude = readCoordinate(publicPlace?.latitude);
+  const publicLongitude = readCoordinate(publicPlace?.longitude);
+  if (![partnerLatitude, partnerLongitude, publicLatitude, publicLongitude].every(Number.isFinite)) {
+    return false;
+  }
+
+  const radians = (degrees) => (degrees * Math.PI) / 180;
+  const deltaLatitude = radians(publicLatitude - partnerLatitude);
+  const deltaLongitude = radians(publicLongitude - partnerLongitude);
+  const haversine =
+    Math.sin(deltaLatitude / 2) ** 2 +
+    Math.cos(radians(partnerLatitude)) *
+      Math.cos(radians(publicLatitude)) *
+      Math.sin(deltaLongitude / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine)) < 0.25;
 };
 
 /**
@@ -259,8 +443,22 @@ const getRestaurantImageSource = (item) => {
  */
 
 export default function ExploreScreen() {
-  const { t } = useTranslation();
   const routeParams = useLocalSearchParams();
+  const routeQuery = Array.isArray(routeParams.q) ? routeParams.q[0] : routeParams.q;
+  const routeCategory = Array.isArray(routeParams.category)
+    ? routeParams.category[0]
+    : routeParams.category;
+  return (
+    <ExploreScreenContent
+      key={`${routeCategory || ''}:${routeQuery || ''}`}
+      routeQuery={routeQuery}
+      routeCategory={routeCategory}
+    />
+  );
+}
+
+function ExploreScreenContent({ routeQuery, routeCategory }) {
+  const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const token = auth.token ?? null;
@@ -268,21 +466,17 @@ export default function ExploreScreen() {
   const isAuthenticated = Boolean(auth.isAuthenticated);
   const authLoading = Boolean(auth.loading);
 
-  const [query, setQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState('Tous');
-
-  useEffect(() => {
-    const category = String(routeParams.category ?? '').toLowerCase();
-    const categoryFilter = {
-      restaurants: 'Tous',
-      groceries: 'Épicerie',
-      drinks: 'Boissons',
-      shops: 'Boutique',
-    }[category];
-    if (categoryFilter) setActiveFilter(categoryFilter);
-  }, [routeParams.category]);
+  const [query, setQuery] = useState(() => normalizeText(routeQuery));
+  const [activeFilter, setActiveFilter] = useState(() => resolveExploreFilter(routeCategory));
+  const [openOnly, setOpenOnly] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
+  const [publicPlaces, setPublicPlaces] = useState([]);
+  const [allDishes, setAllDishes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [publicPlacesLoading, setPublicPlacesLoading] = useState(false);
+  const [needsLocationPermission, setNeedsLocationPermission] = useState(false);
+  const [usingDefaultArea, setUsingDefaultArea] = useState(false);
+  const [selectedDistance, setSelectedDistance] = useState(DEFAULT_NEARBY_RADIUS);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -318,36 +512,112 @@ export default function ExploreScreen() {
 
   const tokenRef = useRef(token);
   useEffect(() => { tokenRef.current = token; }, [token]);
+  const restaurantsRequestId = useRef(0);
+  const publicPlacesRequestId = useRef(0);
+  const searchCoordinatesRequest = useRef(null);
 
-  const loadRestaurants = useCallback(async (isRefresh = false) => {
+  const getSearchCoordinates = useCallback(async () => {
+    if (!searchCoordinatesRequest.current) {
+      const pending = resolveNearbyCoordinates();
+      searchCoordinatesRequest.current = pending;
+      try {
+        return await pending;
+      } finally {
+        if (searchCoordinatesRequest.current === pending) {
+          searchCoordinatesRequest.current = null;
+        }
+      }
+    }
+
+    return searchCoordinatesRequest.current;
+  }, []);
+
+  const loadPublicPlaces = useCallback(async (radiusOverride = null) => {
+    const requestId = ++publicPlacesRequestId.current;
+    setPublicPlacesLoading(true);
+
     try {
+      const radiusKm = normalizeNearbyRadius(
+        radiusOverride ?? await loadNearbyRadius()
+      );
+      if (requestId !== publicPlacesRequestId.current) return;
+      setSelectedDistance(radiusKm);
+
+      const searchContext = await getSearchCoordinates();
+      if (requestId !== publicPlacesRequestId.current) return;
+      setNeedsLocationPermission(!searchContext.permissionGranted);
+      setUsingDefaultArea(searchContext.usingDefaultArea);
+
+      const payload = await getNearbyPlaces({
+        ...searchContext.coordinates,
+        radius: radiusKm,
+        token: tokenRef.current,
+      });
+      if (requestId !== publicPlacesRequestId.current) return;
+
+      const foundPlaces = [
+        ...(Array.isArray(payload?.restaurants) ? payload.restaurants : []).map((item) =>
+          normalizePublicPlace(item, 'restaurant')
+        ),
+        ...(Array.isArray(payload?.fastFoods) ? payload.fastFoods : []).map((item) =>
+          normalizePublicPlace(item, 'african-fast-food')
+        ),
+        ...(Array.isArray(payload?.groceries) ? payload.groceries : []).map((item) =>
+          normalizePublicPlace(item, 'african-grocery')
+        ),
+        ...(Array.isArray(payload?.businesses) ? payload.businesses : []).map((item) =>
+          normalizePublicPlace(item, 'african-business')
+        ),
+      ].filter(Boolean);
+
+      setPublicPlaces(foundPlaces);
+    } catch (error) {
+      console.log('Commerces africains publics indisponibles :', error);
+    } finally {
+      if (requestId === publicPlacesRequestId.current) {
+        setPublicPlacesLoading(false);
+      }
+    }
+  }, [getSearchCoordinates]);
+
+  const loadRestaurants = useCallback(async (isRefresh = false, radiusOverride = null) => {
+    const requestId = ++restaurantsRequestId.current;
+
+    try {
+      const radiusKm = normalizeNearbyRadius(
+        radiusOverride ?? await loadNearbyRadius()
+      );
+      if (requestId !== restaurantsRequestId.current) return;
       if (isRefresh) {
         setRefreshing(true);
       } else {
         setLoading(true);
       }
-
       setErrorMessage('');
+      setSelectedDistance(radiusKm);
 
-      const businessTypeByFilter = {
-        'Épicerie': 'grocery',
-        'Boissons': 'drinks',
-        'Boutique': 'shop',
-      };
-      const businessType = businessTypeByFilter[activeFilter];
-      const data = businessType
-        ? await searchRestaurants({ businessType, token: tokenRef.current })
-        : await getAllRestaurants(tokenRef.current);
+      const searchContext = await getSearchCoordinates();
+      if (requestId !== restaurantsRequestId.current) return;
+      setNeedsLocationPermission(!searchContext.permissionGranted);
+      setUsingDefaultArea(searchContext.usingDefaultArea);
+
+      const data = await getNearbyRestaurants({
+        ...searchContext.coordinates,
+        maxDistance: radiusKm,
+        token: tokenRef.current,
+      });
+      if (requestId !== restaurantsRequestId.current) return;
+
       const extracted = extractRestaurantsFromResponse(data);
 
       const safeRestaurants = extracted
-        .map((item) => normalizeRestaurant(item))
+        .map((item, index) => normalizeRestaurant(item, index))
         .filter((item) => item?._id);
 
       setRestaurants(safeRestaurants);
     } catch (error) {
+      if (requestId !== restaurantsRequestId.current) return;
       console.log('Erreur explore restaurants :', error);
-      setRestaurants([]);
       setErrorMessage(
         normalizeText(
           error?.message,
@@ -355,19 +625,41 @@ export default function ExploreScreen() {
         )
       );
     } finally {
-      if (isRefresh) {
-        setRefreshing(false);
-      } else {
+      if (requestId === restaurantsRequestId.current) {
         setLoading(false);
+        setRefreshing(false);
       }
     }
-  }, [activeFilter]);
+  }, [getSearchCoordinates]);
 
   useEffect(() => {
-    if (!redirectPath) {
+    if (redirectPath) return undefined;
+
+    const startupTimer = setTimeout(() => {
       loadRestaurants(false);
-    }
-  }, [loadRestaurants, redirectPath]);
+      loadPublicPlaces();
+    }, 0);
+
+    return () => clearTimeout(startupTimer);
+  }, [loadRestaurants, loadPublicPlaces, redirectPath]);
+
+  useEffect(() => {
+    if (redirectPath) return undefined;
+
+    let isMounted = true;
+
+    getAllMenuItems(tokenRef.current)
+      .then((items) => {
+        if (isMounted) setAllDishes(Array.isArray(items) ? items : []);
+      })
+      .catch((error) => {
+        console.log('Impossible de charger les plats à explorer :', error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [redirectPath]);
 
   /**
    * =========================================================
@@ -375,156 +667,133 @@ export default function ExploreScreen() {
    * =========================================================
    */
 
+  const restaurantsById = useMemo(
+    () => new Map(restaurants.map((restaurant) => [String(restaurant._id), restaurant])),
+    [restaurants]
+  );
+
+  const directoryItems = useMemo(() => {
+    const uniquePublicPlaces = publicPlaces.filter(
+      (place) => !restaurants.some((partner) => isSameDirectoryPlace(partner, place))
+    );
+    return [...restaurants, ...uniquePublicPlaces];
+  }, [publicPlaces, restaurants]);
+
   const filteredRestaurants = useMemo(() => {
-    const normalizedQuery = normalizeSearch(query);
     const normalizedFilter = normalizeSearch(activeFilter);
 
-    return restaurants
+    return directoryItems
       .filter((item) => {
-        const name = normalizeSearch(item?.name);
         const cuisine = normalizeSearch(item?.cuisine);
-        const address = normalizeSearch(item?.address);
-        const city = normalizeSearch(item?.city);
-        const country = normalizeSearch(item?.country);
+        const matchesQuery = matchesAfricanPlaceSearch(item, query, t);
 
-        const matchesQuery =
-          !normalizedQuery ||
-          name.includes(normalizedQuery) ||
-          cuisine.includes(normalizedQuery) ||
-          address.includes(normalizedQuery) ||
-          city.includes(normalizedQuery) ||
-          country.includes(normalizedQuery);
-
-        const fastFoodTerms = [
-          'fast food', 'fast-food', 'burger', 'hamburger', 'pizza', 'tacos',
-          'fried chicken', 'poulet frit', 'sandwich', 'kebab', 'shawarma',
-          'snack', 'hot dog', 'wrap',
-        ];
-        // Match region filters against restaurant cuisine, categories, name and description.
-        // Include common country adjectives and English/French spellings so the full
-        // continent remains discoverable even when partner data is not normalized yet.
-        const africanRegionTerms = {
-          'afrique de l est': [
-            'est-afric', 'east african', 'ethiop', 'kenyan', 'kenya', 'tanzan', 'tanzania',
-            'somali', 'somalia', 'ougand', 'uganda', 'rwand', 'burund', 'eritrea',
-            'djibouti', 'sudan', 'sudanais', 'south sudan', 'malgache', 'madagascar',
-            'seychell', 'comor', 'maurice', 'mauritian',
-          ],
-          'afrique de l ouest': [
-            'ouest-afric', 'west african', 'nigerian', 'nigeria', 'ghan', 'senegal',
-            'ivoir', 'cote d ivoire', 'mali', 'malien', 'benin', 'beninois', 'togo',
-            'togolais', 'burkina', 'burkinabe', 'guine', 'guinea', 'sierra leone',
-            'liberia', 'liberien', 'gambia', 'gambian', 'mauritania', 'mauritanien',
-            'nigerien', 'cape verde', 'cap verdien',
-          ],
-          'afrique du nord': [
-            'north african', 'north africa', 'maghrebi', 'maghreb', 'maroc', 'moroccan', 'marocaine',
-            'alger', 'algerian', 'algerienne', 'tunisi', 'tunisian', 'egypt', 'egyptian', 'egyptien',
-            'libya', 'libyan', 'libyen', 'western sahara', 'sahara occidental',
-          ],
-          'afrique australe': [
-            'southern african', 'southern africa', 'south african', 'south africa', 'sud-afric', 'sud afric',
-            'namib', 'botswana', 'zimbabwe', 'zambia', 'zambian', 'mozambique', 'mozambicain',
-            'malawi', 'lesotho', 'eswatini', 'swazi', 'madagascar', 'malgache', 'maurice', 'mauritian',
-          ],
-          'afrique centrale': [
-            'central african', 'cameroun', 'cameroon', 'congo', 'congolais', 'gabon',
-            'gabonaise', 'tchad', 'chad', 'centrafric', 'central african republic',
-            'guinee equatoriale', 'equatorial guinea', 'sao tome', 'angola', 'angolais',
-            'rdc', 'republique democratique du congo',
-          ],
-        };
-        const cuisineText = normalizeSearch([
-          item?.cuisine,
-          ...(Array.isArray(item?.categories) ? item.categories : []),
-          item?.category,
-          item?.type,
-          item?.businessType,
-          item?.storeType,
-          item?.name,
-          item?.description,
-        ].filter(Boolean).join(' '));
-        const matchesFastFood =
-          normalizedFilter === 'fast-food' &&
-          fastFoodTerms.some((term) => cuisineText.includes(normalizeSearch(term)));
-        const beverageTerms = [
-          'boisson', 'beverage', 'drink', 'juice', 'jus', 'smoothie', 'cocktail',
-          'coffee', 'cafe', 'tea', 'the', 'soda', 'water', 'eau', 'milkshake',
-        ];
-        const matchesBeverages =
-          normalizedFilter === 'boissons' &&
-          beverageTerms.some((term) => cuisineText.includes(normalizeSearch(term)));
-        const matchesGroceries =
-          normalizedFilter === 'epicerie' &&
-          ['grocery', 'groceries', 'epicerie', 'épicerie', 'market', 'supermarket', 'alimentaire']
-            .some((term) => cuisineText.includes(normalizeSearch(term)));
-        const matchesShops =
-          normalizedFilter === 'boutique' &&
-          ['shop', 'store', 'boutique', 'marketplace'].some((term) => cuisineText.includes(normalizeSearch(term)));
-        const regionKey = normalizedFilter.replace(/[’']/g, '').replace(/\s+/g, ' ');
-        const matchesAfricanRegion = (africanRegionTerms[regionKey] || []).some((term) =>
-          cuisineText.includes(normalizeSearch(term))
-        );
-        const countryCuisineTerms = {
-          malienne: ['malian', 'mali', 'malienne', 'malien'],
-          algerienne: ['algerian', 'algeria', 'algerienne', 'algerien', 'algérienne'],
-          tunisienne: ['tunisian', 'tunisia', 'tunisienne', 'tunisien'],
-        };
-        const matchesCountryCuisine = (countryCuisineTerms[normalizedFilter] || []).some((term) =>
-          cuisineText.includes(normalizeSearch(term))
-        );
-        // Match common singular/plural and French/English variants for quick-service
-        // categories. Partner metadata remains the source of truth: no category is inferred
-        // for display, this only makes the customer's selected filter more tolerant.
-        const categoryTerms = {
-          pizza: ['pizza', 'pizzeria'],
-          burgers: ['burger', 'burgers', 'hamburger', 'cheeseburger'],
-          tacos: ['taco', 'tacos', 'tacos français'],
-          grillades: ['grillade', 'grillades', 'grill', 'grilled', 'barbecue', 'bbq', 'braisé', 'braise'],
-          internationale: ['international', 'world cuisine', 'fusion', 'cuisine du monde'],
-        };
-        const matchesCuisineFormat = (categoryTerms[normalizedFilter] || []).some((term) =>
-          cuisineText.includes(normalizeSearch(term))
-        );
         const matchesFilter =
           normalizedFilter === 'tous' ||
           cuisine.includes(normalizedFilter) ||
-          cuisineText.includes(normalizedFilter) ||
-          (normalizedFilter === 'africaine' && cuisineText.includes('afric')) ||
-          matchesFastFood ||
-          matchesCuisineFormat ||
-          matchesBeverages ||
-          matchesGroceries ||
-          matchesShops ||
-          matchesAfricanRegion ||
-          matchesCountryCuisine;
+          (normalizedFilter === 'africaine' && (
+            cuisine.includes('afric') ||
+            AFRICAN_CUISINE_FILTERS.some((label) => cuisine.includes(normalizeSearch(label))) ||
+            ['restaurant', 'african-fast-food'].includes(item?.category) ||
+            !isPublicDirectoryPlace(item)
+          )) ||
+          (normalizedFilter === 'epicerie' && item?.category === 'african-grocery') ||
+          (normalizedFilter === 'boutique' && ['african-business', 'african-salon'].includes(item?.category)) ||
+          (normalizedFilter === 'fast-food' && item?.category === 'african-fast-food') ||
+          (normalizedFilter === 'salon afro' && item?.category === 'african-salon');
+        const matchesAvailability =
+          !openOnly || (!isPublicDirectoryPlace(item) && item?.isOpen === true);
 
-        return matchesQuery && matchesFilter;
+        return matchesQuery && matchesFilter && matchesAvailability;
       })
       .sort((a, b) => {
-        const aFeatured = a?.isFeatured ? 1 : 0;
-        const bFeatured = b?.isFeatured ? 1 : 0;
-
-        if (aFeatured !== bFeatured) {
-          return bFeatured - aFeatured;
-        }
-
-        const aOpen = a?.isOpen ? 1 : 0;
-        const bOpen = b?.isOpen ? 1 : 0;
+        const aOpen = isPublicDirectoryPlace(a) ? 0 : Number(Boolean(a?.isOpen));
+        const bOpen = isPublicDirectoryPlace(b) ? 0 : Number(Boolean(b?.isOpen));
 
         if (aOpen !== bOpen) {
           return bOpen - aOpen;
         }
 
-        const ratingA = clampRating(a?.rating) ?? -1;
-        const ratingB = clampRating(b?.rating) ?? -1;
-        return ratingB - ratingA;
-      });
-  }, [restaurants, query, activeFilter]);
+        const ratingDifference = clampRating(b?.rating) - clampRating(a?.rating);
+        if (ratingDifference !== 0) return ratingDifference;
 
-  const featuredRestaurants = useMemo(() => {
-    return filteredRestaurants.filter((item) => item?.isFeatured).length;
-  }, [filteredRestaurants]);
+        const aFeatured = a?.isFeatured ? 1 : 0;
+        const bFeatured = b?.isFeatured ? 1 : 0;
+        return bFeatured - aFeatured;
+      });
+  }, [directoryItems, query, activeFilter, openOnly, t]);
+
+  const matchingDishes = useMemo(() => {
+    const normalizedQuery = normalizeSearch(query);
+    if (normalizedQuery.length < 2) return [];
+
+    const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+    const normalizedFilter = normalizeSearch(activeFilter);
+
+    return allDishes
+      .filter((dish) => {
+        if (dish?.available === false || dish?.isAvailable === false) {
+          return false;
+        }
+
+        const restaurantRef = dish?.restaurant;
+        const restaurantId = getDishRestaurantId(dish);
+        const restaurant = restaurantsById.get(String(restaurantId));
+        const restaurantIsOpen =
+          restaurant?.isOpen === true || restaurantRef?.isOpen === true;
+        if (openOnly && !restaurantIsOpen) return false;
+
+        const searchableText = normalizeSearch(
+          [
+            dish?.name,
+            dish?.description,
+            dish?.category,
+            dish?.cuisine,
+            dish?.story,
+            restaurantRef?.name,
+            restaurantRef?.cuisine,
+            restaurantRef?.address,
+            restaurant?.name,
+            restaurant?.cuisine,
+            restaurant?.address,
+          ]
+            .filter(Boolean)
+            .join(' ')
+        );
+
+        const matchesQuery =
+          searchableText.includes(normalizedQuery) ||
+          queryWords.every((word) => searchableText.includes(word));
+        const dishCuisine = normalizeSearch(
+          restaurantRef?.cuisine || restaurant?.cuisine || dish?.cuisine
+        );
+        const matchesFilter =
+          normalizedFilter === 'tous' ||
+          dishCuisine.includes(normalizedFilter) ||
+          (normalizedFilter === 'africaine' && dishCuisine.includes('afric'));
+
+        return matchesQuery && matchesFilter;
+      })
+      .sort((a, b) => {
+        const aName = normalizeSearch(a?.name);
+        const bName = normalizeSearch(b?.name);
+        const aExact = aName === normalizedQuery ? 1 : 0;
+        const bExact = bName === normalizedQuery ? 1 : 0;
+        if (aExact !== bExact) return bExact - aExact;
+
+        const aStartsWithQuery = aName.startsWith(normalizedQuery) ? 1 : 0;
+        const bStartsWithQuery = bName.startsWith(normalizedQuery) ? 1 : 0;
+        if (aStartsWithQuery !== bStartsWithQuery) {
+          return bStartsWithQuery - aStartsWithQuery;
+        }
+
+        const aRecommended = a?.isRecommended ? 1 : 0;
+        const bRecommended = b?.isRecommended ? 1 : 0;
+        if (aRecommended !== bRecommended) return bRecommended - aRecommended;
+
+        return Number(Boolean(b?.isPopular)) - Number(Boolean(a?.isPopular));
+      })
+      .slice(0, 8);
+  }, [allDishes, query, activeFilter, openOnly, restaurantsById]);
 
   const resultCount = filteredRestaurants.length;
 
@@ -557,7 +826,8 @@ export default function ExploreScreen() {
     !loading &&
     filteredRestaurants.length === 0 &&
     (normalizeSearch(query).length > 0 ||
-      normalizeSearch(activeFilter) !== 'tous');
+      normalizeSearch(activeFilter) !== 'tous' ||
+      openOnly);
 
   /**
    * =========================================================
@@ -571,14 +841,99 @@ export default function ExploreScreen() {
     router.push(route);
   }, []);
 
+  const handleOpenDirectoryItem = useCallback((item) => {
+    if (!isPublicDirectoryPlace(item)) {
+      handleOpenRestaurant(item?._id);
+      return;
+    }
+
+    router.push({
+      pathname: '/place/[id]',
+      params: {
+        id: item.id,
+        source: item.source,
+        name: item.name,
+        category: item.category,
+        address: item.address,
+        cuisine: item.cuisine,
+        origin: item.origin,
+        city: item.city,
+        country: item.country,
+        distanceKm: item.distanceKm == null ? '' : String(item.distanceKm),
+        phone: item.phone,
+        email: item.email,
+        website: item.website,
+        menuUrl: item.menuUrl,
+        logoUrl: item.logoUrl,
+        imageUrl: item.imageUrl,
+        openingHours: item.openingHours,
+        description: item.description,
+        brand: item.brand,
+        operator: item.operator,
+        osmType: item.osmType,
+        osmId: item.osmId,
+        osmUrl: item.osmUrl,
+      },
+    });
+  }, [handleOpenRestaurant]);
+
+  const getDishCurrency = useCallback(
+    (dish) => {
+      const restaurantRef = dish?.restaurant;
+      const restaurantId = getDishRestaurantId(dish);
+
+      return (
+        dish?.currency ||
+        restaurantRef?.currency ||
+        restaurantsById.get(String(restaurantId))?.currency ||
+        'EUR'
+      );
+    },
+    [restaurantsById]
+  );
+
   const handleResetFilters = useCallback(() => {
     setQuery('');
     setActiveFilter('Tous');
+    setOpenOnly(false);
   }, []);
 
   const handleRetry = useCallback(() => {
     loadRestaurants(false);
-  }, [loadRestaurants]);
+    loadPublicPlaces();
+  }, [loadPublicPlaces, loadRestaurants]);
+
+  const handleRefresh = useCallback(async () => {
+    await Promise.all([loadRestaurants(true), loadPublicPlaces()]);
+  }, [loadPublicPlaces, loadRestaurants]);
+
+  const handleDistanceChange = useCallback(async (radiusKm) => {
+    if (radiusKm === selectedDistance) return;
+
+    const safeRadius = normalizeNearbyRadius(radiusKm);
+    setSelectedDistance(safeRadius);
+    setRestaurants([]);
+    setPublicPlaces([]);
+    await saveNearbyRadius(safeRadius);
+    await Promise.all([
+      loadRestaurants(true, safeRadius),
+      loadPublicPlaces(safeRadius),
+    ]);
+  }, [loadPublicPlaces, loadRestaurants, selectedDistance]);
+
+  const handleEnableNearbySearch = useCallback(async () => {
+    try {
+      const permission = await Location.requestForegroundPermissionsAsync();
+      if (permission?.status === 'granted') {
+        await Promise.all([loadRestaurants(true), loadPublicPlaces()]);
+      } else {
+        setNeedsLocationPermission(true);
+      }
+    } catch (error) {
+      console.log('Autorisation de localisation indisponible :', error);
+      setNeedsLocationPermission(true);
+    }
+  }, [loadPublicPlaces, loadRestaurants]);
 
   /**
    * =========================================================
@@ -593,42 +948,16 @@ export default function ExploreScreen() {
           userName={displayName}
           locationText={displayAddress}
           avatarUri={displayAvatar}
+          user={user}
         />
 
         <View style={styles.heroCard}>
-          <View style={styles.heroTop}>
-            <View style={styles.heroTextBlock}>
-              <View style={styles.heroBadge}>
-                <Ionicons name="sparkles-outline" size={14} color="#D4A017" />
-                <Text style={styles.heroBadgeText}>{t('explore.premiumDiscovery')}</Text>
-              </View>
-
-              <Text style={styles.title}>{t('explore.title')}</Text>
-              <Text style={styles.subtitle}>
-                {t('explore.subtitle')}
-              </Text>
-            </View>
-
-            <View style={styles.heroLogoWrap}>
-              <Image source={LOGO_IMAGE} style={styles.heroLogo} />
-            </View>
+          <View style={styles.heroIconWrap}>
+            <Ionicons name="compass-outline" size={22} color="#1F6F43" />
           </View>
-
-          <View style={styles.heroStatsRow}>
-            <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>{restaurants.length}</Text>
-              <Text style={styles.heroStatLabel}>{t('explore.restaurants')}</Text>
-            </View>
-
-            <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>{featuredRestaurants}</Text>
-              <Text style={styles.heroStatLabel}>{t('explore.premium')}</Text>
-            </View>
-
-            <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>{resultCount}</Text>
-              <Text style={styles.heroStatLabel}>{t('explore.results')}</Text>
-            </View>
+          <View style={styles.heroTextBlock}>
+            <Text style={styles.title}>{t('explore.title')}</Text>
+            <Text style={styles.subtitle}>{t('explore.subtitle')}</Text>
           </View>
         </View>
 
@@ -646,6 +975,7 @@ export default function ExploreScreen() {
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="never"
+              accessibilityLabel={t('explore.searchPlaceholder')}
             />
 
             {!!query && (
@@ -659,6 +989,57 @@ export default function ExploreScreen() {
             )}
           </View>
         </View>
+
+        {!!query && matchingDishes.length > 0 && (
+          <View style={styles.dishesSection}>
+            <View style={styles.dishesHeading}>
+              <Text style={styles.sectionTitle}>{t('explore.dishesFound')}</Text>
+              <View style={styles.dishesCount}>
+                <Text style={styles.dishesCountText}>{matchingDishes.length}</Text>
+              </View>
+            </View>
+            <FlatList
+              data={matchingDishes}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => `${item?._id || item?.id || 'dish'}-${index}`}
+              contentContainerStyle={styles.dishesRow}
+              renderItem={({ item }) => (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('explore.openDish', { name: item?.name })}
+                  style={({ pressed }) => [
+                    styles.dishCard,
+                    pressed && styles.dishCardPressed,
+                  ]}
+                  onPress={() => {
+                    handleOpenRestaurant(getDishRestaurantId(item));
+                  }}
+                >
+                  <Image
+                    source={getRestaurantImageSource({ image: item?.image })}
+                    style={styles.dishImage}
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
+                    transition={160}
+                  />
+                  <Text style={styles.dishName} numberOfLines={1}>
+                    {item?.name}
+                  </Text>
+                  <Text style={styles.dishRestaurant} numberOfLines={1}>
+                    {item?.restaurant?.name ||
+                      item?.restaurantName ||
+                      item?.restaurant?.cuisine ||
+                      t('restaurant.profile.restaurantFallbackName')}
+                  </Text>
+                  <Text style={styles.dishPrice}>
+                    {formatPrice(item?.price, getDishCurrency(item))}
+                  </Text>
+                </Pressable>
+              )}
+            />
+          </View>
+        )}
 
         <Text style={styles.sectionTitle}>{t('explore.quickFilters')}</Text>
 
@@ -695,11 +1076,87 @@ export default function ExploreScreen() {
           }}
         />
 
+        <View style={styles.distanceSection}>
+          <Text style={styles.distanceLabel}>{t('explore.distance')}</Text>
+          <View style={styles.distanceOptions}>
+            {NEARBY_RADIUS_OPTIONS.map((distance) => (
+              <Pressable
+                key={distance}
+                accessibilityRole="button"
+                accessibilityLabel={t('explore.distanceOption', { distance })}
+                accessibilityState={{ selected: selectedDistance === distance }}
+                onPress={() => handleDistanceChange(distance)}
+                style={({ pressed }) => [
+                  styles.distanceChip,
+                  selectedDistance === distance && styles.distanceChipActive,
+                  pressed && styles.filterChipPressed,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.distanceChipText,
+                    selectedDistance === distance && styles.distanceChipTextActive,
+                  ]}
+                >
+                  {distance} km
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        <Pressable
+          accessibilityRole="switch"
+          accessibilityState={{ checked: openOnly }}
+          accessibilityLabel={t('explore.openNow')}
+          style={({ pressed }) => [
+            styles.openOnlyChip,
+            openOnly && styles.openOnlyChipActive,
+            pressed && styles.filterChipPressed,
+          ]}
+          onPress={() => setOpenOnly((current) => !current)}
+        >
+          <Ionicons
+            name={openOnly ? 'checkmark-circle' : 'time-outline'}
+            size={17}
+            color={openOnly ? '#FFFFFF' : '#1F6F43'}
+          />
+          <Text
+            style={[
+              styles.openOnlyText,
+              openOnly && styles.openOnlyTextActive,
+            ]}
+          >
+            {t('explore.openNow')}
+          </Text>
+        </Pressable>
+
+        {(needsLocationPermission || usingDefaultArea) && (
+          <View style={styles.locationNotice}>
+            <Ionicons name="location-outline" size={19} color="#1F6F43" />
+            <Text style={styles.locationNoticeText}>
+              {t(usingDefaultArea ? 'explore.defaultAreaNotice' : 'explore.nearbyPermissionText', {
+                distance: selectedDistance,
+              })}
+            </Text>
+            {needsLocationPermission ? (
+              <Pressable
+                accessibilityRole="button"
+                onPress={handleEnableNearbySearch}
+                style={({ pressed }) => [styles.locationNoticeButton, pressed && styles.filterChipPressed]}
+              >
+                <Text style={styles.locationNoticeButtonText}>{t('explore.enableLocation')}</Text>
+              </Pressable>
+            ) : null}
+          </View>
+        )}
+
         <View style={styles.resultsHeader}>
           <View>
             <Text style={styles.resultsTitle}>{t('explore.results')}</Text>
             <Text style={styles.resultsSubtitle}>
-              {t('explore.resultsSubtitle', { count: restaurants.length })}
+              {t('explore.resultsSubtitle', { count: directoryItems.length })}
+              {publicPlacesLoading ? ` · ${t('explore.publicSearchLoading')}` : ''}
             </Text>
           </View>
 
@@ -721,12 +1178,23 @@ export default function ExploreScreen() {
     displayAddress,
     displayAvatar,
     displayName,
+    handleDistanceChange,
     errorMessage,
-    featuredRestaurants,
+    getDishCurrency,
+    directoryItems.length,
+    handleEnableNearbySearch,
+    handleOpenRestaurant,
     loading,
+    matchingDishes,
+    needsLocationPermission,
+    usingDefaultArea,
+    openOnly,
+    publicPlacesLoading,
     query,
-    restaurants.length,
     resultCount,
+    selectedDistance,
+    t,
+    user,
   ]);
 
   /**
@@ -737,28 +1205,52 @@ export default function ExploreScreen() {
 
   const renderRestaurant = useCallback(
     ({ item }) => {
-      const isOpen = item?.isOpen === true;
-      const hasOpenStatus = typeof item?.isOpen === 'boolean';
-      const rating = clampRating(item?.rating);
-      const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes);
+      const isPublicPlace = isPublicDirectoryPlace(item);
+      const isOpen = !isPublicPlace && item?.isOpen !== false;
+      const hasRating = normalizeNumber(item?.ratingCount, 0) > 0;
+      const rating = clampRating(item?.rating).toFixed(1);
+      const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes, t('home.timeUnavailable'));
       const imageSource = getRestaurantImageSource(item);
+      const publicPlaceType = getPublicPlaceTypeLabel(item?.category, t);
 
       return (
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t('explore.openRestaurant', { name: item?.name })}
           style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
-          onPress={() => handleOpenRestaurant(item?._id)}
+          onPress={() => handleOpenDirectoryItem(item)}
         >
           <View style={styles.cardImageWrap}>
-            <Image source={imageSource} style={styles.cardImage} />
+            <Image
+              source={imageSource}
+              style={styles.cardImage}
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={180}
+            />
 
-            {!!item?.isFeatured && (
+            {!!item?.isFeatured ? (
               <View style={styles.featuredBadge}>
                 <Ionicons name="flash-outline" size={12} color="#1E1E1E" />
                 <Text style={styles.featuredBadgeText}>{t('home.featured')}</Text>
               </View>
-            )}
+            ) : null}
+            {isPublicPlace ? (
+              <View style={styles.publicBadge}>
+                <Ionicons name="globe-outline" size={12} color="#FFFFFF" />
+                <Text style={styles.publicBadgeText}>{t('publicPlace.publicListing')}</Text>
+              </View>
+            ) : null}
+            {isPublicPlace && Boolean(item?.logoUrl || item?.website) ? (
+              <View style={styles.placeBrandBadge}>
+                <PlaceBrandMark
+                  logoUrl={item.logoUrl}
+                  website={item.website}
+                  category={item.category}
+                  size={48}
+                />
+              </View>
+            ) : null}
           </View>
 
           <View style={styles.cardBody}>
@@ -767,16 +1259,16 @@ export default function ExploreScreen() {
                 {item?.name}
               </Text>
 
-              {rating !== null && (
+              {hasRating && (
                 <View style={styles.ratingBadge}>
                   <Ionicons name="star" size={12} color="#D4A017" />
-                  <Text style={styles.cardRating}>{rating.toFixed(1)}</Text>
+                  <Text style={styles.cardRating}>{rating}</Text>
                 </View>
               )}
             </View>
 
             <Text style={styles.cardCuisine} numberOfLines={1}>
-              {item?.cuisine}
+              {item?.cuisine || publicPlaceType}
             </Text>
 
             <View style={styles.cardMetaRow}>
@@ -786,7 +1278,17 @@ export default function ExploreScreen() {
               </Text>
             </View>
 
-            <View style={styles.cardFooter}>
+            {isPublicPlace ? (
+              <View style={styles.cardFooter}>
+                <Text style={styles.publicCardMetaText}>{publicPlaceType}</Text>
+                {Number.isFinite(item?.distanceKm) && (
+                  <Text style={styles.publicCardMetaText}>
+                    {t('publicPlace.distance', { distance: item.distanceKm })}
+                  </Text>
+                )}
+                <Text style={styles.deliveryTime}>{t('publicPlace.openDetails')}</Text>
+              </View>
+            ) : <View style={styles.cardFooter}>
               <View
                 style={[
                   styles.statusPill,
@@ -799,21 +1301,17 @@ export default function ExploreScreen() {
                     isOpen ? styles.statusTextOpen : styles.statusTextClosed,
                   ]}
                 >
-                  {isOpen
-                    ? t('home.open')
-                    : hasOpenStatus
-                    ? t('home.closed')
-                    : 'Horaires à confirmer'}
+                  {isOpen ? t('home.open') : t('home.closed')}
                 </Text>
               </View>
 
               <Text style={styles.deliveryTime}>{deliveryTime}</Text>
-            </View>
+            </View>}
           </View>
         </Pressable>
       );
     },
-    [handleOpenRestaurant]
+    [handleOpenDirectoryItem, t]
   );
 
   /**
@@ -838,11 +1336,13 @@ export default function ExploreScreen() {
         renderItem={renderRestaurant}
         ListHeaderComponent={renderHeader}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
         contentContainerStyle={styles.content}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={() => loadRestaurants(true)}
+            onRefresh={handleRefresh}
             tintColor="#D4A017"
           />
         }
@@ -851,11 +1351,13 @@ export default function ExploreScreen() {
         windowSize={10}
         removeClippedSubviews={Platform.OS === 'android'}
         ListEmptyComponent={
-          loading ? (
+          loading || publicPlacesLoading ? (
             <View style={styles.loaderBox}>
               <ActivityIndicator size="large" color="#D4A017" />
               <Text style={styles.loaderText}>{t('explore.loadingResults')}</Text>
             </View>
+          ) : matchingDishes.length > 0 ? (
+            <View style={styles.dishOnlySpacer} />
           ) : (
             <View style={styles.emptyState}>
               <Ionicons
@@ -917,96 +1419,26 @@ const styles = StyleSheet.create({
   },
 
   heroCard: {
-    backgroundColor: '#FFF9F2',
-    borderRadius: 26,
+    backgroundColor: '#1F6F43',
+    borderRadius: 24,
     padding: 18,
-    marginBottom: 22,
-    borderWidth: 1,
-    borderColor: '#F0E2CC',
-  },
-
-  heroTop: {
+    marginBottom: 18,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 
   heroTextBlock: {
     flex: 1,
-    paddingRight: 12,
   },
 
-  heroLogoWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 22,
+  heroIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 15,
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#F1E1B4',
-    overflow: 'hidden',
-  },
-
-  heroLogo: {
-    width: 54,
-    height: 54,
-    resizeMode: 'contain',
-  },
-
-  heroBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF4DA',
-    borderWidth: 1,
-    borderColor: '#F1E1B4',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 999,
-    marginBottom: 14,
-    alignSelf: 'flex-start',
-  },
-
-  heroBadgeText: {
-    marginLeft: 6,
-    color: '#8C6711',
-    fontSize: 12,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-    letterSpacing: 0.3,
-  },
-
-  heroStatsRow: {
-    flexDirection: 'row',
-    marginTop: 18,
-    justifyContent: 'space-between',
-  },
-
-  heroStatCard: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    paddingVertical: 14,
-    paddingHorizontal: 10,
-    alignItems: 'center',
-    marginHorizontal: 4,
-    borderWidth: 1,
-    borderColor: '#F3E7D5',
-  },
-
-  heroStatValue: {
-    fontSize: 20,
-    fontWeight: '900',
-    color: '#111111',
-    marginBottom: 4,
-  },
-
-  heroStatLabel: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: '#777777',
-    textTransform: 'uppercase',
-    letterSpacing: 0.2,
+    marginRight: 14,
   },
 
   searchCard: {
@@ -1014,27 +1446,27 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 28,
+    fontSize: 21,
     fontWeight: '900',
-    color: '#111111',
-    marginBottom: 8,
+    color: '#FFFFFF',
+    marginBottom: 4,
   },
 
   subtitle: {
     textAlign: 'left',
-    color: '#777777',
-    fontSize: 14,
-    lineHeight: 22,
+    color: '#E9F3EC',
+    fontSize: 13,
+    lineHeight: 19,
   },
 
   searchBox: {
-    minHeight: 64,
-    borderRadius: 22,
+    minHeight: 58,
+    borderRadius: 18,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 18,
-    marginBottom: 24,
+    marginBottom: 18,
     borderWidth: 1,
     borderColor: '#ECE1D4',
   },
@@ -1042,8 +1474,88 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     marginLeft: 12,
-    fontSize: 16,
+    fontSize: 15,
     color: '#111111',
+  },
+
+  dishesSection: {
+    marginTop: -2,
+    marginBottom: 18,
+  },
+
+  dishesHeading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+
+  dishesCount: {
+    minWidth: 24,
+    height: 24,
+    paddingHorizontal: 7,
+    borderRadius: 12,
+    marginLeft: 8,
+    marginBottom: 14,
+    backgroundColor: '#E8F2EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  dishesCountText: {
+    color: '#1F6F43',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+
+  dishesRow: {
+    paddingBottom: 4,
+  },
+
+  dishCard: {
+    width: 158,
+    marginRight: 12,
+    padding: 9,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#F0E6D9',
+    shadowColor: '#000000',
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+  },
+
+  dishCardPressed: {
+    opacity: 0.84,
+    transform: [{ scale: 0.98 }],
+  },
+
+  dishImage: {
+    width: '100%',
+    height: 92,
+    borderRadius: 12,
+    marginBottom: 8,
+    backgroundColor: '#F3EDE4',
+  },
+
+  dishName: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#1E1E1E',
+  },
+
+  dishRestaurant: {
+    marginTop: 3,
+    fontSize: 11,
+    color: '#82796E',
+  },
+
+  dishPrice: {
+    marginTop: 6,
+    fontSize: 13,
+    color: '#1F6F43',
+    fontWeight: '900',
   },
 
   sectionTitle: {
@@ -1055,7 +1567,53 @@ const styles = StyleSheet.create({
 
   filtersRow: {
     paddingBottom: 8,
-    marginBottom: 20,
+    marginBottom: 8,
+  },
+
+  distanceSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+    paddingHorizontal: 2,
+  },
+
+  distanceLabel: {
+    color: '#526257',
+    fontSize: 13,
+    fontWeight: '800',
+    marginRight: 8,
+  },
+
+  distanceOptions: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+
+  distanceChip: {
+    minWidth: 53,
+    alignItems: 'center',
+    paddingHorizontal: 9,
+    paddingVertical: 8,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#DCE8DE',
+  },
+
+  distanceChipActive: {
+    backgroundColor: '#1F6F43',
+    borderColor: '#1F6F43',
+  },
+
+  distanceChipText: {
+    color: '#526257',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+
+  distanceChipTextActive: {
+    color: '#FFFFFF',
   },
 
   filterChip: {
@@ -1085,6 +1643,67 @@ const styles = StyleSheet.create({
 
   filterChipTextActive: {
     color: '#111111',
+  },
+
+  openOnlyChip: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 9,
+    paddingHorizontal: 13,
+    marginBottom: 18,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#BFD8C7',
+    backgroundColor: '#F5FBF7',
+  },
+
+  openOnlyChipActive: {
+    backgroundColor: '#1F6F43',
+    borderColor: '#1F6F43',
+  },
+
+  openOnlyText: {
+    marginLeft: 7,
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#1F6F43',
+  },
+
+  openOnlyTextActive: {
+    color: '#FFFFFF',
+  },
+
+  locationNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    marginBottom: 16,
+    borderRadius: 16,
+    backgroundColor: '#EEF6EF',
+    borderWidth: 1,
+    borderColor: '#D8E8DA',
+  },
+
+  locationNoticeText: {
+    flex: 1,
+    marginHorizontal: 9,
+    color: '#526257',
+    fontSize: 12,
+    lineHeight: 17,
+  },
+
+  locationNoticeButton: {
+    paddingHorizontal: 11,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: '#1F6F43',
+  },
+
+  locationNoticeButtonText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '800',
   },
 
   resultsHeader: {
@@ -1133,6 +1752,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 
+  dishOnlySpacer: {
+    height: 18,
+  },
+
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
@@ -1176,6 +1799,34 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '800',
     color: '#1E1E1E',
+  },
+
+  publicBadge: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1F6F43',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+  },
+
+  publicBadgeText: {
+    marginLeft: 4,
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+
+  placeBrandBadge: {
+    position: 'absolute',
+    left: 14,
+    bottom: 14,
+    padding: 4,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.94)',
   },
 
   cardBody: {
@@ -1237,6 +1888,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+
+  publicCardMetaText: {
+    color: '#82796E',
+    fontSize: 11,
+    fontWeight: '700',
   },
 
   statusPill: {

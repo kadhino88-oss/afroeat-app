@@ -81,19 +81,9 @@ const normalizeCartItem = (item) => {
     return null;
   }
 
-  const menuItem = item?.menuItem;
-  const populatedMenuItemId = isPlainObject(menuItem)
-    ? menuItem?._id || menuItem?.id
-    : null;
-  const scalarMenuItemId =
-    typeof menuItem === 'string' || typeof menuItem === 'number'
-      ? menuItem
-      : null;
-  // Prefer the actual catalog item's ID over a cart-row ID or populated object.
-  const itemId =
-    populatedMenuItemId || scalarMenuItemId || item?._id || item?.id || item?.menuItemId;
+  const itemId = item?._id || item?.id || item?.menuItem || item?.menuItemId;
 
-  if (!itemId || typeof itemId === 'object') {
+  if (!itemId) {
     return null;
   }
 
@@ -110,8 +100,8 @@ const normalizeCartItem = (item) => {
   return {
     ...item,
     _id: itemId,
-    id: itemId,
-    menuItem: itemId,
+    id: item?.id || itemId,
+    menuItem: item?.menuItem || itemId,
 
     name: normalizeText(item?.name || item?.title || item?.nom, 'Article'),
     description: normalizeText(
@@ -218,7 +208,10 @@ export const CartProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    hydrate();
+    const timer = setTimeout(() => {
+      void hydrate();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [hydrate]);
 
   /**
@@ -407,14 +400,11 @@ export const CartProvider = ({ children }) => {
       );
     }, 0);
 
-    const delivery = cartItems.length > 0 ? 2.99 : 0;
-    const total = Number((subtotal + delivery).toFixed(2));
-
     return {
       items,
       subtotal: Number(subtotal.toFixed(2)),
-      delivery,
-      total,
+      delivery: null,
+      total: null,
     };
   }, [cartItems]);
 

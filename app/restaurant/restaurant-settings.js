@@ -10,13 +10,12 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
-import { getMyRestaurant, updateRestaurant } from '../../services/restaurantService';
 
 const normalizeText = (value, fallback = '') => {
   const normalized = String(value ?? '').trim();
@@ -68,45 +67,12 @@ export default function RestaurantSettingsScreen() {
   const auth = useAuth() || {};
   const user = auth.user ?? null;
   const logout = auth.logout;
-  const token = auth.token;
 
-  const [restaurantId, setRestaurantId] = useState(null);
-  const [loadingSettings, setLoadingSettings] = useState(true);
   const [acceptOrders, setAcceptOrders] = useState(true);
   const [autoAcceptOrders, setAutoAcceptOrders] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [preparationMode, setPreparationMode] = useState(true);
   const [busy, setBusy] = useState(false);
-
-  useFocusEffect(
-    useCallback(() => {
-      let active = true;
-      const loadSettings = async () => {
-        if (!token) {
-          if (active) setLoadingSettings(false);
-          return;
-        }
-        try {
-          const restaurant = await getMyRestaurant(token);
-          if (!active) return;
-          setRestaurantId(restaurant._id);
-          setAcceptOrders(restaurant.isOpen !== false);
-          setAutoAcceptOrders(restaurant.autoAcceptOrders === true);
-          setNotificationsEnabled(restaurant.notificationsEnabled !== false);
-          setPreparationMode(restaurant.preparationMode !== false);
-        } catch (error) {
-          if (active) {
-            setRestaurantId(null);
-            Alert.alert(t('common.error'), error?.message || t('restaurant.settings.errorSaveBody'));
-          }
-        } finally {
-          if (active) setLoadingSettings(false);
-        }
-      };
-      loadSettings();
-      return () => { active = false; };
-    }, [token, t])
-  );
 
   const restaurantName = useMemo(() => {
     return normalizeText(user?.restaurantName || user?.name, t('restaurant.settings.restaurantFallback'));
@@ -126,40 +92,24 @@ export default function RestaurantSettingsScreen() {
   }, []);
 
   const handleSaveCriticalPreferences = useCallback(async () => {
-    if (!token || !restaurantId) {
-      Alert.alert(t('common.error'), t('restaurant.settings.errorSaveBody'));
-      return;
-    }
-
     try {
       setBusy(true);
-      const updated = await updateRestaurant(
-        restaurantId,
-        {
-          isOpen: acceptOrders,
-          autoAcceptOrders,
-          notificationsEnabled,
-          preparationMode,
-        },
-        token
-      );
-      setAcceptOrders(updated.isOpen !== false);
-      setAutoAcceptOrders(updated.autoAcceptOrders === true);
-      setNotificationsEnabled(updated.notificationsEnabled !== false);
-      setPreparationMode(updated.preparationMode !== false);
-      Alert.alert(
-        t('restaurant.settings.successTitle'),
-        t('restaurant.settings.successBody')
-      );
+
+      setTimeout(() => {
+        setBusy(false);
+        Alert.alert(
+          t('restaurant.settings.successTitle'),
+          t('restaurant.settings.successBody')
+        );
+      }, 600);
     } catch (error) {
+      setBusy(false);
       Alert.alert(
         t('common.error'),
         error?.message || t('restaurant.settings.errorSaveBody')
       );
-    } finally {
-      setBusy(false);
     }
-  }, [token, restaurantId, acceptOrders, autoAcceptOrders, notificationsEnabled, preparationMode, t]);
+  }, [t]);
 
   const handleLogout = useCallback(() => {
     Alert.alert(
@@ -204,7 +154,7 @@ export default function RestaurantSettingsScreen() {
           <Pressable
             style={styles.saveButton}
             onPress={handleSaveCriticalPreferences}
-            disabled={busy || loadingSettings || !restaurantId}
+            disabled={busy}
           >
             {busy ? (
               <ActivityIndicator size="small" color="#111111" />

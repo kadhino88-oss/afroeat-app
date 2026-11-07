@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../components/FadeInView';
+import AccountPrivacyLink from '../../components/AccountPrivacyLink';
 import { useAuth } from '../../context/AuthContext';
 import { getAssignedOrders } from '../../services/deliveryService';
 
@@ -79,7 +80,7 @@ export default function LivraisonProfileScreen() {
     } finally {
       setLoading(false);
     }
-  }, [token, currentRole]);
+  }, [token, currentRole, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -203,15 +204,15 @@ export default function LivraisonProfileScreen() {
             <Ionicons name="time-outline" size={20} />
             <Text style={styles.navText}>{t('livraison.profile.historyNav')}</Text>
           </Pressable>
-
           <Pressable
             style={styles.nav}
             onPress={() => router.push('/account/payouts')}
           >
-            <Ionicons name="wallet-outline" size={20} color="#1F6F43" />
+            <Ionicons name="wallet-outline" size={20} />
             <Text style={styles.navText}>{t('payouts.profileLink')}</Text>
           </Pressable>
         </View>
+        <AccountPrivacyLink />
       </View>
     </FadeInView>
   );

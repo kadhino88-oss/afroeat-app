@@ -21,8 +21,4 @@ export const retryPayoutReconciliation = (orderId, token) =>
   apiPost(API_ENDPOINTS.payments.connectReconcile(orderId), {}, token);
 
 export const resolvePayoutReconciliation = (orderId, note, token) =>
-  apiPost(
-    API_ENDPOINTS.payments.connectResolveReconciliation(orderId),
-    { note: String(note || '').trim() },
-    token
-  );
+  apiPost(API_ENDPOINTS.payments.connectResolveReconciliation(orderId), { note }, token);

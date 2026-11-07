@@ -1,3 +1,13 @@
+// Hermes used by React Native can lack Intl.PluralRules. Load the polyfill
+// and the locales supported by AFROEAT before i18next initializes.
+import '@formatjs/intl-pluralrules/polyfill-force.js';
+import '@formatjs/intl-pluralrules/locale-data/fr.js';
+import '@formatjs/intl-pluralrules/locale-data/en.js';
+import '@formatjs/intl-pluralrules/locale-data/de.js';
+import '@formatjs/intl-pluralrules/locale-data/es.js';
+import '@formatjs/intl-pluralrules/locale-data/it.js';
+import '@formatjs/intl-pluralrules/locale-data/zh.js';
+
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 

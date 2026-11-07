@@ -17,28 +17,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import { registerDriver } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 /**
  * =========================================================
  * CONSTANTES
  * =========================================================
  */
-
-const DOCUMENT_OPTIONS = [
-  'Passeport',
-  'Carte de résident',
-  'Carte de séjour',
-  'Titre de séjour',
-  'Document européen',
-];
-
-const DOCUMENT_SLUG_BY_LABEL = {
-  'Passeport': 'passeport',
-  'Carte de résident': 'carteResident',
-  'Carte de séjour': 'carteSejour',
-  'Titre de séjour': 'titreSejour',
-  'Document européen': 'documentEuropeen',
-};
 
 /**
  * =========================================================
@@ -60,6 +45,17 @@ const sanitizePhone = (value) => {
   return String(value ?? '').replace(/[^\d+]/g, '').trim();
 };
 
+const isStrongPassword = (value) => {
+  const password = normalizeText(value);
+  return (
+    password.length >= 8 &&
+    /[A-Z]/.test(password) &&
+    /[a-z]/.test(password) &&
+    /\d/.test(password) &&
+    /[^A-Za-z0-9]/.test(password)
+  );
+};
+
 /**
  * =========================================================
  * SCREEN
@@ -68,17 +64,13 @@ const sanitizePhone = (value) => {
 
 export default function RegisterDriverScreen() {
   const { t } = useTranslation();
+  const auth = useAuth() || {};
+  const login = auth.login;
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [country, setCountry] = useState('');
-  const [documentType, setDocumentType] = useState('Passeport');
-  const [identityFront, setIdentityFront] = useState('');
-  const [identityBack, setIdentityBack] = useState('');
-  const [selfie, setSelfie] = useState('');
-  const [payoutMethod, setPayoutMethod] = useState('');
-  const [membershipPaymentMethod, setMembershipPaymentMethod] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secure, setSecure] = useState(true);
@@ -88,17 +80,11 @@ export default function RegisterDriverScreen() {
     return (
       normalizeText(firstName).length >= 2 &&
       normalizeText(lastName).length >= 2 &&
-      sanitizePhone(phone).length >= 6 &&
+      sanitizePhone(phone).length >= 8 &&
       normalizeText(address).length >= 5 &&
       normalizeText(country).length >= 2 &&
-      normalizeText(documentType).length >= 2 &&
-      normalizeText(identityFront).length >= 5 &&
-      normalizeText(identityBack).length >= 5 &&
-      normalizeText(selfie).length >= 5 &&
-      normalizeText(payoutMethod).length >= 3 &&
-      normalizeText(membershipPaymentMethod).length >= 3 &&
       isValidEmail(email) &&
-      normalizeText(password).length >= 6
+      isStrongPassword(password)
     );
   }, [
     firstName,
@@ -106,12 +92,6 @@ export default function RegisterDriverScreen() {
     phone,
     address,
     country,
-    documentType,
-    identityFront,
-    identityBack,
-    selfie,
-    payoutMethod,
-    membershipPaymentMethod,
     email,
     password,
   ]);
@@ -132,12 +112,6 @@ export default function RegisterDriverScreen() {
     const safePhone = sanitizePhone(phone);
     const safeAddress = normalizeText(address);
     const safeCountry = normalizeText(country);
-    const safeDocumentType = normalizeText(documentType);
-    const safeIdentityFront = normalizeText(identityFront);
-    const safeIdentityBack = normalizeText(identityBack);
-    const safeSelfie = normalizeText(selfie);
-    const safePayoutMethod = normalizeText(payoutMethod);
-    const safeMembershipPaymentMethod = normalizeText(membershipPaymentMethod);
     const safeEmail = normalizeText(email).toLowerCase();
     const safePassword = normalizeText(password);
 
@@ -149,7 +123,7 @@ export default function RegisterDriverScreen() {
       Alert.alert(t('auth.validation.lastNameInvalidTitle'), t('auth.validation.lastNameInvalidBody'));
       return;
     }
-    if (safePhone.length < 6) {
+    if (safePhone.length < 8) {
       Alert.alert(t('auth.validation.phoneInvalidTitle'), t('auth.registerDriver.phoneInvalidBody'));
       return;
     }
@@ -161,35 +135,11 @@ export default function RegisterDriverScreen() {
       Alert.alert(t('auth.validation.countryInvalidTitle'), t('auth.validation.countryInvalidBody'));
       return;
     }
-    if (safeDocumentType.length < 2) {
-      Alert.alert(t('auth.registerDriver.documentTypeInvalidTitle'), t('auth.registerDriver.documentTypeInvalidBody'));
-      return;
-    }
-    if (safeIdentityFront.length < 5) {
-      Alert.alert(t('auth.registerDriver.idFrontInvalidTitle'), t('auth.registerDriver.idFrontInvalidBody'));
-      return;
-    }
-    if (safeIdentityBack.length < 5) {
-      Alert.alert(t('auth.registerDriver.idBackInvalidTitle'), t('auth.registerDriver.idBackInvalidBody'));
-      return;
-    }
-    if (safeSelfie.length < 5) {
-      Alert.alert(t('auth.registerDriver.selfieInvalidTitle'), t('auth.registerDriver.selfieInvalidBody'));
-      return;
-    }
-    if (safePayoutMethod.length < 3) {
-      Alert.alert(t('auth.registerDriver.payoutInvalidTitle'), t('auth.registerDriver.payoutInvalidBody'));
-      return;
-    }
-    if (safeMembershipPaymentMethod.length < 3) {
-      Alert.alert(t('auth.registerDriver.membershipInvalidTitle'), t('auth.registerDriver.membershipInvalidBody'));
-      return;
-    }
     if (!isValidEmail(safeEmail)) {
       Alert.alert(t('auth.login.invalidEmailTitle'), t('auth.login.invalidEmailBody'));
       return;
     }
-    if (safePassword.length < 6) {
+    if (!isStrongPassword(safePassword)) {
       Alert.alert(t('auth.login.invalidPasswordTitle'), t('auth.validation.passwordTooShortBody'));
       return;
     }
@@ -197,34 +147,58 @@ export default function RegisterDriverScreen() {
     try {
       setLoading(true);
 
-      await registerDriver({
+      const registration = await registerDriver({
         firstName: safeFirstName,
         lastName: safeLastName,
         phone: safePhone,
         address: safeAddress,
         country: safeCountry,
-        documentType: safeDocumentType,
-        identityFront: safeIdentityFront,
-        identityBack: safeIdentityBack,
-        selfie: safeSelfie,
-        payoutMethod: safePayoutMethod,
-        membershipPaymentMethod: safeMembershipPaymentMethod,
         email: safeEmail,
         password: safePassword,
         role: 'livreur',
         accountStatus: 'pending_verification',
       });
 
+      const sessionReady =
+        typeof login === 'function' &&
+        (await login(registration?.user, registration?.token));
+
+      if (!sessionReady) {
+        Alert.alert(
+          t('auth.registerDriver.successTitle'),
+          t('auth.registerDriver.successBody'),
+          [
+            {
+              text: t('auth.validation.ok'),
+              onPress: () =>
+                router.replace({
+                  pathname: '/auth/pending-approval',
+                  params: { role: 'livreur' },
+                }),
+            },
+          ]
+        );
+        return;
+      }
+
       Alert.alert(
-        t('auth.registerDriver.successTitle'),
-        t('auth.registerDriver.successBody'),
+        t('profile.payment.signupPromptTitle'),
+        t('profile.payment.signupPromptText'),
         [
           {
-            text: t('auth.validation.ok'),
+            text: t('profile.payment.signupSkipButton'),
             onPress: () =>
               router.replace({
                 pathname: '/auth/pending-approval',
                 params: { role: 'livreur' },
+              }),
+          },
+          {
+            text: t('profile.payment.signupAddNowButton'),
+            onPress: () =>
+              router.replace({
+                pathname: '/profile/payment',
+                params: { fromSignup: 'true' },
               }),
           },
         ]
@@ -252,14 +226,10 @@ export default function RegisterDriverScreen() {
     phone,
     address,
     country,
-    documentType,
-    identityFront,
-    identityBack,
-    selfie,
-    payoutMethod,
-    membershipPaymentMethod,
     email,
     password,
+    login,
+    t,
   ]);
 
   return (
@@ -350,85 +320,6 @@ export default function RegisterDriverScreen() {
               placeholder={t('auth.fields.country')}
               placeholderTextColor="#888888"
               editable={!loading}
-            />
-
-            <Text style={styles.label}>{t('auth.registerDriver.documentTypeLabel')}</Text>
-            <View style={styles.chipsWrapper}>
-              {DOCUMENT_OPTIONS.map((item) => {
-                const active = documentType === item;
-                const slug = DOCUMENT_SLUG_BY_LABEL[item];
-                return (
-                  <Pressable
-                    key={item}
-                    style={({ pressed }) => [
-                      styles.chip,
-                      active && styles.chipActive,
-                      pressed && !loading && styles.buttonPressed,
-                    ]}
-                    onPress={() => setDocumentType(item)}
-                    disabled={loading}
-                  >
-                    <Text style={[styles.chipText, active && styles.chipTextActive]}>
-                      {t(`auth.registerDriver.documents.${slug}`, item)}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            <Text style={styles.label}>{t('auth.registerDriver.idFrontLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={identityFront}
-              onChangeText={setIdentityFront}
-              placeholder={t('auth.registerDriver.uploadPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
-            />
-
-            <Text style={styles.label}>{t('auth.registerDriver.idBackLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={identityBack}
-              onChangeText={setIdentityBack}
-              placeholder={t('auth.registerDriver.uploadPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
-            />
-
-            <Text style={styles.label}>{t('auth.registerDriver.selfieLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={selfie}
-              onChangeText={setSelfie}
-              placeholder={t('auth.registerDriver.selfieUploadPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
-            />
-
-            <Text style={styles.label}>{t('auth.registerDriver.payoutAccountLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={payoutMethod}
-              onChangeText={setPayoutMethod}
-              placeholder={t('auth.registerDriver.payoutPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
-            />
-
-            <Text style={styles.label}>{t('auth.registerDriver.membershipPaymentLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              value={membershipPaymentMethod}
-              onChangeText={setMembershipPaymentMethod}
-              placeholder={t('auth.registerDriver.membershipPaymentPlaceholder')}
-              placeholderTextColor="#888888"
-              editable={!loading}
-              autoCapitalize="none"
             />
 
             <Text style={styles.label}>{t('auth.fields.email')}</Text>
