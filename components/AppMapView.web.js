@@ -19,7 +19,7 @@ export default function AppMapViewWebFallback({ style }) {
   return (
     <View style={[styles.container, style]}>
       <Ionicons name="map-outline" size={36} color="#D4A017" />
-      <Text style={styles.text}>Carte disponible sur l'app mobile</Text>
+      <Text style={styles.text}>Carte disponible sur l&apos;app mobile</Text>
     </View>
   );
 }

@@ -317,23 +317,6 @@ export default function OrderDetailScreen() {
    * =========================================================
    */
 
-  if (!authLoading && !isAuthenticated) {
-    return <Redirect href="/auth/role" />;
-  }
-
-  if (!authLoading && isAuthenticated && currentRole !== 'client') {
-    if (currentRole === 'restaurant') {
-      return <Redirect href="/restaurant/RestaurantDashboard" />;
-    }
-
-    if (currentRole === 'livreur') {
-      return <Redirect href="/livraison" />;
-    }
-
-    if (currentRole === 'admin') {
-      return <Redirect href="/admin" />;
-    }
-  }
 
   /**
    * =========================================================
@@ -444,6 +427,25 @@ export default function OrderDetailScreen() {
    * LOADING
    * =========================================================
    */
+
+  // Garde-fous placés après les hooks (règles des hooks React)
+  if (!authLoading && !isAuthenticated) {
+    return <Redirect href="/auth/role" />;
+  }
+
+  if (!authLoading && isAuthenticated && currentRole !== 'client') {
+    if (currentRole === 'restaurant') {
+      return <Redirect href="/restaurant/RestaurantDashboard" />;
+    }
+
+    if (currentRole === 'livreur') {
+      return <Redirect href="/livraison" />;
+    }
+
+    if (currentRole === 'admin') {
+      return <Redirect href="/admin" />;
+    }
+  }
 
   if (authLoading || loading) {
     return (
