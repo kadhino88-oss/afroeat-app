@@ -1901,6 +1901,7 @@
     "intro": "Configure le compte sécurisé qui recevra les versements de tes commandes Afroeat.",
     "statusError": "Le statut Stripe est momentanément indisponible.",
     "statusConnected": "Compte de versement activé",
+    "statusPlatformPaused": "Compte connecté, mais les versements Afroeat ne sont pas encore activés pour cette plateforme ou ce pays.",
     "statusReview": "Informations envoyées, vérification en cours",
     "statusIncomplete": "Configuration à terminer",
     "requirementsDue": "Informations encore demandées : {{count}}",

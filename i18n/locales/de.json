@@ -1901,6 +1901,7 @@
     "intro": "Richte das sichere Konto ein, auf das deine Afroeat-Auszahlungen eingehen.",
     "statusError": "Der Stripe-Status ist vorübergehend nicht verfügbar.",
     "statusConnected": "Auszahlungskonto aktiviert",
+    "statusPlatformPaused": "Dein Konto ist verbunden, Auszahlungen sind für diese Plattform oder dieses Land aber noch nicht aktiviert.",
     "statusReview": "Angaben übermittelt, Prüfung läuft",
     "statusIncomplete": "Einrichtung noch nicht abgeschlossen",
     "requirementsDue": "Noch benötigte Angaben: {{count}}",

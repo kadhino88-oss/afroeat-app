@@ -1901,6 +1901,7 @@
     "intro": "Set up the secure account that will receive your Afroeat order payouts.",
     "statusError": "Stripe status is temporarily unavailable.",
     "statusConnected": "Payout account active",
+    "statusPlatformPaused": "Your account is connected, but Afroeat payouts are not enabled for this platform or country yet.",
     "statusReview": "Information submitted, verification in progress",
     "statusIncomplete": "Setup needs to be completed",
     "requirementsDue": "Information still requested: {{count}}",

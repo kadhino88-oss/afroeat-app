@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Device from 'expo-device';
+import apiConfig from './apiConfig';
 
 const LOCAL_PORT = '5000';
 const getExpoDevelopmentHost = () => {
@@ -97,19 +98,22 @@ const getDevHost = () => {
 };
 
 const getBaseUrl = () => {
-  if (ENV_API_URL) {
-    const baseUrl = normalizeApiBaseUrl(ENV_API_URL);
-    if (IS_PRODUCTION && !baseUrl.toLowerCase().startsWith('https://')) {
-      throw new Error('La production Afroeat doit utiliser une URL API HTTPS.');
-    }
-    return baseUrl;
+  // Builds de préproduction et de production : validation stricte (URL HTTPS
+  // publique se terminant par /api, jamais localhost ni IP privée). La logique
+  // est partagée avec scripts/api-config.test.cjs via ./apiConfig.
+  if (IS_PRODUCTION) {
+    return apiConfig.resolveApiConfig({
+      appEnv: String(process.env.EXPO_PUBLIC_APP_ENV || 'production')
+        .trim()
+        .toLowerCase(),
+      configuredApiUrl: ENV_API_URL,
+    }).baseUrl;
   }
 
-  if (IS_PRODUCTION) {
-    throw new Error(
-      'EXPO_PUBLIC_API_URL doit être configurée pour chaque build de préproduction et de production.'
-    );
+  if (ENV_API_URL) {
+    return normalizeApiBaseUrl(ENV_API_URL);
   }
+
   const host = getDevHost();
   return `${DEV_PROTOCOL}://${host}:${LOCAL_PORT}/api`;
 };
