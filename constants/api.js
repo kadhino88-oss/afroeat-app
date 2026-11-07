@@ -260,14 +260,8 @@ export const API_ENDPOINTS = {
     cash:               '/payments/cash',
     // ✅ Confirmer un paiement après succès Stripe
     confirm:            '/payments/confirm',
-    // Vérification paiement
-    verify:             '/payments/verify',
     // Méthodes disponibles
     methods:            '/payments/methods',
-    // Historique
-    history:            '/payments/history',
-    // Payment Sheet (Stripe natif)
-    createPaymentSheet: '/payments/create-payment-sheet',
     // Gestion des cartes enregistrées du compte client.
     cards: '/payments/cards',
     createCardSetupIntent: '/payments/cards/setup-intent',
@@ -275,11 +269,8 @@ export const API_ENDPOINTS = {
       `/payments/cards/${safePathParam(paymentMethodId)}/default`,
     removeCard: (paymentMethodId) =>
       `/payments/cards/${safePathParam(paymentMethodId)}`,
-    // Confirmation par commande
-    confirmOrderPayment: (orderId) => `/payments/orders/${safePathParam(orderId)}/confirm`,
     // Remboursement admin
     refund:             '/payments/refund',
-    refundOrderPayment: (orderId) => `/payments/orders/${safePathParam(orderId)}/refund`,
     connectStatus:      '/payments/connect/status',
     connectOnboardingLink: '/payments/connect/onboarding-link',
     connectDashboardLink: '/payments/connect/dashboard-link',

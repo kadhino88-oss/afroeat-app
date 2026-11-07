@@ -8,7 +8,15 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "check:wallet-config": "node --test scripts/stripe-wallet-config.test.cjs",
+    "check:locales": "node --test scripts/check-locales.cjs",
+    "check:api-config": "node --test scripts/api-config.test.cjs",
+    "check:payment-route-sync": "node --test scripts/payment-route-sync.test.cjs",
+    "check:explore-cuisines": "node --test scripts/explore-country-cuisine.test.cjs",
+    "check:restaurant-settings": "node --test scripts/restaurant-settings-persistence.test.cjs",
+    "check:catalog-business-type": "node --test scripts/catalog-business-type.test.cjs",
+    "check:cart-populated-menu-item": "node --test scripts/cart-populated-menu-item.test.cjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

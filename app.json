@@ -1,4 +1,3 @@
-
 {
   "expo": {
     "name": "Afroeat",
@@ -43,10 +42,7 @@
       ],
       [
         "@stripe/stripe-react-native",
-        {
-          "merchantIdentifier": "merchant.com.afroeat",
-          "enableGooglePay": true
-        }
+        {}
       ],
       [
         "expo-image-picker",
@@ -61,6 +57,15 @@
         {
           "icon": "./assets/images/icon.png",
           "color": "#0B0B0F"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B0B0F"
         }
       ]
     ],

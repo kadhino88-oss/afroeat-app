@@ -23,8 +23,9 @@ import React from 'react';
 import { apiPost } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
-export const STRIPE_PUBLISHABLE_KEY =
-  process.env.EXPO_PUBLIC_STRIPE_KEY || 'pk_test_VOTRE_CLE_PUBLIQUE';
+export const STRIPE_PUBLISHABLE_KEY = String(
+  process.env.EXPO_PUBLIC_STRIPE_KEY || ''
+).trim();
 
 export const createPaymentIntent = async (orderId, token) => {
   const response = await apiPost(
