@@ -15,8 +15,8 @@ const getNearbyPlacesRequest = async ({
     throw new Error('Coordonnées invalides pour les épiceries à proximité.');
   }
 
-  if (!Number.isFinite(distance) || distance <= 0 || distance > 30) {
-    throw new Error('Le rayon de recherche doit être compris entre 0 et 30 km.');
+  if (!Number.isFinite(distance) || distance <= 0 || distance > 100) {
+    throw new Error('Le rayon de recherche doit être compris entre 0 et 100 km.');
   }
 
   const endpoint = API_ENDPOINTS?.places?.nearby;

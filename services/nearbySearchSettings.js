@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const NEARBY_RADIUS_OPTIONS = [5, 10, 20, 30];
+export const NEARBY_RADIUS_OPTIONS = [5, 10, 20, 30, 50, 100];
 export const DEFAULT_NEARBY_RADIUS = 10;
 export const DEFAULT_NEARBY_CENTER = {
   latitude: 46.195,
