@@ -10,6 +10,8 @@ import {
   Alert,
   ScrollView,
   RefreshControl,
+  Switch,
+  TextInput,
 } from 'react-native';
 import { useLocalSearchParams, router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +20,7 @@ import { useAuth } from '../../../context/AuthContext';
 import {
   getAdminDrivers,
   updateAdminUserStatus,
+  updateAdminUserVerification,
 } from '../../../services/adminService';
 import i18n from '../../../i18n';
 
@@ -254,6 +257,10 @@ export default function AdminDriverDetailsScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const [lastLiveRefresh, setLastLiveRefresh] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [draftIdentityVerified, setDraftIdentityVerified] = useState(null);
+  const [draftWorkAuthorized, setDraftWorkAuthorized] = useState(null);
+  const [verificationNote, setVerificationNote] = useState('');
+  const [updatingVerification, setUpdatingVerification] = useState(false);
 
   const driverId = normalizeText(Array.isArray(id) ? id[0] : id);
   const currentRole = useMemo(() => {
@@ -333,6 +340,16 @@ export default function AdminDriverDetailsScreen() {
     [isAuthenticated, token, driverId, t]
   );
 
+  // Réinitialise les brouillons quand on change de livreur (ajustement d'état
+  // pendant le rendu, plutôt que dans un effet).
+  const [draftDriverId, setDraftDriverId] = useState(driverId);
+  if (draftDriverId !== driverId) {
+    setDraftDriverId(driverId);
+    setDraftIdentityVerified(null);
+    setDraftWorkAuthorized(null);
+    setVerificationNote('');
+  }
+
   useFocusEffect(
     useCallback(() => {
       fetchDriver(false, false);
@@ -350,6 +367,15 @@ export default function AdminDriverDetailsScreen() {
 
     return () => clearInterval(interval);
   }, [canAccess, token, driverId, fetchDriver]);
+
+  const identityVerificationDraft =
+    draftIdentityVerified ?? Boolean(driver?.isIdentityVerified);
+  const workAuthorizationDraft =
+    draftWorkAuthorized ?? Boolean(driver?.isWorkAuthorized);
+  const verificationChanged = Boolean(driver) && (
+    identityVerificationDraft !== Boolean(driver?.isIdentityVerified) ||
+    workAuthorizationDraft !== Boolean(driver?.isWorkAuthorized)
+  );
 
   const statusStyle = useMemo(() => getStatusStyle(driver?.accountStatus, t), [driver, t]);
   const riskStyle = useMemo(() => getDriverRiskStyle(driver, t), [driver, t]);
@@ -474,6 +500,69 @@ export default function AdminDriverDetailsScreen() {
       ]
     );
   }, [driver, token, t]);
+
+  const handleSaveVerification = useCallback(async () => {
+    if (!token || !driver?._id) {
+      Alert.alert(t('common.error'), t('admin.driverDetails.verificationErrorFallback'));
+      return;
+    }
+
+    const note = verificationNote.trim();
+    if (note.length < 8 || note.length > 500) {
+      Alert.alert(t('common.error'), t('admin.driverDetails.verificationNoteRequired'));
+      return;
+    }
+
+    if (workAuthorizationDraft && !identityVerificationDraft) {
+      Alert.alert(t('common.error'), t('admin.driverDetails.verificationWorkNeedsIdentity'));
+      return;
+    }
+
+    try {
+      setUpdatingVerification(true);
+      const response = await updateAdminUserVerification(
+        driver._id,
+        {
+          isIdentityVerified: identityVerificationDraft,
+          isWorkAuthorized: workAuthorizationDraft,
+          note,
+        },
+        token
+      );
+      const updatedDriver = normalizeDriver(response?.user || null);
+
+      setDriver((previous) => ({
+        ...(previous || {}),
+        ...(updatedDriver || {}),
+        isIdentityVerified: identityVerificationDraft,
+        isWorkAuthorized: workAuthorizationDraft,
+      }));
+      setDraftIdentityVerified(identityVerificationDraft);
+      setDraftWorkAuthorized(workAuthorizationDraft);
+      setVerificationNote('');
+      setErrorMessage('');
+
+      Alert.alert(
+        t('common.success'),
+        response?.message || t('admin.driverDetails.verificationSavedMessage')
+      );
+    } catch (error) {
+      console.log('Erreur vérification admin livreur :', error);
+      Alert.alert(
+        t('common.error'),
+        error?.message || t('admin.driverDetails.verificationErrorFallback')
+      );
+    } finally {
+      setUpdatingVerification(false);
+    }
+  }, [
+    driver,
+    token,
+    t,
+    identityVerificationDraft,
+    workAuthorizationDraft,
+    verificationNote,
+  ]);
 
   const handleOpenCurrentOrder = useCallback(() => {
     if (!driver?.currentOrderId) {
@@ -778,6 +867,104 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.driverDetails.accountUpdatedLabel')}
             value={formatDateTime(driver?.updatedAt)}
           />
+        </InfoCard>
+
+        <InfoCard title={t('admin.driverDetails.verificationActionsTitle')}>
+          <Text style={styles.verificationHint}>
+            {t('admin.driverDetails.verificationHint')}
+          </Text>
+
+          <View style={styles.verificationRow}>
+            <View style={styles.verificationLabelWrap}>
+              <Text style={styles.verificationLabel}>
+                {t('admin.driverDetails.identityVerifiedToggle')}
+              </Text>
+              <Text style={styles.verificationState}>
+                {identityVerificationDraft
+                  ? t('admin.driverDetails.identityVerifiedValue')
+                  : t('admin.driverDetails.identityToVerifyValue')}
+              </Text>
+            </View>
+            <Switch
+              value={identityVerificationDraft}
+              onValueChange={(value) => {
+                setDraftIdentityVerified(value);
+                if (!value) setDraftWorkAuthorized(false);
+              }}
+              disabled={updatingVerification}
+              trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
+              thumbColor={identityVerificationDraft ? '#1F6F43' : '#F4F3F4'}
+            />
+          </View>
+
+          <View style={styles.verificationRow}>
+            <View style={styles.verificationLabelWrap}>
+              <Text style={styles.verificationLabel}>
+                {t('admin.driverDetails.workAuthorizedToggle')}
+              </Text>
+              <Text style={styles.verificationState}>
+                {workAuthorizationDraft
+                  ? t('admin.driverDetails.workAuthorizedValue')
+                  : t('admin.driverDetails.workNotValidatedValue')}
+              </Text>
+            </View>
+            <Switch
+              value={workAuthorizationDraft}
+              onValueChange={(value) => {
+                if (value && !identityVerificationDraft) {
+                  Alert.alert(
+                    t('common.error'),
+                    t('admin.driverDetails.verificationWorkNeedsIdentity')
+                  );
+                  return;
+                }
+                setDraftWorkAuthorized(value);
+              }}
+              disabled={
+                updatingVerification ||
+                (!identityVerificationDraft && !workAuthorizationDraft)
+              }
+              trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
+              thumbColor={workAuthorizationDraft ? '#1F6F43' : '#F4F3F4'}
+            />
+          </View>
+
+          <Text style={styles.verificationNoteLabel}>
+            {t('admin.driverDetails.verificationNoteLabel')}
+          </Text>
+          <TextInput
+            value={verificationNote}
+            onChangeText={setVerificationNote}
+            style={styles.verificationInput}
+            placeholder={t('admin.driverDetails.verificationNotePlaceholder')}
+            placeholderTextColor="#8B8379"
+            multiline
+            maxLength={500}
+            textAlignVertical="top"
+            editable={!updatingVerification}
+            accessibilityLabel={t('admin.driverDetails.verificationNoteLabel')}
+          />
+
+          <Pressable
+            style={[
+              styles.primaryButton,
+              (updatingVerification || !verificationChanged) &&
+                styles.primaryButtonDisabled,
+            ]}
+            onPress={handleSaveVerification}
+            disabled={updatingVerification || !verificationChanged}
+          >
+            {updatingVerification ? (
+              <ActivityIndicator size="small" color="#111" />
+            ) : (
+              <>
+                <Ionicons name="shield-checkmark-outline" size={17} color="#111" />
+                <Text style={styles.primaryButtonText}>
+                  {t('admin.driverDetails.saveVerificationButton')}
+                </Text>
+              </>
+            )}
+          </Pressable>
         </InfoCard>
 
         <InfoCard title={t('admin.driverDetails.fieldActivityTitle')}>
@@ -1143,6 +1330,54 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
+  verificationHint: {
+    color: '#6B655E',
+    fontSize: 13,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  verificationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0E7DA',
+  },
+  verificationLabelWrap: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  verificationLabel: {
+    color: '#1E1E1E',
+    fontSize: 14,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  verificationState: {
+    color: '#6B655E',
+    fontSize: 12,
+    lineHeight: 17,
+  },
+  verificationNoteLabel: {
+    color: '#1E1E1E',
+    fontSize: 13,
+    fontWeight: '800',
+    marginTop: 14,
+    marginBottom: 6,
+  },
+  verificationInput: {
+    minHeight: 92,
+    borderWidth: 1,
+    borderColor: '#D9D0C5',
+    backgroundColor: '#FFFCF7',
+    borderRadius: 14,
+    padding: 12,
+    color: '#1E1E1E',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 12,
+  },
   actionBlock: {
     gap: 10,
   },

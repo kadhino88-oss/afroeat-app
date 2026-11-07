@@ -20,7 +20,6 @@ import { useAuth } from '../../../context/AuthContext';
 import {
   getAdminUserById,
   updateAdminUserStatus,
-  updateAdminUserVerification,
 } from '../../../services/adminService';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
@@ -410,42 +409,6 @@ export default function AdminUserDetailsScreen() {
     );
   }, [token, user, t]);
 
-  const verifyPartner = useCallback(() => {
-    if (!token || !user?._id) {
-      Alert.alert(t('common.error'), t('admin.userDetails.actionImpossibleAlert'));
-      return;
-    }
-
-    Alert.alert(
-      t('admin.userDetails.verifyPartnerTitle'),
-      t('admin.userDetails.verifyPartnerConfirm'),
-      [
-        { text: t('admin.users.cancelAction'), style: 'cancel' },
-        {
-          text: t('admin.userDetails.verifyPartnerButton'),
-          onPress: async () => {
-            try {
-              setUpdating(true);
-              const result = await updateAdminUserVerification(user._id, token);
-              setUser((previous) => ({ ...(previous || {}), ...(result.user || {}) }));
-              Alert.alert(
-                t('common.success'),
-                result.message || t('admin.userDetails.verifyPartnerSuccess')
-              );
-            } catch (error) {
-              Alert.alert(
-                t('common.error'),
-                error?.message || t('admin.userDetails.actionImpossibleAlert')
-              );
-            } finally {
-              setUpdating(false);
-            }
-          },
-        },
-      ]
-    );
-  }, [token, user, t]);
-
   /**
    * =========================================================
    * LOADING
@@ -651,26 +614,6 @@ export default function AdminUserDetailsScreen() {
               value={normalizeText(user?.address)}
             />
           )}
-          {['restaurant', 'livreur'].includes(user?.role) &&
-          (!user?.isIdentityVerified ||
-            (user?.role === 'livreur' && !user?.isWorkAuthorized)) ? (
-            <Pressable
-              style={styles.primaryButton}
-              onPress={verifyPartner}
-              disabled={updating}
-            >
-              {updating ? (
-                <ActivityIndicator size="small" color="#111111" />
-              ) : (
-                <>
-                  <Ionicons name="shield-checkmark-outline" size={18} color="#111111" />
-                  <Text style={styles.primaryButtonText}>
-                    {t('admin.userDetails.verifyPartnerButton')}
-                  </Text>
-                </>
-              )}
-            </Pressable>
-          ) : null}
         </View>
 
         <View style={styles.sectionCard}>

@@ -40,7 +40,23 @@
     "boutique": "Tienda",
     "fastFood": "Comida rápida",
     "africanSalon": "Salón afro",
-    "all": "Todos"
+    "all": "Todos",
+    "nigeriane": "Nigeriana",
+    "ghaneenne": "Ghanesa",
+    "ethiopienne": "Etíope",
+    "sudafricaine": "Sudafricana",
+    "estafricaine": "África oriental",
+    "ouestafricaine": "África occidental",
+    "afriquecentrale": "África central",
+    "fastfood": "Comida rápida",
+    "pizza": "Pizza",
+    "burgers": "Hamburguesas",
+    "tacos": "Tacos",
+    "grillades": "Parrilla",
+    "internationale": "Cocina internacional",
+    "afriquedunord": "África del Norte",
+    "afriqueaustrale": "África austral",
+    "boissons": "Bebidas"
   },
   "home": {
     "brandTagline": "Sabores africanos muy cerca",
@@ -75,7 +91,8 @@
     "deliveryAddressFallback": "Entrega a domicilio",
     "categories": {
       "groceries": "Tiendas de comestibles",
-      "shops": "Tiendas"
+      "shops": "Tiendas",
+      "drinks": "Bebidas"
     },
     "timeUnavailable": "Tiempo de entrega no disponible",
     "deliveryFree": "Envío gratis"
@@ -140,7 +157,8 @@
     "quoteUnavailable": "El cálculo no está disponible. Inténtalo de nuevo o revisa la cesta.",
     "retryQuote": "Reintentar cálculo",
     "quoteChangedTitle": "Presupuesto actualizado",
-    "quoteChangedBody": "El precio o la moneda ha cambiado. Revisa el nuevo total antes de confirmar."
+    "quoteChangedBody": "El precio o la moneda ha cambiado. Revisa el nuevo total antes de confirmar.",
+    "editAddress": "Editar dirección"
   },
   "restaurant": {
     "popular": "Popular",
@@ -189,7 +207,8 @@
       "dataSource": "Calculado a partir de {{count}} pedidos pagados; solo se incluyen los ingresos registrados del restaurante.",
       "loading": "Cargando estadísticas…",
       "unavailable": "Las estadísticas del restaurante no están disponibles.",
-      "sessionUnavailable": "Inicia sesión de nuevo para consultar las estadísticas."
+      "sessionUnavailable": "Inicia sesión de nuevo para consultar las estadísticas.",
+      "bottomText": "Tu restaurante está creciendo. Sigue optimizando tu menú y tu servicio."
     },
     "settings": {
       "saveButton": "Guardar",
@@ -838,7 +857,8 @@
       "preparing": "En preparación",
       "on_the_way": "En camino",
       "confirmed": "Confirmado",
-      "default": "Pedido"
+      "default": "Pedido",
+      "unknown": "Estado por confirmar"
     }
   },
   "cart": {
@@ -1810,7 +1830,18 @@
       "noActiveMissionValue": "Sin misión activa",
       "adminActionsTitle": "Acciones de administrador",
       "viewActiveOrderButton": "Ver pedido activo",
-      "missionFieldLabel": "Misión"
+      "missionFieldLabel": "Misión",
+      "verificationActionsTitle": "Verificación del repartidor",
+      "verificationHint": "Registra una decisión solo después de revisar los documentos justificativos. Toda decisión debe justificarse en la nota de auditoría.",
+      "identityVerifiedToggle": "Identidad verificada",
+      "workAuthorizedToggle": "Autorización de trabajo verificada",
+      "verificationNoteLabel": "Nota de revisión",
+      "verificationNotePlaceholder": "Describe las comprobaciones realizadas (mínimo 8 caracteres)…",
+      "saveVerificationButton": "Guardar verificación",
+      "verificationSavedMessage": "Se guardó la verificación del repartidor.",
+      "verificationNoteRequired": "Introduce una nota de auditoría de 8 a 500 caracteres antes de guardar.",
+      "verificationWorkNeedsIdentity": "Verifica la identidad del repartidor antes de aprobar la autorización de trabajo.",
+      "verificationErrorFallback": "No se pudo guardar la verificación del repartidor."
     },
     "orderDetails": {
       "fetchErrorFallback": "No se pudo cargar el detalle del pedido.",

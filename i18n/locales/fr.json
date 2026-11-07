@@ -40,7 +40,23 @@
     "boutique": "Boutique",
     "fastFood": "Fast-food",
     "africanSalon": "Salon afro",
-    "all": "Tous"
+    "all": "Tous",
+    "nigeriane": "Nigériane",
+    "ghaneenne": "Ghanéenne",
+    "ethiopienne": "Éthiopienne",
+    "sudafricaine": "Sud-africaine",
+    "estafricaine": "Afrique de l’Est",
+    "ouestafricaine": "Afrique de l’Ouest",
+    "afriquecentrale": "Afrique centrale",
+    "fastfood": "Fast-food",
+    "pizza": "Pizza",
+    "burgers": "Burgers",
+    "tacos": "Tacos",
+    "grillades": "Grillades",
+    "internationale": "Cuisine internationale",
+    "afriquedunord": "Afrique du Nord",
+    "afriqueaustrale": "Afrique australe",
+    "boissons": "Boissons"
   },
   "home": {
     "brandTagline": "Saveurs africaines, tout près",
@@ -75,7 +91,8 @@
     "deliveryAddressFallback": "Livraison à domicile",
     "categories": {
       "groceries": "Épiceries",
-      "shops": "Boutiques"
+      "shops": "Boutiques",
+      "drinks": "Boissons"
     },
     "timeUnavailable": "Délai indisponible",
     "deliveryFree": "Gratuite"
@@ -140,7 +157,8 @@
     "quoteUnavailable": "Le devis n’est pas disponible. Réessaie ou vérifie le panier.",
     "retryQuote": "Réessayer le calcul",
     "quoteChangedTitle": "Devis mis à jour",
-    "quoteChangedBody": "Le prix ou la devise a changé. Vérifie le nouveau total avant de valider."
+    "quoteChangedBody": "Le prix ou la devise a changé. Vérifie le nouveau total avant de valider.",
+    "editAddress": "Modifier l’adresse"
   },
   "restaurant": {
     "popular": "Populaire",
@@ -189,7 +207,8 @@
       "dataSource": "Calculé à partir de {{count}} commandes payées ; seuls les revenus restaurant enregistrés sont inclus.",
       "loading": "Chargement des statistiques…",
       "unavailable": "Les statistiques du restaurant sont indisponibles.",
-      "sessionUnavailable": "Reconnecte-toi pour consulter les statistiques."
+      "sessionUnavailable": "Reconnecte-toi pour consulter les statistiques.",
+      "bottomText": "Ton restaurant est en croissance. Continue d'optimiser ton menu et ton service."
     },
     "settings": {
       "saveButton": "Sauvegarder",
@@ -838,7 +857,8 @@
       "preparing": "Préparation",
       "on_the_way": "En livraison",
       "confirmed": "Confirmé",
-      "default": "Commande"
+      "default": "Commande",
+      "unknown": "Statut à confirmer"
     }
   },
   "cart": {
@@ -1810,7 +1830,18 @@
       "noActiveMissionValue": "Aucune mission active",
       "adminActionsTitle": "Actions admin",
       "viewActiveOrderButton": "Voir la commande active",
-      "missionFieldLabel": "Mission"
+      "missionFieldLabel": "Mission",
+      "verificationActionsTitle": "Vérification du livreur",
+      "verificationHint": "Enregistre une décision après contrôle des justificatifs. Chaque décision doit être justifiée dans la note d’audit.",
+      "identityVerifiedToggle": "Identité vérifiée",
+      "workAuthorizedToggle": "Autorisation de travail vérifiée",
+      "verificationNoteLabel": "Note de contrôle",
+      "verificationNotePlaceholder": "Décris les contrôles effectués (8 caractères minimum)…",
+      "saveVerificationButton": "Enregistrer la vérification",
+      "verificationSavedMessage": "La vérification du livreur a été enregistrée.",
+      "verificationNoteRequired": "Saisis une note d’audit de 8 à 500 caractères avant d’enregistrer.",
+      "verificationWorkNeedsIdentity": "L’identité doit être vérifiée avant de valider l’autorisation de travail.",
+      "verificationErrorFallback": "Impossible d’enregistrer la vérification du livreur."
     },
     "orderDetails": {
       "fetchErrorFallback": "Impossible de charger le détail de la commande.",

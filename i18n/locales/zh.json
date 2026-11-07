@@ -40,7 +40,23 @@
     "boutique": "商店",
     "fastFood": "快餐",
     "africanSalon": "非洲风格美发店",
-    "all": "全部"
+    "all": "全部",
+    "nigeriane": "尼日利亚菜",
+    "ghaneenne": "加纳菜",
+    "ethiopienne": "埃塞俄比亚菜",
+    "sudafricaine": "南非菜",
+    "estafricaine": "东非菜",
+    "ouestafricaine": "西非菜",
+    "afriquecentrale": "中非菜",
+    "fastfood": "快餐",
+    "pizza": "披萨",
+    "burgers": "汉堡",
+    "tacos": "塔可",
+    "grillades": "烧烤",
+    "internationale": "国际美食",
+    "afriquedunord": "北非",
+    "afriqueaustrale": "非洲南部",
+    "boissons": "饮品"
   },
   "home": {
     "brandTagline": "身边的非洲风味",
@@ -75,7 +91,8 @@
     "deliveryAddressFallback": "送货上门",
     "categories": {
       "groceries": "杂货店",
-      "shops": "商铺"
+      "shops": "商铺",
+      "drinks": "饮品"
     },
     "timeUnavailable": "配送时间暂不可用",
     "deliveryFree": "免配送费"
@@ -140,7 +157,8 @@
     "quoteUnavailable": "暂时无法计算，请重试或检查购物车。",
     "retryQuote": "重新计算",
     "quoteChangedTitle": "报价已更新",
-    "quoteChangedBody": "价格或货币已变化，请在下单前检查新的总金额。"
+    "quoteChangedBody": "价格或货币已变化，请在下单前检查新的总金额。",
+    "editAddress": "编辑地址"
   },
   "restaurant": {
     "popular": "热门",
@@ -189,7 +207,8 @@
       "dataSource": "根据 {{count}} 笔已付款订单计算；仅计入已记录的餐厅收入。",
       "loading": "正在加载统计数据…",
       "unavailable": "暂时无法获取餐厅统计数据。",
-      "sessionUnavailable": "请重新登录以查看统计数据。"
+      "sessionUnavailable": "请重新登录以查看统计数据。",
+      "bottomText": "你的餐厅正在增长。继续优化你的菜单和服务。"
     },
     "settings": {
       "saveButton": "保存",
@@ -838,7 +857,8 @@
       "preparing": "准备中",
       "on_the_way": "配送中",
       "confirmed": "已确认",
-      "default": "订单"
+      "default": "订单",
+      "unknown": "状态待确认"
     }
   },
   "cart": {
@@ -1810,7 +1830,18 @@
       "noActiveMissionValue": "暂无进行中的任务",
       "adminActionsTitle": "管理员操作",
       "viewActiveOrderButton": "查看进行中的订单",
-      "missionFieldLabel": "任务"
+      "missionFieldLabel": "任务",
+      "verificationActionsTitle": "配送员身份与工作资格审核",
+      "verificationHint": "审核相关证明材料后再记录决定。每项决定都必须在审计备注中说明理由。",
+      "identityVerifiedToggle": "身份已核验",
+      "workAuthorizedToggle": "工作许可已核验",
+      "verificationNoteLabel": "审核备注",
+      "verificationNotePlaceholder": "描述已完成的核验（至少 8 个字符）…",
+      "saveVerificationButton": "保存审核结果",
+      "verificationSavedMessage": "配送员审核结果已保存。",
+      "verificationNoteRequired": "保存前请输入 8 至 500 个字符的审计备注。",
+      "verificationWorkNeedsIdentity": "批准工作许可前必须先核验配送员身份。",
+      "verificationErrorFallback": "无法保存配送员审核结果。"
     },
     "orderDetails": {
       "fetchErrorFallback": "无法加载订单详情。",

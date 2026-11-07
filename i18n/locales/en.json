@@ -40,7 +40,23 @@
     "boutique": "Shop",
     "fastFood": "Fast food",
     "africanSalon": "Afro salon",
-    "all": "All"
+    "all": "All",
+    "nigeriane": "Nigerian",
+    "ghaneenne": "Ghanaian",
+    "ethiopienne": "Ethiopian",
+    "sudafricaine": "South African",
+    "estafricaine": "East African",
+    "ouestafricaine": "West African",
+    "afriquecentrale": "Central African",
+    "fastfood": "Fast food",
+    "pizza": "Pizza",
+    "burgers": "Burgers",
+    "tacos": "Tacos",
+    "grillades": "Grill",
+    "internationale": "International",
+    "afriquedunord": "North African",
+    "afriqueaustrale": "Southern African",
+    "boissons": "Drinks"
   },
   "home": {
     "brandTagline": "African flavors, close by",
@@ -75,7 +91,8 @@
     "deliveryAddressFallback": "Home delivery",
     "categories": {
       "groceries": "Grocery stores",
-      "shops": "Shops"
+      "shops": "Shops",
+      "drinks": "Drinks"
     },
     "timeUnavailable": "Delivery time unavailable",
     "deliveryFree": "Free delivery"
@@ -140,7 +157,8 @@
     "quoteUnavailable": "The quote is unavailable. Try again or review your cart.",
     "retryQuote": "Retry calculation",
     "quoteChangedTitle": "Quote updated",
-    "quoteChangedBody": "The price or currency changed. Review the new total before placing the order."
+    "quoteChangedBody": "The price or currency changed. Review the new total before placing the order.",
+    "editAddress": "Edit address"
   },
   "restaurant": {
     "popular": "Popular",
@@ -189,7 +207,8 @@
       "dataSource": "Calculated from {{count}} paid orders; only recorded restaurant earnings are included.",
       "loading": "Loading analytics…",
       "unavailable": "Restaurant analytics are unavailable.",
-      "sessionUnavailable": "Sign in again to view analytics."
+      "sessionUnavailable": "Sign in again to view analytics.",
+      "bottomText": "Your restaurant is growing. Keep optimizing your menu and service."
     },
     "settings": {
       "saveButton": "Save",
@@ -838,7 +857,8 @@
       "preparing": "Preparing",
       "on_the_way": "On the way",
       "confirmed": "Confirmed",
-      "default": "Order"
+      "default": "Order",
+      "unknown": "Status to be confirmed"
     }
   },
   "cart": {
@@ -1810,7 +1830,18 @@
       "noActiveMissionValue": "No active mission",
       "adminActionsTitle": "Admin actions",
       "viewActiveOrderButton": "View active order",
-      "missionFieldLabel": "Mission"
+      "missionFieldLabel": "Mission",
+      "verificationActionsTitle": "Courier verification",
+      "verificationHint": "Record a decision only after reviewing the supporting documents. Every decision must be justified in the audit note.",
+      "identityVerifiedToggle": "Identity verified",
+      "workAuthorizedToggle": "Work authorization verified",
+      "verificationNoteLabel": "Review note",
+      "verificationNotePlaceholder": "Describe the checks performed (at least 8 characters)…",
+      "saveVerificationButton": "Save verification",
+      "verificationSavedMessage": "Courier verification was saved.",
+      "verificationNoteRequired": "Enter an audit note of 8 to 500 characters before saving.",
+      "verificationWorkNeedsIdentity": "Verify the courier’s identity before approving work authorization.",
+      "verificationErrorFallback": "Could not save courier verification."
     },
     "orderDetails": {
       "fetchErrorFallback": "Unable to load the order details.",

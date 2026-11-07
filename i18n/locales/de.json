@@ -40,7 +40,23 @@
     "boutique": "Geschäft",
     "fastFood": "Fast Food",
     "africanSalon": "Afro-Salon",
-    "all": "Alle"
+    "all": "Alle",
+    "nigeriane": "Nigerianisch",
+    "ghaneenne": "Ghanaisch",
+    "ethiopienne": "Äthiopisch",
+    "sudafricaine": "Südafrikanisch",
+    "estafricaine": "Ostafrikanisch",
+    "ouestafricaine": "Westafrikanisch",
+    "afriquecentrale": "Zentralafrikanisch",
+    "fastfood": "Fast Food",
+    "pizza": "Pizza",
+    "burgers": "Burger",
+    "tacos": "Tacos",
+    "grillades": "Grillgerichte",
+    "internationale": "International",
+    "afriquedunord": "Nordafrikanisch",
+    "afriqueaustrale": "Südliches Afrika",
+    "boissons": "Getränke"
   },
   "home": {
     "brandTagline": "Afrikanischer Geschmack ganz nah",
@@ -75,7 +91,8 @@
     "deliveryAddressFallback": "Lieferung nach Hause",
     "categories": {
       "groceries": "Lebensmittelgeschäfte",
-      "shops": "Geschäfte"
+      "shops": "Geschäfte",
+      "drinks": "Getränke"
     },
     "timeUnavailable": "Lieferzeit nicht verfügbar",
     "deliveryFree": "Kostenlose Lieferung"
@@ -140,7 +157,8 @@
     "quoteUnavailable": "Der Kostenvoranschlag ist nicht verfügbar. Bitte erneut versuchen oder den Warenkorb prüfen.",
     "retryQuote": "Berechnung erneut versuchen",
     "quoteChangedTitle": "Angebot aktualisiert",
-    "quoteChangedBody": "Preis oder Währung haben sich geändert. Prüfe den neuen Gesamtbetrag vor der Bestellung."
+    "quoteChangedBody": "Preis oder Währung haben sich geändert. Prüfe den neuen Gesamtbetrag vor der Bestellung.",
+    "editAddress": "Adresse bearbeiten"
   },
   "restaurant": {
     "popular": "Beliebt",
@@ -189,7 +207,8 @@
       "dataSource": "Berechnet aus {{count}} bezahlten Bestellungen; berücksichtigt werden nur erfasste Restauranterlöse.",
       "loading": "Statistiken werden geladen…",
       "unavailable": "Restaurantstatistiken sind nicht verfügbar.",
-      "sessionUnavailable": "Melde dich erneut an, um die Statistiken zu sehen."
+      "sessionUnavailable": "Melde dich erneut an, um die Statistiken zu sehen.",
+      "bottomText": "Dein Restaurant wächst. Optimiere weiter dein Menü und deinen Service."
     },
     "settings": {
       "saveButton": "Speichern",
@@ -838,7 +857,8 @@
       "preparing": "In Zubereitung",
       "on_the_way": "Unterwegs",
       "confirmed": "Bestätigt",
-      "default": "Bestellung"
+      "default": "Bestellung",
+      "unknown": "Status noch zu bestätigen"
     }
   },
   "cart": {
@@ -1810,7 +1830,18 @@
       "noActiveMissionValue": "Kein aktiver Auftrag",
       "adminActionsTitle": "Admin-Aktionen",
       "viewActiveOrderButton": "Aktive Bestellung ansehen",
-      "missionFieldLabel": "Auftrag"
+      "missionFieldLabel": "Auftrag",
+      "verificationActionsTitle": "Kurierverifizierung",
+      "verificationHint": "Trage eine Entscheidung erst nach Prüfung der Nachweise ein. Jede Entscheidung muss in der Prüfnotiz begründet werden.",
+      "identityVerifiedToggle": "Identität verifiziert",
+      "workAuthorizedToggle": "Arbeitsberechtigung verifiziert",
+      "verificationNoteLabel": "Prüfnotiz",
+      "verificationNotePlaceholder": "Beschreibe die durchgeführten Prüfungen (mindestens 8 Zeichen)…",
+      "saveVerificationButton": "Verifizierung speichern",
+      "verificationSavedMessage": "Die Kurierverifizierung wurde gespeichert.",
+      "verificationNoteRequired": "Gib vor dem Speichern eine Prüfnotiz mit 8 bis 500 Zeichen ein.",
+      "verificationWorkNeedsIdentity": "Die Identität muss vor der Bestätigung der Arbeitsberechtigung verifiziert werden.",
+      "verificationErrorFallback": "Die Kurierverifizierung konnte nicht gespeichert werden."
     },
     "orderDetails": {
       "fetchErrorFallback": "Die Bestelldetails konnten nicht geladen werden.",
