@@ -30,6 +30,7 @@ import { getAllMenuItems } from '../../services/menuService';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import PlaceBrandMark from '../../components/PlaceBrandMark';
+import OwnImage from '../../components/OwnImage';
 
 /**
  * =========================================================
@@ -210,48 +211,6 @@ const normalizeRole = (value) => {
   }
 
   return 'client';
-};
-
-const getAfricanFoodImage = (cuisine) => {
-  const value = normalizeSearch(cuisine);
-
-  if (value.includes('maroc')) {
-    return 'https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('alger')) {
-    return 'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('tun')) {
-    return 'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('sen')) {
-    return 'https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('ivoir')) {
-    return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('camer')) {
-    return 'https://images.unsplash.com/photo-1559847844-5315695dadae?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('congo')) {
-    return 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('mali')) {
-    return 'https://images.unsplash.com/photo-1604908176997-4317d4f66c8f?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  if (value.includes('afric')) {
-    return 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  return 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=1200&auto=format&fit=crop';
 };
 
 const normalizeRestaurant = (item = {}) => {
@@ -907,17 +866,11 @@ export default function HomeScreen() {
                 </Text>
               </View>
             ) : (
-              <Image
-                source={{
-                  uri:
-                    item?.image ||
-                    item?.coverImage ||
-                    getAfricanFoodImage(item?.cuisine),
-                }}
+              <OwnImage
+                uri={item?.image || item?.coverImage}
                 style={styles.restaurantImage}
-                contentFit="cover"
-                cachePolicy="memory-disk"
-                transition={180}
+                icon="restaurant-outline"
+                iconSize={40}
               />
             )}
 
@@ -1118,15 +1071,7 @@ export default function HomeScreen() {
                       ]}
                       onPress={() => handleMoodDishPress(dish)}
                     >
-                      <Image
-                        source={{
-                          uri: dish.image || getAfricanFoodImage(dish.cuisine),
-                        }}
-                        style={styles.searchDishImage}
-                        contentFit="cover"
-                        cachePolicy="memory-disk"
-                        transition={160}
-                      />
+                      <OwnImage uri={dish.image} style={styles.searchDishImage} />
                       <Text style={styles.searchDishName} numberOfLines={1}>
                         {dish.name}
                       </Text>
@@ -1198,15 +1143,7 @@ export default function HomeScreen() {
                           ]}
                           onPress={() => handleMoodDishPress(dish)}
                         >
-                          <Image
-                            source={{
-                              uri: dish.image || getAfricanFoodImage(dish.cuisine),
-                            }}
-                            style={styles.moodDishImage}
-                            contentFit="cover"
-                            cachePolicy="memory-disk"
-                            transition={160}
-                          />
+                          <OwnImage uri={dish.image} style={styles.moodDishImage} />
                           <Text style={styles.moodDishName} numberOfLines={1}>
                             {dish.name}
                           </Text>

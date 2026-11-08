@@ -11,7 +11,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
-import { Image } from 'expo-image';
+import OwnImage from '../components/OwnImage';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../components/FadeInView';
@@ -80,10 +80,6 @@ const formatPrice = (value, currency = 'EUR') => {
   } catch {
     return `${amount.toFixed(2)} ${safeCurrency}`;
   }
-};
-
-const getFallbackImage = () => {
-  return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop';
 };
 
 const getSafeItemId = (item) => {
@@ -688,17 +684,10 @@ export default function CheckoutScreen() {
 
           const price = Math.max(0, normalizeNumber(item?.price, 0));
           const lineTotal = quantity * price;
-          const imageUri = normalizeText(item?.image, getFallbackImage());
 
           return (
             <View style={styles.item}>
-              <Image
-                source={{ uri: imageUri }}
-                style={styles.itemImage}
-                contentFit="cover"
-                cachePolicy="memory-disk"
-                transition={160}
-              />
+              <OwnImage uri={item?.image} style={styles.itemImage} />
 
               <View style={styles.itemLeft}>
                 <Text style={styles.name} numberOfLines={1}>
