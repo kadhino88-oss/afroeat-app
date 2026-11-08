@@ -41,3 +41,15 @@ test('les textes existent dans les 6 langues', () => {
     assert.deepEqual(Object.keys(JSON.parse(read('i18n', 'locales', `${l}.json`)).paymentCards).sort(), keys, l);
   }
 });
+
+test('Apple Pay / Google Pay : bouton natif, confirmation serveur obligatoire, caché sur le web', () => {
+  const service = read('services', 'stripeService.js');
+  assert.match(service, /confirmPlatformPayPayment\(clientSecret/);
+  assert.match(service, /const payWithWallet = async/);
+  // Le serveur confirme toujours le paiement auprès de Stripe avant le succès.
+  const walletPart = service.slice(service.indexOf('const payWithWallet'));
+  assert.match(walletPart, /confirmOrderPayment\(orderId, paymentIntentId, token\)/);
+  assert.match(read('components', 'WalletPayButton.js'), /isPlatformPaySupported/);
+  assert.match(read('components', 'WalletPayButton.web.js'), /return null/);
+  assert.match(payment, /<WalletPayButton/);
+});
