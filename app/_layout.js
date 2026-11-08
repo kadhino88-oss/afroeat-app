@@ -102,6 +102,7 @@ function AppStack() {
         {/* ================================================= */}
         <Stack.Screen name="restaurant" />
         <Stack.Screen name="place/[id]" />
+        <Stack.Screen name="partner-apply" />
 
         {/* ================================================= */}
         {/* LIVRAISON */}
