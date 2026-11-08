@@ -28,6 +28,14 @@ test('le message d\'élargissement existe dans les 6 langues', () => {
 });
 
 test('lieux publics sans photo : pas de photo de plat trompeuse dans Explorer', () => {
-  assert.match(explore, /showPlaceholder = isPublicPlace && !normalizeText\(item\?\.imageUrl\)/);
+  assert.match(explore, /showPlaceholder = !imageUri/);
   assert.match(explore, /cardImagePlaceholder/);
+});
+
+test('aucune photo d\'illustration (unsplash) dans les listes, panier et paiement', () => {
+  for (const f of [['app', '(tabs)', 'explore.js'], ['app', 'cart.js'], ['app', 'checkout.js']]) {
+    assert.doesNotMatch(read(...f), /images\.unsplash\.com/, f.join('/'));
+  }
+  assert.doesNotMatch(read('app', '(tabs)', 'index.js'), /getAfricanFoodImage/);
+  assert.match(read('components', 'OwnImage.js'), /jamais une photo d'illustration/);
 });

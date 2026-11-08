@@ -9,7 +9,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { Image } from 'expo-image';
+import OwnImage from '../components/OwnImage';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { router } from 'expo-router';
@@ -75,10 +75,6 @@ const formatPrice = (value, currency = 'EUR') => {
   } catch {
     return `${amount.toFixed(2)} ${safeCurrency}`;
   }
-};
-
-const getFallbackImage = () => {
-  return 'https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?q=80&w=1200&auto=format&fit=crop';
 };
 
 const getSafeItemId = (item) => {
@@ -345,18 +341,11 @@ export default function CartScreen() {
       const itemQuantity = Math.max(0, normalizeNumber(item?.quantity, 0));
       const itemTotal = itemPrice * itemQuantity;
       const itemDescription = normalizeText(item?.description);
-      const imageUri = item?.image || getFallbackImage();
-
+      
       return (
         <View style={styles.card}>
           <View style={styles.cardTopRow}>
-            <Image
-              source={{ uri: imageUri }}
-              style={styles.itemImage}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              transition={160}
-            />
+            <OwnImage uri={item?.image} style={styles.itemImage} />
 
             <View style={styles.itemInfo}>
               <Text style={styles.name} numberOfLines={1}>

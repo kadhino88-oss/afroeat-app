@@ -18,6 +18,7 @@ import * as Location from 'expo-location';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
 import PlaceBrandMark from '../../components/PlaceBrandMark';
+import OwnImage from '../../components/OwnImage';
 import { getAllMenuItems } from '../../services/menuService';
 import { getNearbyPlacesAdaptive } from '../../services/placeService';
 import { matchesAfricanPlaceSearch } from '../../services/placeSearch';
@@ -38,10 +39,6 @@ import { useTranslation } from 'react-i18next';
  * ASSETS LOCAUX
  * =========================================================
  */
-
-const FALLBACK_RESTAURANT_IMAGE = {
-  uri: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop',
-};
 
 const withTimeout = (promise, timeoutMs, message) =>
   new Promise((resolve, reject) => {
@@ -494,19 +491,13 @@ const getDishRestaurantId = (dish) => {
   );
 };
 
-const getRestaurantImageSource = (item) => {
-  const imageUri = normalizeText(
+// Photo propre au commerce uniquement (jamais de photo d'illustration).
+const getRestaurantImageUri = (item) =>
+  normalizeText(
     isPublicDirectoryPlace(item)
       ? item?.imageUrl
       : item?.coverImage || item?.image
   );
-
-  if (imageUri) {
-    return { uri: imageUri };
-  }
-
-  return FALLBACK_RESTAURANT_IMAGE;
-};
 
 const normalizePublicPlace = (item = {}, category) => {
   const id = normalizeText(item?.id || item?._id);
@@ -1201,13 +1192,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
                     handleOpenRestaurant(getDishRestaurantId(item));
                   }}
                 >
-                  <Image
-                    source={getRestaurantImageSource({ image: item?.image })}
-                    style={styles.dishImage}
-                    contentFit="cover"
-                    cachePolicy="memory-disk"
-                    transition={160}
-                  />
+                  <OwnImage uri={item?.image} style={styles.dishImage} />
                   <Text style={styles.dishName} numberOfLines={1}>
                     {item?.name}
                   </Text>
@@ -1401,9 +1386,9 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
       const hasRating = normalizeNumber(item?.ratingCount, 0) > 0;
       const rating = clampRating(item?.rating).toFixed(1);
       const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes, t('home.timeUnavailable'));
-      const imageSource = getRestaurantImageSource(item);
-      // Aucune photo réelle pour un lieu public : pas de photo de plat trompeuse.
-      const showPlaceholder = isPublicPlace && !normalizeText(item?.imageUrl);
+      const imageUri = getRestaurantImageUri(item);
+      // Pas de photo propre au commerce : fond neutre + son logo ou l'icône de sa catégorie.
+      const showPlaceholder = !imageUri;
       const publicPlaceType = getPublicPlaceTypeLabel(item?.category, t);
 
       return (
@@ -1425,7 +1410,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
               </View>
             ) : (
               <Image
-                source={imageSource}
+                source={{ uri: imageUri }}
                 style={styles.cardImage}
                 contentFit="cover"
                 cachePolicy="memory-disk"
