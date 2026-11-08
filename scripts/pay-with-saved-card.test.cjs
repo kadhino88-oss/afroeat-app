@@ -42,6 +42,14 @@ test('les textes existent dans les 6 langues', () => {
   }
 });
 
+test('web : les alertes (erreurs de formulaire) deviennent visibles', () => {
+  const alert = read('services', 'webAlert.js');
+  assert.match(alert, /Platform\.OS === 'web'/);
+  assert.match(alert, /Alert\.alert = showWebAlert/);
+  assert.match(alert, /window\.alert\(text\)/);
+  assert.match(read('app', '_layout.js'), /import '\.\.\/services\/webAlert';/);
+});
+
 test('Apple Pay / Google Pay : bouton natif, confirmation serveur obligatoire, caché sur le web', () => {
   const service = read('services', 'stripeService.js');
   assert.match(service, /confirmPlatformPayPayment\(clientSecret/);
