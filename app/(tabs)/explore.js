@@ -1402,6 +1402,8 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
       const rating = clampRating(item?.rating).toFixed(1);
       const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes, t('home.timeUnavailable'));
       const imageSource = getRestaurantImageSource(item);
+      // Aucune photo réelle pour un lieu public : pas de photo de plat trompeuse.
+      const showPlaceholder = isPublicPlace && !normalizeText(item?.imageUrl);
       const publicPlaceType = getPublicPlaceTypeLabel(item?.category, t);
 
       return (
@@ -1412,13 +1414,24 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           onPress={() => handleOpenDirectoryItem(item)}
         >
           <View style={styles.cardImageWrap}>
-            <Image
-              source={imageSource}
-              style={styles.cardImage}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              transition={180}
-            />
+            {showPlaceholder ? (
+              <View style={[styles.cardImage, styles.cardImagePlaceholder]}>
+                <PlaceBrandMark
+                  logoUrl={item?.logoUrl}
+                  website={item?.website}
+                  category={item?.category}
+                  size={72}
+                />
+              </View>
+            ) : (
+              <Image
+                source={imageSource}
+                style={styles.cardImage}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={180}
+              />
+            )}
 
             {!!item?.isFeatured ? (
               <View style={styles.featuredBadge}>
@@ -1432,7 +1445,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
                 <Text style={styles.publicBadgeText}>{t('publicPlace.publicListing')}</Text>
               </View>
             ) : null}
-            {isPublicPlace && Boolean(item?.logoUrl || item?.website) ? (
+            {isPublicPlace && !showPlaceholder && Boolean(item?.logoUrl || item?.website) ? (
               <View style={styles.placeBrandBadge}>
                 <PlaceBrandMark
                   logoUrl={item.logoUrl}
@@ -1971,6 +1984,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 170,
     backgroundColor: '#EEEEEE',
+  },
+  cardImagePlaceholder: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1B1B22',
   },
 
   featuredBadge: {
