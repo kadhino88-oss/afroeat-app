@@ -26,3 +26,8 @@ test('le message d\'élargissement existe dans les 6 langues', () => {
     assert.ok(json.explore.zoneExpanded.includes('{{km}}'), l);
   }
 });
+
+test('lieux publics sans photo : pas de photo de plat trompeuse dans Explorer', () => {
+  assert.match(explore, /showPlaceholder = isPublicPlace && !normalizeText\(item\?\.imageUrl\)/);
+  assert.match(explore, /cardImagePlaceholder/);
+});
