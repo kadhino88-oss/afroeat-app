@@ -173,6 +173,32 @@ export default function PublicPlaceScreen() {
           </View>
         )}
 
+        <View style={styles.joinCard}>
+          <Text style={styles.joinTitle}>{t('partnerApply.joinTitle')}</Text>
+          <Text style={styles.joinText}>{t('partnerApply.joinText')}</Text>
+          <Pressable
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.joinButton, pressed && styles.pressed]}
+            onPress={() =>
+              router.push({
+                pathname: '/partner-apply',
+                params: {
+                  id: place.id,
+                  name: place.name,
+                  category: place.category,
+                  address: place.address,
+                  city: place.city,
+                  phone: place.phone,
+                  website: place.website || '',
+                },
+              })
+            }
+          >
+            <Ionicons name="storefront-outline" size={18} color="#FFFFFF" />
+            <Text style={styles.joinButtonText}>{t('partnerApply.joinButton')}</Text>
+          </Pressable>
+        </View>
+
         {!!place.osmUrl && (
           <Pressable style={styles.attribution} onPress={() => openLink(place.osmUrl)}>
             <Ionicons name="open-outline" size={14} color="#7C7164" />
@@ -231,6 +257,11 @@ const styles = StyleSheet.create({
   actionButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#F4EEE7' },
   actionLabel: { flex: 1, marginHorizontal: 10, color: '#26382D', fontSize: 14, fontWeight: '700' },
   pressed: { opacity: 0.75 },
+  joinCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#155B38' },
+  joinTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '900' },
+  joinText: { marginTop: 7, color: '#DDEBE2', fontSize: 14, lineHeight: 21 },
+  joinButton: { marginTop: 14, minHeight: 48, borderRadius: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#1F6F43', borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)' },
+  joinButtonText: { marginLeft: 8, color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   attribution: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 12 },
   attributionText: { marginLeft: 6, color: '#7C7164', fontSize: 11, textDecorationLine: 'underline' },
 });

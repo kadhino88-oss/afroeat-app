@@ -184,6 +184,11 @@ export const API_ENDPOINTS = {
     orders:  (restaurantId) => `/restaurants/${safePathParam(restaurantId)}/orders`,
   },
 
+  // ─── Inscription des commerces ─────────────────────────
+  partnerApplications: {
+    create: () => '/partner-applications',
+  },
+
   // ─── Nearby places ─────────────────────────────────────
   places: {
     nearby: (params = {}) =>
