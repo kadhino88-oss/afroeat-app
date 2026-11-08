@@ -787,6 +787,7 @@
     "noResultsText": "Try another keyword or change the filter.",
     "noRestaurantsText": "No partner is available yet. Reload the list or check the backend.",
     "publicSearchLoading": "Finding African businesses nearby…",
+    "zoneExpanded": "Few results nearby: area widened to {{km}} km",
     "distance": "Distance",
     "distanceOption": "Search within {{distance}} km",
     "nearbyPermissionText": "Searching the Annemasse preview area within {{distance}} km. Enable location to search around you.",

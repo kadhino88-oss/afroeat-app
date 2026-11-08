@@ -787,6 +787,7 @@
     "noResultsText": "Versuche ein anderes Stichwort oder ändere den Filter.",
     "noRestaurantsText": "Noch kein Partner verfügbar. Lade die Liste neu oder überprüfe das Backend.",
     "publicSearchLoading": "Afrikanische Geschäfte in deiner Nähe werden gesucht …",
+    "zoneExpanded": "Wenige Treffer: Suchradius auf {{km}} km erweitert",
     "distance": "Entfernung",
     "distanceOption": "Im Umkreis von {{distance}} km suchen",
     "nearbyPermissionText": "Annemasse-Vorschau im Umkreis von {{distance}} km. Aktiviere den Standort, um in deiner Umgebung zu suchen.",

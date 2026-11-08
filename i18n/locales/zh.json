@@ -787,6 +787,7 @@
     "noResultsText": "请尝试其他关键词或更改筛选条件。",
     "noRestaurantsText": "暂无合作商家。请刷新列表或检查后台。",
     "publicSearchLoading": "正在搜索附近的非洲商家…",
+    "zoneExpanded": "附近结果较少：已将范围扩大到 {{km}} 公里",
     "distance": "距离",
     "distanceOption": "搜索 {{distance}} 公里范围内",
     "nearbyPermissionText": "正在显示 Annemasse 周边 {{distance}} 公里范围。启用位置服务即可搜索你附近的商家。",

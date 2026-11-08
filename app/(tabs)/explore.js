@@ -19,7 +19,7 @@ import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
 import PlaceBrandMark from '../../components/PlaceBrandMark';
 import { getAllMenuItems } from '../../services/menuService';
-import { getNearbyPlaces } from '../../services/placeService';
+import { getNearbyPlacesAdaptive } from '../../services/placeService';
 import { matchesAfricanPlaceSearch } from '../../services/placeSearch';
 import { getAllRestaurants, searchRestaurants, getNearbyRestaurants } from '../../services/restaurantService';
 import {
@@ -606,6 +606,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
   const [openOnly, setOpenOnly] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
   const [publicPlaces, setPublicPlaces] = useState([]);
+  const [expandedRadius, setExpandedRadius] = useState(null);
   const [allDishes, setAllDishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [publicPlacesLoading, setPublicPlacesLoading] = useState(false);
@@ -683,12 +684,13 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
       setNeedsLocationPermission(!searchContext.permissionGranted);
       setUsingDefaultArea(searchContext.usingDefaultArea);
 
-      const payload = await getNearbyPlaces({
+      const payload = await getNearbyPlacesAdaptive({
         ...searchContext.coordinates,
         radius: radiusKm,
         token: tokenRef.current,
       });
       if (requestId !== publicPlacesRequestId.current) return;
+      setExpandedRadius(payload?.expanded ? payload.effectiveRadius : null);
 
       const foundPlaces = [
         ...(Array.isArray(payload?.restaurants) ? payload.restaurants : []).map((item) =>
@@ -896,7 +898,12 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
         const aFeatured = a?.isFeatured ? 1 : 0;
         const bFeatured = b?.isFeatured ? 1 : 0;
-        return bFeatured - aFeatured;
+        if (aFeatured !== bFeatured) return bFeatured - aFeatured;
+
+        // À égalité : le plus proche d'abord.
+        const aDistance = Number.isFinite(a?.distanceKm) ? a.distanceKm : Infinity;
+        const bDistance = Number.isFinite(b?.distanceKm) ? b.distanceKm : Infinity;
+        return aDistance - bDistance;
       });
   }, [directoryItems, query, activeFilter, openOnly, t]);
 
@@ -1336,6 +1343,11 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
               {t('explore.resultsSubtitle', { count: directoryItems.length })}
               {publicPlacesLoading ? ` · ${t('explore.publicSearchLoading')}` : ''}
             </Text>
+            {expandedRadius ? (
+              <Text style={styles.resultsSubtitle}>
+                {t('explore.zoneExpanded', { km: expandedRadius })}
+              </Text>
+            ) : null}
           </View>
 
           <Text style={styles.resultsCount}>
@@ -1358,6 +1370,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
     displayName,
     handleDistanceChange,
     errorMessage,
+    expandedRadius,
     getDishCurrency,
     directoryItems.length,
     handleEnableNearbySearch,
