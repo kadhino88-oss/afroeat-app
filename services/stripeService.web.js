@@ -101,5 +101,8 @@ export const useAfroeatPayment = () => {
     }
   };
 
-  return { pay, loading };
+  // Pas de portefeuille natif sur le web : Stripe Checkout propose déjà Apple Pay / Google Pay.
+  const payWithWallet = async () => ({ success: false, error: 'Indisponible sur le web.' });
+
+  return { pay, payWithWallet, loading };
 };

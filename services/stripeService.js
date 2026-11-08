@@ -13,7 +13,7 @@
  * =========================================================
  */
 
-import { useStripe } from '@stripe/stripe-react-native';
+import { PlatformPay, useStripe } from '@stripe/stripe-react-native';
 import * as Linking from 'expo-linking';
 import Constants from 'expo-constants';
 import { apiPost } from './apiClient';
@@ -118,7 +118,13 @@ const getStripeReturnURL = () =>
     : Linking.createURL('');
 
 export const useAfroeatPayment = () => {
-  const { initPaymentSheet, presentPaymentSheet, confirmPayment, loading } = useStripe();
+  const {
+    initPaymentSheet,
+    presentPaymentSheet,
+    confirmPayment,
+    confirmPlatformPayPayment,
+    loading,
+  } = useStripe();
 
   const pay = async ({
     orderId,
@@ -278,5 +284,88 @@ export const useAfroeatPayment = () => {
     }
   };
 
-  return { pay, loading };
+
+  /**
+   * Apple Pay (iOS) / Google Pay (Android) : le client paie avec la carte de son
+   * portefeuille, sans saisie. Le serveur reste responsable du montant, puis
+   * confirme le paiement auprès de Stripe avant que l'appli annonce un succès.
+   */
+  const payWithWallet = async ({ orderId, token, onError } = {}) => {
+    try {
+      if (!orderId) throw new Error('Aucune commande à payer.');
+      if (!token) {
+        throw new Error('Tu dois être connecté pour effectuer un paiement.');
+      }
+      if (typeof confirmPlatformPayPayment !== 'function') {
+        throw new Error('Le paiement par portefeuille n’est pas disponible sur cet appareil.');
+      }
+
+      const { clientSecret, paymentIntentId, amount, currency } =
+        await createPaymentIntent(orderId, token);
+
+      if (!paymentIntentId) {
+        throw new Error(
+          'Stripe n’a pas retourné l’identifiant du paiement. Aucun paiement n’a été confirmé.'
+        );
+      }
+
+      const merchantCountryCode = String(
+        process.env.EXPO_PUBLIC_STRIPE_MERCHANT_COUNTRY || 'CH'
+      ).trim().toUpperCase();
+      const currencyCode = String(currency || 'eur').toUpperCase();
+      const publishableKey = String(process.env.EXPO_PUBLIC_STRIPE_KEY || '').trim();
+
+      const { error } = await confirmPlatformPayPayment(clientSecret, {
+        applePay: {
+          merchantCountryCode,
+          currencyCode,
+          cartItems: [
+            {
+              paymentType: PlatformPay.PaymentType.Immediate,
+              label: 'AFROEAT',
+              amount: Number(amount || 0).toFixed(2),
+            },
+          ],
+        },
+        googlePay: {
+          merchantCountryCode,
+          currencyCode,
+          testEnv: publishableKey ? publishableKey.startsWith('pk_test_') : __DEV__,
+        },
+      });
+
+      if (error?.code === 'Canceled') {
+        return { success: false, canceled: true };
+      }
+
+      if (error) {
+        throw new Error(
+          error.localizedMessage || error.message || 'Le paiement a échoué. Tu peux réessayer.'
+        );
+      }
+
+      const serverConfirmation = await confirmOrderPayment(orderId, paymentIntentId, token);
+
+      if (!serverConfirmation?.success) {
+        throw new Error(
+          serverConfirmation?.message ||
+          'Stripe a traité le paiement, mais AFROEAT n’a pas pu confirmer la commande. Vérifie son état avant de réessayer.'
+        );
+      }
+
+      return { success: true, paymentIntentId, serverConfirmation };
+    } catch (err) {
+      const message = err?.message || 'Une erreur est survenue lors du paiement.';
+      if (typeof onError === 'function') {
+        try {
+          onError(message);
+        } catch (_callbackError) {
+          // Une erreur d'affichage ne doit pas masquer l'erreur initiale.
+        }
+      }
+      return { success: false, error: message };
+    }
+  };
+
+  return { pay, payWithWallet, loading };
 };
