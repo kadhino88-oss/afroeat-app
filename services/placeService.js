@@ -1,5 +1,6 @@
 import { apiGet } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
+import { NEARBY_RADIUS_OPTIONS } from './nearbySearchSettings';
 
 export const MAX_NEARBY_PLACES = 2000;
 
@@ -67,4 +68,31 @@ export const getNearbyPlaces = async (params) => {
 export const getNearbyGroceries = async (params) => {
   const payload = await request('groceriesNearby', params);
   return { ...payload, groceries: list(payload?.groceries) };
+};
+
+export const MIN_ADAPTIVE_RESULTS = 10;
+
+const countPlaces = (payload) =>
+  list(payload?.restaurants).length +
+  list(payload?.fastFoods).length +
+  list(payload?.groceries).length +
+  list(payload?.businesses).length;
+
+// Façon « Uber Eats » : si la zone choisie compte trop peu de résultats,
+// on élargit automatiquement au rayon suivant (jusqu'à 100 km).
+export const getNearbyPlacesAdaptive = async (params, minResults = MIN_ADAPTIVE_RESULTS) => {
+  const requested = Number(params?.radius) || 10;
+  const radii = NEARBY_RADIUS_OPTIONS.filter((km) => km >= requested);
+  if (radii.length === 0) radii.push(requested);
+
+  let payload = null;
+  let usedRadius = radii[0];
+
+  for (const radius of radii) {
+    payload = await getNearbyPlaces({ ...params, radius });
+    usedRadius = radius;
+    if (countPlaces(payload) >= minResults) break;
+  }
+
+  return { ...payload, effectiveRadius: usedRadius, expanded: usedRadius > requested };
 };

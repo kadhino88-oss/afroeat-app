@@ -787,6 +787,7 @@
     "noResultsText": "Prueba otra palabra clave o cambia el filtro.",
     "noRestaurantsText": "Todavía no hay ningún socio disponible. Recarga la lista o revisa el backend.",
     "publicSearchLoading": "Buscando comercios africanos cercanos…",
+    "zoneExpanded": "Pocos resultados: zona ampliada a {{km}} km",
     "distance": "Distancia",
     "distanceOption": "Buscar en un radio de {{distance}} km",
     "nearbyPermissionText": "Vista previa de Annemasse en un radio de {{distance}} km. Activa la ubicación para buscar a tu alrededor.",

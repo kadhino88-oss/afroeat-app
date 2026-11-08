@@ -787,6 +787,7 @@
     "noResultsText": "Essaie un autre mot-clé ou change de filtre.",
     "noRestaurantsText": "Aucun partenaire n’est encore disponible. Recharge la liste ou vérifie le backend.",
     "publicSearchLoading": "Recherche des commerces autour de toi…",
+    "zoneExpanded": "Peu de résultats : zone élargie à {{km}} km",
       "distance": "Distance",
       "distanceOption": "Rechercher dans un rayon de {{distance}} km",
       "nearbyPermissionText": "La recherche utilise l’aperçu d’Annemasse dans un rayon de {{distance}} km. Active la localisation pour rechercher autour de toi.",
