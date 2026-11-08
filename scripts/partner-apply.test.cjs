@@ -29,3 +29,10 @@ test('les textes d\'inscription existent dans les 6 langues', () => {
     assert.deepEqual(other.sort(), [...keys].sort(), l);
   }
 });
+
+test('en développement sans variable, l\'appli vise l\'API de test en ligne', () => {
+  const config = read('app.config.js');
+  assert.match(config, /DEFAULT_DEV_API_URL = 'https:\/\/afroeat-api-staging\.vercel\.app\/api'/);
+  assert.match(config, /EXPO_PUBLIC_USE_LOCAL_API/);
+  assert.match(config, /!String\(process\.env\.EAS_BUILD_PROFILE/);
+});
