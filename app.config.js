@@ -39,7 +39,20 @@ const isPlaceholderHost = (hostname) => {
   );
 };
 
+const DEFAULT_DEV_API_URL = 'https://afroeat-api-staging.vercel.app/api';
+
 module.exports = ({ config }) => {
+  // Développement local sans variable définie : on vise l'API de test en ligne.
+  // Sans ça, l'appli visait http://<IP de l'ordinateur>:5000 (serveur local inexistant)
+  // et la connexion restait figée. EXPO_PUBLIC_USE_LOCAL_API=true garde l'ancien comportement.
+  if (
+    !String(process.env.EAS_BUILD_PROFILE || '').trim() &&
+    !String(process.env.EXPO_PUBLIC_API_URL || '').trim() &&
+    String(process.env.EXPO_PUBLIC_USE_LOCAL_API || '').trim().toLowerCase() !== 'true'
+  ) {
+    process.env.EXPO_PUBLIC_API_URL = DEFAULT_DEV_API_URL;
+  }
+
   const buildProfile = String(process.env.EAS_BUILD_PROFILE || '').trim().toLowerCase();
   const isProductionBuild = buildProfile === 'production';
   const configuredAppEnv = String(process.env.EXPO_PUBLIC_APP_ENV || '').trim().toLowerCase();
