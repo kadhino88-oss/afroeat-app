@@ -1,3 +1,4 @@
+import '../services/webAlert';
 import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StyleSheet, StatusBar } from 'react-native';

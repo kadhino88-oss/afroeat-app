@@ -41,3 +41,11 @@ test('les textes existent dans les 6 langues', () => {
     assert.deepEqual(Object.keys(JSON.parse(read('i18n', 'locales', `${l}.json`)).paymentCards).sort(), keys, l);
   }
 });
+
+test('web : les alertes (erreurs de formulaire) deviennent visibles', () => {
+  const alert = read('services', 'webAlert.js');
+  assert.match(alert, /Platform\.OS === 'web'/);
+  assert.match(alert, /Alert\.alert = showWebAlert/);
+  assert.match(alert, /window\.alert\(text\)/);
+  assert.match(read('app', '_layout.js'), /import '\.\.\/services\/webAlert';/);
+});
