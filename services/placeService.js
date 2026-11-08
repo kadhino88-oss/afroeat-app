@@ -1,42 +1,70 @@
 import { apiGet } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
-const getNearbyPlacesRequest = async ({
-  latitude,
-  longitude,
-  radius = 10,
-  token = null,
-}) => {
+export const MAX_NEARBY_PLACES = 2000;
+
+const validateParams = ({ latitude, longitude, radius = 10 }) => {
   const lat = Number(latitude);
   const lng = Number(longitude);
   const distance = Number(radius);
 
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-    throw new Error('Coordonnées invalides pour les épiceries à proximité.');
+    throw new Error('Coordonnées invalides pour les lieux à proximité.');
   }
 
   if (!Number.isFinite(distance) || distance <= 0 || distance > 100) {
     throw new Error('Le rayon de recherche doit être compris entre 0 et 100 km.');
   }
 
-  const endpoint = API_ENDPOINTS?.places?.nearby;
+  return { lat, lng, distance };
+};
+
+const request = (endpointName, { latitude, longitude, radius = 10, token = null }) => {
+  const { lat, lng, distance } = validateParams({ latitude, longitude, radius });
+  const endpoint = API_ENDPOINTS?.places?.[endpointName];
   if (typeof endpoint !== 'function') {
     throw new Error('Endpoint des lieux à proximité introuvable.');
   }
 
   return apiGet(
-    endpoint({ lat, lng, radius: distance }),
+    endpoint({ lat, lng, radius: distance, limit: MAX_NEARBY_PLACES }),
     token,
     { timeout: 27000, retries: 0 }
   );
 };
 
-export const getNearbyPlaces = getNearbyPlacesRequest;
+const list = (value) => (Array.isArray(value) ? value : []);
+
+// Restaurants, fast-foods ET épiceries/commerces africains autour de soi, quel que soit le rayon.
+export const getNearbyPlaces = async (params) => {
+  validateParams(params);
+
+  const [placesResult, groceriesResult] = await Promise.allSettled([
+    request('nearby', params),
+    request('groceriesNearby', params),
+  ]);
+
+  if (placesResult.status === 'rejected' && groceriesResult.status === 'rejected') {
+    throw placesResult.reason;
+  }
+
+  const places = placesResult.status === 'fulfilled' ? placesResult.value : {};
+  const groceries = groceriesResult.status === 'fulfilled' ? groceriesResult.value : {};
+
+  return {
+    ...places,
+    restaurants: list(places?.restaurants),
+    fastFoods: list(places?.fastFoods),
+    groceries: list(groceries?.groceries).length
+      ? list(groceries.groceries)
+      : list(places?.groceries),
+    businesses: list(places?.businesses),
+    total: Number(places?.total || 0) + Number(groceries?.total || 0),
+    hasMore: Boolean(places?.hasMore || groceries?.hasMore),
+  };
+};
 
 export const getNearbyGroceries = async (params) => {
-  const nearby = await getNearbyPlacesRequest(params);
-  return {
-    ...nearby,
-    groceries: Array.isArray(nearby?.groceries) ? nearby.groceries : [],
-  };
+  const payload = await request('groceriesNearby', params);
+  return { ...payload, groceries: list(payload?.groceries) };
 };
