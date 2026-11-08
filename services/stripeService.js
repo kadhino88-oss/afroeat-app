@@ -118,11 +118,12 @@ const getStripeReturnURL = () =>
     : Linking.createURL('');
 
 export const useAfroeatPayment = () => {
-  const { initPaymentSheet, presentPaymentSheet, loading } = useStripe();
+  const { initPaymentSheet, presentPaymentSheet, confirmPayment, loading } = useStripe();
 
   const pay = async ({
     orderId,
     token,
+    paymentMethodId = null,
     onSuccess,
     onError,
   } = {}) => {
@@ -134,15 +135,6 @@ export const useAfroeatPayment = () => {
       if (!token) {
         throw new Error(
           'Tu dois être connecté pour effectuer un paiement.'
-        );
-      }
-
-      if (
-        typeof initPaymentSheet !== 'function' ||
-        typeof presentPaymentSheet !== 'function'
-      ) {
-        throw new Error(
-          'Le formulaire sécurisé Stripe n’est pas disponible sur cet appareil.'
         );
       }
 
@@ -160,42 +152,82 @@ export const useAfroeatPayment = () => {
         );
       }
 
-      // PaymentSheet collecte les informations de carte dans l'interface native
-      // Stripe et gère les étapes d'authentification comme 3D Secure.
-      const { error: initializationError } = await initPaymentSheet({
-        merchantDisplayName: 'AFROEAT',
-        paymentIntentClientSecret: clientSecret,
-        ...(customerSessionClientSecret
-          ? { customerSessionClientSecret }
-          : {}),
-        returnURL: getStripeReturnURL(),
-        allowsDelayedPaymentMethods: false,
-      });
+      if (paymentMethodId) {
+        // Carte enregistrée dans le profil : aucune saisie de carte ici.
+        // confirmPayment ouvre lui-même l'écran de validation de la banque
+        // (3-D Secure) à l'intérieur de l'appli quand elle l'exige.
+        if (typeof confirmPayment !== 'function') {
+          throw new Error(
+            'La confirmation sécurisée Stripe n’est pas disponible sur cet appareil.'
+          );
+        }
 
-      if (initializationError) {
-        throw new Error(
-          initializationError.localizedMessage ||
-          initializationError.message ||
-          'Impossible d’ouvrir le formulaire de paiement Stripe.'
-        );
-      }
+        const { error: confirmationError } = await confirmPayment(clientSecret, {
+          paymentMethodType: 'Card',
+          paymentMethodData: { paymentMethodId },
+        });
 
-      const { error: presentationError, didCancel } =
-        await presentPaymentSheet();
+        if (confirmationError?.code === 'Canceled') {
+          return {
+            success: false,
+            canceled: true,
+          };
+        }
 
-      if (didCancel || presentationError?.code === 'Canceled') {
-        return {
-          success: false,
-          canceled: true,
-        };
-      }
+        if (confirmationError) {
+          throw new Error(
+            confirmationError.localizedMessage ||
+            confirmationError.message ||
+            'Le paiement a échoué. Tu peux réessayer.'
+          );
+        }
+      } else {
+        if (
+          typeof initPaymentSheet !== 'function' ||
+          typeof presentPaymentSheet !== 'function'
+        ) {
+          throw new Error(
+            'Le formulaire sécurisé Stripe n’est pas disponible sur cet appareil.'
+          );
+        }
 
-      if (presentationError) {
-        throw new Error(
-          presentationError.localizedMessage ||
-          presentationError.message ||
-          'Le paiement a échoué. Tu peux réessayer.'
-        );
+        // PaymentSheet collecte les informations de carte dans l'interface native
+        // Stripe et gère les étapes d'authentification comme 3D Secure.
+        const { error: initializationError } = await initPaymentSheet({
+          merchantDisplayName: 'AFROEAT',
+          paymentIntentClientSecret: clientSecret,
+          ...(customerSessionClientSecret
+            ? { customerSessionClientSecret }
+            : {}),
+          returnURL: getStripeReturnURL(),
+          allowsDelayedPaymentMethods: false,
+        });
+
+        if (initializationError) {
+          throw new Error(
+            initializationError.localizedMessage ||
+            initializationError.message ||
+            'Impossible d’ouvrir le formulaire de paiement Stripe.'
+          );
+        }
+
+        const { error: presentationError, didCancel } =
+          await presentPaymentSheet();
+
+        if (didCancel || presentationError?.code === 'Canceled') {
+          return {
+            success: false,
+            canceled: true,
+          };
+        }
+
+        if (presentationError) {
+          throw new Error(
+            presentationError.localizedMessage ||
+            presentationError.message ||
+            'Le paiement a échoué. Tu peux réessayer.'
+          );
+        }
       }
 
       // La confirmation serveur récupère l'état réel auprès de Stripe avant

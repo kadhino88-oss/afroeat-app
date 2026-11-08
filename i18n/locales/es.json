@@ -1988,5 +1988,12 @@
     "joinTitle": "¿Es tu comercio?",
     "joinText": "Añade tu logotipo y tus platos, y recibe pedidos con un reparto pensado para ser más asequible.",
     "joinButton": "Unirse a AFROEAT"
+  },
+  "paymentCards": {
+    "noCardTitle": "Ninguna tarjeta guardada",
+    "noCardText": "Añade una tarjeta en tu perfil para hacer un pedido. Se usará por defecto y podrás cambiarla en cualquier momento.",
+    "usedCard": "Tarjeta utilizada",
+    "change": "Cambiar",
+    "addCard": "Añadir una tarjeta"
   }
 }

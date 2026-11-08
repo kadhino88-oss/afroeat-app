@@ -15,8 +15,9 @@ import {
   ActivityIndicator,
   StatusBar,
   Alert,
+  Platform,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -130,11 +131,46 @@ export default function PaymentScreen() {
   const [availableMethods, setAvailableMethods] = useState([]);
   const [step, setStep] = useState('select');
   const [errorMsg, setErrorMsg] = useState('');
+  const [cards, setCards] = useState([]);
+  const [cardsLoading, setCardsLoading] = useState(Platform.OS !== 'web');
   // State updates are asynchronous; this ref blocks rapid double taps before
   // React has time to render the loading state.
   const paymentInProgressRef = useRef(false);
 
   const { pay: payWithStripe } = useAfroeatPayment();
+
+  // Sur mobile, on paie avec la carte enregistrée dans le profil (aucune saisie ici).
+  // Sur le web, l'enregistrement de carte n'existe pas : le paiement reste inchangé.
+  const requiresSavedCard = Platform.OS !== 'web';
+  const defaultCard = cards.find((card) => card?.isDefault) || cards[0] || null;
+  const needsCard = requiresSavedCard && !cardsLoading && !defaultCard;
+
+  const loadCards = useCallback(async () => {
+    if (!requiresSavedCard || !token) {
+      setCardsLoading(false);
+      return;
+    }
+
+    setCardsLoading(true);
+    try {
+      const result = await apiGet(API_ENDPOINTS.payments.cards, token);
+      setCards(Array.isArray(result?.cards) ? result.cards : []);
+    } catch (error) {
+      console.warn('AFROEAT : impossible de charger les cartes.', error?.message);
+      setCards([]);
+    } finally {
+      setCardsLoading(false);
+    }
+  }, [requiresSavedCard, token]);
+
+  // Recharge au retour du profil, après un changement ou un ajout de carte.
+  useFocusEffect(
+    useCallback(() => {
+      loadCards();
+    }, [loadCards])
+  );
+
+  const goToCards = useCallback(() => router.push('/profile/payment'), []);
 
   /**
    * Ne vide le panier qu'après confirmation de l'opération
@@ -266,6 +302,7 @@ export default function PaymentScreen() {
       const result = await payWithStripe({
         orderId,
         token,
+        paymentMethodId: requiresSavedCard ? defaultCard?.id : null,
       });
 
       if (result?.canceled === true) {
@@ -302,6 +339,8 @@ export default function PaymentScreen() {
     token,
     loading,
     payWithStripe,
+    requiresSavedCard,
+    defaultCard,
     t,
     clearCartAfterSuccess,
   ]);
@@ -311,6 +350,12 @@ export default function PaymentScreen() {
    */
   const handlePay = useCallback(() => {
     if (!orderId || !token || loading) return;
+
+    // Une carte enregistrée est exigée pour commander : on renvoie vers le profil.
+    if (needsCard) {
+      goToCards();
+      return;
+    }
 
     const methodIsAvailable = availableMethods.some(
       (method) => method.id === selectedMethod
@@ -329,6 +374,8 @@ export default function PaymentScreen() {
     loading,
     availableMethods,
     selectedMethod,
+    needsCard,
+    goToCards,
     handleCashPayment,
     handleCardPayment,
   ]);
@@ -563,7 +610,41 @@ export default function PaymentScreen() {
           ))
         )}
 
-        {selectedMethod === 'card' && (
+        {requiresSavedCard && cardsLoading && (
+          <ActivityIndicator color="#245EA8" style={styles.methodsLoader} />
+        )}
+
+        {needsCard && (
+          <View style={styles.noCardBox}>
+            <Ionicons name="card-outline" size={20} color="#B3261E" />
+            <View style={styles.savedCardCopy}>
+              <Text style={styles.noCardTitle}>{t('paymentCards.noCardTitle')}</Text>
+              <Text style={styles.infoText}>{t('paymentCards.noCardText')}</Text>
+            </View>
+          </View>
+        )}
+
+        {requiresSavedCard && !cardsLoading && defaultCard && selectedMethod === 'card' && (
+          <View style={styles.savedCardBox}>
+            <Ionicons name="card" size={22} color="#245EA8" />
+            <View style={styles.savedCardCopy}>
+              <Text style={styles.savedCardTitle}>
+                {t('paymentCards.usedCard')}
+              </Text>
+              <Text style={styles.savedCardText}>
+                {`${String(defaultCard.brand || 'card').toUpperCase()} •••• ${defaultCard.last4}`}
+                {defaultCard.expMonth && defaultCard.expYear
+                  ? `  ·  ${String(defaultCard.expMonth).padStart(2, '0')}/${String(defaultCard.expYear).slice(-2)}`
+                  : ''}
+              </Text>
+            </View>
+            <Pressable accessibilityRole="button" onPress={goToCards} style={styles.changeCardBtn}>
+              <Text style={styles.changeCardText}>{t('paymentCards.change')}</Text>
+            </Pressable>
+          </View>
+        )}
+
+        {!requiresSavedCard && selectedMethod === 'card' && (
           <View style={styles.infoBox}>
             <Ionicons
               name="information-circle-outline"
@@ -598,6 +679,7 @@ export default function PaymentScreen() {
             (
               loading ||
               methodsLoading ||
+              cardsLoading ||
               availableMethods.length === 0
             ) && styles.payBtnDisabled,
             pressed && styles.pressed,
@@ -606,6 +688,7 @@ export default function PaymentScreen() {
           disabled={
             loading ||
             methodsLoading ||
+            cardsLoading ||
             availableMethods.length === 0
           }
         >
@@ -614,13 +697,15 @@ export default function PaymentScreen() {
           ) : (
             <>
               <Ionicons
-                name={selectedMethod === 'card' ? 'card' : 'cash'}
+                name={needsCard || selectedMethod === 'card' ? 'card' : 'cash'}
                 size={20}
                 color="#111"
               />
 
               <Text style={styles.payBtnText}>
-                {selectedMethod === 'card'
+                {needsCard
+                  ? t('paymentCards.addCard')
+                  : selectedMethod === 'card'
                   ? t('payment.payAmount', {
                       amount: formatPrice(amount, currency),
                     })
@@ -639,6 +724,14 @@ export default function PaymentScreen() {
 }
 
 const styles = StyleSheet.create({
+  savedCardBox: { flexDirection: 'row', alignItems: 'center', padding: 14, borderRadius: 14, backgroundColor: '#EEF4FB', borderWidth: 1, borderColor: '#D3E2F3', marginTop: 10 },
+  savedCardCopy: { flex: 1, marginLeft: 11 },
+  savedCardTitle: { color: '#5C6B7A', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+  savedCardText: { marginTop: 3, color: '#14253A', fontSize: 15, fontWeight: '800' },
+  changeCardBtn: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#C5D6EA' },
+  changeCardText: { color: '#245EA8', fontSize: 13, fontWeight: '800' },
+  noCardBox: { flexDirection: 'row', alignItems: 'flex-start', padding: 14, borderRadius: 14, backgroundColor: '#FDECEA', borderWidth: 1, borderColor: '#F5C6C2', marginTop: 10 },
+  noCardTitle: { color: '#B3261E', fontSize: 14, fontWeight: '800', marginBottom: 3 },
   container: {
     flex: 1,
     backgroundColor: '#FFF8F0',
