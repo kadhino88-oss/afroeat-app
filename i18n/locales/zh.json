@@ -1988,5 +1988,12 @@
     "joinTitle": "这是你的商家吗？",
     "joinText": "添加你的标志和菜品，通过力求更实惠的配送接收订单。",
     "joinButton": "加入 AFROEAT"
+  },
+  "paymentCards": {
+    "noCardTitle": "尚未保存银行卡",
+    "noCardText": "请先在个人资料中添加银行卡再下单。它将作为默认支付卡，你可以随时更换。",
+    "usedCard": "使用的银行卡",
+    "change": "更换",
+    "addCard": "添加银行卡"
   }
 }

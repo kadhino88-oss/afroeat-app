@@ -1988,5 +1988,12 @@
     "joinTitle": "Is this your business?",
     "joinText": "Add your logo and dishes, and receive orders with a delivery designed to be more affordable.",
     "joinButton": "Join AFROEAT"
+  },
+  "paymentCards": {
+    "noCardTitle": "No saved card",
+    "noCardText": "Add a card in your profile to place an order. It will be used by default and you can change it at any time.",
+    "usedCard": "Card used",
+    "change": "Change",
+    "addCard": "Add a card"
   }
 }
