@@ -24,6 +24,7 @@ import { useCart } from '../context/CartContext';
 import { apiPost, apiGet } from '../services/apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 import { useAfroeatPayment } from '../services/stripeService';
+import WalletPayButton from '../components/WalletPayButton';
 import { clearPendingOrderKeys } from '../services/orderService';
 import { useTranslation } from 'react-i18next';
 
@@ -137,7 +138,7 @@ export default function PaymentScreen() {
   // React has time to render the loading state.
   const paymentInProgressRef = useRef(false);
 
-  const { pay: payWithStripe } = useAfroeatPayment();
+  const { pay: payWithStripe, payWithWallet } = useAfroeatPayment();
 
   // Sur mobile, on paie avec la carte enregistrée dans le profil (aucune saisie ici).
   // Sur le web, l'enregistrement de carte n'existe pas : le paiement reste inchangé.
@@ -344,6 +345,37 @@ export default function PaymentScreen() {
     t,
     clearCartAfterSuccess,
   ]);
+
+  /**
+   * Paiement par Apple Pay / Google Pay (carte du portefeuille de l'appareil).
+   */
+  const handleWalletPayment = useCallback(async () => {
+    if (!orderId || !token || loading || paymentInProgressRef.current) return;
+
+    paymentInProgressRef.current = true;
+    setLoading(true);
+    setErrorMsg('');
+
+    try {
+      const result = await payWithWallet({ orderId, token });
+
+      if (result?.canceled === true) return;
+
+      if (result?.success === true) {
+        await clearCartAfterSuccess();
+        setStep('success');
+      } else {
+        setErrorMsg(result?.error || t('payment.paymentRefused'));
+        setStep('error');
+      }
+    } catch (error) {
+      setErrorMsg(error?.message || t('payment.paymentRefused'));
+      setStep('error');
+    } finally {
+      paymentInProgressRef.current = false;
+      setLoading(false);
+    }
+  }, [orderId, token, loading, payWithWallet, t, clearCartAfterSuccess]);
 
   /**
    * Lancement du moyen de paiement sélectionné.
@@ -714,6 +746,13 @@ export default function PaymentScreen() {
             </>
           )}
         </Pressable>
+
+        {selectedMethod === 'card' && (
+          <WalletPayButton
+            onPress={handleWalletPayment}
+            disabled={loading || methodsLoading}
+          />
+        )}
 
         <Text style={styles.legalText}>
           {t('payment.legalText')}
