@@ -17,6 +17,7 @@ import { router, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
+import { getDeviceAddress } from '../../services/deviceAddress';
 import { BrandFonts } from '../../constants/brand';
 import * as Location from 'expo-location';
 import { getNearbyRestaurants } from '../../services/restaurantService';
@@ -406,15 +407,30 @@ export default function HomeScreen() {
     );
   }, [user, t]);
 
+  // Adresse affichée en haut de l'écran (comme Uber Eats) : adresse enregistrée
+  // du compte, sinon adresse détectée par la localisation de l'appareil.
+  const [detectedAddress, setDetectedAddress] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    getDeviceAddress().then((address) => {
+      if (active && address) setDetectedAddress(address);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const userAddress = useMemo(() => {
     return normalizeText(
       user?.address ||
         user?.adresse ||
         user?.deliveryAddress ||
-        user?.profile?.address,
+        user?.profile?.address ||
+        detectedAddress,
       t('home.deliveryAddressFallback')
     );
-  }, [user, t]);
+  }, [user, detectedAddress, t]);
 
   const userAvatar = useMemo(() => {
     return normalizeText(
