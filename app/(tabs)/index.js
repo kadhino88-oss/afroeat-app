@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import PlaceBrandMark from '../../components/PlaceBrandMark';
 import OwnImage from '../../components/OwnImage';
+import useGridColumns, { MAX_CONTENT_WIDTH } from '../../hooks/use-grid-columns';
 
 /**
  * =========================================================
@@ -968,6 +969,19 @@ export default function HomeScreen() {
     [handleOpenRestaurant, t]
   );
 
+  const columns = useGridColumns();
+  const renderGridItem = useCallback(
+    (info) =>
+      columns > 1 ? (
+        <View style={{ flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 }}>
+          {renderRestaurant(info)}
+        </View>
+      ) : (
+        renderRestaurant(info)
+      ),
+    [columns, renderRestaurant]
+  );
+
   if (redirectPath) {
     return <Redirect href={redirectPath} />;
   }
@@ -981,7 +995,10 @@ export default function HomeScreen() {
         keyExtractor={(item, index) =>
           item?._id?.toString() || index.toString()
         }
-        renderItem={renderRestaurant}
+        key={`grid-${columns}`}
+        numColumns={columns}
+        columnWrapperStyle={columns > 1 ? { marginHorizontal: -8 } : undefined}
+        renderItem={renderGridItem}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
@@ -1321,6 +1338,9 @@ const styles = StyleSheet.create({
   },
 
   listContent: {
+    width: '100%',
+    maxWidth: MAX_CONTENT_WIDTH,
+    alignSelf: 'center',
     paddingHorizontal: 18,
     paddingTop: 10,
     paddingBottom: 120,
