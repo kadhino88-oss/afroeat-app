@@ -98,7 +98,7 @@ const formatDateTime = (value) => {
 const getStatusStyle = (status, t) => {
   switch (String(status).toLowerCase()) {
     case 'active':
-      return { bg: '#E8F5ED', text: '#1F6F43', label: t('admin.users.statusActiveLabel'), icon: 'checkmark-circle-outline' };
+      return { bg: '#E8F5ED', text: '#084424', label: t('admin.users.statusActiveLabel'), icon: 'checkmark-circle-outline' };
     case 'suspended':
       return { bg: '#FDECEC', text: '#B83232', label: t('admin.users.statusSuspendedLabel'), icon: 'ban-outline' };
     case 'pending_verification':
@@ -328,7 +328,7 @@ export default function AdminDriversScreen() {
  */
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 
   card: {
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
 
   action: {
     marginTop: 10,
-    color: '#D4A017',
+    color: '#EAB02F',
     fontWeight: 'bold',
   },
 });

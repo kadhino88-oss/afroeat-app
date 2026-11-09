@@ -121,7 +121,7 @@ const getRoleConfig = (role) => {
         title: 'Dossier restaurant en attente',
         subtitle:
           'Ton dossier partenaire a bien été reçu. Il doit être vérifié avant l’activation complète de ton espace restaurant.',
-        accent: '#1F6F43',
+        accent: '#084424',
         soft: '#E8F5ED',
         icon: 'storefront-outline',
         loginRole: 'restaurant',
@@ -133,7 +133,7 @@ const getRoleConfig = (role) => {
         title: 'Dossier livreur en attente',
         subtitle:
           'Ton dossier livreur a bien été reçu. La vérification d’identité et des éléments d’adhésion doit être validée avant activation.',
-        accent: '#D96C2D',
+        accent: '#C8331A',
         soft: '#FFF0E8',
         icon: 'bicycle-outline',
         loginRole: 'livreur',
@@ -156,7 +156,7 @@ const getRoleConfig = (role) => {
       return {
         title: 'Compte en attente',
         subtitle: 'Ton compte est en attente de traitement.',
-        accent: '#D4A017',
+        accent: '#EAB02F',
         soft: '#FFF3D8',
         icon: 'time-outline',
         loginRole: 'client',
@@ -314,13 +314,13 @@ export default function PendingApprovalScreen() {
             <Ionicons
               name="checkmark-circle-outline"
               size={18}
-              color="#1F6F43"
+              color="#084424"
             />
             <Text style={styles.stepText}>{t('auth.pendingApproval.step1')}</Text>
           </View>
 
           <View style={styles.stepRow}>
-            <Ionicons name="time-outline" size={18} color="#D4A017" />
+            <Ionicons name="time-outline" size={18} color="#EAB02F" />
             <Text style={styles.stepText}>{t('auth.pendingApproval.step2')}</Text>
           </View>
 
@@ -370,7 +370,7 @@ export default function PendingApprovalScreen() {
           ]}
           onPress={handleResetEverything}
         >
-          <Ionicons name="refresh-outline" size={18} color="#B63B3B" />
+          <Ionicons name="refresh-outline" size={18} color="#C8331A" />
           <Text style={styles.resetButtonText}>{t('auth.pendingApproval.resetAccounts')}</Text>
         </Pressable>
       </ScrollView>
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
   brand: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     letterSpacing: 0.3,
   },
 
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 17,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 14,
   },
 
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
   },
 
   resetButtonText: {
-    color: '#B63B3B',
+    color: '#C8331A',
     fontWeight: '900',
     fontSize: 14,
     marginLeft: 8,

@@ -78,7 +78,7 @@ export default function AdminSupportScreen() {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => loadTickets(true)} />}
     >
       <Pressable onPress={() => router.back()} style={styles.backButton} accessibilityRole="button">
-        <Ionicons name="arrow-back" size={21} color="#1E1E1E" />
+        <Ionicons name="arrow-back" size={21} color="#0D1C11" />
       </Pressable>
       <Text style={styles.eyebrow}>AFROEAT · ADMIN</Text>
       <Text style={styles.title}>{t('admin.common.supportTitle')}</Text>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   subject: { fontSize: 16, lineHeight: 21, color: '#201D22', fontWeight: '900' },
   meta: { fontSize: 11, lineHeight: 16, color: '#77717A', marginTop: 5 },
   status: { color: '#9A4E13', fontSize: 10, fontWeight: '900', textTransform: 'uppercase' },
-  statusResolved: { color: '#1F6F43' },
+  statusResolved: { color: '#084424' },
   message: { color: '#38343B', fontSize: 14, lineHeight: 21, marginTop: 13 },
   existingResponse: { backgroundColor: '#F7F4FB', borderRadius: 10, padding: 12, marginTop: 12 },
   responseLabel: { color: '#5A32A3', fontSize: 11, fontWeight: '900', marginBottom: 5 },

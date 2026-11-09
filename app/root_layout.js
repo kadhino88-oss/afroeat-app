@@ -17,7 +17,7 @@ import { CartProvider } from '../context/CartContext';
 function AppStack() {
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <Stack
         initialRouteName="index"
@@ -102,6 +102,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 });

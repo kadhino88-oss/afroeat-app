@@ -62,7 +62,7 @@ const PAYMENT_METHODS = [
     id: 'cash',
     label: 'Paiement à la livraison',
     icon: 'cash-outline',
-    color: '#1F6F43',
+    color: '#084424',
   },
 ];
 
@@ -105,7 +105,7 @@ const PaymentMethodBtn = ({ method, selected, onPress }) => {
         <Ionicons
           name="checkmark-circle"
           size={20}
-          color="#1F6F43"
+          color="#084424"
           style={styles.methodCheck}
         />
       )}
@@ -427,7 +427,7 @@ export default function PaymentScreen() {
       <View style={styles.container}>
         <StatusBar
           barStyle="dark-content"
-          backgroundColor="#FFF8F0"
+          backgroundColor="#FBF6EC"
         />
 
         <View style={styles.centerCard}>
@@ -435,7 +435,7 @@ export default function PaymentScreen() {
             <Ionicons
               name="checkmark-circle"
               size={72}
-              color="#1F6F43"
+              color="#084424"
             />
           </View>
 
@@ -475,14 +475,14 @@ export default function PaymentScreen() {
       <View style={styles.container}>
         <StatusBar
           barStyle="dark-content"
-          backgroundColor="#FFF8F0"
+          backgroundColor="#FBF6EC"
         />
 
         <View style={styles.centerCard}>
           <Ionicons
             name="close-circle"
             size={72}
-            color="#B63B3B"
+            color="#C8331A"
           />
 
           <Text style={styles.errorTitle}>
@@ -523,13 +523,13 @@ export default function PaymentScreen() {
       <View style={styles.container}>
         <StatusBar
           barStyle="dark-content"
-          backgroundColor="#FFF8F0"
+          backgroundColor="#FBF6EC"
         />
 
         <View style={styles.centerCard}>
           <ActivityIndicator
             size="large"
-            color="#D4A017"
+            color="#EAB02F"
           />
 
           <Text style={styles.processingText}>
@@ -549,7 +549,7 @@ export default function PaymentScreen() {
     <View style={styles.container}>
       <StatusBar
         barStyle="dark-content"
-        backgroundColor="#FFF8F0"
+        backgroundColor="#FBF6EC"
       />
 
       <View style={styles.header}>
@@ -590,7 +590,7 @@ export default function PaymentScreen() {
             <Ionicons
               name="lock-closed"
               size={12}
-              color="#1F6F43"
+              color="#084424"
             />
             <Text style={styles.secureBadgeText}>
               {t('checkout.securePayment')}
@@ -694,7 +694,7 @@ export default function PaymentScreen() {
             <Ionicons
               name="information-circle-outline"
               size={16}
-              color="#1F6F43"
+              color="#084424"
             />
             <Text
               style={[styles.infoText, styles.infoTextGreen]}
@@ -773,7 +773,7 @@ const styles = StyleSheet.create({
   noCardTitle: { color: '#B3261E', fontSize: 14, fontWeight: '800', marginBottom: 3 },
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   header: {
     flexDirection: 'row',
@@ -821,7 +821,7 @@ const styles = StyleSheet.create({
   amountValue: {
     fontSize: 38,
     fontWeight: '900',
-    color: '#D4A017',
+    color: '#EAB02F',
     marginBottom: 10,
   },
   secureBadge: {
@@ -872,7 +872,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   methodBtnSelected: {
-    borderColor: '#1F6F43',
+    borderColor: '#084424',
     backgroundColor: '#F0FAF4',
   },
   methodIcon: {
@@ -918,10 +918,10 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   infoTextGreen: {
-    color: '#1F6F43',
+    color: '#084424',
   },
   payBtn: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 18,
     paddingVertical: 18,
     flexDirection: 'row',
@@ -957,7 +957,7 @@ const styles = StyleSheet.create({
   successTitle: {
     fontSize: 24,
     fontWeight: '900',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 12,
     textAlign: 'center',
   },
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
   errorTitle: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#B63B3B',
+    color: '#C8331A',
     marginTop: 16,
     marginBottom: 10,
   },
@@ -989,7 +989,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   primaryBtn: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 32,

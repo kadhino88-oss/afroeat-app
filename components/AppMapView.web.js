@@ -95,7 +95,7 @@ export default function AppMapViewWeb({
           key: marker.key || `${point.x}:${point.y}`,
           x: point.x - left,
           y: point.y - top,
-          color: marker.props.pinColor || '#D96C2D',
+          color: marker.props.pinColor || '#C8331A',
           callout: getChildCallout(marker),
         };
       })

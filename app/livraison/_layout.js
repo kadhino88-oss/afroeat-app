@@ -68,7 +68,7 @@ export default function DriverLayout() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#D96C2D" />
+        <ActivityIndicator size="large" color="#C8331A" />
       </View>
     );
   }
@@ -128,7 +128,7 @@ export default function DriverLayout() {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-        contentStyle: { backgroundColor: '#FFF8F0' },
+        contentStyle: { backgroundColor: '#FBF6EC' },
       }}
     >
       {/* ================================================= */}
@@ -151,7 +151,7 @@ export default function DriverLayout() {
 const styles = StyleSheet.create({
   loader: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
   },

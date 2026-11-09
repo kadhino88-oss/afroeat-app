@@ -254,13 +254,13 @@ export default function RegisterDriverScreen() {
               onPress={handleBack}
               disabled={loading}
             >
-              <Ionicons name="arrow-back" size={22} color="#111111" />
+              <Ionicons name="arrow-back" size={22} color="#0D1C11" />
             </Pressable>
           </View>
 
           <View style={styles.header}>
             <View style={styles.iconWrapper}>
-              <Ionicons name="bicycle-outline" size={30} color="#D96C2D" />
+              <Ionicons name="bicycle-outline" size={30} color="#C8331A" />
             </View>
 
             <Text style={styles.eyebrow}>{t('auth.registerDriver.eyebrow')}</Text>
@@ -376,7 +376,7 @@ export default function RegisterDriverScreen() {
               disabled={!isValid || loading}
             >
               {loading ? (
-                <ActivityIndicator color="#111111" />
+                <ActivityIndicator color="#0D1C11" />
               ) : (
                 <Text style={styles.buttonText}>{t('auth.registerDriver.submit')}</Text>
               )}
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#D96C2D',
+    color: '#C8331A',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -470,7 +470,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
     marginTop: 6,
   },
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     borderWidth: 1,
     borderColor: '#ECE7DF',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     paddingHorizontal: 15,
     paddingVertical: 15,
     borderRadius: 16,
@@ -509,8 +509,8 @@ const styles = StyleSheet.create({
   },
 
   chipActive: {
-    backgroundColor: '#D96C2D',
-    borderColor: '#D96C2D',
+    backgroundColor: '#084424',
+    borderColor: '#C8331A',
   },
 
   chipText: {
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
 
   passwordInput: {
     flex: 1,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     paddingVertical: 15,
     fontSize: 15,
   },
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -562,7 +562,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#D96C2D',
+    backgroundColor: '#084424',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',

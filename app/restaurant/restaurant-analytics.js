@@ -108,7 +108,7 @@ export default function RestaurantAnalytics() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>{t('restaurant.analytics.title')}</Text>
@@ -118,7 +118,7 @@ export default function RestaurantAnalytics() {
 
         {loading && !analytics ? (
           <View style={styles.stateCard}>
-            <ActivityIndicator size="large" color="#1F6F43" />
+            <ActivityIndicator size="large" color="#084424" />
             <Text style={styles.stateText}>{t('restaurant.analytics.loading')}</Text>
           </View>
         ) : error ? (
@@ -140,14 +140,14 @@ export default function RestaurantAnalytics() {
                 title={t('restaurant.analytics.ordersLabel')}
                 value={analytics.totalOrders.toLocaleString(i18n.language)}
                 icon="receipt-outline"
-                color="#1F6F43"
+                color="#084424"
               />
 
               <StatCard
                 title={t('restaurant.analytics.revenueLabel')}
                 value={formatCurrency(analytics.revenue, analytics.currency, i18n.language)}
                 icon="cash-outline"
-                color="#D96C2D"
+                color="#C8331A"
               />
 
               <StatCard
@@ -163,12 +163,12 @@ export default function RestaurantAnalytics() {
                 title={t('restaurant.analytics.ratingLabel')}
                 value={analytics.ratingCount > 0 ? analytics.rating.toFixed(1) : '—'}
                 icon="star-outline"
-                color="#D4A017"
+                color="#EAB02F"
               />
             </View>
 
             <View style={styles.bottomCard}>
-              <Ionicons name="information-circle-outline" size={24} color="#1F6F43" />
+              <Ionicons name="information-circle-outline" size={24} color="#084424" />
               <Text style={styles.bottomText}>
                 {t('restaurant.analytics.dataSource', { count: analytics.paidOrders })}
               </Text>
@@ -181,7 +181,7 @@ export default function RestaurantAnalytics() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { padding: 20, flexGrow: 1 },
   title: {
     fontSize: 26,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   stateText: { marginTop: 12, color: '#666', textAlign: 'center' },
   errorText: { color: '#6A3023', textAlign: 'center', marginVertical: 14 },
   retryButton: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     paddingHorizontal: 18,
     paddingVertical: 11,
     borderRadius: 12,
@@ -240,5 +240,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  bottomText: { marginLeft: 10, color: '#1F6F43', fontWeight: '700', flex: 1 },
+  bottomText: { marginLeft: 10, color: '#084424', fontWeight: '700', flex: 1 },
 });

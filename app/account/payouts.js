@@ -59,7 +59,7 @@ export default function PayoutsScreen() {
   }, [loadStatus]);
 
   if (auth.loading) {
-    return <View style={styles.center}><ActivityIndicator size="large" color="#1F6F43" /></View>;
+    return <View style={styles.center}><ActivityIndicator size="large" color="#084424" /></View>;
   }
   if (!auth.isAuthenticated || !auth.token) return <Redirect href="/auth/role" />;
   if (!['restaurant', 'livreur'].includes(String(auth.role || auth.user?.role || '').toLowerCase())) {
@@ -108,7 +108,7 @@ export default function PayoutsScreen() {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
       <Pressable accessibilityRole="button" onPress={() => router.back()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={21} color="#1E1E1E" />
+        <Ionicons name="arrow-back" size={21} color="#0D1C11" />
       </Pressable>
 
       <Text style={styles.eyebrow}>AFROEAT</Text>
@@ -117,14 +117,14 @@ export default function PayoutsScreen() {
 
       <View style={styles.statusCard}>
         {loading ? (
-          <ActivityIndicator color="#1F6F43" />
+          <ActivityIndicator color="#084424" />
         ) : (
           <>
             <View style={styles.statusRow}>
               <Ionicons
                 name={status?.connected ? 'checkmark-circle' : 'time-outline'}
                 size={23}
-                color={status?.connected ? '#1F6F43' : '#A65D17'}
+                color={status?.connected ? '#084424' : '#A65D17'}
               />
               <Text style={styles.statusText}>{statusLabel}</Text>
             </View>
@@ -170,13 +170,13 @@ export default function PayoutsScreen() {
 
       {status?.connected && (
         <Pressable accessibilityRole="link" disabled={opening} onPress={openStripeDashboard} style={styles.refreshButton}>
-          <Ionicons name="open-outline" size={18} color="#1F6F43" />
+          <Ionicons name="open-outline" size={18} color="#084424" />
           <Text style={styles.refreshText}>{t('payouts.manageButton')}</Text>
         </Pressable>
       )}
 
       <Pressable accessibilityRole="button" disabled={loading || opening} onPress={loadStatus} style={styles.refreshButton}>
-        <Ionicons name="refresh-outline" size={18} color="#1F6F43" />
+        <Ionicons name="refresh-outline" size={18} color="#084424" />
         <Text style={styles.refreshText}>{t('payouts.refreshButton')}</Text>
       </Pressable>
 
@@ -189,12 +189,12 @@ export default function PayoutsScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { padding: 22, paddingBottom: 48 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFF8F0' },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FBF6EC' },
   backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', marginBottom: 22 },
-  eyebrow: { color: '#1F6F43', fontWeight: '900', letterSpacing: 1.2, marginBottom: 8 },
-  title: { fontSize: 28, lineHeight: 34, color: '#1E1E1E', fontWeight: '900', marginBottom: 10 },
+  eyebrow: { color: '#084424', fontWeight: '900', letterSpacing: 1.2, marginBottom: 8 },
+  title: { fontSize: 28, lineHeight: 34, color: '#0D1C11', fontWeight: '900', marginBottom: 10 },
   body: { color: '#615D57', fontSize: 15, lineHeight: 22, marginBottom: 18 },
   bodySmall: { color: '#6B655E', fontSize: 13, lineHeight: 19, marginTop: 8 },
   statusCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 14, minHeight: 68, justifyContent: 'center' },
@@ -203,12 +203,12 @@ const styles = StyleSheet.create({
   formCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 16 },
   label: { color: '#282621', fontWeight: '800', marginBottom: 8 },
   input: { borderWidth: 1, borderColor: '#DDD8D0', borderRadius: 11, minHeight: 50, paddingHorizontal: 14, fontSize: 16, color: '#22221F' },
-  primaryButton: { minHeight: 54, borderRadius: 13, backgroundColor: '#1F6F43', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 16 },
+  primaryButton: { minHeight: 54, borderRadius: 13, backgroundColor: '#084424', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 16 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   disabled: { opacity: 0.55 },
   pressed: { opacity: 0.82 },
   refreshButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 },
-  refreshText: { color: '#1F6F43', fontWeight: '800' },
+  refreshText: { color: '#084424', fontWeight: '800' },
   notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, backgroundColor: '#FFF1DD', borderRadius: 12, padding: 14, marginTop: 8 },
   noticeText: { flex: 1, color: '#6D4A1A', fontSize: 13, lineHeight: 19 },
 });

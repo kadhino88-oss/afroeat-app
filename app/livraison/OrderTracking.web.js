@@ -21,10 +21,10 @@ export default function OrderTrackingWebFallback() {
   const { t } = useTranslation();
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <View style={styles.card}>
-        <Ionicons name="map-outline" size={56} color="#D4A017" />
+        <Ionicons name="map-outline" size={56} color="#EAB02F" />
 
         <Text style={styles.title}>{t('livraison.trackingWeb.title')}</Text>
 
@@ -46,7 +46,7 @@ export default function OrderTrackingWebFallback() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 24,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     textAlign: 'center',
   },
   text: {
@@ -75,13 +75,13 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 24,
     paddingVertical: 14,
     borderRadius: 14,
   },
   buttonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 15,
   },

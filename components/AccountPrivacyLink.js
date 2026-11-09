@@ -15,7 +15,7 @@ export default function AccountPrivacyLink() {
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
       <View style={styles.iconWrap}>
-        <Ionicons name="shield-checkmark-outline" size={21} color="#1F6F43" />
+        <Ionicons name="shield-checkmark-outline" size={21} color="#084424" />
       </View>
       <View style={styles.copy}>
         <Text style={styles.title}>{t('profile.home.dataPrivacyTitle')}</Text>

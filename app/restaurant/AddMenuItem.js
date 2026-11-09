@@ -163,7 +163,7 @@ export default function AddMenuItem() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         contentContainerStyle={styles.content}
@@ -171,7 +171,7 @@ export default function AddMenuItem() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
         </View>
 
@@ -260,10 +260,10 @@ export default function AddMenuItem() {
             disabled={submitting}
           >
             {submitting ? (
-              <ActivityIndicator size="small" color="#111111" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
               <>
-                <Ionicons name="checkmark-circle-outline" size={18} color="#111111" />
+                <Ionicons name="checkmark-circle-outline" size={18} color="#0D1C11" />
                 <Text style={styles.primaryButtonText}>{t('restaurant.addMenuItem.submitButton')}</Text>
               </>
             )}
@@ -275,7 +275,7 @@ export default function AddMenuItem() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
 
   topRow: {
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   chipActive: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#0D1C11',
   },
   chipText: {
     color: '#555',
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
 
   primaryButton: {
     minHeight: 50,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 14,
     marginTop: 22,
     paddingVertical: 13,
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   primaryButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     marginLeft: 8,
     fontSize: 14,

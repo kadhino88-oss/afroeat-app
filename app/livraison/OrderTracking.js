@@ -164,7 +164,7 @@ const getStatusTone = (status) => {
     case 'Livrée':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         icon: 'checkmark-circle',
       };
     case 'En livraison':
@@ -195,7 +195,7 @@ const getStatusTone = (status) => {
     default:
       return {
         bg: '#FFF4E8',
-        text: '#D96C2D',
+        text: '#C8331A',
         icon: 'time-outline',
       };
   }
@@ -562,7 +562,7 @@ export default function OrderTrackingScreen() {
     return (
       <View style={styles.loader}>
         <StatusBar barStyle="dark-content" backgroundColor="#F7F8FA" />
-        <ActivityIndicator size="large" color="#D96C2D" />
+        <ActivityIndicator size="large" color="#C8331A" />
         <Text style={styles.loaderText}>{t('livraison.tracking.loadingTitle')}</Text>
       </View>
     );
@@ -641,7 +641,7 @@ export default function OrderTrackingScreen() {
           <Polyline
             coordinates={routeCoords}
             strokeWidth={5}
-            strokeColor="#D96C2D"
+            strokeColor="#C8331A"
             lineCap="round"
             lineJoin="round"
           />
@@ -655,7 +655,7 @@ export default function OrderTrackingScreen() {
             }}
             title={t('livraison.tracking.markerDriverTitle')}
             description={t('livraison.tracking.markerDriverDescription')}
-            pinColor="#D96C2D"
+            pinColor="#C8331A"
           />
         )}
 
@@ -674,7 +674,7 @@ export default function OrderTrackingScreen() {
 
       <View style={styles.topBar}>
         <Pressable style={styles.topButton} onPress={handleGoBack}>
-          <Ionicons name="arrow-back" size={20} color="#111111" />
+          <Ionicons name="arrow-back" size={20} color="#0D1C11" />
         </Pressable>
 
         <Pressable
@@ -683,9 +683,9 @@ export default function OrderTrackingScreen() {
           disabled={refreshing}
         >
           {refreshing ? (
-            <ActivityIndicator size="small" color="#111111" />
+            <ActivityIndicator size="small" color="#0D1C11" />
           ) : (
-            <Ionicons name="refresh-outline" size={20} color="#111111" />
+            <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
           )}
         </Pressable>
       </View>
@@ -735,7 +735,7 @@ export default function OrderTrackingScreen() {
         </View>
 
         <View style={styles.insightCard}>
-          <Ionicons name="sparkles-outline" size={16} color="#D96C2D" />
+          <Ionicons name="sparkles-outline" size={16} color="#C8331A" />
           <Text style={styles.insightText}>{driverInsight}</Text>
         </View>
 
@@ -793,7 +793,7 @@ export default function OrderTrackingScreen() {
             style={styles.primaryButton}
             onPress={handleOpenExternalNavigation}
           >
-            <Ionicons name="navigate" size={18} color="#111111" />
+            <Ionicons name="navigate" size={18} color="#0D1C11" />
             <Text style={styles.primaryButtonText}>{t('livraison.tracking.openGpsButton')}</Text>
           </Pressable>
         </View>
@@ -839,7 +839,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     fontSize: 22,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     textAlign: 'center',
   },
 
@@ -928,7 +928,7 @@ const styles = StyleSheet.create({
   panelTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -975,7 +975,7 @@ const styles = StyleSheet.create({
   },
 
   metricValue: {
-    color: '#111111',
+    color: '#0D1C11',
     fontSize: 15,
     fontWeight: '900',
   },
@@ -991,7 +991,7 @@ const styles = StyleSheet.create({
   progressFill: {
     height: '100%',
     borderRadius: 999,
-    backgroundColor: '#D96C2D',
+    backgroundColor: '#084424',
   },
 
   insightCard: {
@@ -1035,7 +1035,7 @@ const styles = StyleSheet.create({
 
   metaValue: {
     fontSize: 13,
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '800',
   },
 
@@ -1076,7 +1076,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     flex: 1,
     marginLeft: 6,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 16,
     minHeight: 52,
     flexDirection: 'row',
@@ -1086,7 +1086,7 @@ const styles = StyleSheet.create({
 
   primaryButtonText: {
     marginLeft: 8,
-    color: '#111111',
+    color: '#0D1C11',
     fontSize: 15,
     fontWeight: '900',
   },

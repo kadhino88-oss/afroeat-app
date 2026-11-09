@@ -91,7 +91,7 @@ const getHealthStyle = (status, t) => {
   if (normalized === 'healthy') {
     return {
       bg: '#E8F5ED',
-      text: '#1F6F43',
+      text: '#084424',
       border: '#CFE8D8',
       label: t('admin.dashboard.healthyLabel'),
       icon: 'checkmark-circle',
@@ -207,7 +207,7 @@ const buildQuickStats = ({ users = {}, restaurants = {}, orders = {}, ops = {} }
     label: t('admin.common.usersTitle'),
     value: normalizeNumber(users.total),
     icon: 'people-outline',
-    tint: '#1F6F43',
+    tint: '#084424',
   },
   {
     key: 'restaurants-total',
@@ -296,42 +296,42 @@ const buildNavigationItems = (t) => [
     key: 'hub',
     title: t('admin.dashboard.navHubTitle'),
     text: t('admin.dashboard.navHubText'),
-    icon: <Ionicons name="grid-outline" size={22} color="#1F6F43" />,
+    icon: <Ionicons name="grid-outline" size={22} color="#084424" />,
     route: '/admin',
   },
   {
     key: 'users',
     title: t('admin.common.usersTitle'),
     text: t('admin.dashboard.navUsersText'),
-    icon: <Ionicons name="people-outline" size={22} color="#1F6F43" />,
+    icon: <Ionicons name="people-outline" size={22} color="#084424" />,
     route: '/admin/users',
   },
   {
     key: 'restaurants',
     title: t('admin.common.restaurantsTitle'),
     text: t('admin.dashboard.navRestaurantsText'),
-    icon: <Ionicons name="storefront-outline" size={22} color="#1F6F43" />,
+    icon: <Ionicons name="storefront-outline" size={22} color="#084424" />,
     route: '/admin/restaurants',
   },
   {
     key: 'drivers',
     title: t('admin.common.driversTitle'),
     text: t('admin.dashboard.navDriversText'),
-    icon: <Ionicons name="bicycle-outline" size={22} color="#1F6F43" />,
+    icon: <Ionicons name="bicycle-outline" size={22} color="#084424" />,
     route: '/admin/drivers',
   },
   {
     key: 'orders',
     title: t('admin.common.ordersTitle'),
     text: t('admin.dashboard.navOrdersText'),
-    icon: <Ionicons name="receipt-outline" size={22} color="#1F6F43" />,
+    icon: <Ionicons name="receipt-outline" size={22} color="#084424" />,
     route: '/admin/orders',
   },
   {
     key: 'audit-logs',
     title: t('admin.dashboard.navAuditTitle'),
     text: t('admin.dashboard.navAuditText'),
-    icon: <Ionicons name="document-text-outline" size={22} color="#1F6F43" />,
+    icon: <Ionicons name="document-text-outline" size={22} color="#084424" />,
     route: '/admin/audit-logs',
   },
   {
@@ -342,7 +342,7 @@ const buildNavigationItems = (t) => [
       <MaterialCommunityIcons
         name="chart-timeline-variant"
         size={22}
-        color="#1F6F43"
+        color="#084424"
       />
     ),
     route: '/admin/live-ops',
@@ -351,7 +351,7 @@ const buildNavigationItems = (t) => [
     key: 'analytics',
     title: t('admin.dashboard.navAnalyticsTitle'),
     text: t('admin.dashboard.navAnalyticsText'),
-    icon: <Ionicons name="stats-chart-outline" size={22} color="#1F6F43" />,
+    icon: <Ionicons name="stats-chart-outline" size={22} color="#084424" />,
     route: '/admin/analytics',
   },
 ];
@@ -368,10 +368,10 @@ const StatCard = ({ label, value, iconName, tint }) => (
       <View
         style={[
           styles.statIconWrap,
-          { backgroundColor: `${tint || '#1F6F43'}14` },
+          { backgroundColor: `${tint || '#084424'}14` },
         ]}
       >
-        <Ionicons name={iconName} size={18} color={tint || '#1F6F43'} />
+        <Ionicons name={iconName} size={18} color={tint || '#084424'} />
       </View>
     </View>
     <Text style={styles.statValue}>{normalizeNumber(value)}</Text>
@@ -389,7 +389,7 @@ const CompactStatCard = ({ label, value }) => (
 const HighlightCard = ({ label, value, iconName }) => (
   <View style={styles.highlightCard}>
     <View style={styles.highlightIconWrap}>
-      <Ionicons name={iconName} size={18} color="#1F6F43" />
+      <Ionicons name={iconName} size={18} color="#084424" />
     </View>
     <View style={styles.highlightTextBlock}>
       <Text style={styles.highlightValue}>{normalizeNumber(value)}</Text>
@@ -514,8 +514,8 @@ export default function AdminDashboardScreen() {
   if (authLoading || loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.dashboard.loaderText')}</Text>
       </View>
     );
@@ -560,7 +560,7 @@ export default function AdminDashboardScreen() {
   if (!dashboard || !ops) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
           <Text style={styles.emptyTitle}>{t('admin.dashboard.emptyTitle')}</Text>
@@ -598,7 +598,7 @@ export default function AdminDashboardScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -616,7 +616,7 @@ export default function AdminDashboardScreen() {
               <Ionicons
                 name="shield-checkmark-outline"
                 size={14}
-                color="#1F6F43"
+                color="#084424"
               />
               <Text style={styles.adminPillText}>{t('admin.dashboard.securePillText')}</Text>
             </View>
@@ -632,9 +632,9 @@ export default function AdminDashboardScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -748,7 +748,7 @@ export default function AdminDashboardScreen() {
             <Ionicons
               name="checkmark-circle-outline"
               size={20}
-              color="#1F6F43"
+              color="#084424"
             />
             <Text style={styles.cleanStateText}>
               {t('admin.dashboard.noSignalText')}
@@ -837,7 +837,7 @@ export default function AdminDashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   content: {
@@ -850,7 +850,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   loaderText: {
@@ -885,7 +885,7 @@ const styles = StyleSheet.create({
 
   adminPillText: {
     marginLeft: 6,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -919,7 +919,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -960,7 +960,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -1038,7 +1038,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 12,
     marginTop: 4,
   },
@@ -1082,7 +1082,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -1120,7 +1120,7 @@ const styles = StyleSheet.create({
   compactStatValue: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -1166,7 +1166,7 @@ const styles = StyleSheet.create({
   highlightValue: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 2,
   },
 
@@ -1236,7 +1236,7 @@ const styles = StyleSheet.create({
 
   cleanStateText: {
     marginLeft: 10,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '800',
@@ -1274,7 +1274,7 @@ const styles = StyleSheet.create({
   navCardTitle: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -1293,7 +1293,7 @@ const styles = StyleSheet.create({
 
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1309,7 +1309,7 @@ const styles = StyleSheet.create({
 
   retryButton: {
     marginTop: 18,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     minHeight: 46,
     borderRadius: 14,
     paddingHorizontal: 18,

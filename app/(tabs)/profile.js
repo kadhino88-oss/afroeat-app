@@ -172,7 +172,7 @@ const getAccountStatusStyle = (status, t) => {
       return {
         label: t('profile.menu.statusActiveLabel'),
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         icon: 'checkmark-circle-outline',
       };
 
@@ -219,7 +219,7 @@ const QuickActionCard = ({ icon, label, onPress }) => (
     onPress={onPress}
   >
     <View style={styles.quickIconWrap}>
-      <Ionicons name={icon} size={24} color="#D4A017" />
+      <Ionicons name={icon} size={24} color="#EAB02F" />
     </View>
     <Text style={styles.quickText}>{label}</Text>
   </Pressable>
@@ -240,7 +240,7 @@ const MenuRow = ({ icon, label, subtitle, onPress, danger = false }) => (
         <Ionicons
           name={icon}
           size={20}
-          color={danger ? '#B63B3B' : '#1F6F43'}
+          color={danger ? '#C8331A' : '#084424'}
         />
       </View>
 
@@ -259,7 +259,7 @@ const MenuRow = ({ icon, label, subtitle, onPress, danger = false }) => (
     <Ionicons
       name="chevron-forward-outline"
       size={18}
-      color={danger ? '#B63B3B' : '#AAAAAA'}
+      color={danger ? '#C8331A' : '#AAAAAA'}
     />
   </Pressable>
 );
@@ -329,7 +329,7 @@ export default function ProfileScreen() {
     return (
       <View style={styles.loadingContainer}>
         <StatusBar barStyle="dark-content" backgroundColor="#FAFAF7" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <ActivityIndicator size="large" color="#EAB02F" />
       </View>
     );
   }
@@ -353,7 +353,7 @@ export default function ProfileScreen() {
 
           <View style={styles.guestCard}>
             <View style={styles.guestIconWrap}>
-              <Ionicons name="person-circle-outline" size={68} color="#111111" />
+              <Ionicons name="person-circle-outline" size={68} color="#0D1C11" />
             </View>
 
             <Text style={styles.guestTitle}>{t('profile.menu.guestTitle')}</Text>
@@ -547,7 +547,7 @@ export default function ProfileScreen() {
                     {LANGUAGE_FLAGS[code]}  {t(`languages.${code}`)}
                   </Text>
                   {isActive ? (
-                    <Ionicons name="checkmark" size={18} color="#1F6F43" />
+                    <Ionicons name="checkmark" size={18} color="#084424" />
                   ) : null}
                 </Pressable>
               );
@@ -615,7 +615,7 @@ const styles = StyleSheet.create({
   guestTitle: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 10,
     textAlign: 'center',
   },
@@ -630,7 +630,7 @@ const styles = StyleSheet.create({
 
   primaryGuestButton: {
     width: '100%',
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 14,
     paddingVertical: 15,
     alignItems: 'center',
@@ -638,7 +638,7 @@ const styles = StyleSheet.create({
   },
 
   primaryGuestButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontSize: 15,
     fontWeight: '800',
   },
@@ -688,7 +688,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -829,7 +829,7 @@ const styles = StyleSheet.create({
   },
 
   menuTextDanger: {
-    color: '#B63B3B',
+    color: '#C8331A',
   },
 
   menuSubtitle: {

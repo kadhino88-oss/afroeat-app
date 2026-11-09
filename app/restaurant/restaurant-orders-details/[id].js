@@ -285,7 +285,7 @@ const getStatusStyle = (status) => {
     case 'delivered':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         border: '#CFE8D8',
         slug: s,
         icon: 'checkmark-circle-outline',
@@ -330,7 +330,7 @@ const getStatusStyle = (status) => {
     default:
       return {
         bg: '#FFF0E8',
-        text: '#D96C2D',
+        text: '#C8331A',
         border: '#FFD9C6',
         slug: 'pending',
         icon: 'time-outline',
@@ -451,7 +451,7 @@ export default function RestaurantOrderDetailsScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('restaurant.orderDetails.loaderText')}</Text>
       </View>
     );
@@ -493,7 +493,7 @@ export default function RestaurantOrderDetailsScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -501,8 +501,8 @@ export default function RestaurantOrderDetailsScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => fetchOrder(true)}
-            colors={['#1F6F43']}
-            tintColor="#1F6F43"
+            colors={['#084424']}
+            tintColor="#084424"
           />
         }
         showsVerticalScrollIndicator={false}
@@ -557,20 +557,20 @@ export default function RestaurantOrderDetailsScreen() {
           <Text style={styles.sectionTitle}>{t('restaurant.orderDetails.clientSectionTitle')}</Text>
 
           <View style={styles.infoRow}>
-            <Ionicons name="person-outline" size={18} color="#1F6F43" />
+            <Ionicons name="person-outline" size={18} color="#084424" />
             <Text style={styles.infoText}>{customerName}</Text>
           </View>
 
           {!!customerPhone && (
             <View style={styles.infoRow}>
-              <Ionicons name="call-outline" size={18} color="#1F6F43" />
+              <Ionicons name="call-outline" size={18} color="#084424" />
               <Text style={styles.infoText}>{customerPhone}</Text>
             </View>
           )}
 
           {!!normalizeText(order?.deliveryAddress?.address || order?.shippingAddress?.address) && (
             <View style={styles.infoRow}>
-              <Ionicons name="location-outline" size={18} color="#1F6F43" />
+              <Ionicons name="location-outline" size={18} color="#084424" />
               <Text style={styles.infoText}>
                 {normalizeText(
                   order?.deliveryAddress?.address || order?.shippingAddress?.address
@@ -679,7 +679,7 @@ export default function RestaurantOrderDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   scrollContent: {
@@ -711,7 +711,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingHorizontal: 24,
   },
 
@@ -724,7 +724,7 @@ const styles = StyleSheet.create({
 
   emptyState: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 28,
@@ -986,7 +986,7 @@ const styles = StyleSheet.create({
   },
 
   discountValue: {
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   divider: {
@@ -1010,11 +1010,11 @@ const styles = StyleSheet.create({
   totalValue: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   primaryButton: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     paddingHorizontal: 22,
     paddingVertical: 14,
     borderRadius: 16,

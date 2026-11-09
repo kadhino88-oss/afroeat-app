@@ -77,7 +77,7 @@ const normalizeRestaurant = (data) => {
 const getOpenState = (r) => {
   return r?.isOpen === false
     ? { label: i18n.t('restaurant.profile.closedLabel'), color: '#B83232', bg: '#FDECEC' }
-    : { label: i18n.t('restaurant.profile.openLabel'), color: '#1F6F43', bg: '#E8F5ED' };
+    : { label: i18n.t('restaurant.profile.openLabel'), color: '#084424', bg: '#E8F5ED' };
 };
 
 const formatPrice = (value, currency = 'EUR') => {
@@ -206,7 +206,7 @@ export default function RestaurantProfile() {
   if (authLoading || loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <ActivityIndicator size="large" color="#084424" />
       </View>
     );
   }
@@ -239,7 +239,7 @@ export default function RestaurantProfile() {
   if (!restaurantId) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <MaterialCommunityIcons
             name="storefront-remove-outline"
@@ -257,7 +257,7 @@ export default function RestaurantProfile() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -271,7 +271,7 @@ export default function RestaurantProfile() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -280,9 +280,9 @@ export default function RestaurantProfile() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -300,7 +300,7 @@ export default function RestaurantProfile() {
             <MaterialCommunityIcons
               name="storefront-outline"
               size={28}
-              color="#1F6F43"
+              color="#084424"
             />
           </View>
 
@@ -399,7 +399,7 @@ export default function RestaurantProfile() {
             onPress={savePreparationTime}
             disabled={savingPreparationTime}
           >
-            {savingPreparationTime ? <ActivityIndicator size="small" color="#111111" /> : (
+            {savingPreparationTime ? <ActivityIndicator size="small" color="#0D1C11" /> : (
               <Text style={styles.preparationButtonText}>{t('restaurant.profile.preparationTimeSaveButton')}</Text>
             )}
           </Pressable>
@@ -410,7 +410,7 @@ export default function RestaurantProfile() {
             style={styles.primaryButton}
             onPress={() => router.push('/restaurant/MenuScreen')}
           >
-            <Ionicons name="restaurant-outline" size={18} color="#111111" />
+            <Ionicons name="restaurant-outline" size={18} color="#0D1C11" />
             <Text style={styles.primaryButtonText}>{t('restaurant.profile.viewMenuButton')}</Text>
           </Pressable>
 
@@ -418,14 +418,14 @@ export default function RestaurantProfile() {
             style={styles.secondaryButton}
             onPress={() => router.push('/restaurant/restaurant-orders')}
           >
-            <Ionicons name="receipt-outline" size={18} color="#1F6F43" />
+            <Ionicons name="receipt-outline" size={18} color="#084424" />
             <Text style={styles.secondaryButtonText}>{t('restaurant.profile.viewOrdersButton')}</Text>
           </Pressable>
           <Pressable
             style={styles.secondaryButton}
             onPress={() => router.push('/account/payouts')}
           >
-            <Ionicons name="wallet-outline" size={18} color="#1F6F43" />
+            <Ionicons name="wallet-outline" size={18} color="#084424" />
             <Text style={styles.secondaryButtonText}>{t('payouts.profileLink')}</Text>
           </Pressable>
         </View>
@@ -436,14 +436,14 @@ export default function RestaurantProfile() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
 
   loader: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   topRow: {
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -544,10 +544,10 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   preparationHelp: { color: '#6B655E', fontSize: 13, lineHeight: 19, marginBottom: 12 },
-  preparationInput: { backgroundColor: '#FFF8F0', borderWidth: 1, borderColor: '#E6D8C8', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, color: '#111111', fontSize: 16 },
+  preparationInput: { backgroundColor: '#FBF6EC', borderWidth: 1, borderColor: '#E6D8C8', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, color: '#0D1C11', fontSize: 16 },
   preparationButton: { minHeight: 46, borderRadius: 14, backgroundColor: '#FFC857', justifyContent: 'center', alignItems: 'center', marginTop: 12 },
   preparationButtonDisabled: { opacity: 0.65 },
-  preparationButtonText: { color: '#111111', fontWeight: '900', fontSize: 14 },
+  preparationButtonText: { color: '#0D1C11', fontWeight: '900', fontSize: 14 },
 
   metaRow: {
     flexDirection: 'row',
@@ -578,7 +578,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     minHeight: 50,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 14,
     paddingVertical: 13,
     paddingHorizontal: 14,
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   primaryButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     marginLeft: 8,
     fontSize: 14,
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   secondaryButtonText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '900',
     marginLeft: 8,
     fontSize: 14,

@@ -170,7 +170,7 @@ export default function LivraisonOrderDetailsScreen() {
   if (authLoading || loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#D96C2D" />
+        <ActivityIndicator size="large" color="#C8331A" />
       </View>
     );
   }
@@ -274,7 +274,7 @@ export default function LivraisonOrderDetailsScreen() {
  */
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
 
   content: {
     padding: 20,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
   },
 
   primary: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     padding: 14,
     borderRadius: 10,
     alignItems: 'center',

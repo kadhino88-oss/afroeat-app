@@ -110,7 +110,7 @@ const getStatusStyle = (status, t) => {
     case 'Livrée':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         label: t('order.status.delivered'),
         icon: 'checkmark-circle-outline',
       };
@@ -145,7 +145,7 @@ const getStatusStyle = (status, t) => {
     default:
       return {
         bg: '#FFF0E8',
-        text: '#D96C2D',
+        text: '#C8331A',
         label: normalizeText(status) ? status : t('order.status.pending'),
         icon: 'time-outline',
       };
@@ -158,7 +158,7 @@ const getPaymentStyle = (value, t) => {
   if (normalized === 'paid' || normalized === 'payé') {
     return {
       bg: '#E8F5ED',
-      text: '#1F6F43',
+      text: '#084424',
       label: t('admin.orders.paymentPaidLabel'),
       icon: 'card-outline',
     };
@@ -216,7 +216,7 @@ const getRiskStyle = (order, t) => {
 
   return {
     bg: '#E8F5ED',
-    text: '#1F6F43',
+    text: '#084424',
     label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
   };
@@ -346,7 +346,7 @@ const MetaRow = ({ icon, label, value, valueStyle, multiline = false }) => (
 const FlagBox = ({ label, value, accent, icon }) => (
   <View style={styles.flagBox}>
     <View style={styles.flagBoxTop}>
-      {icon ? <Ionicons name={icon} size={15} color={accent || '#111111'} /> : null}
+      {icon ? <Ionicons name={icon} size={15} color={accent || '#0D1C11'} /> : null}
       <Text style={[styles.flagBoxValue, accent ? { color: accent } : null]}>
         {value}
       </Text>
@@ -511,7 +511,7 @@ export default function AdminOrderDetailsScreen() {
         key: 'delivery',
         label: t('restaurant.profile.deliveryLabel'),
         value: order?.deliveryPerson?._id ? t('admin.orderDetails.deliveryAssignedValue') : t('admin.orderDetails.deliveryUnassignedValue'),
-        accent: order?.deliveryPerson?._id ? '#1F6F43' : '#B83232',
+        accent: order?.deliveryPerson?._id ? '#084424' : '#B83232',
         icon: 'bicycle-outline',
       },
       {
@@ -532,7 +532,7 @@ export default function AdminOrderDetailsScreen() {
         key: 'amount',
         label: t('admin.orderDetails.amountLabel'),
         value: formatPrice(order?.totalPrice, order?.currency || 'EUR'),
-        accent: '#D96C2D',
+        accent: '#C8331A',
         icon: 'cash-outline',
       },
     ];
@@ -556,8 +556,8 @@ export default function AdminOrderDetailsScreen() {
   if (authLoading || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.orderDetails.loaderText')}</Text>
       </View>
     );
@@ -582,7 +582,7 @@ export default function AdminOrderDetailsScreen() {
   if (!orderId) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
           <Text style={styles.emptyTitle}>{t('admin.orderDetails.notFoundTitleInvalid')}</Text>
@@ -599,7 +599,7 @@ export default function AdminOrderDetailsScreen() {
   if (!order) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
           <Text style={styles.emptyTitle}>{t('admin.orderDetails.notFoundTitle')}</Text>
@@ -626,7 +626,7 @@ export default function AdminOrderDetailsScreen() {
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={16} color="#1F6F43" />
+            <Ionicons name="arrow-back" size={16} color="#084424" />
             <Text style={styles.backLinkText}>{t('admin.orderDetails.backToOrdersLink')}</Text>
           </Pressable>
         </View>
@@ -636,7 +636,7 @@ export default function AdminOrderDetailsScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         style={styles.container}
@@ -651,7 +651,7 @@ export default function AdminOrderDetailsScreen() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -660,9 +660,9 @@ export default function AdminOrderDetailsScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -944,11 +944,11 @@ export default function AdminOrderDetailsScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   content: {
     paddingHorizontal: 16,
@@ -960,7 +960,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: {
     marginTop: 12,
@@ -996,14 +996,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: {
@@ -1289,7 +1289,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1304,7 +1304,7 @@ const styles = StyleSheet.create({
 
   retryButton: {
     marginTop: 18,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     minHeight: 46,
     borderRadius: 14,
     paddingHorizontal: 18,
@@ -1329,7 +1329,7 @@ const styles = StyleSheet.create({
   },
   backLinkText: {
     marginLeft: 8,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 14,
     fontWeight: '800',
   },

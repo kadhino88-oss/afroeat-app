@@ -158,14 +158,14 @@ const getStatusColor = (status) => {
     case 'on_the_way':
       return '#2F80ED';
     case 'preparing':
-      return '#D4A017';
+      return '#EAB02F';
     case 'confirmed':
       return '#7B61FF';
     case 'cancelled':
-      return '#C0392B';
+      return '#C8331A';
     case 'pending':
     default:
-      return '#D96C2D';
+      return '#C8331A';
   }
 };
 
@@ -544,8 +544,8 @@ export default function OrderDetailScreen() {
   if (authLoading || loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('order.loading')}</Text>
       </View>
     );
@@ -558,11 +558,11 @@ export default function OrderDetailScreen() {
   if (!order) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
         <View style={styles.emptyWrapper}>
           <Pressable style={styles.topButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <View style={styles.emptyContainer}>
@@ -592,7 +592,7 @@ export default function OrderDetailScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -600,7 +600,7 @@ export default function OrderDetailScreen() {
       >
         <View style={styles.topActions}>
           <Pressable style={styles.topButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -609,9 +609,9 @@ export default function OrderDetailScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -655,12 +655,12 @@ export default function OrderDetailScreen() {
 
           <View style={styles.metaRow}>
             <View style={styles.metaBadge}>
-              <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
+              <Ionicons name="bag-handle-outline" size={14} color="#084424" />
               <Text style={styles.metaBadgeText}>{t('order.itemsCount', { count: itemCount })}</Text>
             </View>
 
             <View style={styles.metaBadge}>
-              <Ionicons name="cash-outline" size={14} color="#D96C2D" />
+              <Ionicons name="cash-outline" size={14} color="#C8331A" />
               <Text style={styles.metaBadgeText}>
                 {formatPrice(total, order?.currency, locale)}
               </Text>
@@ -772,7 +772,7 @@ export default function OrderDetailScreen() {
 
           {normalizeStatus(order?.status) === 'cancelled' && (
             <View style={styles.cancelBox}>
-              <Ionicons name="close-circle-outline" size={18} color="#C0392B" />
+              <Ionicons name="close-circle-outline" size={18} color="#C8331A" />
               <Text style={styles.cancelText}>{t('order.cancelled')}</Text>
             </View>
           )}
@@ -832,7 +832,7 @@ export default function OrderDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   scrollContent: {
@@ -846,7 +846,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   loaderText: {
@@ -889,7 +889,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     textAlign: 'center',
     marginBottom: 8,
   },
@@ -943,7 +943,7 @@ const styles = StyleSheet.create({
   restaurantName: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 10,
   },
 
@@ -1054,7 +1054,7 @@ const styles = StyleSheet.create({
   timelineTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 16,
   },
 
@@ -1076,11 +1076,11 @@ const styles = StyleSheet.create({
   },
 
   timelineDotDone: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
   },
 
   timelineDotCurrent: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
   },
 
   timelineContent: {
@@ -1094,11 +1094,11 @@ const styles = StyleSheet.create({
   },
 
   timelineStepTextDone: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   timelineStepTextCurrent: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '900',
   },
 
@@ -1119,7 +1119,7 @@ const styles = StyleSheet.create({
 
   cancelText: {
     marginLeft: 8,
-    color: '#C0392B',
+    color: '#C8331A',
     fontWeight: '700',
     fontSize: 13,
   },
@@ -1139,7 +1139,7 @@ const styles = StyleSheet.create({
   itemsTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 14,
   },
 
@@ -1160,7 +1160,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -1172,7 +1172,7 @@ const styles = StyleSheet.create({
   itemPrice: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#D96C2D',
+    color: '#C8331A',
   },
 
   emptyItemsText: {
@@ -1200,13 +1200,13 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontWeight: '800',
     fontSize: 16,
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   totalValue: {
     fontWeight: '900',
     fontSize: 18,
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   emptyContainer: {
@@ -1219,7 +1219,7 @@ const styles = StyleSheet.create({
 
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1235,14 +1235,14 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     paddingHorizontal: 18,
     borderRadius: 14,
   },
 
   primaryButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 15,
   },

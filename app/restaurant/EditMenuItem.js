@@ -161,7 +161,7 @@ export default function EditMenuItem() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         contentContainerStyle={styles.content}
@@ -169,7 +169,7 @@ export default function EditMenuItem() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
         </View>
 
@@ -259,7 +259,7 @@ export default function EditMenuItem() {
             <Ionicons
               name={available ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
-              color={available ? '#1F6F43' : '#999'}
+              color={available ? '#084424' : '#999'}
             />
           </Pressable>
 
@@ -268,7 +268,7 @@ export default function EditMenuItem() {
             <Ionicons
               name={isPopular ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
-              color={isPopular ? '#1F6F43' : '#999'}
+              color={isPopular ? '#084424' : '#999'}
             />
           </Pressable>
 
@@ -280,7 +280,7 @@ export default function EditMenuItem() {
             <Ionicons
               name={isRecommended ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
-              color={isRecommended ? '#1F6F43' : '#999'}
+              color={isRecommended ? '#084424' : '#999'}
             />
           </Pressable>
 
@@ -290,10 +290,10 @@ export default function EditMenuItem() {
             disabled={submitting}
           >
             {submitting ? (
-              <ActivityIndicator size="small" color="#111111" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
               <>
-                <Ionicons name="save-outline" size={18} color="#111111" />
+                <Ionicons name="save-outline" size={18} color="#0D1C11" />
                 <Text style={styles.primaryButtonText}>{t('restaurant.editMenuItem.saveButton')}</Text>
               </>
             )}
@@ -305,7 +305,7 @@ export default function EditMenuItem() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
 
   topRow: {
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   chipActive: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#0D1C11',
   },
   chipText: {
     color: '#555',
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
 
   primaryButton: {
     minHeight: 50,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 14,
     marginTop: 22,
     paddingVertical: 13,
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   primaryButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     marginLeft: 8,
     fontSize: 14,

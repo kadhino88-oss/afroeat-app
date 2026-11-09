@@ -106,7 +106,7 @@ const getTargetTypeStyle = (value) => {
     case 'order':
       return { bg: '#EAF3FF', text: '#245EA8', icon: 'receipt-outline' };
     case 'system':
-      return { bg: '#E8F5ED', text: '#1F6F43', icon: 'settings-outline' };
+      return { bg: '#E8F5ED', text: '#084424', icon: 'settings-outline' };
     default:
       return { bg: '#F4F4F4', text: '#555', icon: 'ellipse-outline' };
   }
@@ -185,7 +185,7 @@ const getRiskLevel = (log, t) => {
   return {
     label: t('admin.auditLogDetails.riskStandardLabel'),
     bg: '#E8F5ED',
-    text: '#1F6F43',
+    text: '#084424',
     icon: 'checkmark-circle-outline',
   };
 };
@@ -381,14 +381,14 @@ export default function AdminAuditLogDetailsScreen() {
         key: 'has-target-id',
         value: normalizeText(log?.targetId) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.auditLogs.targetIdLabel'),
-        accent: normalizeText(log?.targetId) ? '#1F6F43' : '#8A6500',
+        accent: normalizeText(log?.targetId) ? '#084424' : '#8A6500',
         icon: 'finger-print-outline',
       },
       {
         key: 'has-ip',
         value: normalizeText(log?.ipAddress) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.auditLogDetails.ipCapturedFlagLabel'),
-        accent: normalizeText(log?.ipAddress) ? '#1F6F43' : '#8A6500',
+        accent: normalizeText(log?.ipAddress) ? '#084424' : '#8A6500',
         icon: 'globe-outline',
       },
       {
@@ -409,7 +409,7 @@ export default function AdminAuditLogDetailsScreen() {
         key: 'target-label',
         value: normalizeText(log?.targetLabel) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.auditLogDetails.targetLabelFlagLabel'),
-        accent: normalizeText(log?.targetLabel) ? '#1F6F43' : '#8A6500',
+        accent: normalizeText(log?.targetLabel) ? '#084424' : '#8A6500',
         icon: 'pricetag-outline',
       },
     ];
@@ -435,8 +435,8 @@ export default function AdminAuditLogDetailsScreen() {
   if (authLoading || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.auditLogDetails.loaderText')}</Text>
       </View>
     );
@@ -445,7 +445,7 @@ export default function AdminAuditLogDetailsScreen() {
   if (!canAccess) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="shield-outline" size={56} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
@@ -460,7 +460,7 @@ export default function AdminAuditLogDetailsScreen() {
   if (!log) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
           <Text style={styles.emptyTitle}>{t('admin.auditLogDetails.notFoundTitle')}</Text>
@@ -487,7 +487,7 @@ export default function AdminAuditLogDetailsScreen() {
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={16} color="#1F6F43" />
+            <Ionicons name="arrow-back" size={16} color="#084424" />
             <Text style={styles.backLinkText}>{t('admin.auditLogDetails.backToLogsLink')}</Text>
           </Pressable>
         </View>
@@ -497,7 +497,7 @@ export default function AdminAuditLogDetailsScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         style={styles.container}
@@ -509,7 +509,7 @@ export default function AdminAuditLogDetailsScreen() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -518,9 +518,9 @@ export default function AdminAuditLogDetailsScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -737,11 +737,11 @@ export default function AdminAuditLogDetailsScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   content: {
     paddingHorizontal: 16,
@@ -752,7 +752,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: {
     marginTop: 12,
@@ -782,14 +782,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: {
@@ -1026,7 +1026,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1041,7 +1041,7 @@ const styles = StyleSheet.create({
 
   retryButton: {
     marginTop: 18,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     minHeight: 46,
     borderRadius: 14,
     paddingHorizontal: 18,
@@ -1066,7 +1066,7 @@ const styles = StyleSheet.create({
   },
   backLinkText: {
     marginLeft: 8,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 14,
     fontWeight: '800',
   },

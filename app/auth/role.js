@@ -150,7 +150,7 @@ const ROLE_CARDS = [
       'Découvre les restaurants, ajoute au panier, commande facilement et suis tes livraisons.',
     iconType: 'ionicons',
     iconName: 'restaurant-outline',
-    accent: '#D4A017',
+    accent: '#EAB02F',
     soft: '#FFF3D8',
     dark: '#8A6500',
   },
@@ -162,9 +162,9 @@ const ROLE_CARDS = [
       'Gère ton menu, tes commandes, ton activité et ton espace partenaire AFROEAT.',
     iconType: 'material',
     iconName: 'storefront-outline',
-    accent: '#1F6F43',
+    accent: '#084424',
     soft: '#E8F5ED',
-    dark: '#1F6F43',
+    dark: '#084424',
   },
   {
     id: 'livreur',
@@ -174,7 +174,7 @@ const ROLE_CARDS = [
       'Accède à tes missions, à ton suivi terrain, à tes statuts de livraison et à ton activité.',
     iconType: 'ionicons',
     iconName: 'bicycle-outline',
-    accent: '#D96C2D',
+    accent: '#C8331A',
     soft: '#FFF0E8',
     dark: '#A6501A',
   },
@@ -289,7 +289,7 @@ export default function RoleSelectionScreen() {
         <View style={styles.loaderLogoWrap}>
           <Image source={LOGO_IMAGE} style={styles.loaderLogo} resizeMode="cover" />
         </View>
-        <ActivityIndicator size="large" color="#D4A017" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('auth.role.loadingSpace')}</Text>
       </View>
     );
@@ -302,7 +302,7 @@ export default function RoleSelectionScreen() {
         <View style={styles.loaderLogoWrap}>
           <Image source={LOGO_IMAGE} style={styles.loaderLogo} resizeMode="cover" />
         </View>
-        <ActivityIndicator size="large" color="#D4A017" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('auth.role.openingSpace')}</Text>
       </View>
     );
@@ -428,7 +428,7 @@ export default function RoleSelectionScreen() {
           ]}
           onPress={handleResetLocalData}
         >
-          <Ionicons name="refresh-outline" size={18} color="#B63B3B" />
+          <Ionicons name="refresh-outline" size={18} color="#C8331A" />
           <Text style={styles.resetButtonText}>{t('auth.role.resetLocalAccounts')}</Text>
         </Pressable>
       </ScrollView>
@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
   },
 
   brandBadge: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 999,
@@ -555,7 +555,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 10,
     letterSpacing: 0.2,
     textAlign: 'center',
@@ -599,7 +599,7 @@ const styles = StyleSheet.create({
   heroStatValue: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
   roleTitle: {
     fontSize: 17,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -725,7 +725,7 @@ const styles = StyleSheet.create({
   },
 
   infoPanel: {
-    backgroundColor: '#111111',
+    backgroundColor: '#0D1C11',
     borderRadius: 24,
     padding: 20,
     marginBottom: 16,
@@ -758,7 +758,7 @@ const styles = StyleSheet.create({
   },
 
   resetButtonText: {
-    color: '#B63B3B',
+    color: '#C8331A',
     fontWeight: '900',
     fontSize: 14,
     marginLeft: 8,

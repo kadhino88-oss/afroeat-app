@@ -153,7 +153,7 @@ const getTargetTypeStyle = (value) => {
     case 'order':
       return { bg: '#EAF3FF', text: '#245EA8' };
     case 'system':
-      return { bg: '#E8F5ED', text: '#1F6F43' };
+      return { bg: '#E8F5ED', text: '#084424' };
     default:
       return { bg: '#F4F4F4', text: '#555555' };
   }
@@ -393,8 +393,8 @@ export default function AdminAuditLogsScreen() {
   if (authLoading || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.auditLogs.loaderText')}</Text>
       </View>
     );
@@ -438,7 +438,7 @@ export default function AdminAuditLogsScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={logs}
@@ -458,7 +458,7 @@ export default function AdminAuditLogsScreen() {
           <View>
             <View style={styles.topRow}>
               <Pressable style={styles.topButton} onPress={handleGoBack}>
-                <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+                <Ionicons name="arrow-back" size={20} color="#0D1C11" />
               </Pressable>
 
               <Pressable
@@ -470,9 +470,9 @@ export default function AdminAuditLogsScreen() {
                 disabled={refreshing}
               >
                 {refreshing ? (
-                  <ActivityIndicator size="small" color="#1E1E1E" />
+                  <ActivityIndicator size="small" color="#0D1C11" />
                 ) : (
-                  <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+                  <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
                 )}
               </Pressable>
             </View>
@@ -743,7 +743,7 @@ export default function AdminAuditLogsScreen() {
  */
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
 
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
 
@@ -753,7 +753,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   loaderText: { marginTop: 12, color: '#777777', fontSize: 15 },
@@ -787,7 +787,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -795,7 +795,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -831,7 +831,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -864,7 +864,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 15,
-    color: '#111111',
+    color: '#0D1C11',
     paddingVertical: 14,
   },
 
@@ -892,7 +892,7 @@ const styles = StyleSheet.create({
   },
 
   filterChipActive: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#0D1C11',
   },
 
   filterChipText: {
@@ -912,7 +912,7 @@ const styles = StyleSheet.create({
 
   applyButton: {
     flex: 1,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',
@@ -921,7 +921,7 @@ const styles = StyleSheet.create({
   },
 
   applyButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 14,
   },
@@ -967,13 +967,13 @@ const styles = StyleSheet.create({
   resultsTitle: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
   },
 
   resultsCount: {
     fontSize: 13,
     fontWeight: '900',
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   resultsText: {
@@ -1033,7 +1033,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 17,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
     textTransform: 'capitalize',
   },
@@ -1110,7 +1110,7 @@ const styles = StyleSheet.create({
   },
 
   footerActionText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 13,
     marginRight: 8,
@@ -1125,7 +1125,7 @@ const styles = StyleSheet.create({
 
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,

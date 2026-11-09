@@ -586,8 +586,8 @@ export default function MapScreen() {
   if (loading || authLoading) {
     return (
       <View style={styles.loaderContainer}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('map.loading')}</Text>
       </View>
     );
@@ -595,7 +595,7 @@ export default function MapScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <View style={styles.topBar}>
         <Pressable
@@ -607,7 +607,7 @@ export default function MapScreen() {
           ]}
           onPress={handleBack}
         >
-          <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+          <Ionicons name="arrow-back" size={20} color="#0D1C11" />
         </Pressable>
 
         <Pressable
@@ -621,9 +621,9 @@ export default function MapScreen() {
           disabled={refreshing}
         >
           {refreshing ? (
-            <ActivityIndicator size="small" color="#1E1E1E" />
+            <ActivityIndicator size="small" color="#0D1C11" />
           ) : (
-            <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+            <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
           )}
         </Pressable>
       </View>
@@ -711,7 +711,7 @@ export default function MapScreen() {
                 latitude: restaurant.latitude,
                 longitude: restaurant.longitude,
               }}
-              pinColor="#D96C2D"
+              pinColor="#C8331A"
             >
               <Callout tooltip onPress={() => openRestaurant(restaurant)}>
                 <View style={styles.calloutCard}>
@@ -802,7 +802,7 @@ export default function MapScreen() {
           visibleBusinesses.length === 0 && (
           <View style={styles.mapOverlayEmpty}>
             {nearbyPlacesLoading ? (
-              <ActivityIndicator size="large" color="#D4A017" />
+              <ActivityIndicator size="large" color="#EAB02F" />
             ) : (
               <Ionicons name="storefront-outline" size={42} color="#C9B8A3" />
             )}
@@ -866,7 +866,7 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingTop: 40,
     paddingHorizontal: 16,
     paddingBottom: 20,
@@ -908,7 +908,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     textAlign: 'center',
     marginBottom: 8,
   },
@@ -959,8 +959,8 @@ const styles = StyleSheet.create({
   },
 
   distanceChipActive: {
-    backgroundColor: '#D4A017',
-    borderColor: '#D4A017',
+    backgroundColor: '#EAB02F',
+    borderColor: '#EAB02F',
   },
 
   distanceText: {
@@ -983,8 +983,8 @@ const styles = StyleSheet.create({
   },
 
   filterChipActive: {
-    backgroundColor: '#1E1E1E',
-    borderColor: '#1E1E1E',
+    backgroundColor: '#0D1C11',
+    borderColor: '#0D1C11',
   },
 
   filterText: {
@@ -1024,7 +1024,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 17,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     textAlign: 'center',
   },
 
@@ -1065,7 +1065,7 @@ const styles = StyleSheet.create({
 
   footerValue: {
     fontSize: 15,
-    color: '#D96C2D',
+    color: '#C8331A',
     fontWeight: '900',
   },
 
@@ -1080,7 +1080,7 @@ const styles = StyleSheet.create({
   },
 
   restaurantDot: {
-    backgroundColor: '#D96C2D',
+    backgroundColor: '#084424',
   },
 
   groceryDot: {
@@ -1114,7 +1114,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   loaderText: {
@@ -1133,7 +1133,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginTop: 16,
     marginBottom: 8,
   },
@@ -1147,14 +1147,14 @@ const styles = StyleSheet.create({
   },
 
   retryButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 14,
   },
 
   retryButtonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 15,
   },
@@ -1174,14 +1174,14 @@ const styles = StyleSheet.create({
   calloutTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
   calloutSubtitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#D96C2D',
+    color: '#C8331A',
     marginBottom: 6,
   },
 
@@ -1207,14 +1207,14 @@ const styles = StyleSheet.create({
   },
 
   calloutButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 12,
     paddingVertical: 10,
     alignItems: 'center',
   },
 
   calloutButtonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 13,
   },

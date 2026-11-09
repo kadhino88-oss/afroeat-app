@@ -80,7 +80,7 @@ export default function PartnerApplyScreen() {
   if (sent) {
     return (
       <View style={[styles.screen, styles.centered]}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.successIcon}>
           <Ionicons name="checkmark" size={38} color="#FFFFFF" />
         </View>
@@ -111,7 +111,7 @@ export default function PartnerApplyScreen() {
         <View style={styles.benefits}>
           {['benefit1', 'benefit2', 'benefit3'].map((key) => (
             <View key={key} style={styles.benefitRow}>
-              <Ionicons name="checkmark-circle" size={18} color="#1F6F43" />
+              <Ionicons name="checkmark-circle" size={18} color="#084424" />
               <Text style={styles.benefitText}>{t(`partnerApply.${key}`)}</Text>
             </View>
           ))}
@@ -154,7 +154,7 @@ export default function PartnerApplyScreen() {
             <Ionicons
               name={form.consent ? 'checkbox' : 'square-outline'}
               size={24}
-              color={form.consent ? '#1F6F43' : '#867A6C'}
+              color={form.consent ? '#084424' : '#867A6C'}
             />
             <Text style={styles.consentText}>{t('partnerApply.consent')}</Text>
           </Pressable>
@@ -194,7 +194,7 @@ function Field({ label, multiline, ...inputProps }) {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   centered: { alignItems: 'center', justifyContent: 'center', padding: 28 },
   content: { paddingBottom: 40 },
   hero: { paddingTop: 64, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#155B38' },
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   submit: { minHeight: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#155B38', paddingHorizontal: 24, marginTop: 6 },
   submitDisabled: { opacity: 0.6 },
   submitText: { color: '#FFFFFF', fontSize: 16, fontWeight: '900' },
-  successIcon: { width: 76, height: 76, borderRadius: 38, alignItems: 'center', justifyContent: 'center', backgroundColor: '#1F6F43', marginBottom: 20 },
+  successIcon: { width: 76, height: 76, borderRadius: 38, alignItems: 'center', justifyContent: 'center', backgroundColor: '#084424', marginBottom: 20 },
   successTitle: { color: '#171717', fontSize: 24, fontWeight: '900', textAlign: 'center' },
   successText: { marginTop: 10, marginBottom: 24, color: '#5C675F', fontSize: 15, lineHeight: 22, textAlign: 'center' },
 });

@@ -80,7 +80,7 @@ export default function RestaurantLayout() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <ActivityIndicator size="large" color="#084424" />
       </View>
     );
   }
@@ -107,7 +107,7 @@ export default function RestaurantLayout() {
         screenOptions={{
           headerShown: false,
           animation: 'fade',
-          contentStyle: { backgroundColor: '#FFF8F0' },
+          contentStyle: { backgroundColor: '#FBF6EC' },
         }}
       >
         <Stack.Screen name="[id]" />
@@ -132,7 +132,7 @@ export default function RestaurantLayout() {
         screenOptions={{
           headerShown: false,
           animation: 'fade',
-          contentStyle: { backgroundColor: '#FFF8F0' },
+          contentStyle: { backgroundColor: '#FBF6EC' },
         }}
       >
         <Stack.Screen name="[id]" />
@@ -166,7 +166,7 @@ export default function RestaurantLayout() {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-        contentStyle: { backgroundColor: '#FFF8F0' },
+        contentStyle: { backgroundColor: '#FBF6EC' },
       }}
     >
       {/* ================================================= */}
@@ -189,7 +189,7 @@ export default function RestaurantLayout() {
 const styles = StyleSheet.create({
   loader: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -155,7 +155,7 @@ export default function HelpScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       {/* ── Header ── */}
       <View style={styles.topBar}>
@@ -197,7 +197,7 @@ export default function HelpScreen() {
 
           {sent ? (
             <View style={styles.sentBox}>
-              <Ionicons name="checkmark-circle" size={40} color="#1F6F43" />
+              <Ionicons name="checkmark-circle" size={40} color="#084424" />
               <Text style={styles.sentTitle}>{t('profile.help.sentTitle')}</Text>
               <Text style={styles.sentText}>{t('profile.help.sentText')}</Text>
               {!!lastTicket?._id && (
@@ -321,7 +321,7 @@ export default function HelpScreen() {
 }
 
 const styles = StyleSheet.create({
-  container:       { flex: 1, backgroundColor: '#FFF8F0' },
+  container:       { flex: 1, backgroundColor: '#FBF6EC' },
   topBar:          { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 54, paddingHorizontal: 16, paddingBottom: 12 },
   backBtn:         { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#EDE5D8' },
   topTitle:        { fontSize: 18, fontWeight: '900', color: '#111' },
@@ -353,13 +353,13 @@ const styles = StyleSheet.create({
   input:           { backgroundColor: '#FAFAFA', borderWidth: 1, borderColor: '#ECE7DF', borderRadius: 14, paddingHorizontal: 14, paddingVertical: 13, fontSize: 14, color: '#111', marginBottom: 4 },
   textarea:        { minHeight: 110, paddingTop: 12 },
   charCount:       { fontSize: 11, color: '#BBB', textAlign: 'right', marginBottom: 8, fontWeight: '600' },
-  submitBtn:       { backgroundColor: '#D4A017', borderRadius: 14, paddingVertical: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 },
+  submitBtn:       { backgroundColor: '#EAB02F', borderRadius: 14, paddingVertical: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 8 },
   submitDisabled:  { opacity: 0.5 },
   submitPressed:   { opacity: 0.85 },
   submitText:      { fontSize: 15, fontWeight: '900', color: '#111' },
 
   sentBox:         { backgroundColor: '#FFF', borderRadius: 20, padding: 24, alignItems: 'center', borderWidth: 1, borderColor: '#C8EDD8' },
-  sentTitle:       { fontSize: 18, fontWeight: '900', color: '#1F6F43', marginTop: 12, marginBottom: 8 },
+  sentTitle:       { fontSize: 18, fontWeight: '900', color: '#084424', marginTop: 12, marginBottom: 8 },
   sentText:        { fontSize: 14, color: '#555', textAlign: 'center', lineHeight: 20 },
   ticketReference: { fontSize: 12, color: '#666', marginTop: 8, fontWeight: '700' },
   sentBtn:         { marginTop: 16, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 12, backgroundColor: '#F0E9DF' },

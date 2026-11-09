@@ -560,7 +560,7 @@ export default function CheckoutScreen() {
   if (!isLoggedIn) {
     return (
       <FadeInView style={styles.centeredContainer}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
         <View style={styles.guestHeroCard}>
           <View style={styles.guestBadge}>
@@ -617,7 +617,7 @@ export default function CheckoutScreen() {
   if (!isClient) {
     return (
       <FadeInView style={styles.centeredContainer}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
         <View style={styles.guestHeroCard}>
           <Ionicons
@@ -651,7 +651,7 @@ export default function CheckoutScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <View style={styles.header}>
         <Pressable
@@ -663,7 +663,7 @@ export default function CheckoutScreen() {
           ]}
           onPress={handleBack}
         >
-          <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
+          <Ionicons name="arrow-back" size={22} color="#0D1C11" />
         </Pressable>
 
         <Text style={styles.title}>{t('checkout.summary')}</Text>
@@ -712,7 +712,7 @@ export default function CheckoutScreen() {
                 <Ionicons
                   name="restaurant-outline"
                   size={18}
-                  color="#1F6F43"
+                  color="#084424"
                 />
 
                 <Text style={styles.infoText} numberOfLines={1}>
@@ -728,7 +728,7 @@ export default function CheckoutScreen() {
                 <Ionicons
                   name="location-outline"
                   size={18}
-                  color="#D96C2D"
+                  color="#C8331A"
                 />
 
                 <Text style={styles.addressTitle}>
@@ -760,7 +760,7 @@ export default function CheckoutScreen() {
                 <Ionicons
                   name="chevron-forward"
                   size={16}
-                  color="#1F6F43"
+                  color="#084424"
                 />
               </Pressable>
             </View>
@@ -799,7 +799,7 @@ export default function CheckoutScreen() {
                     onPress={handleRetryQuote}
                     disabled={quoteLoading}
                   >
-                    <Ionicons name="refresh-outline" size={15} color="#1F6F43" />
+                    <Ionicons name="refresh-outline" size={15} color="#084424" />
                     <Text style={styles.retryQuoteText}>
                       {t('checkout.retryQuote')}
                     </Text>
@@ -940,7 +940,7 @@ export default function CheckoutScreen() {
           }
         >
           {loading ? (
-            <ActivityIndicator color="#1E1E1E" />
+            <ActivityIndicator color="#0D1C11" />
           ) : (
             <Text style={styles.buttonText}>
               {t('checkout.placeOrder')}
@@ -961,13 +961,13 @@ export default function CheckoutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingTop: 18,
   },
 
   centeredContainer: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -1032,7 +1032,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   infoCard: {
@@ -1050,7 +1050,7 @@ const styles = StyleSheet.create({
 
   infoText: {
     marginLeft: 8,
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '700',
     fontSize: 14,
     flex: 1,
@@ -1079,7 +1079,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 15,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   addressText: {
@@ -1089,7 +1089,7 @@ const styles = StyleSheet.create({
   },
 
   addressTextWarning: {
-    color: '#B63B3B',
+    color: '#C8331A',
   },
 
   addressAction: {
@@ -1100,7 +1100,7 @@ const styles = StyleSheet.create({
   },
 
   addressActionText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 14,
     fontWeight: '800',
     marginRight: 4,
@@ -1160,7 +1160,7 @@ const styles = StyleSheet.create({
 
   retryQuoteText: {
     marginLeft: 6,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1202,7 +1202,7 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: '800',
     marginBottom: 4,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 15,
   },
 
@@ -1213,7 +1213,7 @@ const styles = StyleSheet.create({
 
   lineTotal: {
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 15,
   },
 
@@ -1250,7 +1250,7 @@ const styles = StyleSheet.create({
 
   summaryValue: {
     fontSize: 14,
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '800',
   },
 
@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
   totalValue: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   donationCard: {
@@ -1293,7 +1293,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontSize: 14,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   donationSubtitle: {
@@ -1320,14 +1320,14 @@ const styles = StyleSheet.create({
   },
 
   donationChipActive: {
-    backgroundColor: '#1F6F43',
-    borderColor: '#1F6F43',
+    backgroundColor: '#084424',
+    borderColor: '#084424',
   },
 
   donationChipText: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   donationChipTextActive: {
@@ -1362,7 +1362,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     padding: 16,
     borderRadius: 16,
     alignItems: 'center',
@@ -1379,7 +1379,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 16,
   },
 
@@ -1399,7 +1399,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginTop: 14,
     marginBottom: 8,
     textAlign: 'center',
@@ -1414,14 +1414,14 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 14,
   },
 
   primaryButtonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 14,
   },
@@ -1433,7 +1433,7 @@ const styles = StyleSheet.create({
   },
 
   secondaryButtonText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '800',
     fontSize: 14,
   },
