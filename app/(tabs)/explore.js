@@ -34,6 +34,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { BrandFonts } from '../../constants/brand';
+import useGridColumns, { MAX_CONTENT_WIDTH } from '../../hooks/use-grid-columns';
 
 /**
  * =========================================================
@@ -1504,6 +1505,19 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
     [handleOpenDirectoryItem, t]
   );
 
+  const columns = useGridColumns();
+  const renderGridItem = useCallback(
+    (info) =>
+      columns > 1 ? (
+        <View style={{ flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 }}>
+          {renderRestaurant(info)}
+        </View>
+      ) : (
+        renderRestaurant(info)
+      ),
+    [columns, renderRestaurant]
+  );
+
   /**
    * =========================================================
    * SAFE REDIRECT AFTER ALL HOOKS
@@ -1523,7 +1537,10 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
         keyExtractor={(item, index) =>
           `${item?._id || item?.id || 'restaurant'}-${index}`
         }
-        renderItem={renderRestaurant}
+        key={`grid-${columns}`}
+        numColumns={columns}
+        columnWrapperStyle={columns > 1 ? { marginHorizontal: -8 } : undefined}
+        renderItem={renderGridItem}
         ListHeaderComponent={renderHeader}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -1602,6 +1619,9 @@ const styles = StyleSheet.create({
   },
 
   content: {
+    width: '100%',
+    maxWidth: MAX_CONTENT_WIDTH,
+    alignSelf: 'center',
     paddingHorizontal: 16,
     paddingTop: 0,
     paddingBottom: 120,
