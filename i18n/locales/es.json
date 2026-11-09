@@ -13,7 +13,10 @@
     "explore": "Explorar",
     "orders": "Pedidos",
     "favorites": "Favoritos",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "back": "Volver",
+    "cart": "Carrito",
+    "signIn": "Iniciar sesión"
   },
   "moods": {
     "title": "¿Qué se te antoja?",

@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import {
+  Platform,
   View,
   Text,
   TouchableOpacity,
@@ -82,6 +83,8 @@ export default function HomeHeader({
     <View style={styles.wrapper}>
       <View style={styles.topGlow} />
 
+      {/* Sur le web, logo / notifications / panier / profil sont dans la barre du haut (WebNavBar). */}
+      {Platform.OS !== 'web' ? (
       <View style={styles.brandRow}>
         <View style={styles.brandLeft}>
           <View style={styles.logoWrap}>
@@ -150,6 +153,7 @@ export default function HomeHeader({
           </TouchableOpacity>
         </View>
       </View>
+      ) : null}
 
       <TouchableOpacity
         style={styles.locationCard}

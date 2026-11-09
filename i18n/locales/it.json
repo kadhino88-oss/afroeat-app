@@ -13,7 +13,10 @@
     "explore": "Esplora",
     "orders": "Ordini",
     "favorites": "Preferiti",
-    "profile": "Profilo"
+    "profile": "Profilo",
+    "back": "Indietro",
+    "cart": "Carrello",
+    "signIn": "Accedi"
   },
   "moods": {
     "title": "Cosa ti va oggi?",

@@ -13,7 +13,10 @@
     "explore": "Explorer",
     "orders": "Commandes",
     "favorites": "Favoris",
-    "profile": "Profil"
+    "profile": "Profil",
+    "back": "Retour",
+    "cart": "Panier",
+    "signIn": "Connexion"
   },
   "moods": {
     "title": "Envie du moment ?",
