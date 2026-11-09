@@ -51,6 +51,15 @@ export default function ProfilePaymentScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  const cardSetupResult = params?.cardSetup;
+  React.useEffect(() => {
+    if (cardSetupResult === 'success') {
+      setSuccessMessage(t('profile.payment.cardSaved'));
+    } else if (cardSetupResult === 'cancel') {
+      setErrorMessage(t('profile.payment.setupCancelled'));
+    }
+  }, [cardSetupResult, t]);
+
   const finishSignup = useCallback(() => {
     if (role === 'restaurant' || role === 'livreur') {
       router.replace({
@@ -105,7 +114,33 @@ export default function ProfilePaymentScreen() {
   const handleAddCard = useCallback(async () => {
     if (!token || savingCard || !consentAccepted) return;
 
-    if (Platform.OS === 'web' || !stripeAvailable) {
+    if (Platform.OS === 'web') {
+      // Web : page hébergée par Stripe (Checkout, mode setup). Aucun numéro de carte ici.
+      setSavingCard(true);
+      setErrorMessage('');
+      setSuccessMessage('');
+      try {
+        const session = await apiPost(
+          API_ENDPOINTS.payments.createCardSetupSession,
+          {
+            consentAccepted: true,
+            returnUrl:
+              typeof window !== 'undefined' ? window.location.origin : undefined,
+          },
+          token
+        );
+        if (!session?.url) {
+          throw new Error(session?.message || t('profile.payment.setupError'));
+        }
+        window.location.assign(session.url);
+      } catch (error) {
+        setErrorMessage(error?.message || t('profile.payment.saveErrorFallback'));
+        setSavingCard(false);
+      }
+      return;
+    }
+
+    if (!stripeAvailable) {
       setErrorMessage(t('profile.payment.mobileOnlyError'));
       return;
     }

@@ -678,6 +678,7 @@
       "setupError": "No se pudo preparar el registro de la tarjeta.",
       "stripeUnavailable": "El formulario de Stripe no está disponible en este dispositivo.",
       "mobileOnlyError": "Añade una tarjeta desde la aplicación móvil AFROEAT.",
+      "setupCancelled": "Se canceló el añadido de la tarjeta.",
       "refreshButton": "Actualizar tarjetas",
       "signupPromptTitle": "Tu cuenta está lista",
       "signupPromptText": "Añade ahora un método de pago para facilitar tus próximos pedidos. Es opcional y no se realizará ningún cobro.",

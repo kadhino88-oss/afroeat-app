@@ -678,6 +678,7 @@
       "setupError": "Impossibile preparare la registrazione della carta.",
       "stripeUnavailable": "Il modulo Stripe non è disponibile su questo dispositivo.",
       "mobileOnlyError": "Aggiungi una carta dall’app mobile AFROEAT.",
+      "setupCancelled": "Aggiunta della carta annullata.",
       "refreshButton": "Aggiorna carte",
       "signupPromptTitle": "Il tuo account è pronto",
       "signupPromptText": "Aggiungi ora un metodo di pagamento per semplificare i prossimi ordini. È facoltativo e non verrà effettuato alcun addebito.",

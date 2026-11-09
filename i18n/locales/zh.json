@@ -678,6 +678,7 @@
       "setupError": "无法准备银行卡保存流程。",
       "stripeUnavailable": "此设备无法使用 Stripe 表单。",
       "mobileOnlyError": "请在 AFROEAT 手机应用中添加银行卡。",
+      "setupCancelled": "已取消添加银行卡。",
       "refreshButton": "刷新银行卡",
       "signupPromptTitle": "账户已准备就绪",
       "signupPromptText": "现在添加支付方式，之后下单会更方便。此步骤为可选，不会立即扣款。",

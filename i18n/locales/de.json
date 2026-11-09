@@ -678,6 +678,7 @@
       "setupError": "Die Karteneinrichtung konnte nicht vorbereitet werden.",
       "stripeUnavailable": "Das Stripe-Formular ist auf diesem Gerät nicht verfügbar.",
       "mobileOnlyError": "Füge eine Karte in der AFROEAT-App hinzu.",
+      "setupCancelled": "Kartenhinzufügung abgebrochen.",
       "refreshButton": "Karten aktualisieren",
       "signupPromptTitle": "Dein Konto ist bereit",
       "signupPromptText": "Füge jetzt eine Zahlungsmethode hinzu, damit künftige Bestellungen einfacher bezahlt werden können. Das ist freiwillig und löst keine Zahlung aus.",

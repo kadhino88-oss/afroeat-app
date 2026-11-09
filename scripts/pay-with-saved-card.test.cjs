@@ -73,3 +73,14 @@ test('les versions imposées par Expo SDK 58 sont fixées et protégées contre 
   }
   assert.match(dependabot, /version-update:semver-major/);
 });
+
+test('profil paiement : sur le web, ajout de carte via Stripe Checkout (redirection)', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const src = fs.readFileSync(path.join(__dirname, '..', 'app', 'profile', 'payment.js'), 'utf8');
+  const api = fs.readFileSync(path.join(__dirname, '..', 'constants', 'api.js'), 'utf8');
+  assert.match(api, /createCardSetupSession:\s*'\/payments\/cards\/setup-session'/);
+  assert.match(src, /API_ENDPOINTS\.payments\.createCardSetupSession/);
+  assert.match(src, /window\.location\.assign\(session\.url\)/);
+  assert.match(src, /cardSetup/);
+});
