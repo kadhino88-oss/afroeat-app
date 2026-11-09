@@ -29,3 +29,8 @@ test("la page d'accueil web renvoie vers les pages légales", () => {
 test('eas.json définit appVersionSource', () => {
   assert.strictEqual(JSON.parse(read('eas.json')).cli.appVersionSource, 'remote');
 });
+
+test("le paiement web de commande envoie l'origine du site comme adresse de retour", () => {
+  const src = read('services/stripeService.web.js');
+  assert.match(src, /platform: 'web', returnUrl: window\.location\.origin/);
+});

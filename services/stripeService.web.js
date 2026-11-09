@@ -81,7 +81,7 @@ export const useAfroeatPayment = () => {
     try {
       const response = await apiPost(
         API_ENDPOINTS.payments.checkout,
-        { orderId, platform: 'web' },
+        { orderId, platform: 'web', returnUrl: window.location.origin },
         token
       );
       const checkoutUrl = String(response?.url || '').trim();
