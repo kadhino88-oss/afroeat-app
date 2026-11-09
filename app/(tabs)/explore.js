@@ -33,6 +33,7 @@ import {
 } from '../../services/nearbySearchSettings';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { BrandFonts } from '../../constants/brand';
 
 /**
  * =========================================================
@@ -1129,7 +1130,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
         <View style={styles.heroCard}>
           <View style={styles.heroIconWrap}>
-            <Ionicons name="compass-outline" size={22} color="#1F6F43" />
+            <Ionicons name="compass-outline" size={22} color="#084424" />
           </View>
           <View style={styles.heroTextBlock}>
             <Text style={styles.title}>{t('explore.title')}</Text>
@@ -1289,7 +1290,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           <Ionicons
             name={openOnly ? 'checkmark-circle' : 'time-outline'}
             size={17}
-            color={openOnly ? '#FFFFFF' : '#1F6F43'}
+            color={openOnly ? '#FFFFFF' : '#084424'}
           />
           <Text
             style={[
@@ -1303,7 +1304,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
         {(needsLocationPermission || usingDefaultArea) && (
           <View style={styles.locationNotice}>
-            <Ionicons name="location-outline" size={19} color="#1F6F43" />
+            <Ionicons name="location-outline" size={19} color="#084424" />
             <Text style={styles.locationNoticeText}>
               {t(usingDefaultArea ? 'explore.defaultAreaNotice' : 'explore.nearbyPermissionText', {
                 distance: selectedDistance,
@@ -1342,7 +1343,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
         {!!errorMessage && !loading && (
           <View style={styles.errorCard}>
-            <Ionicons name="warning-outline" size={18} color="#B63B3B" />
+            <Ionicons name="warning-outline" size={18} color="#C8331A" />
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         )}
@@ -1420,7 +1421,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
             {!!item?.isFeatured ? (
               <View style={styles.featuredBadge}>
-                <Ionicons name="flash-outline" size={12} color="#1E1E1E" />
+                <Ionicons name="flash-outline" size={12} color="#0D1C11" />
                 <Text style={styles.featuredBadgeText}>{t('home.featured')}</Text>
               </View>
             ) : null}
@@ -1450,7 +1451,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
               {hasRating && (
                 <View style={styles.ratingBadge}>
-                  <Ionicons name="star" size={12} color="#D4A017" />
+                  <Ionicons name="star" size={12} color="#EAB02F" />
                   <Text style={styles.cardRating}>{rating}</Text>
                 </View>
               )}
@@ -1461,7 +1462,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
             </Text>
 
             <View style={styles.cardMetaRow}>
-              <Ionicons name="location-outline" size={14} color="#777777" />
+              <Ionicons name="location-outline" size={14} color="#606D5D" />
               <Text style={styles.cardAddress} numberOfLines={1}>
                 {item?.address}
               </Text>
@@ -1515,7 +1516,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={filteredRestaurants}
@@ -1532,7 +1533,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            tintColor="#D4A017"
+            tintColor="#EAB02F"
           />
         }
         initialNumToRender={6}
@@ -1542,7 +1543,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
         ListEmptyComponent={
           loading || publicPlacesLoading ? (
             <View style={styles.loaderBox}>
-              <ActivityIndicator size="large" color="#D4A017" />
+              <ActivityIndicator size="large" color="#EAB02F" />
               <Text style={styles.loaderText}>{t('explore.loadingResults')}</Text>
             </View>
           ) : matchingDishes.length > 0 ? (
@@ -1597,7 +1598,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   content: {
@@ -1608,7 +1609,7 @@ const styles = StyleSheet.create({
   },
 
   heroCard: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     borderRadius: 24,
     padding: 18,
     marginBottom: 18,
@@ -1664,7 +1665,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 12,
     fontSize: 15,
-    color: '#111111',
+    color: '#0D1C11',
   },
 
   dishesSection: {
@@ -1691,7 +1692,7 @@ const styles = StyleSheet.create({
   },
 
   dishesCountText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '900',
   },
@@ -1731,7 +1732,7 @@ const styles = StyleSheet.create({
   dishName: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   dishRestaurant: {
@@ -1743,14 +1744,15 @@ const styles = StyleSheet.create({
   dishPrice: {
     marginTop: 6,
     fontSize: 13,
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '900',
   },
 
   sectionTitle: {
     fontSize: 22,
-    fontWeight: '900',
-    color: '#111111',
+    fontFamily: BrandFonts.display,
+    fontWeight: 'normal',
+    color: '#0D1C11',
     marginBottom: 16,
   },
 
@@ -1791,8 +1793,8 @@ const styles = StyleSheet.create({
   },
 
   distanceChipActive: {
-    backgroundColor: '#1F6F43',
-    borderColor: '#1F6F43',
+    backgroundColor: '#084424',
+    borderColor: '#084424',
   },
 
   distanceChipText: {
@@ -1816,8 +1818,8 @@ const styles = StyleSheet.create({
   },
 
   filterChipActive: {
-    backgroundColor: '#D4A017',
-    borderColor: '#D4A017',
+    backgroundColor: '#EAB02F',
+    borderColor: '#EAB02F',
   },
 
   filterChipPressed: {
@@ -1831,7 +1833,7 @@ const styles = StyleSheet.create({
   },
 
   filterChipTextActive: {
-    color: '#111111',
+    color: '#0D1C11',
   },
 
   openOnlyChip: {
@@ -1848,15 +1850,15 @@ const styles = StyleSheet.create({
   },
 
   openOnlyChipActive: {
-    backgroundColor: '#1F6F43',
-    borderColor: '#1F6F43',
+    backgroundColor: '#084424',
+    borderColor: '#084424',
   },
 
   openOnlyText: {
     marginLeft: 7,
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   openOnlyTextActive: {
@@ -1886,7 +1888,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
     paddingVertical: 8,
     borderRadius: 12,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
   },
 
   locationNoticeButtonText: {
@@ -1904,14 +1906,15 @@ const styles = StyleSheet.create({
 
   resultsTitle: {
     fontSize: 24,
-    fontWeight: '900',
-    color: '#111111',
+    fontFamily: BrandFonts.display,
+    fontWeight: 'normal',
+    color: '#0D1C11',
   },
 
   resultsSubtitle: {
     marginTop: 4,
     fontSize: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontWeight: '600',
   },
 
@@ -1935,7 +1938,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     flex: 1,
-    color: '#B63B3B',
+    color: '#C8331A',
     fontSize: 13,
     fontWeight: '600',
     marginLeft: 8,
@@ -1992,7 +1995,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 12,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   publicBadge: {
@@ -2001,7 +2004,7 @@ const styles = StyleSheet.create({
     right: 14,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -2037,14 +2040,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
     marginRight: 10,
   },
 
   ratingBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF8EA',
+    backgroundColor: '#F3E7CA',
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 5,
@@ -2053,13 +2056,13 @@ const styles = StyleSheet.create({
   cardRating: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
     marginLeft: 4,
   },
 
   cardCuisine: {
     marginTop: 8,
-    color: '#D96C2D',
+    color: '#C8331A',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -2072,7 +2075,7 @@ const styles = StyleSheet.create({
 
   cardAddress: {
     marginLeft: 6,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 13,
     flex: 1,
   },
@@ -2110,17 +2113,17 @@ const styles = StyleSheet.create({
   },
 
   statusTextOpen: {
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   statusTextClosed: {
-    color: '#B63B3B',
+    color: '#C8331A',
   },
 
   deliveryTime: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   loaderBox: {
@@ -2131,7 +2134,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -2145,29 +2148,30 @@ const styles = StyleSheet.create({
   emptyTitle: {
     marginTop: 24,
     fontSize: 22,
-    fontWeight: '900',
-    color: '#111111',
+    fontFamily: BrandFonts.display,
+    fontWeight: 'normal',
+    color: '#0D1C11',
     textAlign: 'center',
   },
 
   emptyText: {
     marginTop: 14,
     fontSize: 15,
-    color: '#777777',
+    color: '#606D5D',
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 24,
   },
 
   resetButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 16,
   },
 
   resetButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 14,
   },

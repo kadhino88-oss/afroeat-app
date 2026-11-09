@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
+import { BrandFonts } from '../constants/brand';
 import { getUnreadNotificationCount } from '../services/notificationService';
 
 const normalizeText = (value, fallback = '') => {
@@ -92,7 +93,9 @@ export default function HomeHeader({
           </View>
 
           <View style={styles.brandTextWrap}>
-            <Text style={styles.brandName}>AFROEAT</Text>
+            <Text style={styles.brandName}>
+              Afro<Text style={styles.brandAccent}>Eats</Text>
+            </Text>
             <Text style={styles.brandTagline}>{t('home.brandTagline')}</Text>
           </View>
         </View>
@@ -105,7 +108,7 @@ export default function HomeHeader({
             onPress={() => router.push('/notifications')}
             activeOpacity={0.85}
           >
-            <Ionicons name="notifications-outline" size={20} color="#181818" />
+            <Ionicons name="notifications-outline" size={20} color="#0D1C11" />
             {safeNotificationCount > 0 ? (
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>
@@ -122,7 +125,7 @@ export default function HomeHeader({
             onPress={() => router.push('/cart')}
             activeOpacity={0.85}
           >
-            <Ionicons name="basket-outline" size={20} color="#181818" />
+            <Ionicons name="basket-outline" size={20} color="#0D1C11" />
             {safeCartCount > 0 ? (
               <View style={styles.badge}>
                 <Text style={styles.badgeText}>
@@ -142,7 +145,7 @@ export default function HomeHeader({
             {safeAvatarUri ? (
               <Image source={{ uri: safeAvatarUri }} style={styles.avatar} />
             ) : (
-              <Ionicons name="person-outline" size={20} color="#181818" />
+              <Ionicons name="person-outline" size={20} color="#0D1C11" />
             )}
           </TouchableOpacity>
         </View>
@@ -154,7 +157,7 @@ export default function HomeHeader({
         onPress={() => router.push('/map')}
       >
         <View style={styles.locationIconWrap}>
-          <Ionicons name="location-sharp" size={17} color="#D4A017" />
+          <Ionicons name="location-sharp" size={17} color="#EAB02F" />
         </View>
 
         <View style={styles.locationContent}>
@@ -179,7 +182,7 @@ export default function HomeHeader({
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingTop: 18,
     paddingHorizontal: 16,
     paddingBottom: 18,
@@ -237,16 +240,21 @@ const styles = StyleSheet.create({
 
   brandName: {
     fontSize: 18,
-    fontWeight: '900',
-    color: '#111111',
+    fontFamily: BrandFonts.display,
+    fontWeight: 'normal',
+    color: '#0D1C11',
     letterSpacing: 0.3,
+  },
+
+  brandAccent: {
+    color: '#C8331A',
   },
 
   brandTagline: {
     marginTop: 2,
     fontSize: 12,
     fontWeight: '700',
-    color: '#8A7F72',
+    color: '#606D5D',
   },
 
   actionsRow: {
@@ -264,7 +272,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
     borderWidth: 1,
-    borderColor: '#EEE4D8',
+    borderColor: '#E3DECF',
     shadowColor: '#000000',
     shadowOpacity: 0.04,
     shadowRadius: 8,
@@ -323,7 +331,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: '#EEE4D8',
+    borderColor: '#E3DECF',
     flexDirection: 'row',
     alignItems: 'center',
     shadowColor: '#000000',
@@ -337,7 +345,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: '#FFF7E8',
+    backgroundColor: '#F3E7CA',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -350,14 +358,14 @@ const styles = StyleSheet.create({
 
   locationLabel: {
     fontSize: 11,
-    color: '#8A7F72',
+    color: '#606D5D',
     fontWeight: '700',
     marginBottom: 2,
   },
 
   locationValue: {
     fontSize: 14,
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
   },
 
@@ -376,8 +384,9 @@ const styles = StyleSheet.create({
 
   greeting: {
     fontSize: 24,
-    fontWeight: '900',
-    color: '#111111',
+    fontFamily: BrandFonts.display,
+    fontWeight: 'normal',
+    color: '#0D1C11',
   },
 
   subtitle: {
