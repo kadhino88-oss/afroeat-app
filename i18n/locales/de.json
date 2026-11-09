@@ -13,7 +13,10 @@
     "explore": "Entdecken",
     "orders": "Bestellungen",
     "favorites": "Favoriten",
-    "profile": "Profil"
+    "profile": "Profil",
+    "back": "Zurück",
+    "cart": "Warenkorb",
+    "signIn": "Anmelden"
   },
   "moods": {
     "title": "Worauf hast du Lust?",

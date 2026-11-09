@@ -13,7 +13,10 @@
     "explore": "Explore",
     "orders": "Orders",
     "favorites": "Favorites",
-    "profile": "Profile"
+    "profile": "Profile",
+    "back": "Back",
+    "cart": "Cart",
+    "signIn": "Sign in"
   },
   "moods": {
     "title": "Craving something?",

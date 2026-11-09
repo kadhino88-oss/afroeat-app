@@ -13,7 +13,10 @@
     "explore": "探索",
     "orders": "订单",
     "favorites": "收藏",
-    "profile": "我的"
+    "profile": "我的",
+    "back": "返回",
+    "cart": "购物车",
+    "signIn": "登录"
   },
   "moods": {
     "title": "此刻想吃点什么？",

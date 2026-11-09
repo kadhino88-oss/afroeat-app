@@ -203,7 +203,8 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: '#EAB02F',
         tabBarInactiveTintColor: '#8C8C8C',
-        tabBarStyle: styles.tabBar,
+        // Sur le web, la navigation est dans la barre du haut (WebNavBar).
+        tabBarStyle: Platform.OS === 'web' ? { display: 'none' } : styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
         sceneStyle: styles.scene,
         tabBarHideOnKeyboard: true,

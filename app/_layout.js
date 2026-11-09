@@ -3,8 +3,10 @@ import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Fraunces_600SemiBold, Fraunces_700Bold } from '@expo-google-fonts/fraunces';
-import { StyleSheet, StatusBar } from 'react-native';
+import { Platform, StyleSheet, StatusBar, View } from 'react-native';
 import AppStripeProvider from '../components/AppStripeProvider';
+import WebNavBar from '../components/WebNavBar';
+import { MAX_CONTENT_WIDTH } from '../hooks/use-grid-columns';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import { LanguageProvider } from '../context/LanguageContext';
@@ -55,9 +57,13 @@ function AppStack() {
   }, [isAuthenticated, token]);
 
   return (
-    <>
+    <View style={styles.webRoot}>
       <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
+      {/* Site web : barre de navigation (accueil, explorer, commandes, profil, panier, retour). */}
+      <WebNavBar />
+
+      <View style={styles.webContent}>
       <Stack
         initialRouteName="index"
         screenOptions={{
@@ -120,7 +126,8 @@ function AppStack() {
         {/* ================================================= */}
         <Stack.Screen name="admin" />
       </Stack>
-    </>
+      </View>
+    </View>
   );
 }
 
@@ -139,6 +146,17 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
+  // Racine : sur le web, fond crème pleine largeur ; contenu centré (1200 px max).
+  webRoot: {
+    flex: 1,
+    backgroundColor: '#FBF6EC',
+  },
+  webContent: {
+    flex: 1,
+    width: '100%',
+    maxWidth: Platform.OS === 'web' ? MAX_CONTENT_WIDTH : undefined,
+    alignSelf: 'center',
+  },
   scene: {
     flex: 1,
     backgroundColor: '#FBF6EC',
