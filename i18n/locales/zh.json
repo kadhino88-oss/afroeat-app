@@ -1436,7 +1436,8 @@
       "ordersTitle": "订单",
       "auditTitle": "审计日志",
       "auditShort": "审计",
-      "supportTitle": "支持请求"
+      "supportTitle": "支持请求",
+      "partnerApplicationsTitle": "合作伙伴申请"
     },
     "index": {
       "loaderText": "正在加载控制中心...",
@@ -1461,7 +1462,8 @@
       "auditSubtitle": "可追溯性、安全性、敏感操作控制",
       "bottomTitle": "顶级管理架构",
       "bottomText": "该入口以分区化逻辑集中管理 AFROEAT 的监管工作，对关键模块进行高级控制，并为真正的工业化全球运营打下基础。",
-      "supportSubtitle": "查看客户和合作伙伴的请求，回复并更新状态。"
+      "supportSubtitle": "查看客户和合作伙伴的请求，回复并更新状态。",
+      "partnerApplicationsSubtitle": "待审核的商家申请"
     },
     "dashboard": {
       "loaderText": "正在加载管理中心...",
@@ -1930,6 +1932,24 @@
       "markInProgress": "开始处理",
       "resolve": "回复并解决",
       "updateError": "无法更新此请求。"
+    },
+    "partnerApplications": {
+      "empty": "此筛选条件下没有申请。",
+      "loadError": "无法加载申请。",
+      "updateError": "无法更新申请。",
+      "all": "全部",
+      "new": "新申请",
+      "contacted": "已联系",
+      "approved": "已通过",
+      "rejected": "已拒绝",
+      "markContacted": "已联系",
+      "approve": "通过",
+      "reject": "拒绝",
+      "notePlaceholder": "内部备注（可选）",
+      "contact": "联系方式",
+      "website": "网站",
+      "unknown": "未说明",
+      "subtitle": "希望加入 AFROEAT 的非洲商家。"
     }
   },
   "payouts": {

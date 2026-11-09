@@ -171,6 +171,16 @@ export default function AdminIndexScreen() {
       route: '/admin/support',
     },
     {
+      key: 'partnerApplications',
+      title: t('admin.common.partnerApplicationsTitle'),
+      subtitle: t('admin.index.partnerApplicationsSubtitle'),
+      iconType: 'ionicons',
+      iconName: 'storefront-outline',
+      accent: '#084424',
+      soft: '#E3F0E8',
+      route: '/admin/partner-applications',
+    },
+    {
       key: 'audit',
       title: t('admin.common.auditTitle'),
       subtitle: t('admin.index.auditSubtitle'),

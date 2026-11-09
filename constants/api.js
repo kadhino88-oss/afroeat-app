@@ -244,6 +244,8 @@ export const API_ENDPOINTS = {
     liveOrders:       '/admin/orders/live',
     liveDrivers:      '/admin/drivers/live',
     fleetMap:         '/admin/fleet/map',
+    partnerApplications: '/admin/partner-applications',
+    partnerApplicationById: (id) => `/admin/partner-applications/${safePathParam(id)}`,
     auditLogs:        '/admin/audit-logs',
     auditLogById:     (id) => `/admin/audit-logs/${safePathParam(id)}`,
   },

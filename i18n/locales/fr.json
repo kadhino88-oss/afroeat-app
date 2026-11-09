@@ -792,10 +792,10 @@
     "noRestaurantsText": "Aucun partenaire n’est encore disponible. Recharge la liste ou vérifie le backend.",
     "publicSearchLoading": "Recherche des commerces autour de toi…",
     "zoneExpanded": "Peu de résultats : zone élargie à {{km}} km",
-      "distance": "Distance",
-      "distanceOption": "Rechercher dans un rayon de {{distance}} km",
-      "nearbyPermissionText": "La recherche utilise l’aperçu d’Annemasse dans un rayon de {{distance}} km. Active la localisation pour rechercher autour de toi.",
-      "defaultAreaNotice": "Aperçu d’Annemasse et alentours sur {{distance}} km. Active la localisation pour centrer les résultats autour de toi.",
+    "distance": "Distance",
+    "distanceOption": "Rechercher dans un rayon de {{distance}} km",
+    "nearbyPermissionText": "La recherche utilise l’aperçu d’Annemasse dans un rayon de {{distance}} km. Active la localisation pour rechercher autour de toi.",
+    "defaultAreaNotice": "Aperçu d’Annemasse et alentours sur {{distance}} km. Active la localisation pour centrer les résultats autour de toi.",
     "enableLocation": "Activer",
     "reset": "Réinitialiser",
     "retry": "Réessayer"
@@ -1436,7 +1436,8 @@
       "ordersTitle": "Commandes",
       "auditTitle": "Audit logs",
       "auditShort": "Audit",
-      "supportTitle": "Demandes support"
+      "supportTitle": "Demandes support",
+      "partnerApplicationsTitle": "Candidatures partenaires"
     },
     "index": {
       "loaderText": "Chargement du centre de contrôle...",
@@ -1461,7 +1462,8 @@
       "auditSubtitle": "Traçabilité, sécurité, contrôle des actions sensibles",
       "bottomTitle": "Architecture admin niveau DIEU",
       "bottomText": "Ce point d’entrée centralise la supervision AFROEAT avec une logique cloisonnée, un contrôle premium des blocs critiques et une base prête pour une exploitation réelle, industrielle et mondiale.",
-      "supportSubtitle": "Consulte les demandes des clients et partenaires, réponds et mets à jour leur statut."
+      "supportSubtitle": "Consulte les demandes des clients et partenaires, réponds et mets à jour leur statut.",
+      "partnerApplicationsSubtitle": "Demandes de commerces à valider"
     },
     "dashboard": {
       "loaderText": "Chargement du centre admin...",
@@ -1930,6 +1932,24 @@
       "markInProgress": "Prendre en charge",
       "resolve": "Répondre et résoudre",
       "updateError": "Impossible de mettre à jour cette demande."
+    },
+    "partnerApplications": {
+      "empty": "Aucune candidature pour ce filtre.",
+      "loadError": "Impossible de charger les candidatures.",
+      "updateError": "Impossible de mettre à jour la candidature.",
+      "all": "Toutes",
+      "new": "Nouvelles",
+      "contacted": "Contactées",
+      "approved": "Approuvées",
+      "rejected": "Refusées",
+      "markContacted": "Contacté",
+      "approve": "Approuver",
+      "reject": "Refuser",
+      "notePlaceholder": "Note interne (facultatif)",
+      "contact": "Contact",
+      "website": "Site web",
+      "unknown": "Non précisé",
+      "subtitle": "Commerces africains qui veulent rejoindre AFROEAT."
     }
   },
   "payouts": {

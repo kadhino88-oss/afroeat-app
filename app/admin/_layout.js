@@ -152,6 +152,7 @@ export default function AdminLayout() {
       <Stack.Screen name="orders" />
       <Stack.Screen name="payouts" />
       <Stack.Screen name="support" />
+      <Stack.Screen name="partner-applications" />
       <Stack.Screen name="audit-logs" />
 
       {/* Détails */}

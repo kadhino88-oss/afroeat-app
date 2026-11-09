@@ -1436,7 +1436,8 @@
       "ordersTitle": "Bestellungen",
       "auditTitle": "Audit-Protokolle",
       "auditShort": "Audit",
-      "supportTitle": "Supportanfragen"
+      "supportTitle": "Supportanfragen",
+      "partnerApplicationsTitle": "Partneranfragen"
     },
     "index": {
       "loaderText": "Kontrollzentrum wird geladen...",
@@ -1461,7 +1462,8 @@
       "auditSubtitle": "Rückverfolgbarkeit, Sicherheit, Kontrolle sensibler Aktionen",
       "bottomTitle": "Admin-Architektur auf GOTT-Niveau",
       "bottomText": "Dieser Einstiegspunkt zentralisiert die AFROEAT-Aufsicht mit einer abgeschotteten Logik, einer Premium-Kontrolle kritischer Blöcke und einer Basis, die für einen echten, industriellen, weltweiten Betrieb bereit ist.",
-      "supportSubtitle": "Anfragen von Kunden und Partnern prüfen, beantworten und den Status ändern."
+      "supportSubtitle": "Anfragen von Kunden und Partnern prüfen, beantworten und den Status ändern.",
+      "partnerApplicationsSubtitle": "Betriebsanfragen zur Prüfung"
     },
     "dashboard": {
       "loaderText": "Admin-Center wird geladen...",
@@ -1930,6 +1932,24 @@
       "markInProgress": "Bearbeitung starten",
       "resolve": "Antworten und lösen",
       "updateError": "Anfrage konnte nicht aktualisiert werden."
+    },
+    "partnerApplications": {
+      "empty": "Keine Anfragen für diesen Filter.",
+      "loadError": "Anfragen konnten nicht geladen werden.",
+      "updateError": "Anfrage konnte nicht aktualisiert werden.",
+      "all": "Alle",
+      "new": "Neu",
+      "contacted": "Kontaktiert",
+      "approved": "Genehmigt",
+      "rejected": "Abgelehnt",
+      "markContacted": "Kontaktiert",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen",
+      "notePlaceholder": "Interne Notiz (optional)",
+      "contact": "Kontakt",
+      "website": "Website",
+      "unknown": "Nicht angegeben",
+      "subtitle": "Afrikanische Betriebe, die AFROEAT beitreten möchten."
     }
   },
   "payouts": {
