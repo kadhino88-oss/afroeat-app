@@ -10,6 +10,23 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
+    # Les versions de ces paquets sont imposées par Expo SDK 58 : elles ne changent
+    # que lors d'une montée de SDK (« npx expo install --fix »), pas par mise à jour automatique.
+    # Les mises à jour de version majeure (ex. ESLint 10, TypeScript 7) sont aussi exclues :
+    # elles demandent une migration volontaire.
+    ignore:
+      - dependency-name: "expo"
+      - dependency-name: "expo-*"
+      - dependency-name: "@expo/*"
+      - dependency-name: "react"
+      - dependency-name: "react-dom"
+      - dependency-name: "react-native"
+      - dependency-name: "react-native-*"
+      - dependency-name: "@react-native-async-storage/async-storage"
+      - dependency-name: "@stripe/stripe-react-native"
+      - dependency-name: "typescript"
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "chore(deps)"
 

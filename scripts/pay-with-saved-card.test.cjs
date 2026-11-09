@@ -61,3 +61,15 @@ test('Apple Pay / Google Pay : bouton natif, confirmation serveur obligatoire, c
   assert.match(read('components', 'WalletPayButton.web.js'), /return null/);
   assert.match(payment, /<WalletPayButton/);
 });
+
+test('les versions imposées par Expo SDK 58 sont fixées et protégées contre les mises à jour automatiques', () => {
+  const pkg = JSON.parse(read('package.json'));
+  assert.equal(pkg.dependencies['@stripe/stripe-react-native'], '0.81.0');
+  assert.equal(pkg.dependencies['react-dom'], pkg.dependencies.react);
+  assert.match(pkg.devDependencies.typescript, /^~6\./);
+  const dependabot = read('.github', 'dependabot.yml');
+  for (const name of ['@stripe/stripe-react-native', 'typescript', 'react-dom', 'expo-*', 'react-native-*']) {
+    assert.ok(dependabot.includes(`dependency-name: "${name}"`), name);
+  }
+  assert.match(dependabot, /version-update:semver-major/);
+});
