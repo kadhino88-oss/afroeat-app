@@ -1436,7 +1436,8 @@
       "ordersTitle": "Ordini",
       "auditTitle": "Log di audit",
       "auditShort": "Audit",
-      "supportTitle": "Richieste di assistenza"
+      "supportTitle": "Richieste di assistenza",
+      "partnerApplicationsTitle": "Candidature partner"
     },
     "index": {
       "loaderText": "Caricamento centro di controllo...",
@@ -1461,7 +1462,8 @@
       "auditSubtitle": "Tracciabilità, sicurezza, controllo delle azioni sensibili",
       "bottomTitle": "Architettura admin livello DIO",
       "bottomText": "Questo punto d'ingresso centralizza la supervisione di AFROEAT con una logica compartimentata, un controllo premium dei blocchi critici e una base pronta per un'operatività reale, industriale e mondiale.",
-      "supportSubtitle": "Esamina le richieste di clienti e partner, rispondi e aggiorna lo stato."
+      "supportSubtitle": "Esamina le richieste di clienti e partner, rispondi e aggiorna lo stato.",
+      "partnerApplicationsSubtitle": "Richieste di attività da valutare"
     },
     "dashboard": {
       "loaderText": "Caricamento del centro admin...",
@@ -1930,6 +1932,24 @@
       "markInProgress": "Prendi in carico",
       "resolve": "Rispondi e risolvi",
       "updateError": "Impossibile aggiornare la richiesta."
+    },
+    "partnerApplications": {
+      "empty": "Nessuna candidatura per questo filtro.",
+      "loadError": "Impossibile caricare le candidature.",
+      "updateError": "Impossibile aggiornare la candidatura.",
+      "all": "Tutte",
+      "new": "Nuove",
+      "contacted": "Contattate",
+      "approved": "Approvate",
+      "rejected": "Rifiutate",
+      "markContacted": "Contattato",
+      "approve": "Approva",
+      "reject": "Rifiuta",
+      "notePlaceholder": "Nota interna (facoltativa)",
+      "contact": "Contatto",
+      "website": "Sito web",
+      "unknown": "Non indicato",
+      "subtitle": "Attività africane che vogliono unirsi ad AFROEAT."
     }
   },
   "payouts": {

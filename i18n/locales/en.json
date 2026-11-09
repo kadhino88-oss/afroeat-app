@@ -1436,7 +1436,8 @@
       "ordersTitle": "Orders",
       "auditTitle": "Audit logs",
       "auditShort": "Audit",
-      "supportTitle": "Support requests"
+      "supportTitle": "Support requests",
+      "partnerApplicationsTitle": "Partner applications"
     },
     "index": {
       "loaderText": "Loading control center...",
@@ -1461,7 +1462,8 @@
       "auditSubtitle": "Traceability, security, control of sensitive actions",
       "bottomTitle": "GOD-level admin architecture",
       "bottomText": "This entry point centralizes AFROEAT supervision with a compartmentalized logic, premium control of critical blocks, and a foundation ready for real, industrial, worldwide operation.",
-      "supportSubtitle": "Review customer and partner requests, reply, and update their status."
+      "supportSubtitle": "Review customer and partner requests, reply, and update their status.",
+      "partnerApplicationsSubtitle": "Business requests to review"
     },
     "dashboard": {
       "loaderText": "Loading admin center...",
@@ -1930,6 +1932,24 @@
       "markInProgress": "Start handling",
       "resolve": "Reply and resolve",
       "updateError": "Could not update this request."
+    },
+    "partnerApplications": {
+      "empty": "No applications for this filter.",
+      "loadError": "Could not load applications.",
+      "updateError": "Could not update the application.",
+      "all": "All",
+      "new": "New",
+      "contacted": "Contacted",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "markContacted": "Contacted",
+      "approve": "Approve",
+      "reject": "Reject",
+      "notePlaceholder": "Internal note (optional)",
+      "contact": "Contact",
+      "website": "Website",
+      "unknown": "Not specified",
+      "subtitle": "African businesses that want to join AFROEAT."
     }
   },
   "payouts": {

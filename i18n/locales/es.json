@@ -1436,7 +1436,8 @@
       "ordersTitle": "Pedidos",
       "auditTitle": "Registros de auditoría",
       "auditShort": "Auditoría",
-      "supportTitle": "Solicitudes de soporte"
+      "supportTitle": "Solicitudes de soporte",
+      "partnerApplicationsTitle": "Solicitudes de socios"
     },
     "index": {
       "loaderText": "Cargando centro de control...",
@@ -1461,7 +1462,8 @@
       "auditSubtitle": "Trazabilidad, seguridad, control de acciones sensibles",
       "bottomTitle": "Arquitectura de administración nivel DIOS",
       "bottomText": "Este punto de entrada centraliza la supervisión de AFROEAT con una lógica compartimentada, un control premium de los bloques críticos y una base lista para una operación real, industrial y mundial.",
-      "supportSubtitle": "Revisa solicitudes de clientes y socios, responde y actualiza su estado."
+      "supportSubtitle": "Revisa solicitudes de clientes y socios, responde y actualiza su estado.",
+      "partnerApplicationsSubtitle": "Solicitudes de negocios por revisar"
     },
     "dashboard": {
       "loaderText": "Cargando centro de administración...",
@@ -1930,6 +1932,24 @@
       "markInProgress": "Empezar a gestionar",
       "resolve": "Responder y resolver",
       "updateError": "No se pudo actualizar esta solicitud."
+    },
+    "partnerApplications": {
+      "empty": "No hay solicitudes con este filtro.",
+      "loadError": "No se pudieron cargar las solicitudes.",
+      "updateError": "No se pudo actualizar la solicitud.",
+      "all": "Todas",
+      "new": "Nuevas",
+      "contacted": "Contactadas",
+      "approved": "Aprobadas",
+      "rejected": "Rechazadas",
+      "markContacted": "Contactado",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "notePlaceholder": "Nota interna (opcional)",
+      "contact": "Contacto",
+      "website": "Sitio web",
+      "unknown": "No indicado",
+      "subtitle": "Negocios africanos que quieren unirse a AFROEAT."
     }
   },
   "payouts": {
