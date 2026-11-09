@@ -98,17 +98,17 @@ const getTargetTypeLabel = (value, t) => {
 const getTargetTypeStyle = (value) => {
   switch (normalizeText(value).toLowerCase()) {
     case 'user':
-      return { bg: '#EEF2FF', text: '#245EA8', icon: 'person-outline' };
+      return { bg: '#F2ECE0', text: '#084424', icon: 'person-outline' };
     case 'restaurant':
-      return { bg: '#FFF2E8', text: '#C05621', icon: 'storefront-outline' };
+      return { bg: '#F3E7CA', text: '#C8331A', icon: 'storefront-outline' };
     case 'driver':
-      return { bg: '#F3E8FF', text: '#7C3AED', icon: 'bicycle-outline' };
+      return { bg: '#E3F0E8', text: '#084424', icon: 'bicycle-outline' };
     case 'order':
-      return { bg: '#EAF3FF', text: '#245EA8', icon: 'receipt-outline' };
+      return { bg: '#F2ECE0', text: '#084424', icon: 'receipt-outline' };
     case 'system':
-      return { bg: '#E8F5ED', text: '#084424', icon: 'settings-outline' };
+      return { bg: '#E3F0E8', text: '#084424', icon: 'settings-outline' };
     default:
-      return { bg: '#F4F4F4', text: '#555', icon: 'ellipse-outline' };
+      return { bg: '#F2ECE0', text: '#555', icon: 'ellipse-outline' };
   }
 };
 
@@ -160,8 +160,8 @@ const getRiskLevel = (log, t) => {
   ) {
     return {
       label: t('admin.restaurantDetails.riskHighLabel'),
-      bg: '#FDECEC',
-      text: '#B83232',
+      bg: '#F8E1DD',
+      text: '#C8331A',
       icon: 'alert-circle-outline',
     };
   }
@@ -176,15 +176,15 @@ const getRiskLevel = (log, t) => {
   ) {
     return {
       label: t('admin.restaurantDetails.riskMediumLabel'),
-      bg: '#FFF3D8',
-      text: '#8A6500',
+      bg: '#F3E7CA',
+      text: '#301904',
       icon: 'warning-outline',
     };
   }
 
   return {
     label: t('admin.auditLogDetails.riskStandardLabel'),
-    bg: '#E8F5ED',
+    bg: '#E3F0E8',
     text: '#084424',
     icon: 'checkmark-circle-outline',
   };
@@ -232,7 +232,7 @@ const InfoCard = ({ title, children, footer }) => (
 
 const MetaRow = ({ icon, label, value, valueStyle, multiline = false }) => (
   <View style={styles.metaRow}>
-    <Ionicons name={icon} size={16} color="#6B655E" />
+    <Ionicons name={icon} size={16} color="#606D5D" />
     <Text style={styles.metaLabel}>{label}</Text>
     <Text
       style={[
@@ -381,21 +381,21 @@ export default function AdminAuditLogDetailsScreen() {
         key: 'has-target-id',
         value: normalizeText(log?.targetId) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.auditLogs.targetIdLabel'),
-        accent: normalizeText(log?.targetId) ? '#084424' : '#8A6500',
+        accent: normalizeText(log?.targetId) ? '#084424' : '#301904',
         icon: 'finger-print-outline',
       },
       {
         key: 'has-ip',
         value: normalizeText(log?.ipAddress) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.auditLogDetails.ipCapturedFlagLabel'),
-        accent: normalizeText(log?.ipAddress) ? '#084424' : '#8A6500',
+        accent: normalizeText(log?.ipAddress) ? '#084424' : '#301904',
         icon: 'globe-outline',
       },
       {
         key: 'metadata',
         value: metadataEntries.length > 0 ? String(metadataEntries.length) : '0',
         label: t('admin.auditLogDetails.metadataKeysFlagLabel'),
-        accent: metadataEntries.length > 0 ? '#245EA8' : '#666',
+        accent: metadataEntries.length > 0 ? '#084424' : '#666',
         icon: 'layers-outline',
       },
       {
@@ -409,7 +409,7 @@ export default function AdminAuditLogDetailsScreen() {
         key: 'target-label',
         value: normalizeText(log?.targetLabel) ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.auditLogDetails.targetLabelFlagLabel'),
-        accent: normalizeText(log?.targetLabel) ? '#084424' : '#8A6500',
+        accent: normalizeText(log?.targetLabel) ? '#084424' : '#301904',
         icon: 'pricetag-outline',
       },
     ];
@@ -447,7 +447,7 @@ export default function AdminAuditLogDetailsScreen() {
       <FadeInView style={styles.screen}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="shield-outline" size={56} color="#C8BBAA" />
+          <Ionicons name="shield-outline" size={56} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
           <Text style={styles.emptyText}>
             {t('admin.auditLogDetails.restrictedText')}
@@ -462,7 +462,7 @@ export default function AdminAuditLogDetailsScreen() {
       <FadeInView style={styles.screen}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
+          <Ionicons name="alert-circle-outline" size={56} color="#EAB02F" />
           <Text style={styles.emptyTitle}>{t('admin.auditLogDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
             {errorMessage || t('admin.auditLogDetails.fetchErrorFallback')}
@@ -536,7 +536,7 @@ export default function AdminAuditLogDetailsScreen() {
         <View style={styles.liveMonitorCard}>
           <View style={styles.liveMonitorHeader}>
             <View style={styles.liveMonitorTitleWrap}>
-              <Ionicons name="radio-outline" size={18} color="#245EA8" />
+              <Ionicons name="radio-outline" size={18} color="#084424" />
               <Text style={styles.liveMonitorTitle}>{t('admin.auditLogDetails.liveMonitorTitle')}</Text>
             </View>
 
@@ -725,7 +725,7 @@ export default function AdminAuditLogDetailsScreen() {
 
         {!!errorMessage ? (
           <View style={styles.softErrorCard}>
-            <Ionicons name="warning-outline" size={18} color="#B83232" />
+            <Ionicons name="warning-outline" size={18} color="#C8331A" />
             <Text style={styles.softErrorText}>{errorMessage}</Text>
           </View>
         ) : null}
@@ -793,13 +793,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
 
   liveMonitorCard: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
@@ -817,12 +817,12 @@ const styles = StyleSheet.create({
   },
   liveMonitorTitle: {
     marginLeft: 8,
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 16,
     fontWeight: '900',
   },
   liveBadge: {
-    backgroundColor: '#245EA8',
+    backgroundColor: '#084424',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -834,13 +834,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   liveMonitorText: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 8,
   },
   liveMonitorSubText: {
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -873,7 +873,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   heroSubText: {
-    color: '#7A7268',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 20,
     fontWeight: '700',
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
   metaLabel: {
     marginLeft: 8,
     width: 92,
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -946,7 +946,7 @@ const styles = StyleSheet.create({
   flagBox: {
     width: '48%',
     marginHorizontal: '1%',
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 12,
@@ -972,7 +972,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F2ECE5',
+    borderBottomColor: '#F2ECE0',
   },
   metadataBlockLast: {
     marginBottom: 0,
@@ -980,7 +980,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   metadataKey: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 13,
     fontWeight: '800',
     marginBottom: 6,
@@ -1003,7 +1003,7 @@ const styles = StyleSheet.create({
 
   softErrorCard: {
     marginTop: 2,
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     flexDirection: 'row',
@@ -1011,7 +1011,7 @@ const styles = StyleSheet.create({
   },
   softErrorText: {
     marginLeft: 8,
-    color: '#B83232',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '800',

@@ -84,35 +84,35 @@ const getStatusStyle = (status, t) => {
   switch (String(status || '').toLowerCase()) {
     case 'active':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
-        bg: '#FDECEC',
-        text: '#B83232',
+        bg: '#F8E1DD',
+        text: '#C8331A',
         label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
-        bg: '#FFF3D8',
-        text: '#8A6500',
+        bg: '#F3E7CA',
+        text: '#301904',
         label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
-        bg: '#EFE9FF',
-        text: '#6D4CDB',
+        bg: '#F2ECE0',
+        text: '#084424',
         label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
-        bg: '#F4F4F4',
+        bg: '#F2ECE0',
         text: '#555',
         label: t('admin.users.statusUnknownLabel'),
         icon: 'help-circle-outline',
@@ -123,7 +123,7 @@ const getStatusStyle = (status, t) => {
 const getDriverRiskStyle = (driver, t) => {
   if (!driver) {
     return {
-      bg: '#F4F4F4',
+      bg: '#F2ECE0',
       text: '#555',
       label: t('admin.users.statusUnknownLabel'),
       icon: 'help-circle-outline',
@@ -132,8 +132,8 @@ const getDriverRiskStyle = (driver, t) => {
 
   if (driver?.accountStatus === 'suspended' || driver?.accountStatus === 'rejected') {
     return {
-      bg: '#FDECEC',
-      text: '#B83232',
+      bg: '#F8E1DD',
+      text: '#C8331A',
       label: t('admin.restaurantDetails.riskHighLabel'),
       icon: 'alert-circle-outline',
     };
@@ -141,15 +141,15 @@ const getDriverRiskStyle = (driver, t) => {
 
   if (!driver?.isIdentityVerified || !driver?.isWorkAuthorized) {
     return {
-      bg: '#FFF3D8',
-      text: '#8A6500',
+      bg: '#F3E7CA',
+      text: '#301904',
       label: t('admin.restaurantDetails.riskMediumLabel'),
       icon: 'warning-outline',
     };
   }
 
   return {
-    bg: '#E8F5ED',
+    bg: '#E3F0E8',
     text: '#084424',
     label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
@@ -219,7 +219,7 @@ const InfoCard = ({ title, children }) => (
 
 const MetaRow = ({ icon, label, value, multiline = false, valueStyle }) => (
   <View style={styles.metaRow}>
-    <Ionicons name={icon} size={16} color="#6B655E" />
+    <Ionicons name={icon} size={16} color="#606D5D" />
     <Text style={styles.metaLabel}>{label}</Text>
     <Text
       style={[
@@ -401,21 +401,21 @@ export default function AdminDriverDetailsScreen() {
         key: 'identity',
         label: t('admin.restaurantDetails.identityFieldLabel'),
         value: driver?.isIdentityVerified ? t('admin.driverDetails.identityVerifiedValue') : t('admin.driverDetails.identityToVerifyValue'),
-        accent: driver?.isIdentityVerified ? '#084424' : '#8A6500',
+        accent: driver?.isIdentityVerified ? '#084424' : '#301904',
         icon: 'shield-checkmark-outline',
       },
       {
         key: 'work',
         label: t('admin.driverDetails.authorizationLabel'),
         value: driver?.isWorkAuthorized ? t('admin.driverDetails.workValidValue') : t('admin.driverDetails.workMissingValue'),
-        accent: driver?.isWorkAuthorized ? '#084424' : '#B83232',
+        accent: driver?.isWorkAuthorized ? '#084424' : '#C8331A',
         icon: 'briefcase-outline',
       },
       {
         key: 'availability',
         label: t('admin.driverDetails.availabilityLabel'),
         value: driver?.isAvailable ? t('admin.driverDetails.availableValue') : t('admin.driverDetails.offlineValue'),
-        accent: driver?.isAvailable ? '#245EA8' : '#666',
+        accent: driver?.isAvailable ? '#084424' : '#666',
         icon: 'radio-outline',
       },
       {
@@ -429,7 +429,7 @@ export default function AdminDriverDetailsScreen() {
         key: 'mission',
         label: t('admin.driverDetails.activeMissionLabel'),
         value: driver?.currentOrderId ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
-        accent: driver?.currentOrderId ? '#7C3AED' : '#666',
+        accent: driver?.currentOrderId ? '#084424' : '#666',
         icon: 'bicycle-outline',
       },
     ];
@@ -591,7 +591,7 @@ export default function AdminDriverDetailsScreen() {
       <FadeInView style={styles.screen}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="shield-outline" size={56} color="#C8BBAA" />
+          <Ionicons name="shield-outline" size={56} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
           <Text style={styles.emptyText}>
             {t('admin.driverDetails.restrictedText')}
@@ -606,7 +606,7 @@ export default function AdminDriverDetailsScreen() {
       <FadeInView style={styles.screen}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
+          <Ionicons name="alert-circle-outline" size={56} color="#EAB02F" />
           <Text style={styles.emptyTitle}>{t('admin.driverDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
             {errorMessage || t('admin.driverDetails.fetchErrorFallback')}
@@ -680,7 +680,7 @@ export default function AdminDriverDetailsScreen() {
         <View style={styles.liveMonitorCard}>
           <View style={styles.liveMonitorHeader}>
             <View style={styles.liveMonitorTitleWrap}>
-              <Ionicons name="radio-outline" size={18} color="#245EA8" />
+              <Ionicons name="radio-outline" size={18} color="#084424" />
               <Text style={styles.liveMonitorTitle}>{t('admin.driverDetails.liveMonitorTitleDriver')}</Text>
             </View>
 
@@ -755,7 +755,7 @@ export default function AdminDriverDetailsScreen() {
                 : '—'
             }
             icon="flash-outline"
-            tint="#245EA8"
+            tint="#084424"
           />
           <MetricCard
             label={t('admin.driverDetails.completionRateLabel')}
@@ -765,7 +765,7 @@ export default function AdminDriverDetailsScreen() {
                 : '—'
             }
             icon="trophy-outline"
-            tint="#7C3AED"
+            tint="#084424"
           />
           <MetricCard
             label={t('admin.driverDetails.earningsTodayLabel')}
@@ -838,7 +838,7 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.restaurantDetails.identityFieldLabel')}
             value={driver?.isIdentityVerified ? t('admin.driverDetails.identityVerifiedValue') : t('admin.driverDetails.identityToVerifyValue')}
             valueStyle={{
-              color: driver?.isIdentityVerified ? '#084424' : '#8A6500',
+              color: driver?.isIdentityVerified ? '#084424' : '#301904',
               fontWeight: '900',
             }}
           />
@@ -847,7 +847,7 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.restaurantDetails.workFieldLabel')}
             value={driver?.isWorkAuthorized ? t('admin.driverDetails.workAuthorizedValue') : t('admin.driverDetails.workNotValidatedValue')}
             valueStyle={{
-              color: driver?.isWorkAuthorized ? '#084424' : '#B83232',
+              color: driver?.isWorkAuthorized ? '#084424' : '#C8331A',
               fontWeight: '900',
             }}
           />
@@ -892,8 +892,8 @@ export default function AdminDriverDetailsScreen() {
                 if (!value) setDraftWorkAuthorized(false);
               }}
               disabled={updatingVerification}
-              trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
-              thumbColor={identityVerificationDraft ? '#084424' : '#F4F3F4'}
+              trackColor={{ false: '#E3DECF', true: '#E3F0E8' }}
+              thumbColor={identityVerificationDraft ? '#084424' : '#F2ECE0'}
             />
           </View>
 
@@ -924,8 +924,8 @@ export default function AdminDriverDetailsScreen() {
                 updatingVerification ||
                 (!identityVerificationDraft && !workAuthorizationDraft)
               }
-              trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
-              thumbColor={workAuthorizationDraft ? '#084424' : '#F4F3F4'}
+              trackColor={{ false: '#E3DECF', true: '#E3F0E8' }}
+              thumbColor={workAuthorizationDraft ? '#084424' : '#F2ECE0'}
             />
           </View>
 
@@ -937,7 +937,7 @@ export default function AdminDriverDetailsScreen() {
             onChangeText={setVerificationNote}
             style={styles.verificationInput}
             placeholder={t('admin.driverDetails.verificationNotePlaceholder')}
-            placeholderTextColor="#8B8379"
+            placeholderTextColor="#606D5D"
             multiline
             maxLength={500}
             textAlignVertical="top"
@@ -973,7 +973,7 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.driverDetails.availabilityLabel')}
             value={driver?.isAvailable ? t('admin.driverDetails.availableValue') : t('admin.driverDetails.offlineValue')}
             valueStyle={{
-              color: driver?.isAvailable ? '#245EA8' : '#666',
+              color: driver?.isAvailable ? '#084424' : '#666',
               fontWeight: '900',
             }}
           />
@@ -982,7 +982,7 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.driverDetails.missionFieldLabel')}
             value={driver?.currentOrderId ? t('admin.driverDetails.activeOrderDetectedValue') : t('admin.driverDetails.noActiveMissionValue')}
             valueStyle={{
-              color: driver?.currentOrderId ? '#7C3AED' : '#666',
+              color: driver?.currentOrderId ? '#084424' : '#666',
               fontWeight: '900',
             }}
           />
@@ -1010,7 +1010,7 @@ export default function AdminDriverDetailsScreen() {
               style={styles.secondaryButton}
               onPress={handleOpenCurrentOrder}
             >
-              <Ionicons name="receipt-outline" size={16} color="#245EA8" />
+              <Ionicons name="receipt-outline" size={16} color="#084424" />
               <Text style={styles.secondaryButtonText}>{t('admin.driverDetails.viewActiveOrderButton')}</Text>
             </Pressable>
 
@@ -1049,7 +1049,7 @@ export default function AdminDriverDetailsScreen() {
 
         {!!errorMessage ? (
           <View style={styles.softErrorCard}>
-            <Ionicons name="warning-outline" size={18} color="#B83232" />
+            <Ionicons name="warning-outline" size={18} color="#C8331A" />
             <Text style={styles.softErrorText}>{errorMessage}</Text>
           </View>
         ) : null}
@@ -1120,13 +1120,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
 
   liveMonitorCard: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
@@ -1144,12 +1144,12 @@ const styles = StyleSheet.create({
   },
   liveMonitorTitle: {
     marginLeft: 8,
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 16,
     fontWeight: '900',
   },
   liveBadge: {
-    backgroundColor: '#245EA8',
+    backgroundColor: '#084424',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -1161,13 +1161,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   liveMonitorText: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 8,
   },
   liveMonitorSubText: {
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1199,7 +1199,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   heroSubText: {
-    color: '#7A7268',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 20,
     fontWeight: '700',
@@ -1285,7 +1285,7 @@ const styles = StyleSheet.create({
   metaLabel: {
     marginLeft: 8,
     width: 96,
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -1308,7 +1308,7 @@ const styles = StyleSheet.create({
   flagBox: {
     width: '48%',
     marginHorizontal: '1%',
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 12,
@@ -1331,7 +1331,7 @@ const styles = StyleSheet.create({
   },
 
   verificationHint: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 20,
     marginBottom: 8,
@@ -1342,7 +1342,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0E7DA',
+    borderBottomColor: '#F3E7CA',
   },
   verificationLabelWrap: {
     flex: 1,
@@ -1355,7 +1355,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   verificationState: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 17,
   },
@@ -1369,8 +1369,8 @@ const styles = StyleSheet.create({
   verificationInput: {
     minHeight: 92,
     borderWidth: 1,
-    borderColor: '#D9D0C5',
-    backgroundColor: '#FFFCF7',
+    borderColor: '#E3DECF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     padding: 12,
     color: '#0D1C11',
@@ -1384,8 +1384,8 @@ const styles = StyleSheet.create({
   secondaryButton: {
     minHeight: 48,
     borderWidth: 1,
-    borderColor: '#D9E5FF',
-    backgroundColor: '#EEF4FF',
+    borderColor: '#E3F0E8',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 12,
@@ -1394,7 +1394,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   secondaryButtonText: {
-    color: '#245EA8',
+    color: '#084424',
     fontWeight: '900',
     marginLeft: 6,
   },
@@ -1409,7 +1409,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   primaryButtonSuccess: {
-    backgroundColor: '#CDECD7',
+    backgroundColor: '#E3F0E8',
   },
   primaryButtonDisabled: {
     opacity: 0.7,
@@ -1422,7 +1422,7 @@ const styles = StyleSheet.create({
 
   softErrorCard: {
     marginTop: 2,
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     flexDirection: 'row',
@@ -1430,7 +1430,7 @@ const styles = StyleSheet.create({
   },
   softErrorText: {
     marginLeft: 8,
-    color: '#B83232',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '800',

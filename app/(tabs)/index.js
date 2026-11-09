@@ -957,7 +957,7 @@ export default function HomeScreen() {
                 )}
                 {!!distanceText && (
                   <View style={styles.distanceBadge}>
-                    <Ionicons name="navigate-outline" size={13} color="#6B5D4D" />
+                    <Ionicons name="navigate-outline" size={13} color="#606D5D" />
                     <Text style={styles.distanceText}>{distanceText}</Text>
                   </View>
                 )}
@@ -1039,7 +1039,7 @@ export default function HomeScreen() {
               <View style={styles.heroImageShade} />
               <View style={styles.heroTextWrapper}>
                 <View style={styles.heroMiniBadge}>
-                  <Ionicons name="sparkles-outline" size={14} color="#F4C95D" />
+                  <Ionicons name="sparkles-outline" size={14} color="#EAB02F" />
                   <Text style={styles.heroMiniBadgeText}>{t('home.heroEyebrow')}</Text>
                 </View>
 
@@ -1055,7 +1055,7 @@ export default function HomeScreen() {
                   onPress={() => router.push('/(tabs)/explore')}
                 >
                   <Text style={styles.heroButtonText}>{t('home.heroButton')}</Text>
-                  <Ionicons name="arrow-forward" size={16} color="#173725" />
+                  <Ionicons name="arrow-forward" size={16} color="#084424" />
                 </Pressable>
               </View>
             </View>
@@ -1064,12 +1064,12 @@ export default function HomeScreen() {
               <Ionicons
                 name="search"
                 size={20}
-                color="#999999"
+                color="#606D5D"
                 style={styles.searchIcon}
               />
               <TextInput
                 placeholder={t('home.searchPlaceholder')}
-                placeholderTextColor="#999999"
+                placeholderTextColor="#606D5D"
                 value={search}
                 onChangeText={setSearch}
                 style={styles.searchInput}
@@ -1080,7 +1080,7 @@ export default function HomeScreen() {
               />
               {!!search && (
                 <Pressable onPress={() => setSearch('')}>
-                  <Ionicons name="close-circle" size={20} color="#999999" />
+                  <Ionicons name="close-circle" size={20} color="#606D5D" />
                 </Pressable>
               )}
             </View>
@@ -1314,7 +1314,7 @@ export default function HomeScreen() {
             <View style={styles.dishOnlySpacer} />
           ) : (
             <View style={styles.emptyContainer}>
-              <Ionicons name="restaurant-outline" size={48} color="#C4B7A6" />
+              <Ionicons name="restaurant-outline" size={48} color="#606D5D" />
               <Text style={styles.emptyTitle}>{t('home.noRestaurantFound')}</Text>
               <Text style={styles.emptyText}>
                 {t('home.emptyText')}
@@ -1380,7 +1380,7 @@ const styles = StyleSheet.create({
 
   heroMiniBadgeText: {
     marginLeft: 6,
-    color: '#FFF7E6',
+    color: '#F3E7CA',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1396,7 +1396,7 @@ const styles = StyleSheet.create({
 
   heroSubtitle: {
     fontSize: 14,
-    color: '#EDE7DD',
+    color: '#F3E7CA',
     lineHeight: 21,
     marginBottom: 16,
   },
@@ -1480,7 +1480,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginLeft: 8,
     marginBottom: 14,
-    backgroundColor: '#E8F2EB',
+    backgroundColor: '#E3DECF',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1503,7 +1503,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#F0E6D9',
+    borderColor: '#F3E7CA',
     shadowColor: '#000000',
     shadowOpacity: 0.04,
     shadowRadius: 8,
@@ -1521,7 +1521,7 @@ const styles = StyleSheet.create({
     height: 94,
     borderRadius: 12,
     marginBottom: 8,
-    backgroundColor: '#F3EDE4',
+    backgroundColor: '#F2ECE0',
   },
 
   searchDishName: {
@@ -1533,7 +1533,7 @@ const styles = StyleSheet.create({
   searchDishRestaurant: {
     marginTop: 3,
     fontSize: 11,
-    color: '#82796E',
+    color: '#606D5D',
   },
 
   searchDishPrice: {
@@ -1578,7 +1578,7 @@ const styles = StyleSheet.create({
     width: 54,
     height: 54,
     borderRadius: 27,
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
@@ -1603,7 +1603,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: '#F0E6D9',
+    borderColor: '#F3E7CA',
   },
 
   chipActive: {
@@ -1616,7 +1616,7 @@ const styles = StyleSheet.create({
   },
 
   chipText: {
-    color: '#5B5248',
+    color: '#606D5D',
     fontWeight: '700',
     fontSize: 13,
   },
@@ -1664,7 +1664,7 @@ const styles = StyleSheet.create({
 
   moodDishRestaurant: {
     fontSize: 11,
-    color: '#999999',
+    color: '#606D5D',
     marginBottom: 4,
   },
 
@@ -1675,7 +1675,7 @@ const styles = StyleSheet.create({
   },
 
   moodEmptyText: {
-    color: '#999999',
+    color: '#606D5D',
     fontSize: 13,
     marginBottom: 18,
   },
@@ -1718,7 +1718,7 @@ const styles = StyleSheet.create({
   restaurantImage: {
     width: '100%',
     height: 190,
-    backgroundColor: '#F3EDE4',
+    backgroundColor: '#F2ECE0',
   },
 
   publicBrandPanel: {
@@ -1731,7 +1731,7 @@ const styles = StyleSheet.create({
   },
 
   publicListingLabel: {
-    color: '#6D6358',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -1739,7 +1739,7 @@ const styles = StyleSheet.create({
   nearbyNotice: {
     marginTop: -8,
     marginBottom: 14,
-    color: '#655B50',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 17,
   },
@@ -1773,11 +1773,11 @@ const styles = StyleSheet.create({
   },
 
   statusBadgeOpen: {
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
   },
 
   statusBadgeClosed: {
-    backgroundColor: '#FDEAEA',
+    backgroundColor: '#F8E1DD',
   },
 
   statusBadgeText: {
@@ -1884,7 +1884,7 @@ const styles = StyleSheet.create({
 
   distanceText: {
     marginLeft: 5,
-    color: '#6B5D4D',
+    color: '#606D5D',
     fontWeight: '700',
     fontSize: 12,
   },
@@ -1915,9 +1915,9 @@ const styles = StyleSheet.create({
   errorCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FDEAEA',
+    backgroundColor: '#F8E1DD',
     borderWidth: 1,
-    borderColor: '#F4C7C7',
+    borderColor: '#F8E1DD',
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,

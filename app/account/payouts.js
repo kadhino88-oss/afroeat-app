@@ -124,7 +124,7 @@ export default function PayoutsScreen() {
               <Ionicons
                 name={status?.connected ? 'checkmark-circle' : 'time-outline'}
                 size={23}
-                color={status?.connected ? '#084424' : '#A65D17'}
+                color={status?.connected ? '#084424' : '#C8331A'}
               />
               <Text style={styles.statusText}>{statusLabel}</Text>
             </View>
@@ -147,7 +147,7 @@ export default function PayoutsScreen() {
             autoCorrect={false}
             maxLength={2}
             placeholder={t('payouts.countryPlaceholder')}
-            placeholderTextColor="#8C8984"
+            placeholderTextColor="#606D5D"
             editable={!opening}
             accessibilityLabel={t('payouts.countryLabel')}
             style={styles.input}
@@ -181,7 +181,7 @@ export default function PayoutsScreen() {
       </Pressable>
 
       <View style={styles.notice}>
-        <Ionicons name="lock-closed-outline" size={19} color="#8A4B12" />
+        <Ionicons name="lock-closed-outline" size={19} color="#301904" />
         <Text style={styles.noticeText}>{t('payouts.secureNotice')}</Text>
       </View>
     </ScrollView>
@@ -195,20 +195,20 @@ const styles = StyleSheet.create({
   backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', marginBottom: 22 },
   eyebrow: { color: '#084424', fontWeight: '900', letterSpacing: 1.2, marginBottom: 8 },
   title: { fontSize: 28, lineHeight: 34, color: '#0D1C11', fontWeight: '900', marginBottom: 10 },
-  body: { color: '#615D57', fontSize: 15, lineHeight: 22, marginBottom: 18 },
-  bodySmall: { color: '#6B655E', fontSize: 13, lineHeight: 19, marginTop: 8 },
+  body: { color: '#606D5D', fontSize: 15, lineHeight: 22, marginBottom: 18 },
+  bodySmall: { color: '#606D5D', fontSize: 13, lineHeight: 19, marginTop: 8 },
   statusCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 14, minHeight: 68, justifyContent: 'center' },
   statusRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  statusText: { color: '#22221F', fontSize: 16, fontWeight: '800' },
+  statusText: { color: '#0D1C11', fontSize: 16, fontWeight: '800' },
   formCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 16 },
-  label: { color: '#282621', fontWeight: '800', marginBottom: 8 },
-  input: { borderWidth: 1, borderColor: '#DDD8D0', borderRadius: 11, minHeight: 50, paddingHorizontal: 14, fontSize: 16, color: '#22221F' },
+  label: { color: '#0D1C11', fontWeight: '800', marginBottom: 8 },
+  input: { borderWidth: 1, borderColor: '#E3DECF', borderRadius: 11, minHeight: 50, paddingHorizontal: 14, fontSize: 16, color: '#0D1C11' },
   primaryButton: { minHeight: 54, borderRadius: 13, backgroundColor: '#084424', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 16 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   disabled: { opacity: 0.55 },
   pressed: { opacity: 0.82 },
   refreshButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginTop: 4 },
   refreshText: { color: '#084424', fontWeight: '800' },
-  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, backgroundColor: '#FFF1DD', borderRadius: 12, padding: 14, marginTop: 8 },
-  noticeText: { flex: 1, color: '#6D4A1A', fontSize: 13, lineHeight: 19 },
+  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, backgroundColor: '#F3E7CA', borderRadius: 12, padding: 14, marginTop: 8 },
+  noticeText: { flex: 1, color: '#301904', fontSize: 13, lineHeight: 19 },
 });

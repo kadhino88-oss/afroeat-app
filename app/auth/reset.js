@@ -109,7 +109,7 @@ export default function ResetScreen() {
         {/* IP Config */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="wifi-outline" size={20} color="#245EA8" />
+            <Ionicons name="wifi-outline" size={20} color="#084424" />
             <Text style={styles.cardTitle}>{t('auth.reset.networkConfigTitle')}</Text>
           </View>
           <Text style={styles.label}>{t('auth.reset.detectedUrlLabel')}</Text>
@@ -127,7 +127,7 @@ export default function ResetScreen() {
             disabled={testing}
           >
             {testing
-              ? <ActivityIndicator size="small" color="#245EA8" />
+              ? <ActivityIndicator size="small" color="#084424" />
               : <Text style={styles.btnSecondaryText}>{t('auth.reset.testServerButton')}</Text>}
           </Pressable>
 
@@ -168,7 +168,7 @@ export default function ResetScreen() {
         {/* Instructions */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="help-circle-outline" size={20} color="#8A6500" />
+            <Ionicons name="help-circle-outline" size={20} color="#301904" />
             <Text style={styles.cardTitle}>{t('auth.reset.checklistTitle')}</Text>
           </View>
           {t('auth.reset.checklist', { returnObjects: true }).map((item, i) => (
@@ -194,20 +194,20 @@ const styles = StyleSheet.create({
   backBtn: {
     width: 42, height: 42, borderRadius: 21,
     backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center',
-    borderWidth: 1, borderColor: '#EDE5D8',
+    borderWidth: 1, borderColor: '#F3E7CA',
   },
   topTitle: { fontSize: 17, fontWeight: '900', color: '#111' },
   pressed: { opacity: 0.75 },
   content: { padding: 16, paddingBottom: 40 },
   card: {
     backgroundColor: '#fff', borderRadius: 20, padding: 18,
-    marginBottom: 16, borderWidth: 1, borderColor: '#F2E9DD',
+    marginBottom: 16, borderWidth: 1, borderColor: '#F2ECE0',
   },
   cardHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 14, gap: 8 },
   cardTitle: { fontSize: 16, fontWeight: '900', color: '#111' },
   label: { fontSize: 13, fontWeight: '700', color: '#666', marginBottom: 6 },
   codeBox: {
-    backgroundColor: '#F5F0EB', borderRadius: 10, padding: 12, marginBottom: 10,
+    backgroundColor: '#F2ECE0', borderRadius: 10, padding: 12, marginBottom: 10,
   },
   codeText: { fontSize: 13, fontFamily: 'monospace', color: '#333' },
   hint: { fontSize: 13, color: '#666', lineHeight: 20, marginBottom: 14 },
@@ -216,17 +216,17 @@ const styles = StyleSheet.create({
     borderRadius: 14, paddingVertical: 14, paddingHorizontal: 16,
     alignItems: 'center', justifyContent: 'center',
   },
-  btnSecondary: { backgroundColor: '#EEF4FF', borderWidth: 1, borderColor: '#C5D9F5' },
-  btnSecondaryText: { fontSize: 14, fontWeight: '800', color: '#245EA8' },
-  btnDanger: { backgroundColor: '#D93025', marginTop: 4 },
+  btnSecondary: { backgroundColor: '#F2ECE0', borderWidth: 1, borderColor: '#E3F0E8' },
+  btnSecondaryText: { fontSize: 14, fontWeight: '800', color: '#084424' },
+  btnDanger: { backgroundColor: '#C8331A', marginTop: 4 },
   btnDangerText: { fontSize: 14, fontWeight: '800', color: '#fff' },
   btnDisabled: { opacity: 0.5 },
   statusBox: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
     borderRadius: 12, padding: 12, marginTop: 12,
   },
-  statusOk: { backgroundColor: '#EDFAF1' },
-  statusErr: { backgroundColor: '#FDEAEA' },
+  statusOk: { backgroundColor: '#E3F0E8' },
+  statusErr: { backgroundColor: '#F8E1DD' },
   statusText: { fontSize: 13, fontWeight: '700', flex: 1 },
   statusTextOk: { color: '#084424' },
   statusTextErr: { color: '#C8331A' },

@@ -104,36 +104,36 @@ const getStatusStyle = (status, t) => {
   switch (normalizeText(status).toLowerCase()) {
     case 'active':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
-        bg: '#FDECEC',
-        text: '#B83232',
+        bg: '#F8E1DD',
+        text: '#C8331A',
         label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
-        bg: '#FFF3D8',
-        text: '#8A6500',
+        bg: '#F3E7CA',
+        text: '#301904',
         label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
-        bg: '#EFE9FF',
-        text: '#6D4CDB',
+        bg: '#F2ECE0',
+        text: '#084424',
         label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
-        bg: '#F4F4F4',
-        text: '#555555',
+        bg: '#F2ECE0',
+        text: '#606D5D',
         label: t('admin.users.statusUnknownLabel'),
         icon: 'help-circle-outline',
       };
@@ -164,22 +164,22 @@ const getRoleStyle = (role) => {
   switch (normalizeText(role).toLowerCase()) {
     case 'client':
       return {
-        bg: '#EEF2FF',
-        text: '#245EA8',
+        bg: '#F2ECE0',
+        text: '#084424',
         icon: 'person-outline',
       };
     case 'restaurant':
       return {
-        bg: '#FFF2E8',
-        text: '#C05621',
+        bg: '#F3E7CA',
+        text: '#C8331A',
         icon: 'storefront-outline',
       };
     case 'livreur':
     case 'driver':
     case 'delivery':
       return {
-        bg: '#F3E8FF',
-        text: '#7C3AED',
+        bg: '#E3F0E8',
+        text: '#084424',
         icon: 'bicycle-outline',
       };
     case 'admin':
@@ -187,14 +187,14 @@ const getRoleStyle = (role) => {
     case 'superadmin':
     case 'super-admin':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         icon: 'shield-checkmark-outline',
       };
     default:
       return {
-        bg: '#F4F4F4',
-        text: '#555555',
+        bg: '#F2ECE0',
+        text: '#606D5D',
         icon: 'person-circle-outline',
       };
   }
@@ -737,13 +737,13 @@ export default function AdminUsersScreen() {
                 label={t('admin.dashboard.suspendedLabel')}
                 value={stats.suspended}
                 icon="ban-outline"
-                tint="#B83232"
+                tint="#C8331A"
               />
               <StatCard
                 label={t('admin.dashboard.pendingLabel')}
                 value={stats.pending}
                 icon="time-outline"
-                tint="#8A6500"
+                tint="#301904"
               />
             </View>
 
@@ -969,7 +969,7 @@ export default function AdminUsersScreen() {
                 <Ionicons
                   name="alert-circle-outline"
                   size={18}
-                  color="#B83232"
+                  color="#C8331A"
                 />
                 <Text style={styles.errorText}>{errorMessage}</Text>
               </View>
@@ -1074,7 +1074,7 @@ export default function AdminUsersScreen() {
                     <Ionicons
                       name="calendar-outline"
                       size={14}
-                      color="#6B655E"
+                      color="#606D5D"
                     />
                     <Text style={styles.metaBadgeText}>
                       {t('admin.users.createdOnLabel', { date: formatDateTime(item?.createdAt) })}
@@ -1146,7 +1146,7 @@ export default function AdminUsersScreen() {
         }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="people-outline" size={54} color="#C8BBAA" />
+            <Ionicons name="people-outline" size={54} color="#606D5D" />
             <Text style={styles.emptyTitle}>{t('admin.users.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
               {t('admin.users.emptyText')}
@@ -1208,7 +1208,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -1280,7 +1280,7 @@ const styles = StyleSheet.create({
   roleOverviewItem: {
     width: '23%',
     marginHorizontal: '1%',
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 8,
@@ -1336,7 +1336,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   filterChip: {
-    backgroundColor: '#F3ECE4',
+    backgroundColor: '#F2ECE0',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 999,
@@ -1377,7 +1377,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E5DDD2',
+    borderColor: '#F3E7CA',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -1424,13 +1424,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   resultsFiltersText: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 18,
   },
 
   errorCard: {
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     marginBottom: 14,
@@ -1439,7 +1439,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     flex: 1,
-    color: '#B83232',
+    color: '#C8331A',
     marginLeft: 8,
     fontSize: 13,
     lineHeight: 19,
@@ -1500,7 +1500,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1522,8 +1522,8 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 46,
     borderWidth: 1,
-    borderColor: '#CFE5D7',
-    backgroundColor: '#F5FBF7',
+    borderColor: '#E3F0E8',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 12,
@@ -1549,7 +1549,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   actionButtonSuccess: {
-    backgroundColor: '#CDECD7',
+    backgroundColor: '#E3F0E8',
   },
   actionButtonText: {
     color: '#111',
@@ -1559,7 +1559,7 @@ const styles = StyleSheet.create({
   adminProtectedBox: {
     flex: 1,
     minHeight: 46,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 12,

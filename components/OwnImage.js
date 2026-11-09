@@ -22,7 +22,7 @@ export default function OwnImage({ uri, style, icon = 'restaurant-outline', icon
 
   return (
     <View style={[style, styles.placeholder]}>
-      <Ionicons name={icon} size={iconSize} color="#8C8C99" />
+      <Ionicons name={icon} size={iconSize} color="#606D5D" />
     </View>
   );
 }
@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
   placeholder: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1B1B22',
+    backgroundColor: '#0D1C11',
   },
 });

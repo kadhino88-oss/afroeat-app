@@ -320,7 +320,7 @@ export default function LivreurDashboardScreen() {
                 <Ionicons
                   name="cloud-offline-outline"
                   size={17}
-                  color="#9A3412"
+                  color="#C8331A"
                 />
                 <Text style={styles.errorText}>{loadError}</Text>
                 <Pressable
@@ -340,7 +340,7 @@ export default function LivreurDashboardScreen() {
 
             {activeOrder && locationPermissionNeeded && (
               <View style={styles.locationNotice}>
-                <Ionicons name="location-outline" size={18} color="#9A3412" />
+                <Ionicons name="location-outline" size={18} color="#C8331A" />
                 <Text style={styles.locationNoticeText}>
                   {t('livraison.locationPermissionUnavailable')}
                 </Text>
@@ -360,7 +360,7 @@ export default function LivreurDashboardScreen() {
         ListEmptyComponent={
           !loadError ? (
             <View style={styles.emptyState}>
-              <Ionicons name="bicycle-outline" size={42} color="#C9B8A3" />
+              <Ionicons name="bicycle-outline" size={42} color="#EAB02F" />
               <Text style={styles.emptyTitle}>{t('livraison.noDeliveries')}</Text>
               <Text style={styles.emptyText}>
                 {t('livraison.noDeliveriesHint')}
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
   },
 
   link: {
-    color: '#245EA8',
+    color: '#084424',
     fontWeight: '800',
   },
 
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
   errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF2E4',
+    backgroundColor: '#F3E7CA',
     borderRadius: 14,
     padding: 12,
     margin: 12,
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     flex: 1,
-    color: '#7A4A24',
+    color: '#301904',
     fontSize: 12,
     fontWeight: '700',
     marginHorizontal: 8,
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
   locationNotice: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF2E4',
+    backgroundColor: '#F3E7CA',
     borderRadius: 14,
     padding: 12,
     marginHorizontal: 12,
@@ -510,7 +510,7 @@ const styles = StyleSheet.create({
 
   locationNoticeText: {
     flex: 1,
-    color: '#7A4A24',
+    color: '#301904',
     fontSize: 12,
     lineHeight: 17,
     fontWeight: '700',
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
   },
 
   emptyTitle: {
-    color: '#1F1F1F',
+    color: '#0D1C11',
     fontSize: 18,
     fontWeight: '900',
     textAlign: 'center',
@@ -532,7 +532,7 @@ const styles = StyleSheet.create({
   },
 
   emptyText: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 20,
     textAlign: 'center',

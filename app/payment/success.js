@@ -70,8 +70,8 @@ export default function PaymentSuccessScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        {state === 'checking' ? <ActivityIndicator size="large" color="#C9A45C" /> :
-          <Ionicons name={state === 'success' ? 'checkmark-circle' : 'alert-circle'} size={66} color={state === 'success' ? '#23864B' : '#B45309'} />}
+        {state === 'checking' ? <ActivityIndicator size="large" color="#EAB02F" /> :
+          <Ionicons name={state === 'success' ? 'checkmark-circle' : 'alert-circle'} size={66} color={state === 'success' ? '#084424' : '#C8331A'} />}
         <Text style={styles.title}>{state === 'success' ? 'Paiement confirmé' : state === 'error' ? 'Vérification nécessaire' : 'Confirmation du paiement'}</Text>
         <Text style={styles.message}>{message}</Text>
         {state !== 'checking' && <Pressable style={styles.button} onPress={() => router.replace('/(tabs)/orders')}><Text style={styles.buttonText}>Voir mes commandes</Text></Pressable>}
@@ -81,10 +81,10 @@ export default function PaymentSuccessScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0B0B0F', justifyContent: 'center', alignItems: 'center', padding: 24 },
-  card: { width: '100%', maxWidth: 480, backgroundColor: '#17171D', borderColor: '#3A3020', borderWidth: 1, borderRadius: 24, padding: 28, alignItems: 'center', gap: 16 },
-  title: { color: '#F7E7C1', fontSize: 24, fontWeight: '800', textAlign: 'center' },
-  message: { color: '#E7E2D8', fontSize: 16, lineHeight: 24, textAlign: 'center' },
-  button: { marginTop: 8, backgroundColor: '#C9A45C', borderRadius: 14, paddingVertical: 14, paddingHorizontal: 22, width: '100%', alignItems: 'center' },
-  buttonText: { color: '#15130F', fontSize: 16, fontWeight: '800' },
+  container: { flex: 1, backgroundColor: '#0D1C11', justifyContent: 'center', alignItems: 'center', padding: 24 },
+  card: { width: '100%', maxWidth: 480, backgroundColor: '#0D1C11', borderColor: '#301904', borderWidth: 1, borderRadius: 24, padding: 28, alignItems: 'center', gap: 16 },
+  title: { color: '#F3E7CA', fontSize: 24, fontWeight: '800', textAlign: 'center' },
+  message: { color: '#F3E7CA', fontSize: 16, lineHeight: 24, textAlign: 'center' },
+  button: { marginTop: 8, backgroundColor: '#EAB02F', borderRadius: 14, paddingVertical: 14, paddingHorizontal: 22, width: '100%', alignItems: 'center' },
+  buttonText: { color: '#0D1C11', fontSize: 16, fontWeight: '800' },
 });

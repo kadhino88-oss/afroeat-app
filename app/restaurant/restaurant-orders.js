@@ -125,17 +125,17 @@ const formatDate = (value) => {
 const getStatusStyle = (status) => {
   switch (normalizeText(status)) {
     case 'Livrée':
-      return { bg: '#E8F5ED', text: '#084424', icon: 'checkmark-circle-outline' };
+      return { bg: '#E3F0E8', text: '#084424', icon: 'checkmark-circle-outline' };
     case 'En livraison':
-      return { bg: '#EAF3FF', text: '#245EA8', icon: 'bicycle-outline' };
+      return { bg: '#F2ECE0', text: '#084424', icon: 'bicycle-outline' };
     case 'En préparation':
-      return { bg: '#FFF3D8', text: '#8A6500', icon: 'restaurant-outline' };
+      return { bg: '#F3E7CA', text: '#301904', icon: 'restaurant-outline' };
     case 'Confirmée':
-      return { bg: '#EFE9FF', text: '#6D4CDB', icon: 'checkmark-done-outline' };
+      return { bg: '#F2ECE0', text: '#084424', icon: 'checkmark-done-outline' };
     case 'Annulée':
-      return { bg: '#FDECEC', text: '#B83232', icon: 'close-circle-outline' };
+      return { bg: '#F8E1DD', text: '#C8331A', icon: 'close-circle-outline' };
     default:
-      return { bg: '#FFF0E8', text: '#C8331A', icon: 'time-outline' };
+      return { bg: '#F3E7CA', text: '#C8331A', icon: 'time-outline' };
   }
 };
 
@@ -304,7 +304,7 @@ export default function RestaurantOrders() {
 
             {!!loadError && (
               <View style={styles.refreshNotice}>
-                <Ionicons name="cloud-offline-outline" size={18} color="#9B4B2D" />
+                <Ionicons name="cloud-offline-outline" size={18} color="#C8331A" />
                 <Text style={styles.refreshNoticeText}>{loadError}</Text>
                 <Pressable
                   onPress={() => load(true)}
@@ -349,12 +349,12 @@ export default function RestaurantOrders() {
             </View>
 
             <View style={styles.searchBox}>
-              <Ionicons name="search-outline" size={19} color="#8B8177" />
+              <Ionicons name="search-outline" size={19} color="#606D5D" />
               <TextInput
                 value={searchQuery}
                 onChangeText={setSearchQuery}
                 placeholder={t('restaurant.orders.searchPlaceholder')}
-                placeholderTextColor="#9A9188"
+                placeholderTextColor="#606D5D"
                 style={styles.searchInput}
                 returnKeyType="search"
                 accessibilityLabel={t('restaurant.orders.searchPlaceholder')}
@@ -366,7 +366,7 @@ export default function RestaurantOrders() {
                   accessibilityLabel={t('restaurant.orders.clearSearch')}
                   hitSlop={8}
                 >
-                  <Ionicons name="close-circle" size={19} color="#8B8177" />
+                  <Ionicons name="close-circle" size={19} color="#606D5D" />
                 </Pressable>
               )}
             </View>
@@ -453,7 +453,7 @@ export default function RestaurantOrders() {
         }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="receipt-outline" size={54} color="#C8BBAA" />
+            <Ionicons name="receipt-outline" size={54} color="#606D5D" />
             <Text style={styles.emptyTitle}>
               {searchQuery.trim() || activeStatus !== 'Toutes'
                 ? t('restaurant.orders.searchNoResultsTitle')
@@ -512,8 +512,8 @@ const styles = StyleSheet.create({
   refreshNotice: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF0E8',
-    borderColor: '#F2C7B2',
+    backgroundColor: '#F3E7CA',
+    borderColor: '#F3E7CA',
     borderWidth: 1,
     borderRadius: 14,
     paddingHorizontal: 12,
@@ -521,8 +521,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     gap: 8,
   },
-  refreshNoticeText: { flex: 1, color: '#77412C', fontSize: 13, lineHeight: 18 },
-  refreshNoticeAction: { color: '#9B4B2D', fontWeight: '800', padding: 4 },
+  refreshNoticeText: { flex: 1, color: '#C8331A', fontSize: 13, lineHeight: 18 },
+  refreshNoticeAction: { color: '#C8331A', fontWeight: '800', padding: 4 },
 
   header: { marginBottom: 18 },
   searchBox: {
@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderColor: '#E8DED2',
+    borderColor: '#F3E7CA',
     borderWidth: 1,
     borderRadius: 16,
     paddingHorizontal: 14,
@@ -558,7 +558,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   filterChip: {
-    backgroundColor: '#F3ECE4',
+    backgroundColor: '#F2ECE0',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 999,
@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,

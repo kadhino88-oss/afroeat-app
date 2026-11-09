@@ -355,7 +355,7 @@ export default function ProfilePaymentScreen() {
 
         {stripeAvailable ? (
           <View style={styles.paymentOptionsInfo}>
-            <Ionicons name="wallet-outline" size={20} color="#2457C5" />
+            <Ionicons name="wallet-outline" size={20} color="#084424" />
             <View style={styles.paymentOptionsCopy}>
               <Text style={styles.paymentOptionsTitle}>
                 {t('profile.payment.paymentOptionsTitle')}
@@ -405,7 +405,7 @@ export default function ProfilePaymentScreen() {
         ) : cards.length === 0 ? (
           <View style={styles.emptyCard}>
             <View style={styles.emptyIcon}>
-              <Ionicons name="card-outline" size={24} color="#7C7369" />
+              <Ionicons name="card-outline" size={24} color="#606D5D" />
             </View>
             <Text style={styles.emptyTitle}>{t('profile.payment.noPaymentMethod')}</Text>
             <Text style={styles.emptyText}>{t('profile.payment.emptyCardsText')}</Text>
@@ -424,7 +424,7 @@ export default function ProfilePaymentScreen() {
                 <View key={card.id} style={styles.savedCard}>
                   <View style={styles.cardTopRow}>
                     <View style={styles.methodIcon}>
-                      <Ionicons name="card" size={23} color="#2457C5" />
+                      <Ionicons name="card" size={23} color="#084424" />
                     </View>
                     <View style={styles.cardCopy}>
                       <Text style={styles.cardBrand}>
@@ -462,7 +462,7 @@ export default function ProfilePaymentScreen() {
                         onPress={() => handleSetDefault(card)}
                       >
                         {busyCardId === card.id ? (
-                          <ActivityIndicator size="small" color="#2457C5" />
+                          <ActivityIndicator size="small" color="#084424" />
                         ) : (
                           <Text style={styles.secondaryActionText}>
                             {t('profile.payment.setDefaultButton')}
@@ -477,7 +477,7 @@ export default function ProfilePaymentScreen() {
                       style={styles.removeAction}
                       onPress={() => confirmRemoveCard(card)}
                     >
-                      <Ionicons name="trash-outline" size={16} color="#B43D32" />
+                      <Ionicons name="trash-outline" size={16} color="#C8331A" />
                       <Text style={styles.removeActionText}>
                         {t('profile.payment.removeButton')}
                       </Text>
@@ -498,7 +498,7 @@ export default function ProfilePaymentScreen() {
           <Ionicons
             name={consentAccepted ? 'checkbox' : 'square-outline'}
             size={22}
-            color={consentAccepted ? '#084424' : '#8C8379'}
+            color={consentAccepted ? '#084424' : '#606D5D'}
           />
           <Text style={styles.consentText}>{t('profile.payment.saveConsent')}</Text>
         </Pressable>
@@ -525,7 +525,7 @@ export default function ProfilePaymentScreen() {
 
         {errorMessage ? (
           <View accessibilityRole="alert" style={styles.messageBoxError}>
-            <Ionicons name="alert-circle-outline" size={19} color="#A93226" />
+            <Ionicons name="alert-circle-outline" size={19} color="#C8331A" />
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         ) : null}
@@ -549,7 +549,7 @@ export default function ProfilePaymentScreen() {
         ) : null}
 
         <View style={styles.notice}>
-          <Ionicons name="lock-closed-outline" size={20} color="#2457C5" />
+          <Ionicons name="lock-closed-outline" size={20} color="#084424" />
           <View style={styles.noticeCopy}>
             <Text style={styles.noticeTitle}>{t('profile.payment.stripeReadyTitle')}</Text>
             <Text style={styles.noticeText}>{t('profile.payment.stripeReadyText1')}</Text>
@@ -562,7 +562,7 @@ export default function ProfilePaymentScreen() {
           onPress={refreshCards}
           disabled={refreshing || loadingCards}
         >
-          <Ionicons name="refresh-outline" size={16} color="#6F675E" />
+          <Ionicons name="refresh-outline" size={16} color="#606D5D" />
           <Text style={styles.refreshText}>{t('profile.payment.refreshButton')}</Text>
         </Pressable>
       </ScrollView>
@@ -579,7 +579,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#FBF6EC',
   },
-  loaderText: { marginTop: 14, color: '#6F675E', fontSize: 14 },
+  loaderText: { marginTop: 14, color: '#606D5D', fontSize: 14 },
   backButton: {
     width: 44,
     height: 44,
@@ -588,7 +588,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#EDE5D8',
+    borderColor: '#F3E7CA',
   },
   topActions: {
     flexDirection: 'row',
@@ -601,22 +601,22 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#EDE5D8',
+    borderColor: '#F3E7CA',
   },
-  skipSignupText: { color: '#6F675E', fontWeight: '800', fontSize: 13 },
+  skipSignupText: { color: '#606D5D', fontWeight: '800', fontSize: 13 },
   header: { alignItems: 'center', marginTop: 28, marginBottom: 26 },
   iconWrapper: {
     width: 68,
     height: 68,
     borderRadius: 22,
-    backgroundColor: '#FFF0E4',
+    backgroundColor: '#F3E7CA',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
   },
   title: { color: '#0D1C11', fontSize: 28, fontWeight: '900' },
   subtitle: {
-    color: '#6F675E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     textAlign: 'center',
@@ -629,15 +629,15 @@ const styles = StyleSheet.create({
     gap: 11,
     padding: 15,
     marginBottom: 22,
-    backgroundColor: '#EEF3FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 17,
     borderWidth: 1,
-    borderColor: '#D9E4FA',
+    borderColor: '#E3F0E8',
   },
   paymentOptionsCopy: { flex: 1 },
-  paymentOptionsTitle: { color: '#24467A', fontWeight: '900', fontSize: 14 },
+  paymentOptionsTitle: { color: '#084424', fontWeight: '900', fontSize: 14 },
   paymentOptionsText: {
-    color: '#52647E',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 18,
     marginTop: 4,
@@ -647,13 +647,13 @@ const styles = StyleSheet.create({
     marginTop: -8,
     marginBottom: 22,
     borderRadius: 18,
-    backgroundColor: '#F2F8F3',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#DCEBDD',
+    borderColor: '#E3F0E8',
   },
   partnerPayoutCopy: { marginBottom: 12 },
   partnerPayoutTitle: { color: '#084424', fontSize: 15, fontWeight: '900' },
-  partnerPayoutText: { color: '#5F7062', fontSize: 12, lineHeight: 18, marginTop: 5 },
+  partnerPayoutText: { color: '#606D5D', fontSize: 12, lineHeight: 18, marginTop: 5 },
   partnerPayoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 12,
   },
-  sectionTitle: { color: '#25211D', fontSize: 17, fontWeight: '900' },
+  sectionTitle: { color: '#0D1C11', fontSize: 17, fontWeight: '900' },
   loadingCard: {
     minHeight: 78,
     flexDirection: 'row',
@@ -688,55 +688,55 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#EFE7DC',
+    borderColor: '#F2ECE0',
   },
-  loadingText: { color: '#6F675E', fontSize: 13 },
+  loadingText: { color: '#606D5D', fontSize: 13 },
   emptyCard: {
     alignItems: 'center',
     padding: 22,
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: '#EFE7DC',
+    borderColor: '#F2ECE0',
   },
   emptyIcon: {
     width: 48,
     height: 48,
     borderRadius: 16,
-    backgroundColor: '#F5F1EB',
+    backgroundColor: '#F2ECE0',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
   },
-  emptyTitle: { color: '#25211D', fontSize: 15, fontWeight: '800', textAlign: 'center' },
-  emptyText: { color: '#79736A', fontSize: 13, lineHeight: 19, textAlign: 'center', marginTop: 6 },
+  emptyTitle: { color: '#0D1C11', fontSize: 15, fontWeight: '800', textAlign: 'center' },
+  emptyText: { color: '#606D5D', fontSize: 13, lineHeight: 19, textAlign: 'center', marginTop: 6 },
   cardsList: { gap: 12 },
   savedCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#EFE7DC',
+    borderColor: '#F2ECE0',
   },
   cardTopRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   methodIcon: {
     width: 46,
     height: 46,
     borderRadius: 15,
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardCopy: { flex: 1 },
-  cardBrand: { color: '#777067', fontSize: 11, fontWeight: '800', letterSpacing: 0.6 },
-  cardNumber: { color: '#202020', fontSize: 16, fontWeight: '900', marginTop: 3 },
-  cardExpiry: { color: '#79736A', fontSize: 12, marginTop: 4 },
+  cardBrand: { color: '#606D5D', fontSize: 11, fontWeight: '800', letterSpacing: 0.6 },
+  cardNumber: { color: '#0D1C11', fontSize: 16, fontWeight: '900', marginTop: 3 },
+  cardExpiry: { color: '#606D5D', fontSize: 12, marginTop: 4 },
   defaultBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     alignSelf: 'flex-start',
-    backgroundColor: '#EFF8F1',
+    backgroundColor: '#F2ECE0',
     borderRadius: 999,
     paddingHorizontal: 9,
     paddingVertical: 6,
@@ -747,14 +747,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderTopWidth: 1,
-    borderTopColor: '#F1ECE5',
+    borderTopColor: '#F2ECE0',
     marginTop: 14,
     paddingTop: 11,
   },
   secondaryAction: { minHeight: 34, justifyContent: 'center', paddingHorizontal: 2 },
-  secondaryActionText: { color: '#2457C5', fontSize: 13, fontWeight: '800' },
+  secondaryActionText: { color: '#084424', fontSize: 13, fontWeight: '800' },
   removeAction: { flexDirection: 'row', alignItems: 'center', gap: 5, padding: 5 },
-  removeActionText: { color: '#A93226', fontSize: 13, fontWeight: '700' },
+  removeActionText: { color: '#C8331A', fontSize: 13, fontWeight: '700' },
   consentRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -762,7 +762,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 4,
   },
-  consentText: { flex: 1, color: '#514A43', fontSize: 13, lineHeight: 19 },
+  consentText: { flex: 1, color: '#606D5D', fontSize: 13, lineHeight: 19 },
   addButton: {
     minHeight: 52,
     flexDirection: 'row',
@@ -779,17 +779,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 9,
-    backgroundColor: '#FFF0EE',
+    backgroundColor: '#F8E1DD',
     borderRadius: 13,
     padding: 12,
     marginTop: 12,
   },
-  errorText: { flex: 1, color: '#8F2B22', fontSize: 13, lineHeight: 19 },
+  errorText: { flex: 1, color: '#C8331A', fontSize: 13, lineHeight: 19 },
   messageBoxSuccess: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 9,
-    backgroundColor: '#EFF8F1',
+    backgroundColor: '#F2ECE0',
     borderRadius: 13,
     padding: 12,
     marginTop: 12,
@@ -799,16 +799,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
-    backgroundColor: '#EEF4FF',
-    borderColor: '#DCE8FF',
+    backgroundColor: '#F2ECE0',
+    borderColor: '#E3F0E8',
     borderWidth: 1,
     borderRadius: 18,
     padding: 16,
     marginTop: 16,
   },
   noticeCopy: { flex: 1 },
-  noticeTitle: { color: '#1F3E76', fontSize: 14, fontWeight: '900', marginBottom: 6 },
-  noticeText: { color: '#4F5F88', fontSize: 13, lineHeight: 19 },
+  noticeTitle: { color: '#084424', fontSize: 14, fontWeight: '900', marginBottom: 6 },
+  noticeText: { color: '#084424', fontSize: 13, lineHeight: 19 },
   refreshButton: {
     flexDirection: 'row',
     alignSelf: 'center',
@@ -817,5 +817,5 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginTop: 6,
   },
-  refreshText: { color: '#6F675E', fontSize: 12, fontWeight: '700' },
+  refreshText: { color: '#606D5D', fontSize: 12, fontWeight: '700' },
 });

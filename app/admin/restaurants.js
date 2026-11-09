@@ -517,7 +517,7 @@ export default function AdminRestaurantsScreen() {
             <View style={styles.liveMonitorCard}>
               <View style={styles.liveMonitorHeader}>
                 <View style={styles.liveMonitorTitleWrap}>
-                  <Ionicons name="radio-outline" size={18} color="#245EA8" />
+                  <Ionicons name="radio-outline" size={18} color="#084424" />
                   <Text style={styles.liveMonitorTitle}>
                     {t('admin.restaurants.controlCenterTitle')}
                   </Text>
@@ -546,7 +546,7 @@ export default function AdminRestaurantsScreen() {
                 label={t('admin.restaurants.statWithOwnerLabel')}
                 value={stats.withOwner}
                 iconName="person-outline"
-                tint="#245EA8"
+                tint="#084424"
               />
               <StatCard
                 label={t('admin.restaurants.statWithAddressLabel')}
@@ -558,7 +558,7 @@ export default function AdminRestaurantsScreen() {
                 label={t('admin.restaurants.statWithCuisineLabel')}
                 value={stats.withCuisine}
                 iconName="restaurant-outline"
-                tint="#8A6500"
+                tint="#301904"
               />
               <StatCard
                 label={t('admin.restaurants.statOpenLabel')}
@@ -570,21 +570,21 @@ export default function AdminRestaurantsScreen() {
                 label={t('admin.restaurants.statFeaturedLabel')}
                 value={stats.featured}
                 iconName="flash-outline"
-                tint="#7C3AED"
+                tint="#084424"
               />
             </View>
 
             <View style={styles.quickActionsGrid}>
               <QuickActionCard
                 iconName="star-outline"
-                tint="#7C3AED"
+                tint="#084424"
                 title={t('admin.restaurants.premiumShortlistTitle')}
                 text={t('admin.restaurants.premiumShortlistText')}
                 onPress={() => setSort('name')}
               />
               <QuickActionCard
                 iconName="search-outline"
-                tint="#245EA8"
+                tint="#084424"
                 title={t('admin.restaurants.quickAuditTitle')}
                 text={t('admin.restaurants.quickAuditText')}
                 onPress={handleApplyFilters}
@@ -699,7 +699,7 @@ export default function AdminRestaurantsScreen() {
                 <Ionicons
                   name="alert-circle-outline"
                   size={18}
-                  color="#B83232"
+                  color="#C8331A"
                 />
                 <Text style={styles.errorText}>{errorMessage}</Text>
               </View>
@@ -708,8 +708,8 @@ export default function AdminRestaurantsScreen() {
         }
         renderItem={({ item }) => {
           const openBadgeStyle = item?.isOpen
-            ? { bg: '#E8F5ED', text: '#084424', label: t('restaurant.profile.openLabel') }
-            : { bg: '#FDECEC', text: '#B83232', label: t('restaurant.profile.closedLabel') };
+            ? { bg: '#E3F0E8', text: '#084424', label: t('restaurant.profile.openLabel') }
+            : { bg: '#F8E1DD', text: '#C8331A', label: t('restaurant.profile.closedLabel') };
 
           return (
             <Pressable
@@ -751,7 +751,7 @@ export default function AdminRestaurantsScreen() {
 
               {!!normalizeText(item?.address) && (
                 <View style={styles.infoRow}>
-                  <Ionicons name="location-outline" size={15} color="#6B655E" />
+                  <Ionicons name="location-outline" size={15} color="#606D5D" />
                   <Text style={styles.infoText}>
                     {normalizeText(item?.address)}
                   </Text>
@@ -760,7 +760,7 @@ export default function AdminRestaurantsScreen() {
 
               {(normalizeText(item?.city) || normalizeText(item?.country)) ? (
                 <View style={styles.infoRow}>
-                  <Ionicons name="earth-outline" size={15} color="#6B655E" />
+                  <Ionicons name="earth-outline" size={15} color="#606D5D" />
                   <Text style={styles.infoText}>
                     {[normalizeText(item?.city), normalizeText(item?.country)]
                       .filter(Boolean)
@@ -771,7 +771,7 @@ export default function AdminRestaurantsScreen() {
 
               {!!normalizeText(item?.ownerName) && (
                 <View style={styles.infoRow}>
-                  <Ionicons name="person-outline" size={15} color="#6B655E" />
+                  <Ionicons name="person-outline" size={15} color="#606D5D" />
                   <Text style={styles.infoText}>
                     {t('admin.restaurants.ownerLabel', { name: normalizeText(item?.ownerName) })}
                     {!!normalizeText(item?.ownerEmail)
@@ -786,7 +786,7 @@ export default function AdminRestaurantsScreen() {
                   <Ionicons
                     name="calendar-outline"
                     size={15}
-                    color="#6B655E"
+                    color="#606D5D"
                   />
                   <Text style={styles.infoText}>
                     {t('admin.users.createdOnLabel', { date: formatDateValue(item?.createdAt) })}
@@ -806,7 +806,7 @@ export default function AdminRestaurantsScreen() {
 
                 {item?.menuCount > 0 ? (
                   <View style={styles.metaBadge}>
-                    <Ionicons name="book-outline" size={14} color="#245EA8" />
+                    <Ionicons name="book-outline" size={14} color="#084424" />
                     <Text style={styles.metaBadgeText}>
                       {t('admin.restaurants.menuCountLabel', { count: item.menuCount })}
                     </Text>
@@ -828,7 +828,7 @@ export default function AdminRestaurantsScreen() {
 
                 {item?.isFeatured ? (
                   <View style={styles.metaBadge}>
-                    <Ionicons name="flash-outline" size={14} color="#7C3AED" />
+                    <Ionicons name="flash-outline" size={14} color="#084424" />
                     <Text style={styles.metaBadgeText}>{t('restaurant.premium')}</Text>
                   </View>
                 ) : null}
@@ -855,7 +855,7 @@ export default function AdminRestaurantsScreen() {
         }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="storefront-outline" size={54} color="#C8BBAA" />
+            <Ionicons name="storefront-outline" size={54} color="#606D5D" />
             <Text style={styles.emptyTitle}>{t('admin.restaurants.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
               {t('admin.restaurants.emptyText')}
@@ -916,10 +916,10 @@ const styles = StyleSheet.create({
     color: '#0D1C11',
     marginBottom: 8,
   },
-  subtitle: { color: '#6B655E', fontSize: 14, lineHeight: 21 },
+  subtitle: { color: '#606D5D', fontSize: 14, lineHeight: 21 },
 
   liveMonitorCard: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
@@ -941,12 +941,12 @@ const styles = StyleSheet.create({
   },
   liveMonitorTitle: {
     marginLeft: 8,
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 16,
     fontWeight: '900',
   },
   liveBadge: {
-    backgroundColor: '#245EA8',
+    backgroundColor: '#084424',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -958,13 +958,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   liveMonitorText: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 8,
   },
   liveMonitorSubText: {
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1086,7 +1086,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   filterChip: {
-    backgroundColor: '#F3ECE4',
+    backgroundColor: '#F2ECE0',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 999,
@@ -1127,7 +1127,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E5DDD2',
+    borderColor: '#F3E7CA',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -1174,13 +1174,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   resultsFiltersText: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 18,
   },
 
   errorCard: {
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     marginBottom: 14,
@@ -1189,7 +1189,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     flex: 1,
-    color: '#B83232',
+    color: '#C8331A',
     marginLeft: 8,
     fontSize: 13,
     lineHeight: 19,
@@ -1267,7 +1267,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1283,7 +1283,7 @@ const styles = StyleSheet.create({
 
   footerRow: {
     borderTopWidth: 1,
-    borderTopColor: '#F2ECE5',
+    borderTopColor: '#F2ECE0',
     paddingTop: 12,
     marginTop: 10,
     flexDirection: 'row',
@@ -1293,9 +1293,9 @@ const styles = StyleSheet.create({
   footerBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5FBF7',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#CFE5D7',
+    borderColor: '#E3F0E8',
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 999,

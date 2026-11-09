@@ -163,38 +163,38 @@ const getStatusTone = (status) => {
   switch (status) {
     case 'Livrée':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         icon: 'checkmark-circle',
       };
     case 'En livraison':
       return {
-        bg: '#EAF3FF',
-        text: '#245EA8',
+        bg: '#F2ECE0',
+        text: '#084424',
         icon: 'bicycle',
       };
     case 'En préparation':
       return {
-        bg: '#FFF3D8',
-        text: '#8A6500',
+        bg: '#F3E7CA',
+        text: '#301904',
         icon: 'restaurant',
       };
     case 'Confirmée':
       return {
-        bg: '#EFE9FF',
-        text: '#6D4CDB',
+        bg: '#F2ECE0',
+        text: '#084424',
         icon: 'checkmark-done',
       };
     case 'Annulée':
       return {
-        bg: '#FDECEC',
-        text: '#B83232',
+        bg: '#F8E1DD',
+        text: '#C8331A',
         icon: 'close-circle',
       };
     case 'En attente':
     default:
       return {
-        bg: '#FFF4E8',
+        bg: '#F3E7CA',
         text: '#C8331A',
         icon: 'time-outline',
       };
@@ -561,7 +561,7 @@ export default function OrderTrackingScreen() {
   if (authLoading || loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F7F8FA" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
         <ActivityIndicator size="large" color="#C8331A" />
         <Text style={styles.loaderText}>{t('livraison.tracking.loadingTitle')}</Text>
       </View>
@@ -587,13 +587,13 @@ export default function OrderTrackingScreen() {
   if (!safeOrder) {
     return (
       <FadeInView style={styles.fallbackContainer}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F7F8FA" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
         <View style={styles.fallbackBox}>
           <MaterialCommunityIcons
             name="map-marker-off-outline"
             size={56}
-            color="#C7CED6"
+            color="#E3DECF"
           />
           <Text style={styles.fallbackTitle}>{t('livraison.tracking.fallbackTitle')}</Text>
           <Text style={styles.fallbackText}>
@@ -625,7 +625,7 @@ export default function OrderTrackingScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F7F8FA" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <MapView
         ref={mapRef}
@@ -667,7 +667,7 @@ export default function OrderTrackingScreen() {
             }}
             title={t('livraison.tracking.markerCustomerTitle')}
             description={safeOrder?.deliveryAddress || t('livraison.tracking.markerCustomerDescriptionFallback')}
-            pinColor="#1F8F4C"
+            pinColor="#084424"
           />
         )}
       </MapView>
@@ -769,13 +769,13 @@ export default function OrderTrackingScreen() {
 
         <View style={styles.locationBox}>
           <View style={styles.locationRow}>
-            <Ionicons name="navigate-outline" size={15} color="#245EA8" />
+            <Ionicons name="navigate-outline" size={15} color="#084424" />
             <Text style={styles.locationLabel}>{t('livraison.tracking.driverPositionLabel')}</Text>
             <Text style={styles.locationValue}>{driverLocationLabel}</Text>
           </View>
 
           <View style={styles.locationRow}>
-            <Ionicons name="location-outline" size={15} color="#1F8F4C" />
+            <Ionicons name="location-outline" size={15} color="#084424" />
             <Text style={styles.locationLabel}>{t('livraison.tracking.destinationLabel')}</Text>
             <Text style={styles.locationValue} numberOfLines={1}>
               {normalizeText(safeOrder.deliveryAddress, t('livraison.tracking.addressUnavailable'))}
@@ -785,7 +785,7 @@ export default function OrderTrackingScreen() {
 
         <View style={styles.actionsRow}>
           <Pressable style={styles.secondaryButton} onPress={fitMapToMarkers}>
-            <Ionicons name="expand-outline" size={18} color="#245EA8" />
+            <Ionicons name="expand-outline" size={18} color="#084424" />
             <Text style={styles.secondaryButtonText}>{t('livraison.tracking.recenterButton')}</Text>
           </Pressable>
 
@@ -811,12 +811,12 @@ export default function OrderTrackingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7F8FA',
+    backgroundColor: '#F2ECE0',
   },
 
   fallbackContainer: {
     flex: 1,
-    backgroundColor: '#F7F8FA',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -847,7 +847,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     lineHeight: 21,
-    color: '#6B7280',
+    color: '#606D5D',
     textAlign: 'center',
   },
 
@@ -858,14 +858,14 @@ const styles = StyleSheet.create({
 
   loader: {
     flex: 1,
-    backgroundColor: '#F7F8FA',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   loaderText: {
     marginTop: 12,
-    color: '#6B7280',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -934,7 +934,7 @@ const styles = StyleSheet.create({
 
   panelSubtitle: {
     fontSize: 13,
-    color: '#6B7280',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
@@ -959,7 +959,7 @@ const styles = StyleSheet.create({
 
   metricCard: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F2ECE0',
     borderRadius: 18,
     paddingVertical: 12,
     paddingHorizontal: 10,
@@ -967,7 +967,7 @@ const styles = StyleSheet.create({
   },
 
   metricLabel: {
-    color: '#6B7280',
+    color: '#606D5D',
     fontSize: 11,
     fontWeight: '800',
     marginBottom: 6,
@@ -983,7 +983,7 @@ const styles = StyleSheet.create({
   progressTrack: {
     height: 10,
     borderRadius: 999,
-    backgroundColor: '#EEF2F7',
+    backgroundColor: '#F2ECE0',
     overflow: 'hidden',
     marginBottom: 14,
   },
@@ -997,7 +997,7 @@ const styles = StyleSheet.create({
   insightCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: '#FFF7ED',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 12,
@@ -1007,7 +1007,7 @@ const styles = StyleSheet.create({
   insightText: {
     flex: 1,
     marginLeft: 8,
-    color: '#9A3412',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '700',
@@ -1027,7 +1027,7 @@ const styles = StyleSheet.create({
 
   metaLabel: {
     fontSize: 11,
-    color: '#94A3B8',
+    color: '#606D5D',
     fontWeight: '800',
     textTransform: 'uppercase',
     marginBottom: 4,
@@ -1040,7 +1040,7 @@ const styles = StyleSheet.create({
   },
 
   locationBox: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: '#F2ECE0',
     borderRadius: 18,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -1055,7 +1055,7 @@ const styles = StyleSheet.create({
 
   locationLabel: {
     marginLeft: 8,
-    color: '#475569',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '800',
     width: 110,
@@ -1063,7 +1063,7 @@ const styles = StyleSheet.create({
 
   locationValue: {
     flex: 1,
-    color: '#0F172A',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '700',
     textAlign: 'right',
@@ -1094,7 +1094,7 @@ const styles = StyleSheet.create({
   secondaryButton: {
     flex: 1,
     marginRight: 6,
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     minHeight: 52,
     flexDirection: 'row',
@@ -1104,7 +1104,7 @@ const styles = StyleSheet.create({
 
   secondaryButtonText: {
     marginLeft: 8,
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 15,
     fontWeight: '900',
   },

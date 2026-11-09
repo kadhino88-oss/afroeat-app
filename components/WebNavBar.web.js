@@ -34,6 +34,7 @@ export default function WebNavBar() {
   if (isNavHidden(pathname)) return null;
 
   const compact = width < 760;
+  const tiny = width < 560;
   const cartCount = typeof cart.getTotalItems === 'function' ? Number(cart.getTotalItems()) || 0 : 0;
 
   const goBack = () => {
@@ -59,9 +60,11 @@ export default function WebNavBar() {
 
           <Pressable accessibilityRole="link" onPress={() => router.replace('/(tabs)')} style={styles.brand}>
             <View style={styles.logo}><Text style={styles.logoLetter}>A</Text></View>
-            <Text style={styles.brandName}>
-              Afro<Text style={styles.brandAccent}>Eats</Text>
-            </Text>
+            {!tiny ? (
+              <Text style={styles.brandName}>
+                Afro<Text style={styles.brandAccent}>Eats</Text>
+              </Text>
+            ) : null}
           </Pressable>
         </View>
 
@@ -95,7 +98,11 @@ export default function WebNavBar() {
               onPress={() => router.push('/auth/login')}
               style={styles.signIn}
             >
-              <Text style={styles.signInText}>{t('nav.signIn')}</Text>
+              {tiny ? (
+                <Ionicons name="log-in-outline" size={18} color="#084424" />
+              ) : (
+                <Text style={styles.signInText}>{t('nav.signIn')}</Text>
+              )}
             </Pressable>
           ) : null}
           <Pressable
@@ -135,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 12,
   },
-  left: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  left: { flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 0 },
   back: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -158,12 +165,12 @@ const styles = StyleSheet.create({
   logoLetter: { color: '#FBF6EC', fontWeight: '800', fontSize: 16 },
   brandName: { fontFamily: BrandFonts.display, fontSize: 20, color: '#0D1C11' },
   brandAccent: { color: '#C8331A' },
-  links: { flexDirection: 'row', alignItems: 'center', gap: 4, flexShrink: 1 },
-  link: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999 },
+  links: { flexDirection: 'row', alignItems: 'center', gap: 0, flexShrink: 1 },
+  link: { paddingVertical: 8, paddingHorizontal: 10, borderRadius: 999 },
   linkActive: { backgroundColor: '#F3E7CA' },
   linkText: { color: '#606D5D', fontWeight: '600', fontSize: 15 },
   linkTextActive: { color: '#084424' },
-  right: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  right: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 0 },
   signIn: {
     paddingVertical: 8,
     paddingHorizontal: 14,

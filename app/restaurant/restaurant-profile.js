@@ -76,8 +76,8 @@ const normalizeRestaurant = (data) => {
 
 const getOpenState = (r) => {
   return r?.isOpen === false
-    ? { label: i18n.t('restaurant.profile.closedLabel'), color: '#B83232', bg: '#FDECEC' }
-    : { label: i18n.t('restaurant.profile.openLabel'), color: '#084424', bg: '#E8F5ED' };
+    ? { label: i18n.t('restaurant.profile.closedLabel'), color: '#C8331A', bg: '#F8E1DD' }
+    : { label: i18n.t('restaurant.profile.openLabel'), color: '#084424', bg: '#E3F0E8' };
 };
 
 const formatPrice = (value, currency = 'EUR') => {
@@ -101,7 +101,7 @@ const InfoCard = ({ title, children }) => (
 
 const MetaRow = ({ icon, label, value, valueStyle, multiline = false }) => (
   <View style={styles.metaRow}>
-    <Ionicons name={icon} size={16} color="#6B655E" />
+    <Ionicons name={icon} size={16} color="#606D5D" />
     <Text style={styles.metaLabel}>{label}</Text>
     <Text
       style={[
@@ -244,7 +244,7 @@ export default function RestaurantProfile() {
           <MaterialCommunityIcons
             name="storefront-remove-outline"
             size={56}
-            color="#C8BBAA"
+            color="#606D5D"
           />
           <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
@@ -390,7 +390,7 @@ export default function RestaurantProfile() {
             keyboardType="number-pad"
             maxLength={3}
             placeholder={t('restaurant.profile.preparationTimePlaceholder')}
-            placeholderTextColor="#8B857D"
+            placeholderTextColor="#606D5D"
             style={styles.preparationInput}
             accessibilityLabel={t('restaurant.profile.preparationTimeLabel')}
           />
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 18,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
@@ -517,7 +517,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   heroTag: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -543,9 +543,9 @@ const styles = StyleSheet.create({
     color: '#111',
     marginBottom: 14,
   },
-  preparationHelp: { color: '#6B655E', fontSize: 13, lineHeight: 19, marginBottom: 12 },
-  preparationInput: { backgroundColor: '#FBF6EC', borderWidth: 1, borderColor: '#E6D8C8', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, color: '#0D1C11', fontSize: 16 },
-  preparationButton: { minHeight: 46, borderRadius: 14, backgroundColor: '#FFC857', justifyContent: 'center', alignItems: 'center', marginTop: 12 },
+  preparationHelp: { color: '#606D5D', fontSize: 13, lineHeight: 19, marginBottom: 12 },
+  preparationInput: { backgroundColor: '#FBF6EC', borderWidth: 1, borderColor: '#F3E7CA', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, color: '#0D1C11', fontSize: 16 },
+  preparationButton: { minHeight: 46, borderRadius: 14, backgroundColor: '#EAB02F', justifyContent: 'center', alignItems: 'center', marginTop: 12 },
   preparationButtonDisabled: { opacity: 0.65 },
   preparationButtonText: { color: '#0D1C11', fontWeight: '900', fontSize: 14 },
 
@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
   metaLabel: {
     marginLeft: 8,
     width: 92,
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#D6EAD9',
+    borderColor: '#E3F0E8',
     paddingVertical: 13,
     paddingHorizontal: 14,
     alignItems: 'center',

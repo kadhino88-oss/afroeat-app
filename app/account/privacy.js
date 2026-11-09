@@ -105,7 +105,7 @@ export default function AccountPrivacyScreen() {
       <Text style={styles.body}>{t('profile.home.deleteAccountIntro')}</Text>
 
       <View style={styles.notice}>
-        <Ionicons name="information-circle-outline" size={21} color="#8A4B12" />
+        <Ionicons name="information-circle-outline" size={21} color="#301904" />
         <Text style={styles.noticeText}>{t('profile.home.deleteAccountRetention')}</Text>
       </View>
 
@@ -119,7 +119,7 @@ export default function AccountPrivacyScreen() {
         textContentType="password"
         editable={!deleting}
         placeholder={t('profile.home.deleteAccountPasswordPlaceholder')}
-        placeholderTextColor="#8C8984"
+        placeholderTextColor="#606D5D"
         accessibilityLabel={t('profile.home.deleteAccountPasswordLabel')}
         style={styles.input}
       />
@@ -163,30 +163,30 @@ const styles = StyleSheet.create({
     marginBottom: 18, borderRadius: 22, backgroundColor: '#FFFFFF',
   },
   eyebrow: { color: '#084424', fontSize: 12, fontWeight: '900', letterSpacing: 1.4 },
-  title: { marginTop: 6, color: '#1C211D', fontSize: 26, fontWeight: '900' },
-  body: { marginTop: 10, color: '#626862', fontSize: 14, lineHeight: 21 },
+  title: { marginTop: 6, color: '#0D1C11', fontSize: 26, fontWeight: '900' },
+  body: { marginTop: 10, color: '#606D5D', fontSize: 14, lineHeight: 21 },
   notice: {
     flexDirection: 'row', alignItems: 'flex-start', gap: 10, marginTop: 20,
-    padding: 14, borderRadius: 14, backgroundColor: '#FFF0D9',
+    padding: 14, borderRadius: 14, backgroundColor: '#F3E7CA',
   },
-  noticeText: { flex: 1, color: '#67431F', fontSize: 13, lineHeight: 19 },
-  sectionTitle: { marginTop: 24, marginBottom: 9, color: '#1C211D', fontSize: 15, fontWeight: '800' },
+  noticeText: { flex: 1, color: '#301904', fontSize: 13, lineHeight: 19 },
+  sectionTitle: { marginTop: 24, marginBottom: 9, color: '#0D1C11', fontSize: 15, fontWeight: '800' },
   input: {
-    minHeight: 50, paddingHorizontal: 14, borderWidth: 1, borderColor: '#D9D4CD',
-    borderRadius: 12, backgroundColor: '#FFFFFF', color: '#1C211D', fontSize: 15,
+    minHeight: 50, paddingHorizontal: 14, borderWidth: 1, borderColor: '#E3DECF',
+    borderRadius: 12, backgroundColor: '#FFFFFF', color: '#0D1C11', fontSize: 15,
   },
   deleteButton: {
     minHeight: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 9, marginTop: 14, borderRadius: 13, backgroundColor: '#9F2525',
+    gap: 9, marginTop: 14, borderRadius: 13, backgroundColor: '#C8331A',
   },
   deleteButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '800' },
   disabled: { opacity: 0.7 },
   pressed: { opacity: 0.78 },
   webCard: { marginTop: 24, padding: 16, borderRadius: 16, backgroundColor: '#FFFFFF' },
-  webTitle: { color: '#1C211D', fontSize: 15, fontWeight: '800' },
+  webTitle: { color: '#0D1C11', fontSize: 15, fontWeight: '800' },
   webButton: {
     minHeight: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    marginTop: 12, paddingHorizontal: 12, borderRadius: 10, backgroundColor: '#EAF4EC',
+    marginTop: 12, paddingHorizontal: 12, borderRadius: 10, backgroundColor: '#F2ECE0',
   },
   webButtonText: { color: '#084424', fontSize: 14, fontWeight: '800' },
 });

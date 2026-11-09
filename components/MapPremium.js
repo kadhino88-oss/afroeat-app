@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
   mapBox: {
     height: 240,
     borderRadius: 24,
-    backgroundColor: '#151515',
+    backgroundColor: '#0D1C11',
     borderWidth: 1,
-    borderColor: '#2A2A2A',
+    borderColor: '#0D1C11',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   subtitle: {
-    color: '#A1A1AA',
+    color: '#606D5D',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 24,

@@ -567,7 +567,7 @@ export default function CheckoutScreen() {
             <Ionicons
               name="sparkles-outline"
               size={16}
-              color="#8A6500"
+              color="#301904"
             />
             <Text style={styles.guestBadgeText}>
               {t('checkout.guestPremiumTitle')}
@@ -577,7 +577,7 @@ export default function CheckoutScreen() {
           <Ionicons
             name="lock-closed-outline"
             size={54}
-            color="#C4B7A6"
+            color="#606D5D"
           />
 
           <Text style={styles.emptyTitle}>
@@ -623,7 +623,7 @@ export default function CheckoutScreen() {
           <Ionicons
             name="shield-outline"
             size={54}
-            color="#C65D2E"
+            color="#C8331A"
           />
 
           <Text style={styles.emptyTitle}>
@@ -770,7 +770,7 @@ export default function CheckoutScreen() {
                 <Ionicons
                   name="card-outline"
                   size={18}
-                  color="#2457C5"
+                  color="#084424"
                 />
 
                 <Text style={styles.paymentPreviewTitle}>
@@ -814,7 +814,7 @@ export default function CheckoutScreen() {
             <Ionicons
               name="basket-outline"
               size={52}
-              color="#C4B7A6"
+              color="#606D5D"
             />
 
             <Text style={styles.emptyTitle}>
@@ -898,7 +898,7 @@ export default function CheckoutScreen() {
             <Ionicons
               name="warning-outline"
               size={16}
-              color="#B04A00"
+              color="#C8331A"
             />
 
             <Text style={styles.footerHelperText}>
@@ -989,7 +989,7 @@ const styles = StyleSheet.create({
   guestBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
@@ -998,7 +998,7 @@ const styles = StyleSheet.create({
 
   guestBadgeText: {
     marginLeft: 6,
-    color: '#8A6500',
+    color: '#301904',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1038,14 +1038,14 @@ const styles = StyleSheet.create({
   infoCard: {
     marginHorizontal: 20,
     marginBottom: 12,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#D6EAD9',
+    borderColor: '#E3F0E8',
   },
 
   infoText: {
@@ -1083,7 +1083,7 @@ const styles = StyleSheet.create({
   },
 
   addressText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -1109,11 +1109,11 @@ const styles = StyleSheet.create({
   paymentPreviewCard: {
     marginHorizontal: 20,
     marginBottom: 14,
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#DBE7FF',
+    borderColor: '#E3F0E8',
   },
 
   paymentPreviewHeader: {
@@ -1126,17 +1126,17 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 15,
     fontWeight: '800',
-    color: '#2457C5',
+    color: '#084424',
   },
 
   paymentPreviewText: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 14,
     lineHeight: 21,
   },
 
   quoteError: {
-    color: '#9B342E',
+    color: '#C8331A',
     fontSize: 12,
     lineHeight: 17,
   },
@@ -1155,7 +1155,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#D6EAD9',
+    borderColor: '#E3F0E8',
   },
 
   retryQuoteText: {
@@ -1190,7 +1190,7 @@ const styles = StyleSheet.create({
     width: 62,
     height: 62,
     borderRadius: 14,
-    backgroundColor: '#F1ECE5',
+    backgroundColor: '#F2ECE0',
     marginRight: 12,
   },
 
@@ -1207,7 +1207,7 @@ const styles = StyleSheet.create({
   },
 
   details: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
   },
 
@@ -1244,7 +1244,7 @@ const styles = StyleSheet.create({
 
   summaryLabel: {
     fontSize: 14,
-    color: '#777777',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
@@ -1264,7 +1264,7 @@ const styles = StyleSheet.create({
 
   totalLabel: {
     fontSize: 16,
-    color: '#555555',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
@@ -1275,10 +1275,10 @@ const styles = StyleSheet.create({
   },
 
   donationCard: {
-    backgroundColor: '#F1F8F3',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#D9EEDF',
+    borderColor: '#E3F0E8',
     padding: 12,
     marginBottom: 12,
   },
@@ -1297,7 +1297,7 @@ const styles = StyleSheet.create({
   },
 
   donationSubtitle: {
-    color: '#4C6B57',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 17,
     marginBottom: 10,
@@ -1314,7 +1314,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#CBE4D3',
+    borderColor: '#E3F0E8',
     marginRight: 8,
     marginBottom: 6,
   },
@@ -1335,7 +1335,7 @@ const styles = StyleSheet.create({
   },
 
   footerHelperText: {
-    color: '#8A6500',
+    color: '#301904',
     fontSize: 13,
     lineHeight: 18,
     marginBottom: 12,
@@ -1344,7 +1344,7 @@ const styles = StyleSheet.create({
   },
 
   footerHelperLink: {
-    color: '#B04A00',
+    color: '#C8331A',
     textDecorationLine: 'underline',
     fontWeight: '800',
   },
@@ -1353,12 +1353,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 6,
-    backgroundColor: '#FFF0E8',
+    backgroundColor: '#F3E7CA',
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#F5D5C0',
+    borderColor: '#F3E7CA',
   },
 
   button: {
@@ -1406,7 +1406,7 @@ const styles = StyleSheet.create({
   },
 
   emptyText: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,

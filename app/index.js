@@ -211,9 +211,9 @@ const styles = StyleSheet.create({
     height: 82,
     borderRadius: 24,
     overflow: 'hidden',
-    backgroundColor: '#FFF6E3',
+    backgroundColor: '#F3E7CA',
     borderWidth: 1,
-    borderColor: '#F3E2B5',
+    borderColor: '#F3E7CA',
     marginBottom: 16,
   },
 
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   loaderSubtitle: {
     fontSize: 13,
     lineHeight: 19,
-    color: '#7A7268',
+    color: '#606D5D',
     fontWeight: '700',
     textAlign: 'center',
   },

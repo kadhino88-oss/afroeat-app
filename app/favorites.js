@@ -156,7 +156,7 @@ export default function FavoritesScreen() {
             />
           ) : (
             <View style={styles.cardImageFallback}>
-              <Ionicons name="restaurant-outline" size={24} color="#9A846C" />
+              <Ionicons name="restaurant-outline" size={24} color="#606D5D" />
             </View>
           )}
           <View style={styles.cardText}>
@@ -167,7 +167,7 @@ export default function FavoritesScreen() {
               {normalizeText(item?.description || item?.cuisine, t('favorites.cuisineFallback'))}
             </Text>
           </View>
-          <Ionicons name="chevron-forward" size={20} color="#999999" />
+          <Ionicons name="chevron-forward" size={20} color="#606D5D" />
         </Pressable>
 
         <Pressable
@@ -178,9 +178,9 @@ export default function FavoritesScreen() {
           onPress={() => handleRemove(restaurantId)}
         >
           {removingId === String(restaurantId) ? (
-            <ActivityIndicator size="small" color="#9B3428" />
+            <ActivityIndicator size="small" color="#C8331A" />
           ) : (
-            <Ionicons name="heart" size={19} color="#B54A3A" />
+            <Ionicons name="heart" size={19} color="#C8331A" />
           )}
         </Pressable>
       </View>
@@ -192,7 +192,7 @@ export default function FavoritesScreen() {
       <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
       <View style={styles.header}>
         <View style={styles.badge}>
-          <Ionicons name="heart-outline" size={14} color="#A36A00" />
+          <Ionicons name="heart-outline" size={14} color="#301904" />
           <Text style={styles.badgeText}>{t('favorites.badge')}</Text>
         </View>
         <Text style={styles.title}>{t('favorites.title')}</Text>
@@ -239,7 +239,7 @@ export default function FavoritesScreen() {
           ListEmptyComponent={
             !error ? (
               <View style={styles.emptyContainer}>
-                <Ionicons name="heart-outline" size={60} color="#C9B8A3" />
+                <Ionicons name="heart-outline" size={60} color="#EAB02F" />
                 <Text style={styles.emptyTitle}>{t('favorites.emptyTitle')}</Text>
                 <Text style={styles.emptyText}>{t('favorites.emptyText')}</Text>
                 <Pressable
@@ -261,29 +261,29 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FBF6EC', paddingTop: 40, paddingHorizontal: 16 },
   loader: { flex: 1, backgroundColor: '#FBF6EC', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 },
-  loaderText: { marginTop: 12, color: '#555555', fontSize: 15, fontWeight: '600', textAlign: 'center' },
+  loaderText: { marginTop: 12, color: '#606D5D', fontSize: 15, fontWeight: '600', textAlign: 'center' },
   header: { marginBottom: 20, alignItems: 'center' },
-  badge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF3D8', borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 14 },
-  badgeText: { marginLeft: 6, color: '#A36A00', fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.3 },
+  badge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F3E7CA', borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 14 },
+  badgeText: { marginLeft: 6, color: '#301904', fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.3 },
   title: { fontSize: 28, fontWeight: '900', color: '#0D1C11', textAlign: 'center', marginBottom: 8 },
-  subtitle: { textAlign: 'center', color: '#777777', fontSize: 14, lineHeight: 20 },
+  subtitle: { textAlign: 'center', color: '#606D5D', fontSize: 14, lineHeight: 20 },
   listContent: { paddingBottom: 120, flexGrow: 1 },
   card: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 10, marginBottom: 14, flexDirection: 'row', alignItems: 'center', shadowColor: '#000000', shadowOpacity: 0.05, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 3 },
   cardMain: { flex: 1, minWidth: 0, padding: 4, flexDirection: 'row', alignItems: 'center' },
-  cardImage: { width: 62, height: 62, borderRadius: 16, backgroundColor: '#F1ECE5', marginRight: 12 },
-  cardImageFallback: { width: 62, height: 62, borderRadius: 16, backgroundColor: '#F1ECE5', marginRight: 12, alignItems: 'center', justifyContent: 'center' },
+  cardImage: { width: 62, height: 62, borderRadius: 16, backgroundColor: '#F2ECE0', marginRight: 12 },
+  cardImageFallback: { width: 62, height: 62, borderRadius: 16, backgroundColor: '#F2ECE0', marginRight: 12, alignItems: 'center', justifyContent: 'center' },
   cardText: { flex: 1, minWidth: 0 },
   name: { fontSize: 16, fontWeight: '800', color: '#0D1C11', marginBottom: 4 },
-  desc: { fontSize: 13, color: '#777777', lineHeight: 18 },
+  desc: { fontSize: 13, color: '#606D5D', lineHeight: 18 },
   removeButton: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' },
   emptyContainer: { alignItems: 'center', justifyContent: 'center', marginTop: 80, paddingHorizontal: 24, flex: 1 },
   emptyTitle: { fontSize: 20, fontWeight: '800', color: '#0D1C11', marginTop: 16, marginBottom: 8, textAlign: 'center' },
-  emptyText: { color: '#777777', textAlign: 'center', lineHeight: 22, fontSize: 15, marginBottom: 20 },
+  emptyText: { color: '#606D5D', textAlign: 'center', lineHeight: 22, fontSize: 15, marginBottom: 20 },
   button: { backgroundColor: '#EAB02F', paddingHorizontal: 20, paddingVertical: 12, borderRadius: 14 },
   buttonText: { color: '#0D1C11', fontWeight: '800', fontSize: 15 },
   buttonPressed: { opacity: 0.84 },
-  errorBanner: { marginBottom: 12, padding: 12, borderRadius: 12, backgroundColor: '#FCE8E4' },
-  errorText: { color: '#8F3428', textAlign: 'center', marginBottom: 4 },
+  errorBanner: { marginBottom: 12, padding: 12, borderRadius: 12, backgroundColor: '#F8E1DD' },
+  errorText: { color: '#C8331A', textAlign: 'center', marginBottom: 4 },
   retryText: { color: '#084424', fontWeight: '800', textAlign: 'center' },
   loadingState: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });

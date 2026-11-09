@@ -151,8 +151,8 @@ const ROLE_CARDS = [
     iconType: 'ionicons',
     iconName: 'restaurant-outline',
     accent: '#EAB02F',
-    soft: '#FFF3D8',
-    dark: '#8A6500',
+    soft: '#F3E7CA',
+    dark: '#301904',
   },
   {
     id: 'restaurant',
@@ -163,7 +163,7 @@ const ROLE_CARDS = [
     iconType: 'material',
     iconName: 'storefront-outline',
     accent: '#084424',
-    soft: '#E8F5ED',
+    soft: '#E3F0E8',
     dark: '#084424',
   },
   {
@@ -175,8 +175,8 @@ const ROLE_CARDS = [
     iconType: 'ionicons',
     iconName: 'bicycle-outline',
     accent: '#C8331A',
-    soft: '#FFF0E8',
-    dark: '#A6501A',
+    soft: '#F3E7CA',
+    dark: '#C8331A',
   },
 ];
 
@@ -285,7 +285,7 @@ export default function RoleSelectionScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F3" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
         <View style={styles.loaderLogoWrap}>
           <Image source={LOGO_IMAGE} style={styles.loaderLogo} resizeMode="cover" />
         </View>
@@ -298,7 +298,7 @@ export default function RoleSelectionScreen() {
   if (isAuthenticated && user?._id) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F3" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
         <View style={styles.loaderLogoWrap}>
           <Image source={LOGO_IMAGE} style={styles.loaderLogo} resizeMode="cover" />
         </View>
@@ -310,7 +310,7 @@ export default function RoleSelectionScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F3" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -445,7 +445,7 @@ export default function RoleSelectionScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#FFF8F3',
+    backgroundColor: '#F2ECE0',
   },
 
   content: {
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
 
   loader: {
     flex: 1,
-    backgroundColor: '#FFF8F3',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -467,9 +467,9 @@ const styles = StyleSheet.create({
     height: 84,
     borderRadius: 24,
     overflow: 'hidden',
-    backgroundColor: '#FFF6E3',
+    backgroundColor: '#F3E7CA',
     borderWidth: 1,
-    borderColor: '#F3E2B5',
+    borderColor: '#F3E7CA',
     marginBottom: 18,
   },
 
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 14,
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
@@ -525,9 +525,9 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 26,
     overflow: 'hidden',
-    backgroundColor: '#FFF6E3',
+    backgroundColor: '#F3E7CA',
     borderWidth: 1,
-    borderColor: '#F3E2B5',
+    borderColor: '#F3E7CA',
     marginBottom: 14,
   },
 
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#1F1F1F',
+    color: '#0D1C11',
     lineHeight: 25,
     marginBottom: 10,
     textAlign: 'center',
@@ -572,7 +572,7 @@ const styles = StyleSheet.create({
 
   description: {
     fontSize: 14,
-    color: '#666666',
+    color: '#606D5D',
     lineHeight: 22,
     textAlign: 'center',
     marginBottom: 18,
@@ -586,14 +586,14 @@ const styles = StyleSheet.create({
 
   heroStatCard: {
     flex: 1,
-    backgroundColor: '#FAF8F4',
+    backgroundColor: '#F2ECE0',
     borderRadius: 18,
     paddingVertical: 12,
     paddingHorizontal: 8,
     alignItems: 'center',
     marginHorizontal: 4,
     borderWidth: 1,
-    borderColor: '#F0E5D9',
+    borderColor: '#F3E7CA',
   },
 
   heroStatValue: {
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
 
   heroStatLabel: {
     fontSize: 11,
-    color: '#7A7268',
+    color: '#606D5D',
     fontWeight: '700',
     textTransform: 'uppercase',
   },
@@ -627,7 +627,7 @@ const styles = StyleSheet.create({
 
   sectionSubtitle: {
     fontSize: 13,
-    color: '#6F6F6F',
+    color: '#606D5D',
     lineHeight: 20,
   },
 
@@ -675,7 +675,7 @@ const styles = StyleSheet.create({
 
   roleDescription: {
     fontSize: 12.5,
-    color: '#666666',
+    color: '#606D5D',
     lineHeight: 18,
     marginBottom: 14,
   },
@@ -709,17 +709,17 @@ const styles = StyleSheet.create({
   secondaryButton: {
     flex: 1,
     minHeight: 46,
-    backgroundColor: '#F7F7F7',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: '#ECE6DD',
+    borderColor: '#F3E7CA',
   },
 
   secondaryButtonText: {
-    color: '#444444',
+    color: '#606D5D',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -739,14 +739,14 @@ const styles = StyleSheet.create({
   },
 
   infoText: {
-    color: '#E1E1E1',
+    color: '#E3DECF',
     fontSize: 14,
     lineHeight: 22,
     marginBottom: 6,
   },
 
   resetButton: {
-    backgroundColor: '#FFF0F0',
+    backgroundColor: '#F8E1DD',
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 16,
@@ -754,7 +754,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#F3C9C9',
+    borderColor: '#F8E1DD',
   },
 
   resetButtonText: {

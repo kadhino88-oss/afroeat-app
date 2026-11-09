@@ -98,15 +98,15 @@ const formatDateTime = (value) => {
 const getStatusStyle = (status, t) => {
   switch (String(status).toLowerCase()) {
     case 'active':
-      return { bg: '#E8F5ED', text: '#084424', label: t('admin.users.statusActiveLabel'), icon: 'checkmark-circle-outline' };
+      return { bg: '#E3F0E8', text: '#084424', label: t('admin.users.statusActiveLabel'), icon: 'checkmark-circle-outline' };
     case 'suspended':
-      return { bg: '#FDECEC', text: '#B83232', label: t('admin.users.statusSuspendedLabel'), icon: 'ban-outline' };
+      return { bg: '#F8E1DD', text: '#C8331A', label: t('admin.users.statusSuspendedLabel'), icon: 'ban-outline' };
     case 'pending_verification':
-      return { bg: '#FFF3D8', text: '#8A6500', label: t('admin.users.statusPendingLabel'), icon: 'time-outline' };
+      return { bg: '#F3E7CA', text: '#301904', label: t('admin.users.statusPendingLabel'), icon: 'time-outline' };
     case 'rejected':
-      return { bg: '#EFE9FF', text: '#6D4CDB', label: t('admin.users.statusRejectedLabel'), icon: 'close-circle-outline' };
+      return { bg: '#F2ECE0', text: '#084424', label: t('admin.users.statusRejectedLabel'), icon: 'close-circle-outline' };
     default:
-      return { bg: '#F4F4F4', text: '#555', label: t('admin.users.statusUnknownLabel'), icon: 'help-circle-outline' };
+      return { bg: '#F2ECE0', text: '#555', label: t('admin.users.statusUnknownLabel'), icon: 'help-circle-outline' };
   }
 };
 

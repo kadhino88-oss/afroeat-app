@@ -284,54 +284,54 @@ const getStatusStyle = (status) => {
   switch (s) {
     case 'delivered':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
-        border: '#CFE8D8',
+        border: '#E3F0E8',
         slug: s,
         icon: 'checkmark-circle-outline',
       };
 
     case 'delivery':
       return {
-        bg: '#EAF3FF',
-        text: '#245EA8',
-        border: '#CFE1FF',
+        bg: '#F2ECE0',
+        text: '#084424',
+        border: '#E3F0E8',
         slug: s,
         icon: 'bicycle-outline',
       };
 
     case 'preparing':
       return {
-        bg: '#FFF3D8',
-        text: '#8A6500',
-        border: '#F4DEAA',
+        bg: '#F3E7CA',
+        text: '#301904',
+        border: '#EAB02F',
         slug: s,
         icon: 'restaurant-outline',
       };
 
     case 'confirmed':
       return {
-        bg: '#EFE9FF',
-        text: '#6D4CDB',
-        border: '#DDD1FF',
+        bg: '#F2ECE0',
+        text: '#084424',
+        border: '#E3F0E8',
         slug: s,
         icon: 'checkmark-done-outline',
       };
 
     case 'cancelled':
       return {
-        bg: '#FDECEC',
-        text: '#B83232',
-        border: '#F7CFCF',
+        bg: '#F8E1DD',
+        text: '#C8331A',
+        border: '#F8E1DD',
         slug: s,
         icon: 'close-circle-outline',
       };
 
     default:
       return {
-        bg: '#FFF0E8',
+        bg: '#F3E7CA',
         text: '#C8331A',
-        border: '#FFD9C6',
+        border: '#F3E7CA',
         slug: 'pending',
         icon: 'time-outline',
       };
@@ -460,7 +460,7 @@ export default function RestaurantOrderDetailsScreen() {
   if (!order) {
     return (
       <View style={styles.emptyState}>
-        <Ionicons name="receipt-outline" size={52} color="#B8B8B8" />
+        <Ionicons name="receipt-outline" size={52} color="#606D5D" />
         <Text style={styles.emptyTitle}>{t('restaurant.orderDetails.notFoundTitle')}</Text>
         <Text style={styles.emptyText}>
           {t('restaurant.orderDetails.notFoundText')}
@@ -509,7 +509,7 @@ export default function RestaurantOrderDetailsScreen() {
       >
         {!!loadError && (
           <View style={styles.refreshNotice}>
-            <Ionicons name="cloud-offline-outline" size={18} color="#9B4B2D" />
+            <Ionicons name="cloud-offline-outline" size={18} color="#C8331A" />
             <Text style={styles.refreshNoticeText}>{loadError}</Text>
           </View>
         )}
@@ -517,7 +517,7 @@ export default function RestaurantOrderDetailsScreen() {
         {/* HEADER */}
         <View style={styles.header}>
           <Pressable style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#161616" />
+            <Ionicons name="arrow-back" size={22} color="#0D1C11" />
           </Pressable>
 
           <View style={styles.headerTextWrap}>
@@ -591,7 +591,7 @@ export default function RestaurantOrderDetailsScreen() {
 
           {items.length === 0 ? (
             <View style={styles.emptyItemsBox}>
-              <Ionicons name="restaurant-outline" size={24} color="#C2C2C2" />
+              <Ionicons name="restaurant-outline" size={24} color="#E3DECF" />
               <Text style={styles.emptyItemsText}>{t('restaurant.orderDetails.noItemsFound')}</Text>
             </View>
           ) : (
@@ -689,8 +689,8 @@ const styles = StyleSheet.create({
   refreshNotice: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF0E8',
-    borderColor: '#F2C7B2',
+    backgroundColor: '#F3E7CA',
+    borderColor: '#F3E7CA',
     borderWidth: 1,
     borderRadius: 14,
     paddingHorizontal: 12,
@@ -701,7 +701,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   refreshNoticeText: {
-    color: '#77412C',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
@@ -793,7 +793,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     padding: 18,
     borderWidth: 1,
-    borderColor: '#F2EDE7',
+    borderColor: '#F2ECE0',
     shadowColor: '#000',
     shadowOpacity: 0.04,
     shadowRadius: 12,
@@ -878,12 +878,12 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
     borderStyle: 'dashed',
-    borderColor: '#E4DED6',
+    borderColor: '#E3DECF',
     paddingVertical: 22,
     paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFDFB',
+    backgroundColor: '#FFFDF9',
   },
 
   emptyItemsText: {
@@ -897,7 +897,7 @@ const styles = StyleSheet.create({
   itemCard: {
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1ECE6',
+    borderBottomColor: '#F2ECE0',
   },
 
   itemCardLast: {
@@ -919,7 +919,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#151515',
+    color: '#0D1C11',
     lineHeight: 21,
   },
 
@@ -936,7 +936,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 7,
     borderRadius: 999,
-    backgroundColor: '#F5EFE7',
+    backgroundColor: '#F2ECE0',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -944,7 +944,7 @@ const styles = StyleSheet.create({
   qtyBadgeText: {
     fontSize: 13,
     fontWeight: '900',
-    color: '#6A4B2F',
+    color: '#301904',
   },
 
   itemBottomRow: {
@@ -991,7 +991,7 @@ const styles = StyleSheet.create({
 
   divider: {
     height: 1,
-    backgroundColor: '#F0E9E1',
+    backgroundColor: '#F2ECE0',
     marginVertical: 14,
   },
 

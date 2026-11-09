@@ -56,7 +56,7 @@ const PAYMENT_METHODS = [
     id: 'card',
     label: 'Carte bancaire',
     icon: 'card-outline',
-    color: '#245EA8',
+    color: '#084424',
   },
   {
     id: 'cash',
@@ -604,7 +604,7 @@ export default function PaymentScreen() {
 
         {methodsLoading ? (
           <ActivityIndicator
-            color="#5A32A3"
+            color="#084424"
             size="large"
             style={styles.methodsLoader}
           />
@@ -614,7 +614,7 @@ export default function PaymentScreen() {
               <Ionicons
                 name="information-circle-outline"
                 size={18}
-                color="#245EA8"
+                color="#084424"
               />
               <Text style={styles.infoText}>
                 {t('payment.methodsUnavailable')}
@@ -643,12 +643,12 @@ export default function PaymentScreen() {
         )}
 
         {requiresSavedCard && cardsLoading && (
-          <ActivityIndicator color="#245EA8" style={styles.methodsLoader} />
+          <ActivityIndicator color="#084424" style={styles.methodsLoader} />
         )}
 
         {needsCard && (
           <View style={styles.noCardBox}>
-            <Ionicons name="card-outline" size={20} color="#B3261E" />
+            <Ionicons name="card-outline" size={20} color="#C8331A" />
             <View style={styles.savedCardCopy}>
               <Text style={styles.noCardTitle}>{t('paymentCards.noCardTitle')}</Text>
               <Text style={styles.infoText}>{t('paymentCards.noCardText')}</Text>
@@ -658,7 +658,7 @@ export default function PaymentScreen() {
 
         {requiresSavedCard && !cardsLoading && defaultCard && selectedMethod === 'card' && (
           <View style={styles.savedCardBox}>
-            <Ionicons name="card" size={22} color="#245EA8" />
+            <Ionicons name="card" size={22} color="#084424" />
             <View style={styles.savedCardCopy}>
               <Text style={styles.savedCardTitle}>
                 {t('paymentCards.usedCard')}
@@ -681,7 +681,7 @@ export default function PaymentScreen() {
             <Ionicons
               name="information-circle-outline"
               size={16}
-              color="#245EA8"
+              color="#084424"
             />
             <Text style={styles.infoText}>
               {t('payment.cardInfo')}
@@ -763,14 +763,14 @@ export default function PaymentScreen() {
 }
 
 const styles = StyleSheet.create({
-  savedCardBox: { flexDirection: 'row', alignItems: 'center', padding: 14, borderRadius: 14, backgroundColor: '#EEF4FB', borderWidth: 1, borderColor: '#D3E2F3', marginTop: 10 },
+  savedCardBox: { flexDirection: 'row', alignItems: 'center', padding: 14, borderRadius: 14, backgroundColor: '#F2ECE0', borderWidth: 1, borderColor: '#E3F0E8', marginTop: 10 },
   savedCardCopy: { flex: 1, marginLeft: 11 },
-  savedCardTitle: { color: '#5C6B7A', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-  savedCardText: { marginTop: 3, color: '#14253A', fontSize: 15, fontWeight: '800' },
-  changeCardBtn: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#C5D6EA' },
-  changeCardText: { color: '#245EA8', fontSize: 13, fontWeight: '800' },
-  noCardBox: { flexDirection: 'row', alignItems: 'flex-start', padding: 14, borderRadius: 14, backgroundColor: '#FDECEA', borderWidth: 1, borderColor: '#F5C6C2', marginTop: 10 },
-  noCardTitle: { color: '#B3261E', fontSize: 14, fontWeight: '800', marginBottom: 3 },
+  savedCardTitle: { color: '#606D5D', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+  savedCardText: { marginTop: 3, color: '#084424', fontSize: 15, fontWeight: '800' },
+  changeCardBtn: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E3F0E8' },
+  changeCardText: { color: '#084424', fontSize: 13, fontWeight: '800' },
+  noCardBox: { flexDirection: 'row', alignItems: 'flex-start', padding: 14, borderRadius: 14, backgroundColor: '#F8E1DD', borderWidth: 1, borderColor: '#F8E1DD', marginTop: 10 },
+  noCardTitle: { color: '#C8331A', fontSize: 14, fontWeight: '800', marginBottom: 3 },
   container: {
     flex: 1,
     backgroundColor: '#FBF6EC',
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#EDE5D8',
+    borderColor: '#F3E7CA',
   },
   headerTitle: {
     fontSize: 20,
@@ -827,7 +827,7 @@ const styles = StyleSheet.create({
   secureBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1A2A1A',
+    backgroundColor: '#084424',
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
@@ -836,7 +836,7 @@ const styles = StyleSheet.create({
   secureBadgeText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#4CAF7D',
+    color: '#007E4B',
   },
   sectionTitle: {
     fontSize: 15,
@@ -856,7 +856,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   supportLinkText: {
-    color: '#5A32A3',
+    color: '#084424',
     fontSize: 13,
     fontWeight: '800',
   },
@@ -868,12 +868,12 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 10,
     borderWidth: 1.5,
-    borderColor: '#EDE5D8',
+    borderColor: '#F3E7CA',
     gap: 12,
   },
   methodBtnSelected: {
     borderColor: '#084424',
-    backgroundColor: '#F0FAF4',
+    backgroundColor: '#F2ECE0',
   },
   methodIcon: {
     width: 44,
@@ -899,20 +899,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 8,
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 12,
     padding: 12,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#C5D9F5',
+    borderColor: '#E3F0E8',
   },
   infoBoxGreen: {
-    backgroundColor: '#EDFAF1',
-    borderColor: '#B8E6CB',
+    backgroundColor: '#E3F0E8',
+    borderColor: '#007E4B',
   },
   infoText: {
     fontSize: 13,
-    color: '#245EA8',
+    color: '#084424',
     fontWeight: '600',
     flex: 1,
     lineHeight: 18,

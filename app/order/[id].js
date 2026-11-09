@@ -154,13 +154,13 @@ const getStatusStep = (status) => {
 const getStatusColor = (status) => {
   switch (normalizeStatus(status)) {
     case 'delivered':
-      return '#1F8F4C';
+      return '#084424';
     case 'on_the_way':
-      return '#2F80ED';
+      return '#084424';
     case 'preparing':
       return '#EAB02F';
     case 'confirmed':
-      return '#7B61FF';
+      return '#084424';
     case 'cancelled':
       return '#C8331A';
     case 'pending':
@@ -566,7 +566,7 @@ export default function OrderDetailScreen() {
           </Pressable>
 
           <View style={styles.emptyContainer}>
-            <Ionicons name="receipt-outline" size={54} color="#C9B8A3" />
+            <Ionicons name="receipt-outline" size={54} color="#EAB02F" />
             <Text style={styles.emptyTitle}>{t('order.notFoundTitle')}</Text>
             <Text style={styles.emptyText}>
               {errorMessage || t('order.loadError')}
@@ -648,7 +648,7 @@ export default function OrderDetailScreen() {
 
           {!!order?.deliveryAddress && (
             <View style={styles.addressRow}>
-              <Ionicons name="location-outline" size={15} color="#777777" />
+              <Ionicons name="location-outline" size={15} color="#606D5D" />
               <Text style={styles.addressText}>{order.deliveryAddress}</Text>
             </View>
           )}
@@ -667,7 +667,7 @@ export default function OrderDetailScreen() {
             </View>
 
             <View style={styles.metaBadge}>
-              <Ionicons name="card-outline" size={14} color="#7B61FF" />
+              <Ionicons name="card-outline" size={14} color="#084424" />
               <Text style={styles.metaBadgeText}>
                 {order?.paymentStatus || t('order.unpaid')}
               </Text>
@@ -678,7 +678,7 @@ export default function OrderDetailScreen() {
         {isOnTheWay && (
           <View style={styles.liveCard}>
             <View style={styles.liveHeader}>
-              <Ionicons name="radio-outline" size={18} color="#2457C5" />
+              <Ionicons name="radio-outline" size={18} color="#084424" />
               <Text style={styles.liveTitle}>{t('order.realtime')}</Text>
             </View>
 
@@ -851,7 +851,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 10,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -896,14 +896,14 @@ const styles = StyleSheet.create({
 
   subtitle: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 20,
   },
 
   subMeta: {
     textAlign: 'center',
-    color: '#999999',
+    color: '#606D5D',
     fontSize: 12,
     marginTop: 6,
   },
@@ -954,7 +954,7 @@ const styles = StyleSheet.create({
   },
 
   addressText: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 14,
     marginLeft: 6,
     flex: 1,
@@ -969,7 +969,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -979,13 +979,13 @@ const styles = StyleSheet.create({
 
   metaBadgeText: {
     marginLeft: 6,
-    color: '#555555',
+    color: '#606D5D',
     fontWeight: '700',
     fontSize: 12,
   },
 
   liveCard: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 22,
     padding: 18,
     marginBottom: 18,
@@ -1006,7 +1006,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 17,
     fontWeight: '800',
-    color: '#2457C5',
+    color: '#084424',
   },
 
   liveRow: {
@@ -1018,7 +1018,7 @@ const styles = StyleSheet.create({
   },
 
   liveLabel: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 13,
     fontWeight: '700',
     flex: 1,
@@ -1026,7 +1026,7 @@ const styles = StyleSheet.create({
   },
 
   liveValue: {
-    color: '#2457C5',
+    color: '#084424',
     fontSize: 13,
     fontWeight: '900',
     textAlign: 'right',
@@ -1034,7 +1034,7 @@ const styles = StyleSheet.create({
 
   liveUpdatedAt: {
     marginTop: 8,
-    color: '#7180A2',
+    color: '#606D5D',
     fontSize: 11,
     textAlign: 'right',
   },
@@ -1068,7 +1068,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#E6E6E6',
+    backgroundColor: '#E3DECF',
     marginRight: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -1090,7 +1090,7 @@ const styles = StyleSheet.create({
   timelineStepText: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#777777',
+    color: '#606D5D',
   },
 
   timelineStepTextDone: {
@@ -1104,14 +1104,14 @@ const styles = StyleSheet.create({
 
   timelineStepSubtext: {
     marginTop: 4,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 13,
   },
 
   cancelBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FDEAEA',
+    backgroundColor: '#F8E1DD',
     borderRadius: 14,
     padding: 12,
     marginTop: 10,
@@ -1149,7 +1149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1ECE4',
+    borderBottomColor: '#F2ECE0',
   },
 
   itemLeft: {
@@ -1166,7 +1166,7 @@ const styles = StyleSheet.create({
 
   itemQuantity: {
     fontSize: 13,
-    color: '#777777',
+    color: '#606D5D',
   },
 
   itemPrice: {
@@ -1176,7 +1176,7 @@ const styles = StyleSheet.create({
   },
 
   emptyItemsText: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 14,
   },
 
@@ -1228,7 +1228,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,

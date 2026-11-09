@@ -171,7 +171,7 @@ const getAccountStatusStyle = (status, t) => {
     case 'approved':
       return {
         label: t('profile.menu.statusActiveLabel'),
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         icon: 'checkmark-circle-outline',
       };
@@ -182,8 +182,8 @@ const getAccountStatusStyle = (status, t) => {
     case 'pending_approval':
       return {
         label: t('order.status.pending'),
-        bg: '#FFF3D8',
-        text: '#8A6500',
+        bg: '#F3E7CA',
+        text: '#301904',
         icon: 'time-outline',
       };
 
@@ -192,16 +192,16 @@ const getAccountStatusStyle = (status, t) => {
     case 'disabled':
       return {
         label: t('admin.users.statusSuspendedLabel'),
-        bg: '#FDECEC',
-        text: '#B83232',
+        bg: '#F8E1DD',
+        text: '#C8331A',
         icon: 'ban-outline',
       };
 
     default:
       return {
         label: t('profile.menu.statusClientDefaultLabel'),
-        bg: '#F3ECE4',
-        text: '#555555',
+        bg: '#F2ECE0',
+        text: '#606D5D',
         icon: 'person-outline',
       };
   }
@@ -259,7 +259,7 @@ const MenuRow = ({ icon, label, subtitle, onPress, danger = false }) => (
     <Ionicons
       name="chevron-forward-outline"
       size={18}
-      color={danger ? '#C8331A' : '#AAAAAA'}
+      color={danger ? '#C8331A' : '#606D5D'}
     />
   </Pressable>
 );
@@ -328,7 +328,7 @@ export default function ProfileScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FAFAF7" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
         <ActivityIndicator size="large" color="#EAB02F" />
       </View>
     );
@@ -341,7 +341,7 @@ export default function ProfileScreen() {
   if (!isAuthenticated) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FAFAF7" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -394,7 +394,7 @@ export default function ProfileScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FAFAF7" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -568,14 +568,14 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAF7',
+    backgroundColor: '#F2ECE0',
   },
 
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FAFAF7',
+    backgroundColor: '#F2ECE0',
   },
 
   scrollContent: {
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
   guestText: {
     fontSize: 14,
     lineHeight: 22,
-    color: '#666666',
+    color: '#606D5D',
     textAlign: 'center',
     marginBottom: 22,
   },
@@ -650,11 +650,11 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E6E6E6',
+    borderColor: '#E3DECF',
   },
 
   secondaryGuestButtonText: {
-    color: '#444444',
+    color: '#606D5D',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -702,13 +702,13 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
   profileEmail: {
     fontSize: 14,
-    color: '#777777',
+    color: '#606D5D',
     marginBottom: 12,
   },
 
@@ -751,7 +751,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFF8E7',
+    backgroundColor: '#F3E7CA',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
@@ -760,7 +760,7 @@ const styles = StyleSheet.create({
   quickText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#333333',
+    color: '#0D1C11',
     textAlign: 'center',
   },
 
@@ -780,7 +780,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#AAAAAA',
+    color: '#606D5D',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     paddingHorizontal: 16,
@@ -795,7 +795,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderTopWidth: 1,
-    borderTopColor: '#F2F2F2',
+    borderTopColor: '#F2ECE0',
   },
 
   menuLeft: {
@@ -808,14 +808,14 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
 
   menuIconWrapDanger: {
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
   },
 
   menuTextWrap: {
@@ -825,7 +825,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#1A1A1A',
+    color: '#0D1C11',
   },
 
   menuTextDanger: {
@@ -834,7 +834,7 @@ const styles = StyleSheet.create({
 
   menuSubtitle: {
     fontSize: 12,
-    color: '#999999',
+    color: '#606D5D',
     marginTop: 2,
   },
 
@@ -861,12 +861,12 @@ const styles = StyleSheet.create({
   languageModalTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: '#0D1C11',
   },
 
   languageModalSubtitle: {
     fontSize: 13,
-    color: '#8A8A8A',
+    color: '#606D5D',
     marginTop: 4,
     marginBottom: 14,
   },
@@ -881,12 +881,12 @@ const styles = StyleSheet.create({
   },
 
   languageOptionActive: {
-    backgroundColor: '#F1F7F3',
+    backgroundColor: '#F2ECE0',
   },
 
   languageOptionText: {
     fontSize: 15,
-    color: '#1A1A1A',
+    color: '#0D1C11',
     fontWeight: '500',
   },
 });

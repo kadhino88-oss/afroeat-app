@@ -197,19 +197,19 @@ const getStatusColor = (s) => {
   if (s === 'cancelled') return '#C8331A';
   if (s === 'pending') return '#EAB02F';
   if (s === 'preparing') return '#C8331A';
-  if (s === 'on_the_way') return '#2457C5';
-  if (s === 'confirmed') return '#7B61FF';
-  return '#777777';
+  if (s === 'on_the_way') return '#084424';
+  if (s === 'confirmed') return '#084424';
+  return '#606D5D';
 };
 
 const getStatusBg = (s) => {
-  if (s === 'delivered') return '#E8F5ED';
-  if (s === 'cancelled') return '#FDECEC';
-  if (s === 'pending') return '#FFF3D8';
-  if (s === 'preparing') return '#FFF0E8';
-  if (s === 'on_the_way') return '#EAF3FF';
-  if (s === 'confirmed') return '#EFE9FF';
-  return '#F4F4F4';
+  if (s === 'delivered') return '#E3F0E8';
+  if (s === 'cancelled') return '#F8E1DD';
+  if (s === 'pending') return '#F3E7CA';
+  if (s === 'preparing') return '#F3E7CA';
+  if (s === 'on_the_way') return '#F2ECE0';
+  if (s === 'confirmed') return '#F2ECE0';
+  return '#F2ECE0';
 };
 
 const getStatusLabel = (s) => {
@@ -482,7 +482,7 @@ export default function OrdersScreen() {
             <Ionicons
               name="chevron-forward-outline"
               size={18}
-              color="#777777"
+              color="#606D5D"
             />
           </View>
         </View>
@@ -606,7 +606,7 @@ export default function OrdersScreen() {
         ListEmptyComponent={
           sortedOrders.length > 0 ? (
             <View style={styles.empty}>
-              <Ionicons name="filter-outline" size={48} color="#C4B7A6" />
+              <Ionicons name="filter-outline" size={48} color="#606D5D" />
               <Text style={styles.emptyTitle}>
                 {t('orders.noMatchingOrders')}
               </Text>
@@ -628,7 +628,7 @@ export default function OrdersScreen() {
               <Ionicons
                 name="cloud-offline-outline"
                 size={48}
-                color="#C4B7A6"
+                color="#606D5D"
               />
               <Text style={styles.emptyTitle}>{t('orders.loadFailed')}</Text>
               <Text style={styles.emptyText}>{t('orders.tryAgain')}</Text>
@@ -652,7 +652,7 @@ export default function OrdersScreen() {
             </View>
           ) : (
             <View style={styles.empty}>
-              <Ionicons name="receipt-outline" size={48} color="#C4B7A6" />
+              <Ionicons name="receipt-outline" size={48} color="#606D5D" />
               <Text style={styles.emptyTitle}>{t('orders.empty')}</Text>
               <Text style={styles.emptyText}>{t('orders.emptyText')}</Text>
               <Pressable
@@ -702,7 +702,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -718,7 +718,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 18,
@@ -747,7 +747,7 @@ const styles = StyleSheet.create({
   statDivider: {
     width: 1,
     alignSelf: 'stretch',
-    backgroundColor: '#F0E6D9',
+    backgroundColor: '#F3E7CA',
     marginHorizontal: 8,
   },
 
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#777777',
+    color: '#606D5D',
     textTransform: 'uppercase',
     letterSpacing: 0.3,
   },
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E8E0D7',
+    borderColor: '#F3E7CA',
     borderRadius: 999,
     paddingHorizontal: 14,
     marginRight: 8,
@@ -793,7 +793,7 @@ const styles = StyleSheet.create({
   },
 
   filterChipText: {
-    color: '#555555',
+    color: '#606D5D',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -804,21 +804,21 @@ const styles = StyleSheet.create({
 
   filterCount: {
     marginLeft: 7,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '800',
   },
 
   filterCountSelected: {
-    color: '#DDF4E6',
+    color: '#E3F0E8',
   },
 
   errorCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FDEAEA',
+    backgroundColor: '#F8E1DD',
     borderWidth: 1,
-    borderColor: '#F4C7C7',
+    borderColor: '#F8E1DD',
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -884,13 +884,13 @@ const styles = StyleSheet.create({
   },
 
   date: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 13,
     marginBottom: 8,
   },
 
   address: {
-    color: '#8A8A8A',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 19,
     marginBottom: 12,
@@ -910,7 +910,7 @@ const styles = StyleSheet.create({
   },
 
   metaText: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -919,7 +919,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -938,7 +938,7 @@ const styles = StyleSheet.create({
   },
 
   emptyText: {
-    color: '#777777',
+    color: '#606D5D',
     marginTop: 8,
     textAlign: 'center',
     lineHeight: 21,

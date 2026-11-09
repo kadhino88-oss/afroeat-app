@@ -61,14 +61,14 @@ export default function PremiumInput({
   const borderColor = borderAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [
-      safeError ? '#D97B7B' : '#E8DED2',
+      safeError ? '#C8331A' : '#F3E7CA',
       safeError ? '#C8331A' : '#EAB02F',
     ],
   });
 
   const backgroundColor = borderAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#FFFFFF', '#FFFDF8'],
+    outputRange: ['#FFFFFF', '#FFFDF9'],
   });
 
   return (
@@ -91,7 +91,7 @@ export default function PremiumInput({
             <Ionicons
               name={iconName}
               size={18}
-              color={isFocused ? '#EAB02F' : '#8B8176'}
+              color={isFocused ? '#EAB02F' : '#606D5D'}
             />
           </View>
         )}
@@ -105,7 +105,7 @@ export default function PremiumInput({
             inputStyle,
           ]}
           placeholder={safePlaceholder}
-          placeholderTextColor="#A39A90"
+          placeholderTextColor="#606D5D"
           value={value}
           onChangeText={onChangeText}
           onFocus={handleFocus}
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#5F554C',
+    color: '#606D5D',
     marginBottom: 8,
   },
 
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 
   containerDisabled: {
     opacity: 0.75,
-    backgroundColor: '#F8F4EE',
+    backgroundColor: '#F2ECE0',
   },
 
   iconWrap: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
 
   inputDisabled: {
-    color: '#7E746A',
+    color: '#606D5D',
   },
 
   errorText: {

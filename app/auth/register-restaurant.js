@@ -231,7 +231,7 @@ export default function RegisterRestaurantScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F3" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <KeyboardAvoidingView
         style={styles.flex}
@@ -272,7 +272,7 @@ export default function RegisterRestaurantScreen() {
               value={restaurantName}
               onChangeText={setRestaurantName}
               placeholder={t('auth.registerRestaurant.restaurantNameLabel')}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#606D5D"
               editable={!loading}
             />
 
@@ -282,7 +282,7 @@ export default function RegisterRestaurantScreen() {
               value={firstName}
               onChangeText={setFirstName}
               placeholder={t('auth.fields.firstName')}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#606D5D"
               editable={!loading}
             />
 
@@ -292,7 +292,7 @@ export default function RegisterRestaurantScreen() {
               value={lastName}
               onChangeText={setLastName}
               placeholder={t('auth.fields.lastName')}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#606D5D"
               editable={!loading}
             />
 
@@ -302,7 +302,7 @@ export default function RegisterRestaurantScreen() {
               value={phone}
               onChangeText={setPhone}
               placeholder={t('auth.fields.phone')}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#606D5D"
               keyboardType="phone-pad"
               editable={!loading}
             />
@@ -313,7 +313,7 @@ export default function RegisterRestaurantScreen() {
               value={address}
               onChangeText={setAddress}
               placeholder={t('auth.registerRestaurant.addressPlaceholder')}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#606D5D"
               multiline
               textAlignVertical="top"
               editable={!loading}
@@ -325,7 +325,7 @@ export default function RegisterRestaurantScreen() {
               value={country}
               onChangeText={setCountry}
               placeholder={t('auth.fields.country')}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#606D5D"
               editable={!loading}
             />
 
@@ -335,7 +335,7 @@ export default function RegisterRestaurantScreen() {
               value={email}
               onChangeText={setEmail}
               placeholder={t('auth.fields.email')}
-              placeholderTextColor="#888888"
+              placeholderTextColor="#606D5D"
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -349,7 +349,7 @@ export default function RegisterRestaurantScreen() {
                 value={password}
                 onChangeText={setPassword}
                 placeholder={t('auth.fields.password')}
-                placeholderTextColor="#888888"
+                placeholderTextColor="#606D5D"
                 secureTextEntry={secure}
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -363,7 +363,7 @@ export default function RegisterRestaurantScreen() {
                 <Ionicons
                   name={secure ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
-                  color="#666666"
+                  color="#606D5D"
                 />
               </Pressable>
             </View>
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F3',
+    backgroundColor: '#F2ECE0',
   },
 
   content: {
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     width: 78,
     height: 78,
     borderRadius: 39,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 14,
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 14,
-    color: '#666666',
+    color: '#606D5D',
     lineHeight: 22,
     textAlign: 'center',
   },
@@ -485,9 +485,9 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#ECE7DF',
+    borderColor: '#F2ECE0',
     color: '#0D1C11',
     paddingHorizontal: 15,
     paddingVertical: 15,
@@ -501,9 +501,9 @@ const styles = StyleSheet.create({
   },
 
   passwordWrapper: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#ECE7DF',
+    borderColor: '#F2ECE0',
     borderRadius: 16,
     marginBottom: 18,
     flexDirection: 'row',
@@ -519,7 +519,7 @@ const styles = StyleSheet.create({
   },
 
   infoBox: {
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     borderRadius: 18,
     padding: 16,
     marginBottom: 18,
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
 
   infoText: {
     fontSize: 13,
-    color: '#2F5C41',
+    color: '#084424',
     lineHeight: 20,
   },
 

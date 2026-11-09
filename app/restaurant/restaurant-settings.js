@@ -57,7 +57,7 @@ const SettingRow = ({
       </View>
 
       <View style={styles.settingRight}>
-        {rightNode || <Ionicons name="chevron-forward" size={18} color="#8A8A8A" />}
+        {rightNode || <Ionicons name="chevron-forward" size={18} color="#606D5D" />}
       </View>
     </Pressable>
   );
@@ -245,15 +245,15 @@ export default function RestaurantSettingsScreen() {
           <SettingRow
             icon="receipt-outline"
             iconColor="#084424"
-            iconBg="#E8F5ED"
+            iconBg="#E3F0E8"
             title={t('restaurant.settings.acceptOrdersTitle')}
             subtitle={t('restaurant.settings.acceptOrdersSubtitle')}
             rightNode={
               <Switch
                 value={acceptOrders}
                 onValueChange={setAcceptOrders}
-                trackColor={{ false: '#D8D8D8', true: '#BFE3CB' }}
-                thumbColor={acceptOrders ? '#084424' : '#F5F5F5'}
+                trackColor={{ false: '#E3DECF', true: '#007E4B' }}
+                thumbColor={acceptOrders ? '#084424' : '#F2ECE0'}
               />
             }
           />
@@ -261,31 +261,31 @@ export default function RestaurantSettingsScreen() {
           <SettingRow
             icon="flash-outline"
             iconColor="#C8331A"
-            iconBg="#FFF0E8"
+            iconBg="#F3E7CA"
             title={t('restaurant.settings.autoAcceptTitle')}
             subtitle={t('restaurant.settings.autoAcceptSubtitle')}
             rightNode={
               <Switch
                 value={autoAcceptOrders}
                 onValueChange={setAutoAcceptOrders}
-                trackColor={{ false: '#D8D8D8', true: '#F5D0BA' }}
-                thumbColor={autoAcceptOrders ? '#C8331A' : '#F5F5F5'}
+                trackColor={{ false: '#E3DECF', true: '#F3E7CA' }}
+                thumbColor={autoAcceptOrders ? '#C8331A' : '#F2ECE0'}
               />
             }
           />
 
           <SettingRow
             icon="restaurant-outline"
-            iconColor="#245EA8"
-            iconBg="#EAF3FF"
+            iconColor="#084424"
+            iconBg="#F2ECE0"
             title={t('restaurant.settings.prepModeTitle')}
             subtitle={t('restaurant.settings.prepModeSubtitle')}
             rightNode={
               <Switch
                 value={preparationMode}
                 onValueChange={setPreparationMode}
-                trackColor={{ false: '#D8D8D8', true: '#C7DCF8' }}
-                thumbColor={preparationMode ? '#245EA8' : '#F5F5F5'}
+                trackColor={{ false: '#E3DECF', true: '#E3F0E8' }}
+                thumbColor={preparationMode ? '#084424' : '#F2ECE0'}
               />
             }
           />
@@ -296,24 +296,24 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="notifications-outline"
-            iconColor="#7C3AED"
-            iconBg="#F3E8FF"
+            iconColor="#084424"
+            iconBg="#E3F0E8"
             title={t('restaurant.settings.opNotifTitle')}
             subtitle={t('restaurant.settings.opNotifSubtitle')}
             rightNode={
               <Switch
                 value={notificationsEnabled}
                 onValueChange={setNotificationsEnabled}
-                trackColor={{ false: '#D8D8D8', true: '#D9C6FA' }}
-                thumbColor={notificationsEnabled ? '#7C3AED' : '#F5F5F5'}
+                trackColor={{ false: '#E3DECF', true: '#E3F0E8' }}
+                thumbColor={notificationsEnabled ? '#084424' : '#F2ECE0'}
               />
             }
           />
 
           <SettingRow
             icon="mail-outline"
-            iconColor="#245EA8"
-            iconBg="#EAF3FF"
+            iconColor="#084424"
+            iconBg="#F2ECE0"
             title={t('restaurant.settings.contactPrefTitle')}
             subtitle={t('restaurant.settings.contactPrefSubtitle')}
             onPress={() =>
@@ -330,8 +330,8 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="time-outline"
-            iconColor="#8A6500"
-            iconBg="#FFF3D8"
+            iconColor="#301904"
+            iconBg="#F3E7CA"
             title={t('restaurant.settings.hoursTitle')}
             subtitle={t('restaurant.settings.hoursSubtitle')}
             onPress={() =>
@@ -345,7 +345,7 @@ export default function RestaurantSettingsScreen() {
           <SettingRow
             icon="car-outline"
             iconColor="#C8331A"
-            iconBg="#FFF0E8"
+            iconBg="#F3E7CA"
             title={t('restaurant.settings.deliveryZonesTitle')}
             subtitle={t('restaurant.settings.deliveryZonesSubtitle')}
             onPress={() =>
@@ -359,7 +359,7 @@ export default function RestaurantSettingsScreen() {
           <SettingRow
             icon="card-outline"
             iconColor="#084424"
-            iconBg="#E8F5ED"
+            iconBg="#E3F0E8"
             title={t('restaurant.settings.paymentTitle')}
             subtitle={t('restaurant.settings.paymentSubtitle')}
             onPress={() =>
@@ -376,8 +376,8 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="person-circle-outline"
-            iconColor="#245EA8"
-            iconBg="#EAF3FF"
+            iconColor="#084424"
+            iconBg="#F2ECE0"
             title={t('restaurant.settings.profileTitle')}
             subtitle={t('restaurant.settings.profileSubtitle')}
             onPress={() => router.push('/restaurant/restaurant-profile')}
@@ -386,7 +386,7 @@ export default function RestaurantSettingsScreen() {
           <SettingRow
             icon="shield-checkmark-outline"
             iconColor="#084424"
-            iconBg="#E8F5ED"
+            iconBg="#E3F0E8"
             title={t('restaurant.settings.securityTitle')}
             subtitle={t('restaurant.settings.securitySubtitle')}
             onPress={() =>
@@ -399,8 +399,8 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="log-out-outline"
-            iconColor="#B83232"
-            iconBg="#FDECEC"
+            iconColor="#C8331A"
+            iconBg="#F8E1DD"
             title={t('restaurant.settings.logoutTitle')}
             subtitle={t('restaurant.settings.logoutRowSubtitle')}
             onPress={handleLogout}
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
   },
 
   heroText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
 
   settingRowDanger: {
     borderWidth: 1,
-    borderColor: '#F5D0D0',
+    borderColor: '#F8E1DD',
   },
 
   settingRowPressed: {
@@ -580,12 +580,12 @@ const styles = StyleSheet.create({
   },
 
   settingTitleDanger: {
-    color: '#B83232',
+    color: '#C8331A',
   },
 
   settingSubtitle: {
     fontSize: 13,
-    color: '#666666',
+    color: '#606D5D',
     lineHeight: 18,
   },
 

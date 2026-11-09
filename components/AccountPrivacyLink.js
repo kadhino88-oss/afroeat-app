@@ -21,7 +21,7 @@ export default function AccountPrivacyLink() {
         <Text style={styles.title}>{t('profile.home.dataPrivacyTitle')}</Text>
         <Text style={styles.subtitle}>{t('profile.home.dataPrivacyText')}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={18} color="#8B837A" />
+      <Ionicons name="chevron-forward" size={18} color="#606D5D" />
     </Pressable>
   );
 }
@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
     borderRadius: 14,
-    backgroundColor: '#EAF4EC',
+    backgroundColor: '#F2ECE0',
   },
   copy: { flex: 1 },
-  title: { color: '#1C211D', fontSize: 14, fontWeight: '800' },
-  subtitle: { marginTop: 3, color: '#747B76', fontSize: 12, lineHeight: 17 },
+  title: { color: '#0D1C11', fontSize: 14, fontWeight: '800' },
+  subtitle: { marginTop: 3, color: '#606D5D', fontSize: 12, lineHeight: 17 },
 });
