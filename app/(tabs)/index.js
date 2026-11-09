@@ -1654,8 +1654,8 @@ const styles = StyleSheet.create({
   },
 
   restaurantCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    backgroundColor: '#FFFDF9',
+    borderRadius: 28,
     marginBottom: 18,
     overflow: 'hidden',
     shadowColor: '#000000',
@@ -1663,6 +1663,8 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 5 },
     elevation: 4,
+    borderWidth: 1,
+    borderColor: '#E3DECF'
   },
 
   restaurantCardPressed: {
@@ -1757,7 +1759,7 @@ const styles = StyleSheet.create({
     left: 14,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F4C95D',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1781,8 +1783,9 @@ const styles = StyleSheet.create({
   },
 
   restaurantName: {
+    fontFamily: BrandFonts.display,
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: 'normal',
     color: '#0D1C11',
     flex: 1,
     marginRight: 10,
@@ -1823,7 +1826,7 @@ const styles = StyleSheet.create({
   deliveryFeeBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5FBF7',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1833,7 +1836,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 8,
-    backgroundColor: '#F7F4EF',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,

@@ -1949,8 +1949,8 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 22,
+    backgroundColor: '#FFFDF9',
+    borderRadius: 28,
     marginBottom: 16,
     overflow: 'hidden',
     shadowColor: '#000000',
@@ -1958,6 +1958,8 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
+    borderWidth: 1,
+    borderColor: '#E3DECF',
   },
 
   cardPressed: {
@@ -1985,7 +1987,7 @@ const styles = StyleSheet.create({
     left: 14,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F4C95D',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -2037,9 +2039,10 @@ const styles = StyleSheet.create({
   },
 
   cardTitle: {
+    fontFamily: BrandFonts.display,
     flex: 1,
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: 'normal',
     color: '#0D1C11',
     marginRight: 10,
   },
