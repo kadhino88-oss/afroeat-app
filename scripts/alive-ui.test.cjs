@@ -36,3 +36,7 @@ test('page d\'accueil du site : palette de la marque (vert forêt, crème)', () 
   assert.match(src, /cocoa: '#084424'/);
   assert.match(src, /paper: '#FBF6EC'/);
 });
+
+test('dépendances : @react-navigation/* est géré par Expo, exclu des mises à jour automatiques', () => {
+  assert.match(read('.github', 'dependabot.yml'), /dependency-name: "@react-navigation\/\*"/);
+});
