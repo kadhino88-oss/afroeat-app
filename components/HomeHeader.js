@@ -12,6 +12,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
 import { BrandFonts } from '../constants/brand';
+import FloatingDecor from './FloatingDecor';
 import { getUnreadNotificationCount } from '../services/notificationService';
 
 const normalizeText = (value, fallback = '') => {
@@ -81,7 +82,7 @@ export default function HomeHeader({
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.topGlow} />
+      <FloatingDecor />
 
       {/* Sur le web, logo / notifications / panier / profil sont dans la barre du haut (WebNavBar). */}
       {Platform.OS !== 'web' ? (

@@ -17,6 +17,7 @@ import { router, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
+import DishMarquee from '../../components/DishMarquee';
 import { getDeviceAddress } from '../../services/deviceAddress';
 import { BrandFonts } from '../../constants/brand';
 import * as Location from 'expo-location';
@@ -971,14 +972,15 @@ export default function HomeScreen() {
 
   const columns = useGridColumns();
   const renderGridItem = useCallback(
-    (info) =>
-      columns > 1 ? (
-        <View style={{ flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 }}>
-          {renderRestaurant(info)}
-        </View>
-      ) : (
-        renderRestaurant(info)
-      ),
+    (info) => (
+      // Les cartes apparaissent en glissant l'une après l'autre (délai plafonné).
+      <FadeInView
+        delay={Math.min(info.index % 12, 8) * 70}
+        style={columns > 1 ? { flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 } : undefined}
+      >
+        {renderRestaurant(info)}
+      </FadeInView>
+    ),
     [columns, renderRestaurant]
   );
 
@@ -1021,6 +1023,8 @@ export default function HomeScreen() {
               avatarUri={userAvatar}
               user={user}
             />
+
+            <DishMarquee />
 
             <View style={styles.heroCard}>
               <Image

@@ -19,6 +19,7 @@ import { useCart } from '../context/CartContext';
 import { getNearbyPlaces } from '../services/placeService';
 import { NEARBY_RADIUS_OPTIONS } from '../services/nearbySearchSettings';
 import PlaceBrandMark from '../components/PlaceBrandMark';
+import DishMarquee from '../components/DishMarquee';
 
 const HERO_IMAGE = 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1400&q=90';
 
@@ -301,6 +302,10 @@ export default function WebDiscoveryHome() {
             <Text style={styles.heroImageCaptionText}>Restaurants & commerces africains</Text>
           </View>
           <View style={styles.heroOrnament} />
+        </View>
+
+        <View style={styles.marqueeWrap}>
+          <DishMarquee />
         </View>
 
         <View style={[styles.content, compact && styles.contentCompact]}>
@@ -598,6 +603,7 @@ const styles = StyleSheet.create({
   noticeText: { color: COLORS.cream, fontSize: 11, flex: 1, lineHeight: 16 },
   heroCompact: { minHeight: 520, paddingHorizontal: 22, paddingVertical: 42, justifyContent: 'flex-end' },
   heroCopyCompact: { width: '100%' },
+  marqueeWrap: { backgroundColor: '#FBF6EC', paddingVertical: 10, width: '100%', maxWidth: '100%', overflow: 'hidden', alignSelf: 'stretch' },
   heroTitleCompact: { fontSize: 39, lineHeight: 46 },
   searchFormCompact: { flexDirection: 'column', alignItems: 'stretch', backgroundColor: 'transparent', padding: 0 },
 });

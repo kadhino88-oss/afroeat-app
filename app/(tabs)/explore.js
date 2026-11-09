@@ -1507,14 +1507,14 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
   const columns = useGridColumns();
   const renderGridItem = useCallback(
-    (info) =>
-      columns > 1 ? (
-        <View style={{ flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 }}>
-          {renderRestaurant(info)}
-        </View>
-      ) : (
-        renderRestaurant(info)
-      ),
+    (info) => (
+      <FadeInView
+        delay={Math.min(info.index % 12, 8) * 70}
+        style={columns > 1 ? { flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 } : undefined}
+      >
+        {renderRestaurant(info)}
+      </FadeInView>
+    ),
     [columns, renderRestaurant]
   );
 
