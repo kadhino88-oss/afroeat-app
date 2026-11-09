@@ -678,6 +678,7 @@
       "setupError": "Could not prepare card setup.",
       "stripeUnavailable": "The Stripe form is unavailable on this device.",
       "mobileOnlyError": "Add a card from the AFROEAT mobile app.",
+      "setupCancelled": "Card setup cancelled.",
       "refreshButton": "Refresh cards",
       "signupPromptTitle": "Your account is ready",
       "signupPromptText": "Add a payment method now to make future orders easier. This is optional and won’t trigger a payment.",

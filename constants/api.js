@@ -270,6 +270,7 @@ export const API_ENDPOINTS = {
     // Gestion des cartes enregistrées du compte client.
     cards: '/payments/cards',
     createCardSetupIntent: '/payments/cards/setup-intent',
+    createCardSetupSession: '/payments/cards/setup-session',
     setDefaultCard: (paymentMethodId) =>
       `/payments/cards/${safePathParam(paymentMethodId)}/default`,
     removeCard: (paymentMethodId) =>
