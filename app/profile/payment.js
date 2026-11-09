@@ -48,17 +48,13 @@ export default function ProfilePaymentScreen() {
   const [savingCard, setSavingCard] = useState(false);
   const [busyCardId, setBusyCardId] = useState(null);
   const [consentAccepted, setConsentAccepted] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-
-  const cardSetupResult = params?.cardSetup;
-  React.useEffect(() => {
-    if (cardSetupResult === 'success') {
-      setSuccessMessage(t('profile.payment.cardSaved'));
-    } else if (cardSetupResult === 'cancel') {
-      setErrorMessage(t('profile.payment.setupCancelled'));
-    }
-  }, [cardSetupResult, t]);
+  // Retour de Stripe Checkout (web) : message affiché dès le premier rendu.
+  const [errorMessage, setErrorMessage] = useState(() =>
+    params?.cardSetup === 'cancel' ? t('profile.payment.setupCancelled') : ''
+  );
+  const [successMessage, setSuccessMessage] = useState(() =>
+    params?.cardSetup === 'success' ? t('profile.payment.cardSaved') : ''
+  );
 
   const finishSignup = useCallback(() => {
     if (role === 'restaurant' || role === 'livreur') {

@@ -82,5 +82,5 @@ test('profil paiement : sur le web, ajout de carte via Stripe Checkout (redirect
   assert.match(api, /createCardSetupSession:\s*'\/payments\/cards\/setup-session'/);
   assert.match(src, /API_ENDPOINTS\.payments\.createCardSetupSession/);
   assert.match(src, /window\.location\.assign\(session\.url\)/);
-  assert.match(src, /cardSetup/);
+  assert.match(src, /params\?\.cardSetup/);
 });
