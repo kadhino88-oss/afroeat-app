@@ -2,6 +2,7 @@
   "expo": {
     "name": "Afroeat",
     "slug": "afroeat",
+    "owner": "bk-entreprises-organization",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -71,7 +72,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "1aa7acfc-71e1-46b0-b5d3-efeaf2b16a81"
+        "projectId": "e2648096-d74c-4732-96e0-ce31af47e9f8"
       }
     }
   }
