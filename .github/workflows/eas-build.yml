@@ -1,0 +1,56 @@
+name: Construire l'appli mobile (EAS)
+
+# Bouton manuel (onglet « Actions » → « Run workflow »).
+# Lance une construction sur les serveurs Expo (EAS) et rend la main tout de suite :
+# le lien de suivi apparaît dans le journal et sur https://expo.dev.
+# Secret requis : EXPO_TOKEN (jeton créé sur expo.dev → Settings → Access tokens).
+# Variables d'environnement de l'appli (EXPO_PUBLIC_API_URL, EXPO_PUBLIC_STRIPE_KEY…) :
+# à définir sur expo.dev → projet → Environment variables (environnement « preview » / « production »).
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Plateforme (iOS demande d'abord la connexion au compte Apple, voir docs/PUBLICATION_MAGASINS.md)"
+        type: choice
+        options: [android, ios, all]
+        default: android
+      profile:
+        description: "Profil de construction"
+        type: choice
+        options: [preview, production]
+        default: preview
+
+permissions:
+  contents: read
+
+jobs:
+  eas-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Vérifier le secret
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "::error::Le secret EXPO_TOKEN est absent (expo.dev → Settings → Access tokens)."
+            exit 1
+          fi
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      - name: Lancer la construction
+        env:
+          NPM_CONFIG_LEGACY_PEER_DEPS: "true"
+        run: eas build --platform ${{ inputs.platform }} --profile ${{ inputs.profile }} --non-interactive --no-wait
