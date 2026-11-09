@@ -93,7 +93,7 @@ const getHealthStyle = (status, t) => {
   if (normalized === 'healthy') {
     return {
       bg: '#E8F5ED',
-      text: '#1F6F43',
+      text: '#084424',
       border: '#CFE8D8',
       label: t('admin.dashboard.healthyLabel'),
       icon: 'checkmark-circle',
@@ -191,7 +191,7 @@ const normalizeOpsOverview = (payload) => {
  * =========================================================
  */
 
-const StatCard = ({ label, value, iconName, tint = '#1F6F43' }) => (
+const StatCard = ({ label, value, iconName, tint = '#084424' }) => (
   <View style={styles.statCard}>
     <View style={styles.statCardTop}>
       <View style={[styles.statIconWrap, { backgroundColor: `${tint}14` }]}>
@@ -207,7 +207,7 @@ const HighlightCard = ({
   label,
   value,
   iconName,
-  tint = '#1F6F43',
+  tint = '#084424',
 }) => (
   <View style={styles.highlightCard}>
     <View
@@ -234,7 +234,7 @@ const MetricStripCard = ({ title, items }) => (
           <Text
             style={[
               styles.metricStripValue,
-              { color: item.tint || '#111111' },
+              { color: item.tint || '#0D1C11' },
             ]}
           >
             {normalizeNumber(item.value)}
@@ -393,14 +393,14 @@ export default function AdminOpsScreen() {
         label: t('admin.common.usersTitle'),
         value: entities.totalUsers,
         iconName: 'people-outline',
-        tint: '#1F6F43',
+        tint: '#084424',
       },
       {
         key: 'total-restaurants',
         label: t('admin.common.restaurantsTitle'),
         value: entities.totalRestaurants,
         iconName: 'storefront-outline',
-        tint: '#D96C2D',
+        tint: '#C8331A',
       },
       {
         key: 'total-drivers',
@@ -448,7 +448,7 @@ export default function AdminOpsScreen() {
         label: t('admin.ops.activeDriversLabel'),
         value: entities.activeDriversAccounts,
         iconName: 'navigate-outline',
-        tint: '#1F6F43',
+        tint: '#084424',
       },
     ],
     [entities, t]
@@ -461,14 +461,14 @@ export default function AdminOpsScreen() {
         label: t('admin.ops.totalOrdersLabel'),
         value: orders.totalOrders,
         iconName: 'receipt-outline',
-        tint: '#1F6F43',
+        tint: '#084424',
       },
       {
         key: 'pending-orders',
         label: t('admin.dashboard.pendingLabel'),
         value: orders.pendingOrders,
         iconName: 'hourglass-outline',
-        tint: '#D96C2D',
+        tint: '#C8331A',
       },
       {
         key: 'preparing-orders',
@@ -489,7 +489,7 @@ export default function AdminOpsScreen() {
         label: t('order.status.delivered'),
         value: orders.deliveredOrders,
         iconName: 'checkmark-circle-outline',
-        tint: '#1F6F43',
+        tint: '#084424',
       },
       {
         key: 'cancelled-orders',
@@ -509,14 +509,14 @@ export default function AdminOpsScreen() {
         label: t('admin.dashboard.newAccounts7dLabel'),
         value: entities.newUsers7d,
         iconName: 'person-add-outline',
-        tint: '#1F6F43',
+        tint: '#084424',
       },
       {
         key: 'new-restaurants-7d',
         label: t('admin.dashboard.newRestaurants7dLabel'),
         value: entities.newRestaurants7d,
         iconName: 'add-circle-outline',
-        tint: '#D96C2D',
+        tint: '#C8331A',
       },
       {
         key: 'new-orders-24h',
@@ -583,8 +583,8 @@ export default function AdminOpsScreen() {
   if (authLoading || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.ops.loaderText')}</Text>
       </View>
     );
@@ -629,7 +629,7 @@ export default function AdminOpsScreen() {
   if (!ops) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
           <Text style={styles.emptyTitle}>{t('admin.ops.emptyTitle')}</Text>
@@ -667,7 +667,7 @@ export default function AdminOpsScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -681,7 +681,7 @@ export default function AdminOpsScreen() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -690,9 +690,9 @@ export default function AdminOpsScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -795,7 +795,7 @@ export default function AdminOpsScreen() {
           </Pressable>
 
           <Pressable style={styles.quickActionCard} onPress={handleOpenDrivers}>
-            <Ionicons name="bicycle-outline" size={20} color="#1F6F43" />
+            <Ionicons name="bicycle-outline" size={20} color="#084424" />
             <Text style={styles.quickActionTitle}>{t('admin.common.driversTitle')}</Text>
             <Text style={styles.quickActionText}>{t('admin.ops.driversQuickText')}</Text>
           </Pressable>
@@ -810,7 +810,7 @@ export default function AdminOpsScreen() {
             style={styles.quickActionCard}
             onPress={handleOpenRestaurants}
           >
-            <Ionicons name="storefront-outline" size={20} color="#D96C2D" />
+            <Ionicons name="storefront-outline" size={20} color="#C8331A" />
             <Text style={styles.quickActionTitle}>{t('admin.common.restaurantsTitle')}</Text>
             <Text style={styles.quickActionText}>{t('admin.ops.restaurantsQuickText')}</Text>
           </Pressable>
@@ -929,7 +929,7 @@ export default function AdminOpsScreen() {
             <Ionicons
               name="checkmark-circle-outline"
               size={20}
-              color="#1F6F43"
+              color="#084424"
             />
             <Text style={styles.cleanStateText}>
               {t('admin.dashboard.noSignalText')}
@@ -989,14 +989,14 @@ export default function AdminOpsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
 
   loader: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: {
     marginTop: 12,
@@ -1032,14 +1032,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: {
@@ -1069,7 +1069,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   heroText: {
@@ -1165,7 +1165,7 @@ const styles = StyleSheet.create({
   metricStripTitle: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 14,
   },
   metricStripGrid: {
@@ -1224,7 +1224,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 12,
     marginTop: 4,
   },
@@ -1254,7 +1254,7 @@ const styles = StyleSheet.create({
   quickActionTitle: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginTop: 10,
     marginBottom: 4,
   },
@@ -1300,7 +1300,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
   statLabel: {
@@ -1340,7 +1340,7 @@ const styles = StyleSheet.create({
   highlightValue: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 2,
   },
   highlightLabel: {
@@ -1402,7 +1402,7 @@ const styles = StyleSheet.create({
   },
   cleanStateText: {
     marginLeft: 10,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '800',
@@ -1461,7 +1461,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1476,7 +1476,7 @@ const styles = StyleSheet.create({
 
   retryButton: {
     marginTop: 18,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     minHeight: 46,
     borderRadius: 14,
     paddingHorizontal: 18,

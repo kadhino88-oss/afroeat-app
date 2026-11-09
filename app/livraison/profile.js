@@ -133,7 +133,7 @@ export default function LivraisonProfileScreen() {
   if (authLoading || loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#D96C2D" />
+        <ActivityIndicator size="large" color="#C8331A" />
       </View>
     );
   }
@@ -223,7 +223,7 @@ export default function LivraisonProfileScreen() {
  */
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
 
   content: {
     padding: 20,

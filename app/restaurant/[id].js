@@ -835,7 +835,7 @@ export default function RestaurantScreen() {
     return (
       <View style={styles.loader}>
         <StatusBar barStyle="light-content" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('restaurant.loading')}</Text>
       </View>
     );
@@ -844,7 +844,7 @@ export default function RestaurantScreen() {
   if (!restaurant) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <Text style={styles.errorText}>
           {errorMessage || t('restaurant.loadError')}
         </Text>
@@ -945,7 +945,7 @@ export default function RestaurantScreen() {
         <View style={styles.heroBottomContent}>
           {restaurant.isFeatured ? (
             <View style={styles.heroBadge}>
-              <Ionicons name="sparkles-outline" size={13} color="#111111" />
+              <Ionicons name="sparkles-outline" size={13} color="#0D1C11" />
               <Text style={styles.heroBadgeText}>{t('restaurant.premiumRestaurant')}</Text>
             </View>
           ) : null}
@@ -972,8 +972,8 @@ export default function RestaurantScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => fetchData(true)}
-            colors={['#D4A017']}
-            tintColor="#D4A017"
+            colors={['#EAB02F']}
+            tintColor="#EAB02F"
           />
         }
         ListHeaderComponent={
@@ -1019,7 +1019,7 @@ export default function RestaurantScreen() {
 
             <View style={styles.infoCard}>
               <View style={styles.metaRow}>
-                <Ionicons name="restaurant-outline" size={16} color="#D96C2D" />
+                <Ionicons name="restaurant-outline" size={16} color="#C8331A" />
                 <Text style={styles.metaText}>
                   {restaurant.cuisine}
                   {restaurant.city ? ` • ${restaurant.city}` : ''}
@@ -1029,7 +1029,7 @@ export default function RestaurantScreen() {
 
               {!!restaurant.address && (
                 <View style={styles.metaRow}>
-                  <Ionicons name="location-outline" size={16} color="#1F6F43" />
+                  <Ionicons name="location-outline" size={16} color="#084424" />
                   <Text style={styles.metaText}>{restaurant.address}</Text>
                 </View>
               )}
@@ -1157,7 +1157,7 @@ export default function RestaurantScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   heroWrapper: {
@@ -1237,7 +1237,7 @@ const styles = StyleSheet.create({
     minWidth: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 4,
@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 12,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
   },
 
   heroTitle: {
@@ -1319,7 +1319,7 @@ const styles = StyleSheet.create({
   },
 
   refreshRetryText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1346,7 +1346,7 @@ const styles = StyleSheet.create({
   quickStatValue: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -1450,8 +1450,8 @@ const styles = StyleSheet.create({
   },
 
   categoryFilterSelected: {
-    backgroundColor: '#1F6F43',
-    borderColor: '#1F6F43',
+    backgroundColor: '#084424',
+    borderColor: '#084424',
   },
 
   categoryFilterText: {
@@ -1466,7 +1466,7 @@ const styles = StyleSheet.create({
 
   clearFiltersButton: {
     alignSelf: 'center',
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     borderRadius: 12,
     paddingHorizontal: 15,
     paddingVertical: 10,
@@ -1511,7 +1511,7 @@ const styles = StyleSheet.create({
     height: 78,
     borderRadius: 16,
     marginRight: 12,
-    backgroundColor: '#F3E6D7',
+    backgroundColor: '#F1EBDA',
   },
 
   textContent: {
@@ -1548,7 +1548,7 @@ const styles = StyleSheet.create({
   },
 
   price: {
-    color: '#D96C2D',
+    color: '#C8331A',
     fontWeight: '800',
     fontSize: 14,
     marginRight: 10,
@@ -1594,13 +1594,13 @@ const styles = StyleSheet.create({
   },
 
   unavailableBadgeText: {
-    color: '#B63B3B',
+    color: '#C8331A',
     fontSize: 11,
     fontWeight: '800',
   },
 
   addBtn: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     width: 44,
     height: 44,
     borderRadius: 22,
@@ -1637,7 +1637,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingHorizontal: 24,
   },
 
@@ -1654,7 +1654,7 @@ const styles = StyleSheet.create({
 
   retryBtn: {
     marginTop: 16,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 12,
@@ -1662,7 +1662,7 @@ const styles = StyleSheet.create({
 
   retryText: {
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
   },
 
   buttonPressed: {

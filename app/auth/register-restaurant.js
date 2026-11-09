@@ -251,13 +251,13 @@ export default function RegisterRestaurantScreen() {
               onPress={handleBack}
               disabled={loading}
             >
-              <Ionicons name="arrow-back" size={22} color="#111111" />
+              <Ionicons name="arrow-back" size={22} color="#0D1C11" />
             </Pressable>
           </View>
 
           <View style={styles.header}>
             <View style={styles.iconWrapper}>
-              <Ionicons name="storefront-outline" size={30} color="#1F6F43" />
+              <Ionicons name="storefront-outline" size={30} color="#084424" />
             </View>
 
             <Text style={styles.eyebrow}>{t('auth.registerRestaurant.eyebrow')}</Text>
@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
     marginTop: 6,
   },
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     borderWidth: 1,
     borderColor: '#ECE7DF',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     paddingHorizontal: 15,
     paddingVertical: 15,
     borderRadius: 16,
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
 
   passwordInput: {
     flex: 1,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     paddingVertical: 15,
     fontSize: 15,
   },
@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: 'center',

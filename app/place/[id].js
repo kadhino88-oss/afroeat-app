@@ -147,7 +147,7 @@ export default function PublicPlaceScreen() {
 
         <View style={styles.menuCard}>
           <View style={styles.menuIcon}>
-            <Ionicons name="book-outline" size={22} color="#1F6F43" />
+            <Ionicons name="book-outline" size={22} color="#084424" />
           </View>
           <Text style={styles.menuTitle}>{t('publicPlace.catalogueTitle')}</Text>
           <Text style={styles.menuText}>
@@ -213,7 +213,7 @@ export default function PublicPlaceScreen() {
 function InfoRow({ icon, label, value }) {
   return (
     <View style={styles.infoRow}>
-      <Ionicons name={icon} size={18} color="#1F6F43" />
+      <Ionicons name={icon} size={18} color="#084424" />
       <View style={styles.infoCopy}>
         <Text style={styles.infoLabel}>{label}</Text>
         <Text style={styles.infoValue}>{value}</Text>
@@ -225,7 +225,7 @@ function InfoRow({ icon, label, value }) {
 function ActionButton({ icon, label, onPress }) {
   return (
     <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
-      <Ionicons name={icon} size={18} color="#1F6F43" />
+      <Ionicons name={icon} size={18} color="#084424" />
       <Text style={styles.actionLabel}>{label}</Text>
       <Ionicons name="chevron-forward" size={17} color="#968A7A" />
     </Pressable>
@@ -233,7 +233,7 @@ function ActionButton({ icon, label, onPress }) {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingBottom: 36 },
   hero: { minHeight: 260, paddingTop: 68, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#155B38', alignItems: 'center', justifyContent: 'center' },
   backButton: { position: 'absolute', top: 48, left: 18, width: 42, height: 42, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.14)' },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   joinCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#155B38' },
   joinTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '900' },
   joinText: { marginTop: 7, color: '#DDEBE2', fontSize: 14, lineHeight: 21 },
-  joinButton: { marginTop: 14, minHeight: 48, borderRadius: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#1F6F43', borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)' },
+  joinButton: { marginTop: 14, minHeight: 48, borderRadius: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#084424', borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)' },
   joinButtonText: { marginLeft: 8, color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   attribution: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 12 },
   attributionText: { marginLeft: 6, color: '#7C7164', fontSize: 11, textDecorationLine: 'underline' },

@@ -18,7 +18,7 @@ export default function AuthLayout() {
         headerShown: false,
         animation: 'fade',
         contentStyle: {
-          backgroundColor: '#FFF8F0',
+          backgroundColor: '#FBF6EC',
         },
       }}
     >

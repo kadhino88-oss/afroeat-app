@@ -213,7 +213,7 @@ const normalizeRestaurantsResponse = (response) => {
  * =========================================================
  */
 
-const StatCard = ({ label, value, iconName, tint = '#1F6F43' }) => (
+const StatCard = ({ label, value, iconName, tint = '#084424' }) => (
   <View style={styles.statCard}>
     <View style={[styles.statIconWrap, { backgroundColor: `${tint}14` }]}>
       <Ionicons name={iconName} size={18} color={tint} />
@@ -422,8 +422,8 @@ export default function AdminRestaurantsScreen() {
   if (authLoading || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.restaurants.loaderText')}</Text>
       </View>
     );
@@ -467,7 +467,7 @@ export default function AdminRestaurantsScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={restaurants}
@@ -487,7 +487,7 @@ export default function AdminRestaurantsScreen() {
           <View>
             <View style={styles.topRow}>
               <Pressable style={styles.topButton} onPress={handleGoBack}>
-                <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+                <Ionicons name="arrow-back" size={20} color="#0D1C11" />
               </Pressable>
 
               <Pressable
@@ -499,9 +499,9 @@ export default function AdminRestaurantsScreen() {
                 disabled={refreshing}
               >
                 {refreshing ? (
-                  <ActivityIndicator size="small" color="#1E1E1E" />
+                  <ActivityIndicator size="small" color="#0D1C11" />
                 ) : (
-                  <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+                  <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
                 )}
               </Pressable>
             </View>
@@ -540,7 +540,7 @@ export default function AdminRestaurantsScreen() {
                 label={t('admin.users.statTotalLabel')}
                 value={stats.total}
                 iconName="storefront-outline"
-                tint="#1F6F43"
+                tint="#084424"
               />
               <StatCard
                 label={t('admin.restaurants.statWithOwnerLabel')}
@@ -552,7 +552,7 @@ export default function AdminRestaurantsScreen() {
                 label={t('admin.restaurants.statWithAddressLabel')}
                 value={stats.withAddress}
                 iconName="location-outline"
-                tint="#D96C2D"
+                tint="#C8331A"
               />
               <StatCard
                 label={t('admin.restaurants.statWithCuisineLabel')}
@@ -564,7 +564,7 @@ export default function AdminRestaurantsScreen() {
                 label={t('admin.restaurants.statOpenLabel')}
                 value={stats.open}
                 iconName="checkmark-circle-outline"
-                tint="#1F6F43"
+                tint="#084424"
               />
               <StatCard
                 label={t('admin.restaurants.statFeaturedLabel')}
@@ -708,7 +708,7 @@ export default function AdminRestaurantsScreen() {
         }
         renderItem={({ item }) => {
           const openBadgeStyle = item?.isOpen
-            ? { bg: '#E8F5ED', text: '#1F6F43', label: t('restaurant.profile.openLabel') }
+            ? { bg: '#E8F5ED', text: '#084424', label: t('restaurant.profile.openLabel') }
             : { bg: '#FDECEC', text: '#B83232', label: t('restaurant.profile.closedLabel') };
 
           return (
@@ -797,7 +797,7 @@ export default function AdminRestaurantsScreen() {
               <View style={styles.metaRow}>
                 {item?.rating > 0 ? (
                   <View style={styles.metaBadge}>
-                    <Ionicons name="star-outline" size={14} color="#D4A017" />
+                    <Ionicons name="star-outline" size={14} color="#EAB02F" />
                     <Text style={styles.metaBadgeText}>
                       {Number(item.rating).toFixed(1)}
                     </Text>
@@ -818,7 +818,7 @@ export default function AdminRestaurantsScreen() {
                     <Ionicons
                       name="receipt-outline"
                       size={14}
-                      color="#1F6F43"
+                      color="#084424"
                     />
                     <Text style={styles.metaBadgeText}>
                       {t('admin.restaurants.ordersCountLabel', { count: item.ordersCount })}
@@ -839,7 +839,7 @@ export default function AdminRestaurantsScreen() {
                   <Ionicons
                     name="storefront-outline"
                     size={15}
-                    color="#1F6F43"
+                    color="#084424"
                   />
                   <Text style={styles.footerBadgeText}>{t('admin.users.viewDetailsButton')}</Text>
                 </View>
@@ -868,7 +868,7 @@ export default function AdminRestaurantsScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
   emptyListContent: { flexGrow: 1 },
 
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: { marginTop: 12, color: '#777', fontSize: 15 },
 
@@ -906,14 +906,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: { color: '#6B655E', fontSize: 14, lineHeight: 21 },
@@ -1093,7 +1093,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   filterChipActive: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#0D1C11',
   },
   filterChipText: {
     color: '#555',
@@ -1110,7 +1110,7 @@ const styles = StyleSheet.create({
   },
   applyButton: {
     flex: 1,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',
@@ -1165,7 +1165,7 @@ const styles = StyleSheet.create({
   resultsCount: {
     fontSize: 13,
     fontWeight: '900',
-    color: '#1F6F43',
+    color: '#084424',
   },
   resultsText: {
     color: '#666',
@@ -1301,7 +1301,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   footerBadgeText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '800',
     fontSize: 13,
     marginLeft: 6,
@@ -1320,7 +1320,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,

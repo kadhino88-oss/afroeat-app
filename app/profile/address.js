@@ -79,8 +79,8 @@ export default function ProfileAddressScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('common.loading')}</Text>
       </View>
     );
@@ -102,7 +102,7 @@ export default function ProfileAddressScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <View style={styles.topRow}>
         <Pressable style={styles.backButton} onPress={handleBack}>
@@ -145,14 +145,14 @@ export default function ProfileAddressScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5EFE8',
+    backgroundColor: '#F2ECE0',
     paddingTop: 24,
     paddingHorizontal: 16,
   },
 
   loader: {
     flex: 1,
-    backgroundColor: '#F5EFE8',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },

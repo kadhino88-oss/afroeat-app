@@ -85,7 +85,7 @@ const getStatusStyle = (status, t) => {
     case 'active':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
@@ -150,7 +150,7 @@ const getDriverRiskStyle = (driver, t) => {
 
   return {
     bg: '#E8F5ED',
-    text: '#1F6F43',
+    text: '#084424',
     label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
   };
@@ -200,7 +200,7 @@ const normalizeDriver = (driver) => {
   };
 };
 
-const MetricCard = ({ label, value, icon, tint = '#1F6F43' }) => (
+const MetricCard = ({ label, value, icon, tint = '#084424' }) => (
   <View style={styles.metricCard}>
     <View style={[styles.metricIconWrap, { backgroundColor: `${tint}14` }]}>
       <Ionicons name={icon} size={18} color={tint} />
@@ -401,14 +401,14 @@ export default function AdminDriverDetailsScreen() {
         key: 'identity',
         label: t('admin.restaurantDetails.identityFieldLabel'),
         value: driver?.isIdentityVerified ? t('admin.driverDetails.identityVerifiedValue') : t('admin.driverDetails.identityToVerifyValue'),
-        accent: driver?.isIdentityVerified ? '#1F6F43' : '#8A6500',
+        accent: driver?.isIdentityVerified ? '#084424' : '#8A6500',
         icon: 'shield-checkmark-outline',
       },
       {
         key: 'work',
         label: t('admin.driverDetails.authorizationLabel'),
         value: driver?.isWorkAuthorized ? t('admin.driverDetails.workValidValue') : t('admin.driverDetails.workMissingValue'),
-        accent: driver?.isWorkAuthorized ? '#1F6F43' : '#B83232',
+        accent: driver?.isWorkAuthorized ? '#084424' : '#B83232',
         icon: 'briefcase-outline',
       },
       {
@@ -579,8 +579,8 @@ export default function AdminDriverDetailsScreen() {
   if (loading && !initialLoaded) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.driverDetails.loaderText')}</Text>
       </View>
     );
@@ -589,7 +589,7 @@ export default function AdminDriverDetailsScreen() {
   if (!canAccess) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="shield-outline" size={56} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
@@ -604,7 +604,7 @@ export default function AdminDriverDetailsScreen() {
   if (!driver) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
           <Text style={styles.emptyTitle}>{t('admin.driverDetails.notFoundTitle')}</Text>
@@ -631,7 +631,7 @@ export default function AdminDriverDetailsScreen() {
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={16} color="#1F6F43" />
+            <Ionicons name="arrow-back" size={16} color="#084424" />
             <Text style={styles.backLinkText}>{t('admin.driverDetails.backToDriversLink')}</Text>
           </Pressable>
         </View>
@@ -641,7 +641,7 @@ export default function AdminDriverDetailsScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         style={styles.container}
@@ -653,7 +653,7 @@ export default function AdminDriverDetailsScreen() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -662,9 +662,9 @@ export default function AdminDriverDetailsScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -737,7 +737,7 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.driverDetails.deliveriesLabel')}
             value={String(normalizeNumber(driver?.completedDeliveries))}
             icon="checkmark-done-outline"
-            tint="#1F6F43"
+            tint="#084424"
           />
           <MetricCard
             label={t('restaurant.analytics.ratingLabel')}
@@ -745,7 +745,7 @@ export default function AdminDriverDetailsScreen() {
               driver?.rating > 0 ? Number(driver.rating).toFixed(1) : '—'
             }
             icon="star-outline"
-            tint="#D4A017"
+            tint="#EAB02F"
           />
           <MetricCard
             label={t('admin.driverDetails.acceptanceRateLabel')}
@@ -773,7 +773,7 @@ export default function AdminDriverDetailsScreen() {
               driver?.earningsToday > 0 ? `${normalizeNumber(driver?.earningsToday)} €` : '—'
             }
             icon="cash-outline"
-            tint="#D96C2D"
+            tint="#C8331A"
           />
           <MetricCard
             label={t('admin.driverDetails.earningsWeekLabel')}
@@ -781,7 +781,7 @@ export default function AdminDriverDetailsScreen() {
               driver?.earningsWeek > 0 ? `${normalizeNumber(driver?.earningsWeek)} €` : '—'
             }
             icon="wallet-outline"
-            tint="#1F6F43"
+            tint="#084424"
           />
         </View>
 
@@ -838,7 +838,7 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.restaurantDetails.identityFieldLabel')}
             value={driver?.isIdentityVerified ? t('admin.driverDetails.identityVerifiedValue') : t('admin.driverDetails.identityToVerifyValue')}
             valueStyle={{
-              color: driver?.isIdentityVerified ? '#1F6F43' : '#8A6500',
+              color: driver?.isIdentityVerified ? '#084424' : '#8A6500',
               fontWeight: '900',
             }}
           />
@@ -847,7 +847,7 @@ export default function AdminDriverDetailsScreen() {
             label={t('admin.restaurantDetails.workFieldLabel')}
             value={driver?.isWorkAuthorized ? t('admin.driverDetails.workAuthorizedValue') : t('admin.driverDetails.workNotValidatedValue')}
             valueStyle={{
-              color: driver?.isWorkAuthorized ? '#1F6F43' : '#B83232',
+              color: driver?.isWorkAuthorized ? '#084424' : '#B83232',
               fontWeight: '900',
             }}
           />
@@ -893,7 +893,7 @@ export default function AdminDriverDetailsScreen() {
               }}
               disabled={updatingVerification}
               trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
-              thumbColor={identityVerificationDraft ? '#1F6F43' : '#F4F3F4'}
+              thumbColor={identityVerificationDraft ? '#084424' : '#F4F3F4'}
             />
           </View>
 
@@ -925,7 +925,7 @@ export default function AdminDriverDetailsScreen() {
                 (!identityVerificationDraft && !workAuthorizationDraft)
               }
               trackColor={{ false: '#D8D2CA', true: '#BDE6CA' }}
-              thumbColor={workAuthorizationDraft ? '#1F6F43' : '#F4F3F4'}
+              thumbColor={workAuthorizationDraft ? '#084424' : '#F4F3F4'}
             />
           </View>
 
@@ -1061,11 +1061,11 @@ export default function AdminDriverDetailsScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   content: {
     paddingHorizontal: 16,
@@ -1077,7 +1077,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: {
     marginTop: 12,
@@ -1109,14 +1109,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: {
@@ -1349,7 +1349,7 @@ const styles = StyleSheet.create({
     paddingRight: 12,
   },
   verificationLabel: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 14,
     fontWeight: '800',
     marginBottom: 4,
@@ -1360,7 +1360,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
   },
   verificationNoteLabel: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 13,
     fontWeight: '800',
     marginTop: 14,
@@ -1373,7 +1373,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFCF7',
     borderRadius: 14,
     padding: 12,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 12,
@@ -1400,7 +1400,7 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     minHeight: 48,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 12,
@@ -1445,7 +1445,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1460,7 +1460,7 @@ const styles = StyleSheet.create({
 
   retryButton: {
     marginTop: 18,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     minHeight: 46,
     borderRadius: 14,
     paddingHorizontal: 18,
@@ -1485,7 +1485,7 @@ const styles = StyleSheet.create({
   },
   backLinkText: {
     marginLeft: 8,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 14,
     fontWeight: '800',
   },

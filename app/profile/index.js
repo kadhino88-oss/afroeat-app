@@ -92,7 +92,7 @@ const getDisplayName = (user) => {
 const FeatureCard = ({ icon, title, text }) => (
   <View style={styles.featureCard}>
     <View style={styles.featureIconWrap}>
-      <MaterialCommunityIcons name={icon} size={22} color="#1F6F43" />
+      <MaterialCommunityIcons name={icon} size={22} color="#084424" />
     </View>
     <Text style={styles.featureTitle}>{title}</Text>
     <Text style={styles.featureText}>{text}</Text>
@@ -104,7 +104,7 @@ const QuickCard = ({ icon, title, text, onPress }) => (
     style={({ pressed }) => [styles.quickCard, pressed && styles.buttonPressed]}
     onPress={onPress}
   >
-    <Ionicons name={icon} size={22} color="#1F6F43" />
+    <Ionicons name={icon} size={22} color="#084424" />
     <View style={styles.quickCardTextBlock}>
       <Text style={styles.quickCardTitle}>{title}</Text>
       <Text style={styles.quickCardText}>{text}</Text>
@@ -171,8 +171,8 @@ export default function ProfileHomeScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('profile.home.loaderText')}</Text>
       </View>
     );
@@ -196,7 +196,7 @@ export default function ProfileHomeScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -210,7 +210,7 @@ export default function ProfileHomeScreen() {
             ]}
             onPress={handleBackToProfileTab}
           >
-            <Ionicons name="arrow-back" size={22} color="#111111" />
+            <Ionicons name="arrow-back" size={22} color="#0D1C11" />
           </Pressable>
         </View>
 
@@ -224,7 +224,7 @@ export default function ProfileHomeScreen() {
               <Ionicons
                 name="checkmark-circle-outline"
                 size={14}
-                color="#1F6F43"
+                color="#084424"
               />
               <Text style={styles.connectedBadgeText}>{t('profile.home.sessionActive')}</Text>
             </View>
@@ -242,7 +242,7 @@ export default function ProfileHomeScreen() {
               ]}
               onPress={handleOpenRestaurants}
             >
-              <Ionicons name="restaurant-outline" size={18} color="#111111" />
+              <Ionicons name="restaurant-outline" size={18} color="#0D1C11" />
               <Text style={styles.primaryButtonText}>{t('profile.home.exploreButton')}</Text>
             </Pressable>
 
@@ -256,7 +256,7 @@ export default function ProfileHomeScreen() {
               <Ionicons
                 name="receipt-outline"
                 size={18}
-                color="#1E1E1E"
+                color="#0D1C11"
               />
               <Text style={styles.secondaryButtonText}>{t('profile.home.myOrdersButton')}</Text>
             </Pressable>
@@ -350,7 +350,7 @@ export default function ProfileHomeScreen() {
             ]}
             onPress={handleOpenOrders}
           >
-            <Ionicons name="arrow-forward-outline" size={18} color="#111111" />
+            <Ionicons name="arrow-forward-outline" size={18} color="#0D1C11" />
             <Text style={styles.primaryButtonText}>{t('profile.home.ctaButton')}</Text>
           </Pressable>
         </View>
@@ -368,7 +368,7 @@ export default function ProfileHomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   content: {
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
 
   loader: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
 
   connectedBadgeText: {
     marginLeft: 6,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     lineHeight: 36,
     marginBottom: 10,
   },
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     flex: 1,
     minHeight: 50,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 16,
     paddingHorizontal: 14,
     justifyContent: 'center',
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
 
   primaryButtonFull: {
     minHeight: 50,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 16,
     paddingHorizontal: 14,
     justifyContent: 'center',
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontSize: 14,
     fontWeight: '900',
     marginLeft: 8,
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
   },
 
   secondaryButtonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 14,
     fontWeight: '900',
     marginLeft: 8,
@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 12,
   },
 
@@ -558,7 +558,7 @@ const styles = StyleSheet.create({
   featureTitle: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
   quickCardTitle: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -609,7 +609,7 @@ const styles = StyleSheet.create({
   ctaTitle: {
     fontSize: 19,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 

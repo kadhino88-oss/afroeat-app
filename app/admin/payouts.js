@@ -100,7 +100,7 @@ export default function AdminPayoutsScreen() {
       refreshControl={<RefreshControl refreshing={loading && orders.length > 0} onRefresh={loadOrders} />}
     >
       <Pressable onPress={() => router.back()} style={styles.backButton} accessibilityRole="button">
-        <Ionicons name="arrow-back" size={21} color="#1E1E1E" />
+        <Ionicons name="arrow-back" size={21} color="#0D1C11" />
       </Pressable>
       <Text style={styles.eyebrow}>AFROEAT · ADMIN</Text>
       <Text style={styles.title}>{t('payouts.reconciliationTitle')}</Text>
@@ -110,7 +110,7 @@ export default function AdminPayoutsScreen() {
         <ActivityIndicator color="#5A32A3" size="large" style={styles.loader} />
       ) : orders.length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="checkmark-circle-outline" size={32} color="#1F6F43" />
+          <Ionicons name="checkmark-circle-outline" size={32} color="#084424" />
           <Text style={styles.emptyText}>{t('payouts.reconciliationEmpty')}</Text>
         </View>
       ) : orders.map((order) => (
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   card: { backgroundColor: '#FFFFFF', borderRadius: 15, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#E9E3F1' },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', gap: 8, marginBottom: 10 },
   orderId: { color: '#393244', fontWeight: '900' },
-  amount: { color: '#1F6F43', fontWeight: '900' },
+  amount: { color: '#084424', fontWeight: '900' },
   reason: { color: '#582D2D', fontSize: 14, lineHeight: 20, marginBottom: 8 },
   meta: { color: '#77717D', fontSize: 12, marginBottom: 14 },
   retryButton: { backgroundColor: '#5A32A3', borderRadius: 10, minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },

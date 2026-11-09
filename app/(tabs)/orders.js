@@ -193,10 +193,10 @@ const formatDate = (value, locale = 'fr') => {
 };
 
 const getStatusColor = (s) => {
-  if (s === 'delivered') return '#1F6F43';
-  if (s === 'cancelled') return '#B63B3B';
-  if (s === 'pending') return '#D4A017';
-  if (s === 'preparing') return '#D96C2D';
+  if (s === 'delivered') return '#084424';
+  if (s === 'cancelled') return '#C8331A';
+  if (s === 'pending') return '#EAB02F';
+  if (s === 'preparing') return '#C8331A';
   if (s === 'on_the_way') return '#2457C5';
   if (s === 'confirmed') return '#7B61FF';
   return '#777777';
@@ -410,8 +410,8 @@ export default function OrdersScreen() {
   if (authLoading || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('orders.loadingOrders')}</Text>
       </View>
     );
@@ -492,7 +492,7 @@ export default function OrdersScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={visibleOrders}
@@ -505,7 +505,7 @@ export default function OrdersScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
-            tintColor="#D4A017"
+            tintColor="#EAB02F"
           />
         }
         contentContainerStyle={styles.listContent}
@@ -525,7 +525,7 @@ export default function OrdersScreen() {
               <View style={styles.statDivider} />
 
               <View style={styles.statCard}>
-                <Text style={[styles.statValue, { color: '#D4A017' }]}>
+                <Text style={[styles.statValue, { color: '#EAB02F' }]}>
                   {stats.active}
                 </Text>
                 <Text style={styles.statLabel}>{t('orders.active')}</Text>
@@ -534,7 +534,7 @@ export default function OrdersScreen() {
               <View style={styles.statDivider} />
 
               <View style={styles.statCard}>
-                <Text style={[styles.statValue, { color: '#1F6F43' }]}>
+                <Text style={[styles.statValue, { color: '#084424' }]}>
                   {stats.delivered}
                 </Text>
                 <Text style={styles.statLabel}>{t('orders.delivered')}</Text>
@@ -597,7 +597,7 @@ export default function OrdersScreen() {
 
             {!!error && (
               <View style={styles.errorCard}>
-                <Ionicons name="warning-outline" size={18} color="#B63B3B" />
+                <Ionicons name="warning-outline" size={18} color="#C8331A" />
                 <Text style={styles.errorText}>{error}</Text>
               </View>
             )}
@@ -683,7 +683,7 @@ export default function OrdersScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingHorizontal: 16,
     paddingTop: 20,
   },
@@ -697,7 +697,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   loaderText: {
@@ -713,7 +713,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -754,7 +754,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -788,8 +788,8 @@ const styles = StyleSheet.create({
   },
 
   filterChipSelected: {
-    backgroundColor: '#1F6F43',
-    borderColor: '#1F6F43',
+    backgroundColor: '#084424',
+    borderColor: '#084424',
   },
 
   filterChipText: {
@@ -827,7 +827,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     flex: 1,
-    color: '#B63B3B',
+    color: '#C8331A',
     fontSize: 13,
     fontWeight: '600',
     marginLeft: 8,
@@ -859,7 +859,7 @@ const styles = StyleSheet.create({
   orderId: {
     fontWeight: '900',
     fontSize: 15,
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   statusPill: {
@@ -879,7 +879,7 @@ const styles = StyleSheet.create({
   restaurantName: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -905,7 +905,7 @@ const styles = StyleSheet.create({
   total: {
     fontSize: 17,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 2,
   },
 
@@ -934,7 +934,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 20,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   emptyText: {
@@ -947,7 +947,7 @@ const styles = StyleSheet.create({
   },
 
   exploreButton: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderRadius: 16,

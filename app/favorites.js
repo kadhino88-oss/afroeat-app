@@ -122,8 +122,8 @@ export default function FavoritesScreen() {
   if (authLoading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('favorites.loading')}</Text>
       </View>
     );
@@ -189,7 +189,7 @@ export default function FavoritesScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
       <View style={styles.header}>
         <View style={styles.badge}>
           <Ionicons name="heart-outline" size={14} color="#A36A00" />
@@ -208,7 +208,7 @@ export default function FavoritesScreen() {
             onPress={() => fetchFavorites(true)}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1F6F43" />
+              <ActivityIndicator size="small" color="#084424" />
             ) : (
               <Text style={styles.retryText}>{t('restaurant.retry')}</Text>
             )}
@@ -218,7 +218,7 @@ export default function FavoritesScreen() {
 
       {(loading || refreshing) && favorites.length === 0 ? (
         <View style={styles.loadingState}>
-          <ActivityIndicator size="large" color="#1F6F43" />
+          <ActivityIndicator size="large" color="#084424" />
           <Text style={styles.loaderText}>{t('favorites.loading')}</Text>
         </View>
       ) : (
@@ -232,8 +232,8 @@ export default function FavoritesScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={() => fetchFavorites(true)}
-              colors={['#D4A017']}
-              tintColor="#D4A017"
+              colors={['#EAB02F']}
+              tintColor="#EAB02F"
             />
           }
           ListEmptyComponent={
@@ -259,13 +259,13 @@ export default function FavoritesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0', paddingTop: 40, paddingHorizontal: 16 },
-  loader: { flex: 1, backgroundColor: '#FFF8F0', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 },
+  container: { flex: 1, backgroundColor: '#FBF6EC', paddingTop: 40, paddingHorizontal: 16 },
+  loader: { flex: 1, backgroundColor: '#FBF6EC', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24 },
   loaderText: { marginTop: 12, color: '#555555', fontSize: 15, fontWeight: '600', textAlign: 'center' },
   header: { marginBottom: 20, alignItems: 'center' },
   badge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF3D8', borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 14 },
   badgeText: { marginLeft: 6, color: '#A36A00', fontSize: 12, fontWeight: '800', textTransform: 'uppercase', letterSpacing: 0.3 },
-  title: { fontSize: 28, fontWeight: '900', color: '#1E1E1E', textAlign: 'center', marginBottom: 8 },
+  title: { fontSize: 28, fontWeight: '900', color: '#0D1C11', textAlign: 'center', marginBottom: 8 },
   subtitle: { textAlign: 'center', color: '#777777', fontSize: 14, lineHeight: 20 },
   listContent: { paddingBottom: 120, flexGrow: 1 },
   card: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 10, marginBottom: 14, flexDirection: 'row', alignItems: 'center', shadowColor: '#000000', shadowOpacity: 0.05, shadowRadius: 10, shadowOffset: { width: 0, height: 4 }, elevation: 3 },
@@ -273,17 +273,17 @@ const styles = StyleSheet.create({
   cardImage: { width: 62, height: 62, borderRadius: 16, backgroundColor: '#F1ECE5', marginRight: 12 },
   cardImageFallback: { width: 62, height: 62, borderRadius: 16, backgroundColor: '#F1ECE5', marginRight: 12, alignItems: 'center', justifyContent: 'center' },
   cardText: { flex: 1, minWidth: 0 },
-  name: { fontSize: 16, fontWeight: '800', color: '#1E1E1E', marginBottom: 4 },
+  name: { fontSize: 16, fontWeight: '800', color: '#0D1C11', marginBottom: 4 },
   desc: { fontSize: 13, color: '#777777', lineHeight: 18 },
   removeButton: { width: 42, height: 48, alignItems: 'center', justifyContent: 'center' },
   emptyContainer: { alignItems: 'center', justifyContent: 'center', marginTop: 80, paddingHorizontal: 24, flex: 1 },
-  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#1E1E1E', marginTop: 16, marginBottom: 8, textAlign: 'center' },
+  emptyTitle: { fontSize: 20, fontWeight: '800', color: '#0D1C11', marginTop: 16, marginBottom: 8, textAlign: 'center' },
   emptyText: { color: '#777777', textAlign: 'center', lineHeight: 22, fontSize: 15, marginBottom: 20 },
-  button: { backgroundColor: '#D4A017', paddingHorizontal: 20, paddingVertical: 12, borderRadius: 14 },
-  buttonText: { color: '#1E1E1E', fontWeight: '800', fontSize: 15 },
+  button: { backgroundColor: '#EAB02F', paddingHorizontal: 20, paddingVertical: 12, borderRadius: 14 },
+  buttonText: { color: '#0D1C11', fontWeight: '800', fontSize: 15 },
   buttonPressed: { opacity: 0.84 },
   errorBanner: { marginBottom: 12, padding: 12, borderRadius: 12, backgroundColor: '#FCE8E4' },
   errorText: { color: '#8F3428', textAlign: 'center', marginBottom: 4 },
-  retryText: { color: '#1F6F43', fontWeight: '800', textAlign: 'center' },
+  retryText: { color: '#084424', fontWeight: '800', textAlign: 'center' },
   loadingState: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });

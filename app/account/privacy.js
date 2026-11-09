@@ -27,7 +27,7 @@ export default function AccountPrivacyScreen() {
   if (auth.loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#D96C2D" />
+        <ActivityIndicator size="large" color="#C8331A" />
       </View>
     );
   }
@@ -97,7 +97,7 @@ export default function AccountPrivacyScreen() {
         onPress={() => router.back()}
         style={styles.backButton}
       >
-        <Ionicons name="arrow-back" size={21} color="#1E1E1E" />
+        <Ionicons name="arrow-back" size={21} color="#0D1C11" />
       </Pressable>
 
       <Text style={styles.eyebrow}>AFROEAT</Text>
@@ -147,7 +147,7 @@ export default function AccountPrivacyScreen() {
           style={({ pressed }) => [styles.webButton, pressed && styles.pressed]}
         >
           <Text style={styles.webButtonText}>{t('profile.home.deleteAccountWebButton')}</Text>
-          <Ionicons name="open-outline" size={18} color="#1F6F43" />
+          <Ionicons name="open-outline" size={18} color="#084424" />
         </Pressable>
       </View>
     </ScrollView>
@@ -155,14 +155,14 @@ export default function AccountPrivacyScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { padding: 20, paddingBottom: 48 },
   loader: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   backButton: {
     width: 44, height: 44, alignItems: 'center', justifyContent: 'center',
     marginBottom: 18, borderRadius: 22, backgroundColor: '#FFFFFF',
   },
-  eyebrow: { color: '#1F6F43', fontSize: 12, fontWeight: '900', letterSpacing: 1.4 },
+  eyebrow: { color: '#084424', fontSize: 12, fontWeight: '900', letterSpacing: 1.4 },
   title: { marginTop: 6, color: '#1C211D', fontSize: 26, fontWeight: '900' },
   body: { marginTop: 10, color: '#626862', fontSize: 14, lineHeight: 21 },
   notice: {
@@ -188,5 +188,5 @@ const styles = StyleSheet.create({
     minHeight: 46, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     marginTop: 12, paddingHorizontal: 12, borderRadius: 10, backgroundColor: '#EAF4EC',
   },
-  webButtonText: { color: '#1F6F43', fontSize: 14, fontWeight: '800' },
+  webButtonText: { color: '#084424', fontSize: 14, fontWeight: '800' },
 });

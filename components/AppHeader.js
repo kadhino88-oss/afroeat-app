@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   container: {
     height: 70,
     paddingHorizontal: 16,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -4,
     right: -4,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 10,
     paddingHorizontal: 5,
     paddingVertical: 2,

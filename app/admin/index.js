@@ -106,7 +106,7 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.opsSubtitle'),
       iconType: 'ionicons',
       iconName: 'pulse-outline',
-      accent: '#D96C2D',
+      accent: '#C8331A',
       soft: '#FFF0E8',
       route: '/admin/ops',
     },
@@ -116,7 +116,7 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.usersSubtitle'),
       iconType: 'ionicons',
       iconName: 'people-outline',
-      accent: '#1F6F43',
+      accent: '#084424',
       soft: '#E8F5ED',
       route: '/admin/users',
     },
@@ -126,7 +126,7 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.restaurantsSubtitle'),
       iconType: 'material',
       iconName: 'storefront-outline',
-      accent: '#D4A017',
+      accent: '#EAB02F',
       soft: '#FFF3D8',
       route: '/admin/restaurants',
     },
@@ -146,7 +146,7 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.ordersSubtitle'),
       iconType: 'ionicons',
       iconName: 'receipt-outline',
-      accent: '#111111',
+      accent: '#0D1C11',
       soft: '#F2F2F2',
       route: '/admin/orders',
     },
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 19,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 14,
   },
 
@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 13,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
     textAlign: 'center',
   },
 
@@ -602,7 +602,7 @@ const styles = StyleSheet.create({
   },
 
   bottomPanel: {
-    backgroundColor: '#111111',
+    backgroundColor: '#0D1C11',
     borderRadius: 24,
     padding: 18,
     marginTop: 4,

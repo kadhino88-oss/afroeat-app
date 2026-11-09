@@ -141,6 +141,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 });

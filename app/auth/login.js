@@ -39,7 +39,7 @@ const ROLE_CONFIG = {
     label: 'Client',
     description:
       'Connecte-toi pour commander, suivre tes commandes et gérer ton compte AFROEAT.',
-    color: '#D4A017',
+    color: '#EAB02F',
     soft: '#FFF3D8',
     dark: '#8A6500',
     icon: 'restaurant-outline',
@@ -48,16 +48,16 @@ const ROLE_CONFIG = {
     label: 'Restaurant',
     description:
       'Connecte-toi à ton espace partenaire pour gérer ton menu, tes commandes et ton activité.',
-    color: '#1F6F43',
+    color: '#084424',
     soft: '#E8F5ED',
-    dark: '#1F6F43',
+    dark: '#084424',
     icon: 'storefront-outline',
   },
   livreur: {
     label: 'Livreur',
     description:
       'Connecte-toi à ton espace livraison pour gérer tes missions, ton suivi et ton activité.',
-    color: '#D96C2D',
+    color: '#C8331A',
     soft: '#FFF0E8',
     dark: '#A6501A',
     icon: 'bicycle-outline',
@@ -335,11 +335,11 @@ export default function LoginScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.loaderLogoWrap}>
           <Image source={LOGO_IMAGE} style={styles.loaderLogo} resizeMode="cover" />
         </View>
-        <ActivityIndicator size="large" color="#D4A017" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>Chargement...</Text>
       </View>
     );
@@ -351,7 +351,7 @@ export default function LoginScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <KeyboardAvoidingView
         style={styles.flex}
@@ -373,7 +373,7 @@ export default function LoginScreen() {
               ]}
               onPress={handleBack}
             >
-              <Ionicons name="arrow-back" size={22} color="#111111" />
+              <Ionicons name="arrow-back" size={22} color="#0D1C11" />
             </Pressable>
           </View>
 
@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
 
   screen: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   content: {
@@ -532,7 +532,7 @@ const styles = StyleSheet.create({
 
   loader: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -632,7 +632,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -640,7 +640,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
     textAlign: 'center',
   },
@@ -709,7 +709,7 @@ const styles = StyleSheet.create({
 
   input: {
     flex: 1,
-    color: '#111111',
+    color: '#0D1C11',
     fontSize: 15,
     paddingVertical: 14,
   },
@@ -764,7 +764,7 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 10,
   },
 

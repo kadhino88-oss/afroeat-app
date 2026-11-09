@@ -190,7 +190,7 @@ export default function RestaurantSettingsScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -198,7 +198,7 @@ export default function RestaurantSettingsScreen() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={handleBack}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -207,10 +207,10 @@ export default function RestaurantSettingsScreen() {
             disabled={busy || loadingSettings || !restaurantId}
           >
             {busy ? (
-              <ActivityIndicator size="small" color="#111111" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
               <>
-                <Ionicons name="save-outline" size={16} color="#111111" />
+                <Ionicons name="save-outline" size={16} color="#0D1C11" />
                 <Text style={styles.saveButtonText}>{t('restaurant.settings.saveButton')}</Text>
               </>
             )}
@@ -234,7 +234,7 @@ export default function RestaurantSettingsScreen() {
           </View>
 
           <View style={styles.heroBadge}>
-            <Ionicons name="settings-outline" size={16} color="#1F6F43" />
+            <Ionicons name="settings-outline" size={16} color="#084424" />
             <Text style={styles.heroBadgeText}>{t('restaurant.settings.heroBadge')}</Text>
           </View>
         </View>
@@ -244,7 +244,7 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="receipt-outline"
-            iconColor="#1F6F43"
+            iconColor="#084424"
             iconBg="#E8F5ED"
             title={t('restaurant.settings.acceptOrdersTitle')}
             subtitle={t('restaurant.settings.acceptOrdersSubtitle')}
@@ -253,14 +253,14 @@ export default function RestaurantSettingsScreen() {
                 value={acceptOrders}
                 onValueChange={setAcceptOrders}
                 trackColor={{ false: '#D8D8D8', true: '#BFE3CB' }}
-                thumbColor={acceptOrders ? '#1F6F43' : '#F5F5F5'}
+                thumbColor={acceptOrders ? '#084424' : '#F5F5F5'}
               />
             }
           />
 
           <SettingRow
             icon="flash-outline"
-            iconColor="#D96C2D"
+            iconColor="#C8331A"
             iconBg="#FFF0E8"
             title={t('restaurant.settings.autoAcceptTitle')}
             subtitle={t('restaurant.settings.autoAcceptSubtitle')}
@@ -269,7 +269,7 @@ export default function RestaurantSettingsScreen() {
                 value={autoAcceptOrders}
                 onValueChange={setAutoAcceptOrders}
                 trackColor={{ false: '#D8D8D8', true: '#F5D0BA' }}
-                thumbColor={autoAcceptOrders ? '#D96C2D' : '#F5F5F5'}
+                thumbColor={autoAcceptOrders ? '#C8331A' : '#F5F5F5'}
               />
             }
           />
@@ -344,7 +344,7 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="car-outline"
-            iconColor="#D96C2D"
+            iconColor="#C8331A"
             iconBg="#FFF0E8"
             title={t('restaurant.settings.deliveryZonesTitle')}
             subtitle={t('restaurant.settings.deliveryZonesSubtitle')}
@@ -358,7 +358,7 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="card-outline"
-            iconColor="#1F6F43"
+            iconColor="#084424"
             iconBg="#E8F5ED"
             title={t('restaurant.settings.paymentTitle')}
             subtitle={t('restaurant.settings.paymentSubtitle')}
@@ -385,7 +385,7 @@ export default function RestaurantSettingsScreen() {
 
           <SettingRow
             icon="shield-checkmark-outline"
-            iconColor="#1F6F43"
+            iconColor="#084424"
             iconBg="#E8F5ED"
             title={t('restaurant.settings.securityTitle')}
             subtitle={t('restaurant.settings.securitySubtitle')}
@@ -415,7 +415,7 @@ export default function RestaurantSettingsScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   content: {
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
     minHeight: 44,
     paddingHorizontal: 14,
     borderRadius: 14,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -453,7 +453,7 @@ const styles = StyleSheet.create({
 
   saveButtonText: {
     marginLeft: 8,
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 13,
   },
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
 
   heroBadgeText: {
     marginLeft: 6,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '900',
   },
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 12,
   },
 
@@ -575,7 +575,7 @@ const styles = StyleSheet.create({
   settingTitle: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 

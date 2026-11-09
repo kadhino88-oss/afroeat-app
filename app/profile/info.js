@@ -255,8 +255,8 @@ export default function InfoScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
+        <ActivityIndicator size="large" color="#EAB02F" />
       </View>
     );
   }
@@ -277,7 +277,7 @@ export default function InfoScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F5EFE8" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <View style={styles.topRow}>
         <Pressable
@@ -307,7 +307,7 @@ export default function InfoScreen() {
         <View style={styles.card}>
           <View style={styles.cardTop}>
             <View style={styles.iconWrap}>
-              <Ionicons name="location-outline" size={20} color="#D96C2D" />
+              <Ionicons name="location-outline" size={20} color="#C8331A" />
             </View>
             <View style={styles.cardContent}>
               <Text style={styles.cardLabel}>{t('profile.info.deliveryAddressLabel')}</Text>
@@ -335,7 +335,7 @@ export default function InfoScreen() {
                 style={styles.editBtn}
                 onPress={() => { setEditingAddress(true); setAddress(normalizeText(user?.address || user?.deliveryAddress || user?.adresse)); }}
               >
-                <Ionicons name="pencil" size={16} color="#D4A017" />
+                <Ionicons name="pencil" size={16} color="#EAB02F" />
               </Pressable>
             )}
           </View>
@@ -384,8 +384,8 @@ export default function InfoScreen() {
 }
 
 const styles = StyleSheet.create({
-  container:       { flex: 1, backgroundColor: '#F5EFE8' },
-  loader:          { flex: 1, backgroundColor: '#F5EFE8', justifyContent: 'center', alignItems: 'center' },
+  container:       { flex: 1, backgroundColor: '#F2ECE0' },
+  loader:          { flex: 1, backgroundColor: '#F2ECE0', justifyContent: 'center', alignItems: 'center' },
   topRow:          { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 54, paddingHorizontal: 16, paddingBottom: 12 },
   backButton:      { width: 44, height: 44, borderRadius: 22, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#EDE5D8' },
   pageTitle:       { fontSize: 18, fontWeight: '900', color: '#111' },
@@ -393,26 +393,26 @@ const styles = StyleSheet.create({
 
   avatarSection:   { alignItems: 'center', marginBottom: 24, paddingTop: 8 },
   avatarWrap:      { position: 'relative', marginBottom: 12 },
-  avatar:          { width: 100, height: 100, borderRadius: 50, borderWidth: 3, borderColor: '#D4A017' },
-  avatarFallback:  { width: 100, height: 100, borderRadius: 50, backgroundColor: '#FFF3D8', justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#D4A017' },
-  avatarInitials:  { fontSize: 34, fontWeight: '900', color: '#D4A017' },
-  avatarBadge:     { position: 'absolute', bottom: 2, right: 2, width: 30, height: 30, borderRadius: 15, backgroundColor: '#111', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#F5EFE8' },
+  avatar:          { width: 100, height: 100, borderRadius: 50, borderWidth: 3, borderColor: '#EAB02F' },
+  avatarFallback:  { width: 100, height: 100, borderRadius: 50, backgroundColor: '#FFF3D8', justifyContent: 'center', alignItems: 'center', borderWidth: 3, borderColor: '#EAB02F' },
+  avatarInitials:  { fontSize: 34, fontWeight: '900', color: '#EAB02F' },
+  avatarBadge:     { position: 'absolute', bottom: 2, right: 2, width: 30, height: 30, borderRadius: 15, backgroundColor: '#111', justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#F2ECE0' },
   avatarName:      { fontSize: 20, fontWeight: '900', color: '#111', marginBottom: 4 },
   avatarRole:      { fontSize: 13, fontWeight: '700', color: '#888', marginBottom: 4 },
   avatarHint:      { fontSize: 12, color: '#BBB', fontWeight: '600' },
 
   card:            { backgroundColor: '#FFF', borderRadius: 18, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#EDE5D8' },
   cardTop:         { flexDirection: 'row', alignItems: 'flex-start' },
-  iconWrap:        { width: 38, height: 38, borderRadius: 19, backgroundColor: '#FFF8F0', justifyContent: 'center', alignItems: 'center', marginRight: 12, flexShrink: 0 },
+  iconWrap:        { width: 38, height: 38, borderRadius: 19, backgroundColor: '#FBF6EC', justifyContent: 'center', alignItems: 'center', marginRight: 12, flexShrink: 0 },
   cardContent:     { flex: 1 },
   cardLabel:       { fontSize: 12, fontWeight: '800', color: '#AAA', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
   cardValue:       { fontSize: 15, fontWeight: '700', color: '#111', lineHeight: 20 },
   editBtn:         { width: 34, height: 34, borderRadius: 17, backgroundColor: '#FFF3D8', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#F1DFA6', marginLeft: 8 },
-  addressInput:    { fontSize: 15, color: '#111', borderWidth: 1, borderColor: '#D4A017', borderRadius: 10, padding: 10, minHeight: 60, marginTop: 4, fontWeight: '600', lineHeight: 20 },
+  addressInput:    { fontSize: 15, color: '#111', borderWidth: 1, borderColor: '#EAB02F', borderRadius: 10, padding: 10, minHeight: 60, marginTop: 4, fontWeight: '600', lineHeight: 20 },
   editActions:     { flexDirection: 'row', gap: 10, marginTop: 14 },
   cancelBtn:       { flex: 1, paddingVertical: 12, borderRadius: 12, borderWidth: 1, borderColor: '#DDD', alignItems: 'center' },
   cancelBtnText:   { fontSize: 14, fontWeight: '700', color: '#888' },
-  saveBtn:         { flex: 2, paddingVertical: 12, borderRadius: 12, backgroundColor: '#D4A017', alignItems: 'center' },
+  saveBtn:         { flex: 2, paddingVertical: 12, borderRadius: 12, backgroundColor: '#EAB02F', alignItems: 'center' },
   saveBtnText:     { fontSize: 14, fontWeight: '900', color: '#111' },
 
   hint:            { fontSize: 12, color: '#BBB', textAlign: 'center', lineHeight: 18, marginTop: 8, paddingHorizontal: 16 },

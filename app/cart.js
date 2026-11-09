@@ -372,7 +372,7 @@ export default function CartScreen() {
                 pressed && styles.buttonPressed,
               ]}
             >
-              <Ionicons name="trash-outline" size={18} color="#C0392B" />
+              <Ionicons name="trash-outline" size={18} color="#C8331A" />
             </Pressable>
           </View>
 
@@ -387,7 +387,7 @@ export default function CartScreen() {
                   pressed && styles.buttonPressed,
                 ]}
               >
-                <Ionicons name="remove" size={18} color="#111111" />
+                <Ionicons name="remove" size={18} color="#0D1C11" />
               </Pressable>
 
               <Text style={styles.quantityText}>{itemQuantity}</Text>
@@ -401,7 +401,7 @@ export default function CartScreen() {
                   pressed && styles.buttonPressed,
                 ]}
               >
-                <Ionicons name="add" size={18} color="#111111" />
+                <Ionicons name="add" size={18} color="#0D1C11" />
               </Pressable>
             </View>
 
@@ -423,7 +423,7 @@ export default function CartScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <View style={styles.header}>
         <Pressable
@@ -435,7 +435,7 @@ export default function CartScreen() {
             pressed && styles.buttonPressed,
           ]}
         >
-          <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
+          <Ionicons name="arrow-back" size={22} color="#0D1C11" />
         </Pressable>
 
         <Text style={styles.title}>{t('cart.title')}</Text>
@@ -467,14 +467,14 @@ export default function CartScreen() {
           ]}
           onPress={handleOpenRestaurant}
         >
-          <Ionicons name="restaurant-outline" size={16} color="#1F6F43" />
+          <Ionicons name="restaurant-outline" size={16} color="#084424" />
           <Text style={styles.restaurantBannerText} numberOfLines={1}>
             {t('checkout.orderingAt', { restaurant: cartRestaurantName })}
           </Text>
           <Ionicons
             name="chevron-forward-outline"
             size={18}
-            color="#1F6F43"
+            color="#084424"
           />
         </Pressable>
       )}
@@ -618,7 +618,7 @@ export default function CartScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingTop: 18,
   },
 
@@ -654,7 +654,7 @@ const styles = StyleSheet.create({
   },
 
   clearButtonText: {
-    color: '#B63B3B',
+    color: '#C8331A',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   restaurantBanner: {
@@ -680,7 +680,7 @@ const styles = StyleSheet.create({
 
   restaurantBannerText: {
     marginLeft: 8,
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '700',
     fontSize: 14,
     flex: 1,
@@ -772,7 +772,7 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: '800',
     fontSize: 17,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 
@@ -832,13 +832,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
   },
 
   itemTotal: {
     fontSize: 17,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   footer: {
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
 
   summaryValue: {
     fontSize: 14,
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '800',
   },
 
@@ -894,7 +894,7 @@ const styles = StyleSheet.create({
 
   totalValue: {
     fontSize: 22,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '900',
   },
 
@@ -915,7 +915,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 16,
     alignItems: 'center',
     borderRadius: 16,
@@ -931,7 +931,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 16,
   },
@@ -947,7 +947,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginTop: 16,
     marginBottom: 8,
   },
@@ -961,7 +961,7 @@ const styles = StyleSheet.create({
   },
 
   exploreButton: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     paddingHorizontal: 18,
     paddingVertical: 14,
     borderRadius: 14,

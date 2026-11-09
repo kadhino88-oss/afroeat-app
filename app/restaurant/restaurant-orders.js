@@ -125,7 +125,7 @@ const formatDate = (value) => {
 const getStatusStyle = (status) => {
   switch (normalizeText(status)) {
     case 'Livrée':
-      return { bg: '#E8F5ED', text: '#1F6F43', icon: 'checkmark-circle-outline' };
+      return { bg: '#E8F5ED', text: '#084424', icon: 'checkmark-circle-outline' };
     case 'En livraison':
       return { bg: '#EAF3FF', text: '#245EA8', icon: 'bicycle-outline' };
     case 'En préparation':
@@ -135,7 +135,7 @@ const getStatusStyle = (status) => {
     case 'Annulée':
       return { bg: '#FDECEC', text: '#B83232', icon: 'close-circle-outline' };
     default:
-      return { bg: '#FFF0E8', text: '#D96C2D', icon: 'time-outline' };
+      return { bg: '#FFF0E8', text: '#C8331A', icon: 'time-outline' };
   }
 };
 
@@ -267,14 +267,14 @@ export default function RestaurantOrders() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <ActivityIndicator size="large" color="#084424" />
       </View>
     );
   }
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={filteredOrders}
@@ -290,14 +290,14 @@ export default function RestaurantOrders() {
           <View>
             <View style={styles.topRow}>
               <Pressable style={styles.topButton} onPress={() => router.back()}>
-                <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+                <Ionicons name="arrow-back" size={20} color="#0D1C11" />
               </Pressable>
 
               <Pressable style={styles.topButton} onPress={() => load(true)}>
                 {refreshing ? (
-                  <ActivityIndicator size="small" color="#1E1E1E" />
+                  <ActivityIndicator size="small" color="#0D1C11" />
                 ) : (
-                  <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+                  <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
                 )}
               </Pressable>
             </View>
@@ -431,7 +431,7 @@ export default function RestaurantOrders() {
 
               <View style={styles.metaRow}>
                 <View style={styles.metaBadge}>
-                  <Ionicons name="cash-outline" size={14} color="#D96C2D" />
+                  <Ionicons name="cash-outline" size={14} color="#C8331A" />
                   <Text style={styles.metaBadgeText}>
                     {formatPrice(
                       item?.totalPrice,
@@ -442,7 +442,7 @@ export default function RestaurantOrders() {
                 </View>
 
                 <View style={styles.metaBadge}>
-                  <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
+                  <Ionicons name="bag-handle-outline" size={14} color="#084424" />
                   <Text style={styles.metaBadgeText}>
                     {t('livraison.itemsCount', { count: normalizeNumber(item?.itemCount) })}
                   </Text>
@@ -484,7 +484,7 @@ export default function RestaurantOrders() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
   emptyListContent: { flexGrow: 1 },
 
@@ -492,7 +492,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   topRow: {
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     minWidth: 0,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 15,
     paddingVertical: 12,
     paddingHorizontal: 10,
@@ -547,7 +547,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   filterChipActive: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#0D1C11',
   },
   filterChipText: {
     color: '#555',
@@ -708,7 +708,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 11,
     borderRadius: 12,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     marginTop: 4,
   },
   clearFiltersText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },

@@ -153,7 +153,7 @@ const getPaymentStyle = (value) => {
   const normalized = normalizeText(value).toLowerCase();
 
   if (normalized === 'paid' || normalized === 'payé') {
-    return { bg: '#E8F5ED', text: '#1F6F43', icon: 'card-outline' };
+    return { bg: '#E8F5ED', text: '#084424', icon: 'card-outline' };
   }
 
   if (normalized === 'unpaid' || normalized === 'non payé') {
@@ -172,7 +172,7 @@ const getStatusColors = (status) => {
     case 'Livrée':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         icon: 'checkmark-circle-outline',
       };
 
@@ -207,7 +207,7 @@ const getStatusColors = (status) => {
     default:
       return {
         bg: '#FFF0E8',
-        text: '#D96C2D',
+        text: '#C8331A',
         icon: 'time-outline',
       };
   }
@@ -266,7 +266,7 @@ const normalizeOrder = (order) => {
  * =========================================================
  */
 
-const StatCard = ({ label, value, iconName, tint = '#1F6F43' }) => (
+const StatCard = ({ label, value, iconName, tint = '#084424' }) => (
   <View style={styles.statCard}>
     <View style={[styles.statIconWrap, { backgroundColor: `${tint}14` }]}>
       <Ionicons name={iconName} size={18} color={tint} />
@@ -505,8 +505,8 @@ export default function AdminOrdersScreen() {
   if (loadingAuth || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.orders.loaderText')}</Text>
       </View>
     );
@@ -519,7 +519,7 @@ export default function AdminOrdersScreen() {
   if (!canAccess) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="shield-outline" size={54} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
@@ -539,7 +539,7 @@ export default function AdminOrdersScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={orders}
@@ -559,7 +559,7 @@ export default function AdminOrdersScreen() {
           <View>
             <View style={styles.topRow}>
               <Pressable style={styles.topButton} onPress={handleGoBack}>
-                <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+                <Ionicons name="arrow-back" size={20} color="#0D1C11" />
               </Pressable>
 
               <Pressable
@@ -571,9 +571,9 @@ export default function AdminOrdersScreen() {
                 disabled={refreshing}
               >
                 {refreshing ? (
-                  <ActivityIndicator size="small" color="#1E1E1E" />
+                  <ActivityIndicator size="small" color="#0D1C11" />
                 ) : (
-                  <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+                  <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
                 )}
               </Pressable>
             </View>
@@ -610,13 +610,13 @@ export default function AdminOrdersScreen() {
                 label={t('admin.users.statTotalLabel')}
                 value={stats.total}
                 iconName="receipt-outline"
-                tint="#1F6F43"
+                tint="#084424"
               />
               <StatCard
                 label={t('admin.dashboard.pendingLabel')}
                 value={stats.pending}
                 iconName="time-outline"
-                tint="#D96C2D"
+                tint="#C8331A"
               />
               <StatCard
                 label={t('order.status.on_the_way')}
@@ -628,7 +628,7 @@ export default function AdminOrdersScreen() {
                 label={t('order.status.delivered')}
                 value={stats.delivered}
                 iconName="checkmark-circle-outline"
-                tint="#1F6F43"
+                tint="#084424"
               />
               <StatCard
                 label={t('admin.orders.statUnpaidLabel')}
@@ -840,7 +840,7 @@ export default function AdminOrdersScreen() {
 
               <View style={styles.metaRow}>
                 <View style={styles.metaBadge}>
-                  <Ionicons name="cash-outline" size={14} color="#D96C2D" />
+                  <Ionicons name="cash-outline" size={14} color="#C8331A" />
                   <Text style={styles.metaBadgeText}>
                     {formatPrice(item?.totalPrice, item?.currency || 'EUR')}
                   </Text>
@@ -875,7 +875,7 @@ export default function AdminOrdersScreen() {
 
                 {item?.itemCount > 0 && (
                   <View style={styles.metaBadge}>
-                    <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
+                    <Ionicons name="bag-handle-outline" size={14} color="#084424" />
                     <Text style={styles.metaBadgeText}>
                       {t('admin.orders.itemCountLabel', { count: normalizeNumber(item?.itemCount) })}
                     </Text>
@@ -885,7 +885,7 @@ export default function AdminOrdersScreen() {
 
               <View style={styles.footerRow}>
                 <View style={styles.footerBadge}>
-                  <Ionicons name="eye-outline" size={15} color="#1F6F43" />
+                  <Ionicons name="eye-outline" size={15} color="#084424" />
                   <Text style={styles.footerBadgeText}>{t('admin.users.viewDetailsButton')}</Text>
                 </View>
 
@@ -915,7 +915,7 @@ export default function AdminOrdersScreen() {
  */
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
   emptyListContent: { flexGrow: 1 },
 
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: { marginTop: 12, color: '#777', fontSize: 15 },
 
@@ -949,14 +949,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 30,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: { color: '#6B655E', fontSize: 14, lineHeight: 21 },
@@ -1097,7 +1097,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   filterChipActive: {
-    backgroundColor: '#1E1E1E',
+    backgroundColor: '#0D1C11',
   },
   filterChipText: {
     color: '#555',
@@ -1114,7 +1114,7 @@ const styles = StyleSheet.create({
   },
   applyButton: {
     flex: 1,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     borderRadius: 14,
     alignItems: 'center',
@@ -1165,7 +1165,7 @@ const styles = StyleSheet.create({
   resultsCount: {
     fontSize: 13,
     fontWeight: '900',
-    color: '#1F6F43',
+    color: '#084424',
   },
   resultsText: {
     color: '#666',
@@ -1284,7 +1284,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   footerBadgeText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '800',
     fontSize: 13,
     marginLeft: 6,
@@ -1298,7 +1298,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,

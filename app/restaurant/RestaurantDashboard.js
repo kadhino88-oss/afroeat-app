@@ -434,8 +434,8 @@ export default function RestaurantDashboard() {
   if (authLoading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('common.loading')}</Text>
       </View>
     );
@@ -465,7 +465,7 @@ export default function RestaurantDashboard() {
     <View>
       <View style={styles.topActions}>
         <Pressable style={styles.topButton} onPress={handleOpenProfile}>
-          <Ionicons name="person-outline" size={20} color="#1E1E1E" />
+          <Ionicons name="person-outline" size={20} color="#0D1C11" />
         </Pressable>
 
         <View style={styles.topActionsRight}>
@@ -475,9 +475,9 @@ export default function RestaurantDashboard() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
 
@@ -485,7 +485,7 @@ export default function RestaurantDashboard() {
             style={[styles.topButton, styles.topButtonSpaced]}
             onPress={handleLogout}
           >
-            <Ionicons name="log-out-outline" size={20} color="#B63B3B" />
+            <Ionicons name="log-out-outline" size={20} color="#C8331A" />
           </Pressable>
         </View>
       </View>
@@ -518,7 +518,7 @@ export default function RestaurantDashboard() {
           <MaterialCommunityIcons
             name="storefront-outline"
             size={28}
-            color="#1F6F43"
+            color="#084424"
           />
         </View>
 
@@ -599,7 +599,7 @@ export default function RestaurantDashboard() {
 
       <View style={styles.quickButtonsRow}>
         <Pressable style={styles.quickButtonPrimary} onPress={handleAddItem}>
-          <Ionicons name="add-circle-outline" size={20} color="#1E1E1E" />
+          <Ionicons name="add-circle-outline" size={20} color="#0D1C11" />
           <Text style={styles.quickButtonPrimaryText}>{t('restaurant.menuScreen.addDishButton')}</Text>
         </Pressable>
 
@@ -607,7 +607,7 @@ export default function RestaurantDashboard() {
           style={styles.quickButtonSecondary}
           onPress={handleOpenOrders}
         >
-          <Ionicons name="receipt-outline" size={20} color="#1F6F43" />
+          <Ionicons name="receipt-outline" size={20} color="#084424" />
           <Text style={styles.quickButtonSecondaryText}>{t('restaurant.dashboard.viewOrdersButton')}</Text>
         </Pressable>
       </View>
@@ -622,8 +622,8 @@ export default function RestaurantDashboard() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('restaurant.dashboard.dashboardLoadingText')}</Text>
       </View>
     );
@@ -632,7 +632,7 @@ export default function RestaurantDashboard() {
   if (!restaurantId) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <MaterialCommunityIcons
             name="storefront-remove-outline"
@@ -667,7 +667,7 @@ export default function RestaurantDashboard() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={menuItems}
@@ -708,7 +708,7 @@ export default function RestaurantDashboard() {
 
             <View style={styles.metaRow}>
               <View style={styles.priceBadge}>
-                <Ionicons name="cash-outline" size={14} color="#D96C2D" />
+                <Ionicons name="cash-outline" size={14} color="#C8331A" />
                 <Text style={styles.price}>
                   {formatPrice(
                     item?.price,
@@ -750,7 +750,7 @@ export default function RestaurantDashboard() {
                 style={styles.secondaryAction}
                 onPress={() => handleEdit(item)}
               >
-                <Ionicons name="create-outline" size={16} color="#1F6F43" />
+                <Ionicons name="create-outline" size={16} color="#084424" />
                 <Text style={styles.secondaryActionText}>{t('restaurant.menuScreen.editButton')}</Text>
               </Pressable>
 
@@ -799,7 +799,7 @@ export default function RestaurantDashboard() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   listContent: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 120 },
   emptyListContent: { flexGrow: 1 },
 
@@ -807,7 +807,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: { marginTop: 12, color: '#777777', fontSize: 15 },
 
@@ -856,14 +856,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: { color: '#6B655E', fontSize: 14, lineHeight: 21 },
@@ -894,7 +894,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 6,
   },
   heroText: { color: '#666666', fontSize: 14, lineHeight: 21 },
@@ -918,8 +918,8 @@ const styles = StyleSheet.create({
   },
   heroTagOpen: { backgroundColor: '#E8F5ED' },
   heroTagClosed: { backgroundColor: '#FDECEC' },
-  heroTagTextOpen: { color: '#1F6F43' },
-  heroTagTextClosed: { color: '#B63B3B' },
+  heroTagTextOpen: { color: '#084424' },
+  heroTagTextClosed: { color: '#C8331A' },
 
   statsGrid: {
     flexDirection: 'row',
@@ -944,7 +944,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 6,
     textAlign: 'center',
   },
@@ -953,7 +953,7 @@ const styles = StyleSheet.create({
   quickButtonsRow: { flexDirection: 'row', marginBottom: 20 },
   quickButtonPrimary: {
     flex: 1,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 15,
     borderRadius: 16,
     alignItems: 'center',
@@ -962,7 +962,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   quickButtonPrimaryText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 15,
     marginLeft: 8,
@@ -980,7 +980,7 @@ const styles = StyleSheet.create({
     borderColor: '#E8F1EA',
   },
   quickButtonSecondaryText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '900',
     fontSize: 15,
     marginLeft: 8,
@@ -995,12 +995,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
   sectionCount: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#D4A017',
+    color: '#EAB02F',
   },
 
   card: {
@@ -1023,7 +1023,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 19,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     flex: 1,
     marginRight: 10,
   },
@@ -1035,8 +1035,8 @@ const styles = StyleSheet.create({
   statusBadgeAvailable: { backgroundColor: '#E8F5ED' },
   statusBadgeUnavailable: { backgroundColor: '#FDEAEA' },
   statusBadgeText: { fontSize: 12, fontWeight: '800' },
-  statusBadgeTextAvailable: { color: '#1F6F43' },
-  statusBadgeTextUnavailable: { color: '#B63B3B' },
+  statusBadgeTextAvailable: { color: '#084424' },
+  statusBadgeTextUnavailable: { color: '#C8331A' },
 
   desc: {
     color: '#666666',
@@ -1063,7 +1063,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   price: {
-    color: '#D96C2D',
+    color: '#C8331A',
     fontSize: 14,
     fontWeight: '800',
     marginLeft: 6,
@@ -1103,12 +1103,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   secondaryActionText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '800',
     marginLeft: 6,
   },
   deleteButton: {
-    backgroundColor: '#C0392B',
+    backgroundColor: '#C8331A',
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 12,
@@ -1125,7 +1125,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1139,13 +1139,13 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   emptyButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     paddingHorizontal: 18,
     borderRadius: 14,
   },
   emptyButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 15,
   },

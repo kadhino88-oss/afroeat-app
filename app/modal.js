@@ -75,7 +75,7 @@ const NOTIFICATIONS_META = [
     titleKey: 'modal.demoNotifications.welcomeTitle',
     descriptionKey: 'modal.demoNotifications.welcomeDescription',
     icon: 'sparkles-outline',
-    color: '#D4A017',
+    color: '#EAB02F',
     bg: '#FFF3D8',
   },
   {
@@ -83,7 +83,7 @@ const NOTIFICATIONS_META = [
     titleKey: 'modal.demoNotifications.orderTrackingTitle',
     descriptionKey: 'modal.demoNotifications.orderTrackingDescription',
     icon: 'receipt-outline',
-    color: '#1F6F43',
+    color: '#084424',
     bg: '#E8F5ED',
   },
   {
@@ -91,7 +91,7 @@ const NOTIFICATIONS_META = [
     titleKey: 'modal.demoNotifications.upcomingOffersTitle',
     descriptionKey: 'modal.demoNotifications.upcomingOffersDescription',
     icon: 'gift-outline',
-    color: '#D96C2D',
+    color: '#C8331A',
     bg: '#FFF0E8',
   },
 ];
@@ -138,7 +138,7 @@ export default function ModalScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <View style={styles.topRow}>
         <View style={styles.titleBlock}>
@@ -155,7 +155,7 @@ export default function ModalScreen() {
           ]}
           onPress={handleClose}
         >
-          <Ionicons name="close" size={22} color="#1E1E1E" />
+          <Ionicons name="close" size={22} color="#0D1C11" />
         </Pressable>
       </View>
 
@@ -201,7 +201,7 @@ export default function ModalScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingTop: 24,
     paddingHorizontal: 16,
   },
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 6,
   },
 

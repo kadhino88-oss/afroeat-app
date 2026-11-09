@@ -300,8 +300,8 @@ export default function ProfilePaymentScreen() {
   if (auth.loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D4A017" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('profile.payment.loaderText')}</Text>
       </View>
     );
@@ -314,7 +314,7 @@ export default function ProfilePaymentScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
@@ -330,7 +330,7 @@ export default function ProfilePaymentScreen() {
               return router.replace('/(tabs)/profile');
             }}
           >
-            <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={22} color="#0D1C11" />
           </Pressable>
           {fromSignup ? (
             <Pressable
@@ -347,7 +347,7 @@ export default function ProfilePaymentScreen() {
 
         <View style={styles.header}>
           <View style={styles.iconWrapper}>
-            <Ionicons name="card-outline" size={32} color="#D96C2D" />
+            <Ionicons name="card-outline" size={32} color="#C8331A" />
           </View>
           <Text style={styles.title}>{t('profile.payment.title')}</Text>
           <Text style={styles.subtitle}>{t('profile.payment.subtitle')}</Text>
@@ -393,13 +393,13 @@ export default function ProfilePaymentScreen() {
         <View style={styles.sectionHeading}>
           <Text style={styles.sectionTitle}>{t('profile.payment.savedCardsTitle')}</Text>
           {refreshing ? (
-            <ActivityIndicator size="small" color="#D96C2D" />
+            <ActivityIndicator size="small" color="#C8331A" />
           ) : null}
         </View>
 
         {loadingCards ? (
           <View style={styles.loadingCard}>
-            <ActivityIndicator size="small" color="#D96C2D" />
+            <ActivityIndicator size="small" color="#C8331A" />
             <Text style={styles.loadingText}>{t('profile.payment.loadingCards')}</Text>
           </View>
         ) : cards.length === 0 ? (
@@ -445,7 +445,7 @@ export default function ProfilePaymentScreen() {
                     </View>
                     {isDefault ? (
                       <View style={styles.defaultBadge}>
-                        <Ionicons name="checkmark-circle" size={15} color="#1F6F43" />
+                        <Ionicons name="checkmark-circle" size={15} color="#084424" />
                         <Text style={styles.defaultBadgeText}>
                           {t('profile.payment.defaultLabel')}
                         </Text>
@@ -498,7 +498,7 @@ export default function ProfilePaymentScreen() {
           <Ionicons
             name={consentAccepted ? 'checkbox' : 'square-outline'}
             size={22}
-            color={consentAccepted ? '#1F6F43' : '#8C8379'}
+            color={consentAccepted ? '#084424' : '#8C8379'}
           />
           <Text style={styles.consentText}>{t('profile.payment.saveConsent')}</Text>
         </Pressable>
@@ -531,7 +531,7 @@ export default function ProfilePaymentScreen() {
         ) : null}
         {successMessage ? (
           <View accessibilityRole="status" style={styles.messageBoxSuccess}>
-            <Ionicons name="checkmark-circle-outline" size={19} color="#1F6F43" />
+            <Ionicons name="checkmark-circle-outline" size={19} color="#084424" />
             <Text style={styles.successText}>{successMessage}</Text>
           </View>
         ) : null}
@@ -571,13 +571,13 @@ export default function ProfilePaymentScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { padding: 20, paddingTop: 54, paddingBottom: 40 },
   loader: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: { marginTop: 14, color: '#6F675E', fontSize: 14 },
   backButton: {
@@ -614,7 +614,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 14,
   },
-  title: { color: '#1E1E1E', fontSize: 28, fontWeight: '900' },
+  title: { color: '#0D1C11', fontSize: 28, fontWeight: '900' },
   subtitle: {
     color: '#6F675E',
     fontSize: 14,
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
     borderColor: '#DCEBDD',
   },
   partnerPayoutCopy: { marginBottom: 12 },
-  partnerPayoutTitle: { color: '#1F6F43', fontSize: 15, fontWeight: '900' },
+  partnerPayoutTitle: { color: '#084424', fontSize: 15, fontWeight: '900' },
   partnerPayoutText: { color: '#5F7062', fontSize: 12, lineHeight: 18, marginTop: 5 },
   partnerPayoutButton: {
     flexDirection: 'row',
@@ -661,14 +661,14 @@ const styles = StyleSheet.create({
     gap: 8,
     padding: 12,
     borderRadius: 12,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
   },
   partnerPayoutButtonText: { color: '#FFFFFF', fontWeight: '800', fontSize: 13 },
   continueSignupButton: {
     alignItems: 'center',
     padding: 14,
     borderRadius: 14,
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     marginTop: 12,
   },
   continueSignupText: { color: '#FFFFFF', fontSize: 14, fontWeight: '900' },
@@ -741,7 +741,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 6,
   },
-  defaultBadgeText: { color: '#1F6F43', fontSize: 11, fontWeight: '800' },
+  defaultBadgeText: { color: '#084424', fontSize: 11, fontWeight: '800' },
   cardActions: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -769,7 +769,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 9,
-    backgroundColor: '#D96C2D',
+    backgroundColor: '#084424',
     borderRadius: 15,
     marginTop: 12,
   },
@@ -794,7 +794,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginTop: 12,
   },
-  successText: { flex: 1, color: '#1F6F43', fontSize: 13, lineHeight: 19, fontWeight: '700' },
+  successText: { flex: 1, color: '#084424', fontSize: 13, lineHeight: 19, fontWeight: '700' },
   notice: {
     flexDirection: 'row',
     alignItems: 'flex-start',

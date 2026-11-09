@@ -82,7 +82,7 @@ export default function ProfileLayout() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#D4A017" />
+        <ActivityIndicator size="large" color="#EAB02F" />
       </View>
     );
   }
@@ -117,12 +117,12 @@ export default function ProfileLayout() {
 const styles = StyleSheet.create({
   loader: {
     flex: 1,
-    backgroundColor: '#F5EFE8',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   scene: {
-    backgroundColor: '#F5EFE8',
+    backgroundColor: '#F2ECE0',
   },
 });

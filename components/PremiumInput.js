@@ -62,7 +62,7 @@ export default function PremiumInput({
     inputRange: [0, 1],
     outputRange: [
       safeError ? '#D97B7B' : '#E8DED2',
-      safeError ? '#C0392B' : '#D4A017',
+      safeError ? '#C8331A' : '#EAB02F',
     ],
   });
 
@@ -91,7 +91,7 @@ export default function PremiumInput({
             <Ionicons
               name={iconName}
               size={18}
-              color={isFocused ? '#D4A017' : '#8B8176'}
+              color={isFocused ? '#EAB02F' : '#8B8176'}
             />
           </View>
         )}
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 15,
-    color: '#111111',
+    color: '#0D1C11',
     paddingVertical: 14,
     fontWeight: '600',
   },
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     marginTop: 8,
-    color: '#C0392B',
+    color: '#C8331A',
     fontSize: 12,
     fontWeight: '700',
     lineHeight: 18,

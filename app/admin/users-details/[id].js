@@ -188,7 +188,7 @@ const getRoleStyle = (role, t) => {
     case 'super-admin':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         icon: 'shield-checkmark-outline',
         label: t('admin.users.roleAdminLabel'),
       };
@@ -207,7 +207,7 @@ const getStatusStyle = (status, t) => {
     case 'active':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
@@ -418,8 +418,8 @@ export default function AdminUserDetailsScreen() {
   if (authLoading || loading) {
     return (
       <View style={styles.center}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.userDetails.loaderText')}</Text>
       </View>
     );
@@ -462,7 +462,7 @@ export default function AdminUserDetailsScreen() {
   if (!userId) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('admin.userDetails.notFoundTitle')}</Text>
@@ -478,7 +478,7 @@ export default function AdminUserDetailsScreen() {
   if (!user) {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="person-circle-outline" size={54} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('admin.userDetails.notFoundTitle')}</Text>
@@ -495,7 +495,7 @@ export default function AdminUserDetailsScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -504,13 +504,13 @@ export default function AdminUserDetailsScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => fetchUser(true)}
-            tintColor="#1F6F43"
+            tintColor="#084424"
           />
         }
       >
         <View style={styles.header}>
           <Pressable style={styles.backButton} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={22} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={22} color="#0D1C11" />
           </Pressable>
 
           <Text style={styles.title}>{t('admin.userDetails.title')}</Text>
@@ -518,7 +518,7 @@ export default function AdminUserDetailsScreen() {
 
         <View style={styles.heroCard}>
           <View style={styles.avatarWrap}>
-            <Ionicons name="person-outline" size={34} color="#1F6F43" />
+            <Ionicons name="person-outline" size={34} color="#084424" />
           </View>
 
           <Text style={styles.name}>
@@ -590,13 +590,13 @@ export default function AdminUserDetailsScreen() {
             icon="id-card-outline"
             label={t('admin.users.identityVerifiedLabel')}
             value={user?.isIdentityVerified ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
-            iconColor={user?.isIdentityVerified ? '#1F6F43' : '#8A6500'}
+            iconColor={user?.isIdentityVerified ? '#084424' : '#8A6500'}
           />
           <InfoRow
             icon="briefcase-outline"
             label={t('admin.users.workAuthorizedLabel')}
             value={user?.isWorkAuthorized ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
-            iconColor={user?.isWorkAuthorized ? '#1F6F43' : '#8A6500'}
+            iconColor={user?.isWorkAuthorized ? '#084424' : '#8A6500'}
           />
           {(normalizeText(user?.city) || normalizeText(user?.country)) ? (
             <InfoRow
@@ -648,7 +648,7 @@ export default function AdminUserDetailsScreen() {
             disabled={updating}
           >
             {updating ? (
-              <ActivityIndicator size="small" color="#111111" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
               <>
                 <Ionicons
@@ -660,7 +660,7 @@ export default function AdminUserDetailsScreen() {
                       : 'ban-outline'
                   }
                   size={18}
-                  color="#111111"
+                  color="#0D1C11"
                 />
                 <Text style={styles.primaryButtonText}>
                   {['pending_verification', 'rejected'].includes(
@@ -679,7 +679,7 @@ export default function AdminUserDetailsScreen() {
             <Ionicons
               name="shield-checkmark-outline"
               size={18}
-              color="#1F6F43"
+              color="#084424"
             />
             <Text style={styles.protectedText}>{t('admin.users.adminProtectedText')}</Text>
           </View>
@@ -692,7 +692,7 @@ export default function AdminUserDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   content: {
@@ -705,7 +705,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     paddingHorizontal: 24,
   },
 
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     flex: 1,
   },
 
@@ -770,7 +770,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     textAlign: 'center',
     marginBottom: 6,
   },
@@ -819,7 +819,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 14,
   },
 
@@ -852,7 +852,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     minHeight: 52,
     borderRadius: 16,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -865,7 +865,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 15,
     marginLeft: 8,
@@ -885,7 +885,7 @@ const styles = StyleSheet.create({
   },
 
   protectedText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '900',
     fontSize: 14,
     marginLeft: 8,
@@ -896,12 +896,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,

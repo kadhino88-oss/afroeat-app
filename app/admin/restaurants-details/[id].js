@@ -155,7 +155,7 @@ const getOwnerStatusStyle = (status, t) => {
     case 'active':
       return {
         bg: '#E8F5ED',
-        text: '#1F6F43',
+        text: '#084424',
         label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
@@ -194,7 +194,7 @@ const getVerificationStyle = (value, t) => {
   if (value === true) {
     return {
       bg: '#E8F5ED',
-      text: '#1F6F43',
+      text: '#084424',
       label: t('admin.userDetails.yesLabel'),
       icon: 'checkmark-circle-outline',
     };
@@ -234,7 +234,7 @@ const getOperationalRiskStyle = (restaurant, t) => {
 
   return {
     bg: '#E8F5ED',
-    text: '#1F6F43',
+    text: '#084424',
     label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
   };
@@ -388,7 +388,7 @@ const MetaRow = ({ icon, label, value, valueStyle, multiline = false }) => (
   </View>
 );
 
-const StatBox = ({ label, value, accent = '#1F6F43', icon }) => (
+const StatBox = ({ label, value, accent = '#084424', icon }) => (
   <View style={styles.statBox}>
     <View style={styles.statBoxTop}>
       {icon ? <Ionicons name={icon} size={15} color={accent} /> : null}
@@ -606,7 +606,7 @@ export default function AdminRestaurantDetailsScreen() {
         key: 'deliveryFee',
         value: formatPrice(restaurant?.deliveryFee, restaurant?.currency || 'EUR'),
         label: t('restaurant.profile.deliveryLabel'),
-        accent: '#D96C2D',
+        accent: '#C8331A',
         icon: 'car-outline',
       },
       {
@@ -620,7 +620,7 @@ export default function AdminRestaurantDetailsScreen() {
         key: 'hasOwner',
         value: restaurant?.owner?._id ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.restaurantDetails.hasOwnerFlagLabel'),
-        accent: restaurant?.owner?._id ? '#1F6F43' : '#B83232',
+        accent: restaurant?.owner?._id ? '#084424' : '#B83232',
         icon: 'person-outline',
       },
       {
@@ -648,7 +648,7 @@ export default function AdminRestaurantDetailsScreen() {
         key: 'isOpen',
         value: restaurant?.isOpen ? t('restaurant.profile.openLabel') : t('restaurant.profile.closedLabel'),
         label: t('admin.restaurantDetails.stateFlagLabel'),
-        accent: restaurant?.isOpen ? '#1F6F43' : '#B83232',
+        accent: restaurant?.isOpen ? '#084424' : '#B83232',
         icon: restaurant?.isOpen ? 'checkmark-circle-outline' : 'close-circle-outline',
       },
     ];
@@ -743,8 +743,8 @@ export default function AdminRestaurantDetailsScreen() {
   if (authLoading || (loading && !initialLoaded)) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.restaurantDetails.loaderText')}</Text>
       </View>
     );
@@ -781,7 +781,7 @@ export default function AdminRestaurantDetailsScreen() {
   if (!restaurantId) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
@@ -798,7 +798,7 @@ export default function AdminRestaurantDetailsScreen() {
   if (!restaurant) {
     return (
       <FadeInView style={styles.screen}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
@@ -815,14 +815,14 @@ export default function AdminRestaurantDetailsScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#111111" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
               <Text style={styles.primaryButtonText}>{t('restaurant.retry')}</Text>
             )}
           </Pressable>
 
           <Pressable style={styles.backLink} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={16} color="#1F6F43" />
+            <Ionicons name="arrow-back" size={16} color="#084424" />
             <Text style={styles.backLinkText}>{t('admin.restaurantDetails.backToListButton')}</Text>
           </Pressable>
         </View>
@@ -832,7 +832,7 @@ export default function AdminRestaurantDetailsScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -846,7 +846,7 @@ export default function AdminRestaurantDetailsScreen() {
       >
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={handleGoBack}>
-            <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+            <Ionicons name="arrow-back" size={20} color="#0D1C11" />
           </Pressable>
 
           <Pressable
@@ -855,9 +855,9 @@ export default function AdminRestaurantDetailsScreen() {
             disabled={refreshing}
           >
             {refreshing ? (
-              <ActivityIndicator size="small" color="#1E1E1E" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
-              <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+              <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
             )}
           </Pressable>
         </View>
@@ -908,7 +908,7 @@ export default function AdminRestaurantDetailsScreen() {
             <Badge
               label={t('admin.restaurantDetails.partnerBadgeLabel')}
               bg="#E8F5ED"
-              text="#1F6F43"
+              text="#084424"
               icon="storefront-outline"
             />
 
@@ -979,7 +979,7 @@ export default function AdminRestaurantDetailsScreen() {
             label={t('restaurant.profile.openLabel')}
             value={restaurant?.isOpen ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
             valueStyle={{
-              color: restaurant?.isOpen ? '#1F6F43' : '#B83232',
+              color: restaurant?.isOpen ? '#084424' : '#B83232',
               fontWeight: '900',
             }}
           />
@@ -990,7 +990,7 @@ export default function AdminRestaurantDetailsScreen() {
             <StatBox
               label={t('admin.restaurantDetails.revenueLabel')}
               value={formatPrice(restaurant?.revenue, restaurant?.currency || 'EUR')}
-              accent="#1F6F43"
+              accent="#084424"
               icon="cash-outline"
             />
             <StatBox
@@ -1002,7 +1002,7 @@ export default function AdminRestaurantDetailsScreen() {
             <StatBox
               label={t('admin.restaurantDetails.deliveredLabel')}
               value={String(restaurant?.deliveredOrders || 0)}
-              accent="#1F6F43"
+              accent="#084424"
               icon="checkmark-circle-outline"
             />
             <StatBox
@@ -1124,7 +1124,7 @@ export default function AdminRestaurantDetailsScreen() {
             disabled={updatingOwner || !restaurant?.owner?._id}
           >
             {updatingOwner ? (
-              <ActivityIndicator size="small" color="#111111" />
+              <ActivityIndicator size="small" color="#0D1C11" />
             ) : (
               <>
                 <Ionicons
@@ -1134,7 +1134,7 @@ export default function AdminRestaurantDetailsScreen() {
                       : 'ban-outline'
                   }
                   size={18}
-                  color="#111111"
+                  color="#0D1C11"
                 />
                 <Text style={styles.ownerActionButtonText}>
                   {restaurant?.owner?.accountStatus === 'suspended'
@@ -1200,7 +1200,7 @@ export default function AdminRestaurantDetailsScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   content: {
@@ -1213,7 +1213,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   loaderText: {
@@ -1253,7 +1253,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -1261,7 +1261,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -1344,7 +1344,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontSize: 21,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -1397,7 +1397,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 14,
   },
 
@@ -1417,7 +1417,7 @@ const styles = StyleSheet.create({
 
   metaValue: {
     flex: 1,
-    color: '#111111',
+    color: '#0D1C11',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '700',
@@ -1472,7 +1472,7 @@ const styles = StyleSheet.create({
   actionsTitle: {
     fontSize: 17,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginBottom: 8,
   },
 
@@ -1486,7 +1486,7 @@ const styles = StyleSheet.create({
 
   ownerActionButton: {
     minHeight: 50,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     borderRadius: 14,
     paddingVertical: 13,
     paddingHorizontal: 14,
@@ -1504,7 +1504,7 @@ const styles = StyleSheet.create({
   },
 
   ownerActionButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     marginLeft: 8,
     fontSize: 14,
@@ -1567,12 +1567,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   emptyTitle: {
     textAlign: 'center',
-    color: '#111111',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -1588,7 +1588,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 14,
@@ -1602,7 +1602,7 @@ const styles = StyleSheet.create({
   },
 
   primaryButtonText: {
-    color: '#111111',
+    color: '#0D1C11',
     fontWeight: '900',
     fontSize: 15,
   },
@@ -1615,7 +1615,7 @@ const styles = StyleSheet.create({
 
   backLinkText: {
     marginLeft: 8,
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 14,
     fontWeight: '800',
   },

@@ -91,7 +91,7 @@ export default function ResetScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <View style={styles.topBar}>
         <Pressable
@@ -136,7 +136,7 @@ export default function ResetScreen() {
               <Ionicons
                 name={serverStatus.ok ? 'checkmark-circle' : 'close-circle'}
                 size={18}
-                color={serverStatus.ok ? '#1F6F43' : '#B63B3B'}
+                color={serverStatus.ok ? '#084424' : '#C8331A'}
               />
               <Text style={[styles.statusText, serverStatus.ok ? styles.statusTextOk : styles.statusTextErr]}>
                 {serverStatus.ok
@@ -150,7 +150,7 @@ export default function ResetScreen() {
         {/* Reset Session */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
-            <Ionicons name="refresh-circle-outline" size={20} color="#D96C2D" />
+            <Ionicons name="refresh-circle-outline" size={20} color="#C8331A" />
             <Text style={styles.cardTitle}>{t('auth.reset.resetSessionTitle')}</Text>
           </View>
           <Text style={styles.hint}>{t('auth.reset.resetHint')}</Text>
@@ -173,7 +173,7 @@ export default function ResetScreen() {
           </View>
           {t('auth.reset.checklist', { returnObjects: true }).map((item, i) => (
             <View key={i} style={styles.checkRow}>
-              <Ionicons name="checkmark-outline" size={16} color="#D4A017" />
+              <Ionicons name="checkmark-outline" size={16} color="#EAB02F" />
               <Text style={styles.checkText}>{item}</Text>
             </View>
           ))}
@@ -185,11 +185,11 @@ export default function ResetScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
   topBar: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingTop: 54, paddingHorizontal: 16, paddingBottom: 12,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   backBtn: {
     width: 42, height: 42, borderRadius: 21,
@@ -228,8 +228,8 @@ const styles = StyleSheet.create({
   statusOk: { backgroundColor: '#EDFAF1' },
   statusErr: { backgroundColor: '#FDEAEA' },
   statusText: { fontSize: 13, fontWeight: '700', flex: 1 },
-  statusTextOk: { color: '#1F6F43' },
-  statusTextErr: { color: '#B63B3B' },
+  statusTextOk: { color: '#084424' },
+  statusTextErr: { color: '#C8331A' },
   checkRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginBottom: 8 },
   checkText: { fontSize: 13, color: '#555', lineHeight: 20, flex: 1 },
 });

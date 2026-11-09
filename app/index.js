@@ -153,7 +153,7 @@ export default function IndexEntry() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
         <View style={styles.loaderCard}>
           <View style={styles.logoWrap}>
@@ -171,7 +171,7 @@ export default function IndexEntry() {
 
           <ActivityIndicator
             size="large"
-            color="#D4A017"
+            color="#EAB02F"
             style={styles.loaderSpinner}
           />
         </View>
@@ -185,7 +185,7 @@ export default function IndexEntry() {
 const styles = StyleSheet.create({
   loader: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   loaderTitle: {
     fontSize: 24,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     letterSpacing: 0.4,
     marginBottom: 6,
   },

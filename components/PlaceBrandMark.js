@@ -66,7 +66,7 @@ export default function PlaceBrandMark({
           onError={handleImageError}
         />
       ) : (
-        <Ionicons name={iconName} size={size * 0.48} color="#1F6F43" />
+        <Ionicons name={iconName} size={size * 0.48} color="#084424" />
       )}
     </View>
   );

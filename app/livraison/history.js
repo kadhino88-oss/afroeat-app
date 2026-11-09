@@ -81,7 +81,7 @@ const formatDateTime = (value) => {
 const getDeliveredStatusStyle = () => {
   return {
     bg: '#E8F5ED',
-    text: '#1F6F43',
+    text: '#084424',
   };
 };
 
@@ -187,8 +187,8 @@ export default function LivraisonHistoryScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
-        <ActivityIndicator size="large" color="#D96C2D" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
+        <ActivityIndicator size="large" color="#C8331A" />
         <Text style={styles.loaderText}>{t('livraison.history.loaderText')}</Text>
       </View>
     );
@@ -197,7 +197,7 @@ export default function LivraisonHistoryScreen() {
   if (!isAuthenticated || currentRole !== 'livreur') {
     return (
       <FadeInView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+        <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
           <Ionicons name="time-outline" size={54} color="#C8BBAA" />
           <Text style={styles.emptyTitle}>{t('livraison.history.restrictedAccessTitle')}</Text>
@@ -218,7 +218,7 @@ export default function LivraisonHistoryScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={orders}
@@ -234,7 +234,7 @@ export default function LivraisonHistoryScreen() {
           <View>
             <View style={styles.topActions}>
               <Pressable style={styles.topButton} onPress={handleGoBack}>
-                <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+                <Ionicons name="arrow-back" size={20} color="#0D1C11" />
               </Pressable>
 
               <Pressable
@@ -243,9 +243,9 @@ export default function LivraisonHistoryScreen() {
                 disabled={refreshing}
               >
                 {refreshing ? (
-                  <ActivityIndicator size="small" color="#1E1E1E" />
+                  <ActivityIndicator size="small" color="#0D1C11" />
                 ) : (
-                  <Ionicons name="refresh-outline" size={20} color="#1E1E1E" />
+                  <Ionicons name="refresh-outline" size={20} color="#0D1C11" />
                 )}
               </Pressable>
             </View>
@@ -324,12 +324,12 @@ export default function LivraisonHistoryScreen() {
 
               <View style={styles.metaRow}>
                 <View style={styles.metaBadge}>
-                  <Ionicons name="bag-handle-outline" size={14} color="#1F6F43" />
+                  <Ionicons name="bag-handle-outline" size={14} color="#084424" />
                   <Text style={styles.metaBadgeText}>{t('livraison.itemsCount', { count: itemCount })}</Text>
                 </View>
 
                 <View style={styles.metaBadge}>
-                  <Ionicons name="cash-outline" size={14} color="#D96C2D" />
+                  <Ionicons name="cash-outline" size={14} color="#C8331A" />
                   <Text style={styles.metaBadgeText}>
                     {formatPrice(item?.totalPrice, item?.currency || 'EUR')}
                   </Text>
@@ -392,7 +392,7 @@ export default function LivraisonHistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   listContent: {
     paddingHorizontal: 16,
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
   loaderText: {
     marginTop: 12,
@@ -438,14 +438,14 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#D96C2D',
+    color: '#C8331A',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 8,
   },
   subtitle: {
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 6,
     textAlign: 'center',
   },
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
   orderTitle: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 4,
   },
   orderSubTitle: {
@@ -581,7 +581,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   detailsText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     textAlign: 'center',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 20,
     fontWeight: '800',
     marginTop: 14,
@@ -607,7 +607,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   emptyButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     paddingHorizontal: 18,
     borderRadius: 14,

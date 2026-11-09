@@ -277,7 +277,7 @@ export default function LivreurDashboardScreen() {
   if (authLoading || loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#D96C2D" />
+        <ActivityIndicator size="large" color="#C8331A" />
       </View>
     );
   }
@@ -330,7 +330,7 @@ export default function LivreurDashboardScreen() {
                   accessibilityLabel={t('restaurant.retry')}
                 >
                   {refreshing ? (
-                    <ActivityIndicator size="small" color="#1F6F43" />
+                    <ActivityIndicator size="small" color="#084424" />
                   ) : (
                     <Text style={styles.retryText}>{t('restaurant.retry')}</Text>
                   )}
@@ -434,7 +434,7 @@ export default function LivreurDashboardScreen() {
  */
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF8F0' },
+  container: { flex: 1, backgroundColor: '#FBF6EC' },
 
   loader: {
     flex: 1,
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
   },
 
   primary: {
-    color: '#D96C2D',
+    color: '#C8331A',
     fontWeight: '900',
   },
 
@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
   },
 
   retryText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -544,7 +544,7 @@ const styles = StyleSheet.create({
     minHeight: 42,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     borderRadius: 13,
     paddingHorizontal: 16,
     marginTop: 18,

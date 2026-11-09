@@ -209,14 +209,14 @@ export default function MenuScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#1F6F43" />
+        <ActivityIndicator size="large" color="#084424" />
       </View>
     );
   }
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={items}
@@ -232,14 +232,14 @@ export default function MenuScreen() {
           <View>
             <View style={styles.topRow}>
               <Pressable style={styles.topButton} onPress={() => router.back()}>
-                <Ionicons name="arrow-back" size={20} color="#1E1E1E" />
+                <Ionicons name="arrow-back" size={20} color="#0D1C11" />
               </Pressable>
 
               <Pressable
                 style={styles.topButton}
                 onPress={() => router.push('/restaurant/AddMenuItem')}
               >
-                <Ionicons name="add" size={22} color="#1E1E1E" />
+                <Ionicons name="add" size={22} color="#0D1C11" />
               </Pressable>
             </View>
 
@@ -302,7 +302,7 @@ export default function MenuScreen() {
 
             <View style={styles.metaRow}>
               <View style={styles.metaBadge}>
-                <Ionicons name="cash-outline" size={14} color="#D96C2D" />
+                <Ionicons name="cash-outline" size={14} color="#C8331A" />
                 <Text style={styles.metaBadgeText}>
                   {formatPrice(item.price, restaurant?.currency || 'EUR')}
                 </Text>
@@ -328,7 +328,7 @@ export default function MenuScreen() {
                 style={styles.secondaryButton}
                 onPress={() => handleEdit(item)}
               >
-                <Ionicons name="create-outline" size={16} color="#1F6F43" />
+                <Ionicons name="create-outline" size={16} color="#084424" />
                 <Text style={styles.secondaryButtonText}>{t('restaurant.menuScreen.editButton')}</Text>
               </Pressable>
 
@@ -363,7 +363,7 @@ export default function MenuScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#FFF8F0' },
+  screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingHorizontal: 16, paddingTop: 18, paddingBottom: 60 },
   emptyListContent: { flexGrow: 1 },
 
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   topRow: {
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1F6F43',
+    color: '#084424',
     marginBottom: 6,
     textTransform: 'uppercase',
   },
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
   badgeOpen: { backgroundColor: '#E8F5ED' },
   badgeClosed: { backgroundColor: '#FDECEC' },
   badgeText: { fontSize: 12, fontWeight: '800' },
-  badgeTextOpen: { color: '#1F6F43' },
+  badgeTextOpen: { color: '#084424' },
   badgeTextClosed: { color: '#B83232' },
 
   metaRow: {
@@ -522,14 +522,14 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   secondaryButtonText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '900',
     marginLeft: 6,
   },
   deleteButton: {
     flex: 1,
     minHeight: 46,
-    backgroundColor: '#C0392B',
+    backgroundColor: '#C8331A',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 12,
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   primaryButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 14,
