@@ -437,6 +437,8 @@ export default function WebDiscoveryHome() {
             <Pressable onPress={() => openExplorer('Épicerie')}><Text style={styles.footerLink}>Épiceries</Text></Pressable>
             <Pressable onPress={() => openExplorer('Boutique')}><Text style={styles.footerLink}>Commerces africains</Text></Pressable>
             <Pressable onPress={() => router.push('/auth/role')}><Text style={styles.footerLink}>Devenir partenaire</Text></Pressable>
+            <Pressable onPress={() => router.push('/legal/privacy')}><Text style={styles.footerLink}>Confidentialité</Text></Pressable>
+            <Pressable onPress={() => router.push('/legal/terms')}><Text style={styles.footerLink}>Conditions</Text></Pressable>
           </View>
           <Text style={styles.footerCopy}>© {new Date().getFullYear()} AFROEAT</Text>
         </View>
