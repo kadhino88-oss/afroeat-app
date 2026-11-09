@@ -40,8 +40,8 @@ const ROLE_CONFIG = {
     description:
       'Connecte-toi pour commander, suivre tes commandes et gérer ton compte AFROEAT.',
     color: '#EAB02F',
-    soft: '#FFF3D8',
-    dark: '#8A6500',
+    soft: '#F3E7CA',
+    dark: '#301904',
     icon: 'restaurant-outline',
   },
   restaurant: {
@@ -49,7 +49,7 @@ const ROLE_CONFIG = {
     description:
       'Connecte-toi à ton espace partenaire pour gérer ton menu, tes commandes et ton activité.',
     color: '#084424',
-    soft: '#E8F5ED',
+    soft: '#E3F0E8',
     dark: '#084424',
     icon: 'storefront-outline',
   },
@@ -58,17 +58,17 @@ const ROLE_CONFIG = {
     description:
       'Connecte-toi à ton espace livraison pour gérer tes missions, ton suivi et ton activité.',
     color: '#C8331A',
-    soft: '#FFF0E8',
-    dark: '#A6501A',
+    soft: '#F3E7CA',
+    dark: '#C8331A',
     icon: 'bicycle-outline',
   },
   admin: {
     label: 'Admin',
     description:
       'Connexion sécurisée à l’espace de supervision et de pilotage AFROEAT.',
-    color: '#5A32A3',
-    soft: '#F1EAFE',
-    dark: '#5A32A3',
+    color: '#084424',
+    soft: '#F2ECE0',
+    dark: '#084424',
     icon: 'shield-checkmark-outline',
   },
 };
@@ -410,7 +410,7 @@ export default function LoginScreen() {
               <Ionicons
                 name="mail-outline"
                 size={18}
-                color="#7A7268"
+                color="#606D5D"
                 style={styles.inputIcon}
               />
               <TextInput
@@ -418,7 +418,7 @@ export default function LoginScreen() {
                 value={email}
                 onChangeText={setEmail}
                 placeholder="nom@email.com"
-                placeholderTextColor="#9A948D"
+                placeholderTextColor="#606D5D"
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -431,7 +431,7 @@ export default function LoginScreen() {
               <Ionicons
                 name="lock-closed-outline"
                 size={18}
-                color="#7A7268"
+                color="#606D5D"
                 style={styles.inputIcon}
               />
               <TextInput
@@ -439,7 +439,7 @@ export default function LoginScreen() {
                 value={password}
                 onChangeText={setPassword}
                 placeholder={t('auth.login.passwordPlaceholder')}
-                placeholderTextColor="#9A948D"
+                placeholderTextColor="#606D5D"
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -454,7 +454,7 @@ export default function LoginScreen() {
                 <Ionicons
                   name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                   size={18}
-                  color="#777777"
+                  color="#606D5D"
                 />
               </Pressable>
             </View>
@@ -543,9 +543,9 @@ const styles = StyleSheet.create({
     height: 84,
     borderRadius: 24,
     overflow: 'hidden',
-    backgroundColor: '#FFF6E3',
+    backgroundColor: '#F3E7CA',
     borderWidth: 1,
-    borderColor: '#F3E2B5',
+    borderColor: '#F3E7CA',
     marginBottom: 18,
   },
 
@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#555555',
+    color: '#606D5D',
     fontSize: 15,
     fontWeight: '600',
   },
@@ -618,9 +618,9 @@ const styles = StyleSheet.create({
     height: 88,
     borderRadius: 24,
     overflow: 'hidden',
-    backgroundColor: '#FFF6E3',
+    backgroundColor: '#F3E7CA',
     borderWidth: 1,
-    borderColor: '#F3E2B5',
+    borderColor: '#F3E7CA',
     marginBottom: 14,
   },
 
@@ -646,7 +646,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 14,
@@ -686,15 +686,15 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#5F584F',
+    color: '#606D5D',
     marginBottom: 8,
     marginTop: 6,
   },
 
   inputWrap: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#ECE7DF',
+    borderColor: '#F2ECE0',
     borderRadius: 16,
     minHeight: 54,
     paddingHorizontal: 14,
@@ -744,19 +744,19 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E6DED3',
+    borderColor: '#F3E7CA',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   secondaryButtonText: {
-    color: '#444444',
+    color: '#606D5D',
     fontSize: 14,
     fontWeight: '800',
   },
 
   infoBox: {
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     borderRadius: 20,
     padding: 18,
   },
@@ -770,7 +770,7 @@ const styles = StyleSheet.create({
 
   infoText: {
     fontSize: 14,
-    color: '#5D5246',
+    color: '#606D5D',
     lineHeight: 20,
     marginBottom: 6,
   },

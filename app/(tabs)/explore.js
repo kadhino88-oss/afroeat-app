@@ -1141,12 +1141,12 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
         <View style={styles.searchCard}>
           <View style={styles.searchBox}>
-            <Ionicons name="search-outline" size={22} color="#A0A0A0" />
+            <Ionicons name="search-outline" size={22} color="#606D5D" />
 
             <TextInput
               style={styles.searchInput}
               placeholder={t('explore.searchPlaceholder')}
-              placeholderTextColor="#A0A0A0"
+              placeholderTextColor="#606D5D"
               value={query}
               onChangeText={setQuery}
               returnKeyType="search"
@@ -1162,7 +1162,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
                 accessibilityLabel={t('explore.clearSearch')}
                 onPress={() => setQuery('')}
               >
-                <Ionicons name="close-circle" size={20} color="#A0A0A0" />
+                <Ionicons name="close-circle" size={20} color="#606D5D" />
               </Pressable>
             )}
           </View>
@@ -1507,14 +1507,14 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
 
   const columns = useGridColumns();
   const renderGridItem = useCallback(
-    (info) =>
-      columns > 1 ? (
-        <View style={{ flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 }}>
-          {renderRestaurant(info)}
-        </View>
-      ) : (
-        renderRestaurant(info)
-      ),
+    (info) => (
+      <FadeInView
+        delay={Math.min(info.index % 12, 8) * 70}
+        style={columns > 1 ? { flex: 1, maxWidth: `${100 / columns}%`, paddingHorizontal: 8 } : undefined}
+      >
+        {renderRestaurant(info)}
+      </FadeInView>
+    ),
     [columns, renderRestaurant]
   );
 
@@ -1574,7 +1574,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
                     : 'restaurant-outline'
                 }
                 size={72}
-                color="#C9B8A3"
+                color="#EAB02F"
               />
               <Text style={styles.emptyTitle}>
                 {showEmptySearchState
@@ -1664,7 +1664,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     textAlign: 'left',
-    color: '#E9F3EC',
+    color: '#F2ECE0',
     fontSize: 13,
     lineHeight: 19,
   },
@@ -1678,7 +1678,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#ECE1D4',
+    borderColor: '#F3E7CA',
   },
 
   searchInput: {
@@ -1706,7 +1706,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginLeft: 8,
     marginBottom: 14,
-    backgroundColor: '#E8F2EB',
+    backgroundColor: '#E3DECF',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1728,7 +1728,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#F0E6D9',
+    borderColor: '#F3E7CA',
     shadowColor: '#000000',
     shadowOpacity: 0.04,
     shadowRadius: 8,
@@ -1746,7 +1746,7 @@ const styles = StyleSheet.create({
     height: 92,
     borderRadius: 12,
     marginBottom: 8,
-    backgroundColor: '#F3EDE4',
+    backgroundColor: '#F2ECE0',
   },
 
   dishName: {
@@ -1758,7 +1758,7 @@ const styles = StyleSheet.create({
   dishRestaurant: {
     marginTop: 3,
     fontSize: 11,
-    color: '#82796E',
+    color: '#606D5D',
   },
 
   dishPrice: {
@@ -1790,7 +1790,7 @@ const styles = StyleSheet.create({
   },
 
   distanceLabel: {
-    color: '#526257',
+    color: '#606D5D',
     fontSize: 13,
     fontWeight: '800',
     marginRight: 8,
@@ -1809,7 +1809,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#DCE8DE',
+    borderColor: '#E3DECF',
   },
 
   distanceChipActive: {
@@ -1818,7 +1818,7 @@ const styles = StyleSheet.create({
   },
 
   distanceChipText: {
-    color: '#526257',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1832,8 +1832,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#E7D8C5',
-    backgroundColor: '#F8F8F8',
+    borderColor: '#F3E7CA',
+    backgroundColor: '#F2ECE0',
     marginRight: 12,
   },
 
@@ -1849,7 +1849,7 @@ const styles = StyleSheet.create({
   filterChipText: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#6B5D4D',
+    color: '#606D5D',
   },
 
   filterChipTextActive: {
@@ -1865,8 +1865,8 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#BFD8C7',
-    backgroundColor: '#F5FBF7',
+    borderColor: '#007E4B',
+    backgroundColor: '#F2ECE0',
   },
 
   openOnlyChipActive: {
@@ -1891,15 +1891,15 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     borderRadius: 16,
-    backgroundColor: '#EEF6EF',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#D8E8DA',
+    borderColor: '#E3F0E8',
   },
 
   locationNoticeText: {
     flex: 1,
     marginHorizontal: 9,
-    color: '#526257',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 17,
   },
@@ -1941,15 +1941,15 @@ const styles = StyleSheet.create({
   resultsCount: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#E17A2D',
+    color: '#EAB02F',
   },
 
   errorCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FDEAEA',
+    backgroundColor: '#F8E1DD',
     borderWidth: 1,
-    borderColor: '#F4C7C7',
+    borderColor: '#F8E1DD',
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -1993,12 +1993,12 @@ const styles = StyleSheet.create({
   cardImage: {
     width: '100%',
     height: 170,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#F2ECE0',
   },
   cardImagePlaceholder: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1B1B22',
+    backgroundColor: '#0D1C11',
   },
 
   featuredBadge: {
@@ -2111,7 +2111,7 @@ const styles = StyleSheet.create({
   },
 
   publicCardMetaText: {
-    color: '#82796E',
+    color: '#606D5D',
     fontSize: 11,
     fontWeight: '700',
   },
@@ -2123,11 +2123,11 @@ const styles = StyleSheet.create({
   },
 
   statusOpen: {
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
   },
 
   statusClosed: {
-    backgroundColor: '#FDEAEA',
+    backgroundColor: '#F8E1DD',
   },
 
   statusText: {

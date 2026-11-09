@@ -85,7 +85,7 @@ export default function AdminLayout() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#5A32A3" />
+        <ActivityIndicator size="large" color="#084424" />
       </View>
     );
   }
@@ -135,7 +135,7 @@ export default function AdminLayout() {
       screenOptions={{
         headerShown: false,
         animation: 'fade',
-        contentStyle: { backgroundColor: '#F7F4FB' },
+        contentStyle: { backgroundColor: '#F2ECE0' },
       }}
     >
       {/* ================================================= */}
@@ -168,7 +168,7 @@ export default function AdminLayout() {
 const styles = StyleSheet.create({
   loader: {
     flex: 1,
-    backgroundColor: '#F7F4FB',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },

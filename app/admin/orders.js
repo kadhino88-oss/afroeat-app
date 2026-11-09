@@ -153,60 +153,60 @@ const getPaymentStyle = (value) => {
   const normalized = normalizeText(value).toLowerCase();
 
   if (normalized === 'paid' || normalized === 'payé') {
-    return { bg: '#E8F5ED', text: '#084424', icon: 'card-outline' };
+    return { bg: '#E3F0E8', text: '#084424', icon: 'card-outline' };
   }
 
   if (normalized === 'unpaid' || normalized === 'non payé') {
-    return { bg: '#FDECEC', text: '#B83232', icon: 'alert-circle-outline' };
+    return { bg: '#F8E1DD', text: '#C8331A', icon: 'alert-circle-outline' };
   }
 
   if (normalized === 'refunded' || normalized === 'remboursé') {
-    return { bg: '#EAF3FF', text: '#245EA8', icon: 'swap-horizontal-outline' };
+    return { bg: '#F2ECE0', text: '#084424', icon: 'swap-horizontal-outline' };
   }
 
-  return { bg: '#F4F4F4', text: '#555', icon: 'help-circle-outline' };
+  return { bg: '#F2ECE0', text: '#555', icon: 'help-circle-outline' };
 };
 
 const getStatusColors = (status) => {
   switch (normalizeText(status)) {
     case 'Livrée':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         icon: 'checkmark-circle-outline',
       };
 
     case 'En livraison':
       return {
-        bg: '#EAF3FF',
-        text: '#245EA8',
+        bg: '#F2ECE0',
+        text: '#084424',
         icon: 'bicycle-outline',
       };
 
     case 'En préparation':
       return {
-        bg: '#FFF3D8',
-        text: '#8A6500',
+        bg: '#F3E7CA',
+        text: '#301904',
         icon: 'restaurant-outline',
       };
 
     case 'Confirmée':
       return {
-        bg: '#EFE9FF',
-        text: '#6D4CDB',
+        bg: '#F2ECE0',
+        text: '#084424',
         icon: 'checkmark-done-outline',
       };
 
     case 'Annulée':
       return {
-        bg: '#FDECEC',
-        text: '#B83232',
+        bg: '#F8E1DD',
+        text: '#C8331A',
         icon: 'close-circle-outline',
       };
 
     default:
       return {
-        bg: '#FFF0E8',
+        bg: '#F3E7CA',
         text: '#C8331A',
         icon: 'time-outline',
       };
@@ -521,7 +521,7 @@ export default function AdminOrdersScreen() {
       <FadeInView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="shield-outline" size={54} color="#C8BBAA" />
+          <Ionicons name="shield-outline" size={54} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('admin.orders.restrictedTitle')}</Text>
           <Text style={styles.emptyText}>
             {t('admin.orders.restrictedText')}
@@ -589,7 +589,7 @@ export default function AdminOrdersScreen() {
             <View style={styles.liveMonitorCard}>
               <View style={styles.liveMonitorHeader}>
                 <View style={styles.liveMonitorTitleWrap}>
-                  <Ionicons name="radio-outline" size={18} color="#245EA8" />
+                  <Ionicons name="radio-outline" size={18} color="#084424" />
                   <Text style={styles.liveMonitorTitle}>{t('admin.orders.controlCenterTitle')}</Text>
                 </View>
 
@@ -622,7 +622,7 @@ export default function AdminOrdersScreen() {
                 label={t('order.status.on_the_way')}
                 value={stats.delivering}
                 iconName="bicycle-outline"
-                tint="#245EA8"
+                tint="#084424"
               />
               <StatCard
                 label={t('order.status.delivered')}
@@ -634,27 +634,27 @@ export default function AdminOrdersScreen() {
                 label={t('admin.orders.statUnpaidLabel')}
                 value={stats.unpaid}
                 iconName="card-outline"
-                tint="#B83232"
+                tint="#C8331A"
               />
               <StatCard
                 label={t('admin.dashboard.unassignedLabel')}
                 value={stats.unassigned}
                 iconName="person-remove-outline"
-                tint="#7C3AED"
+                tint="#084424"
               />
             </View>
 
             <View style={styles.quickActionsGrid}>
               <QuickActionCard
                 iconName="bicycle-outline"
-                tint="#245EA8"
+                tint="#084424"
                 title={t('admin.ops.liveTripsLabel')}
                 text={t('admin.orders.liveTripsQuickText')}
                 onPress={() => setActiveStatus('En livraison')}
               />
               <QuickActionCard
                 iconName="card-outline"
-                tint="#B83232"
+                tint="#C8331A"
                 title={t('admin.orders.sensitivePaymentsQuickTitle')}
                 text={t('admin.orders.sensitivePaymentsQuickText')}
                 onPress={() => setActivePaymentStatus('Non payé')}
@@ -766,7 +766,7 @@ export default function AdminOrdersScreen() {
 
             {!!errorMessage && orders.length === 0 ? (
               <View style={styles.errorCard}>
-                <Ionicons name="alert-circle-outline" size={18} color="#B83232" />
+                <Ionicons name="alert-circle-outline" size={18} color="#C8331A" />
                 <Text style={styles.errorText}>{errorMessage}</Text>
               </View>
             ) : null}
@@ -866,7 +866,7 @@ export default function AdminOrdersScreen() {
 
                 {!!normalizeText(item?.restaurantCuisine) && (
                   <View style={styles.metaBadge}>
-                    <Ionicons name="restaurant-outline" size={14} color="#245EA8" />
+                    <Ionicons name="restaurant-outline" size={14} color="#084424" />
                     <Text style={styles.metaBadgeText}>
                       {normalizeText(item?.restaurantCuisine)}
                     </Text>
@@ -896,7 +896,7 @@ export default function AdminOrdersScreen() {
         }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="receipt-outline" size={54} color="#C8BBAA" />
+            <Ionicons name="receipt-outline" size={54} color="#606D5D" />
             <Text style={styles.emptyTitle}>{t('admin.orders.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
               {t('admin.orders.emptyText')}
@@ -959,10 +959,10 @@ const styles = StyleSheet.create({
     color: '#0D1C11',
     marginBottom: 8,
   },
-  subtitle: { color: '#6B655E', fontSize: 14, lineHeight: 21 },
+  subtitle: { color: '#606D5D', fontSize: 14, lineHeight: 21 },
 
   liveMonitorCard: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
@@ -980,12 +980,12 @@ const styles = StyleSheet.create({
   },
   liveMonitorTitle: {
     marginLeft: 8,
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 16,
     fontWeight: '900',
   },
   liveBadge: {
-    backgroundColor: '#245EA8',
+    backgroundColor: '#084424',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -997,13 +997,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   liveMonitorText: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 8,
   },
   liveMonitorSubText: {
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1090,7 +1090,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   filterChip: {
-    backgroundColor: '#F3ECE4',
+    backgroundColor: '#F2ECE0',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 999,
@@ -1131,7 +1131,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E5DDD2',
+    borderColor: '#F3E7CA',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -1174,13 +1174,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   resultsFiltersText: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 18,
   },
 
   errorCard: {
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     marginBottom: 14,
@@ -1189,7 +1189,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     flex: 1,
-    color: '#B83232',
+    color: '#C8331A',
     marginLeft: 8,
     fontSize: 13,
     lineHeight: 19,
@@ -1224,7 +1224,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   cardMetaAlert: {
-    color: '#B83232',
+    color: '#C8331A',
     fontWeight: '800',
   },
 
@@ -1250,7 +1250,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1266,7 +1266,7 @@ const styles = StyleSheet.create({
 
   footerRow: {
     borderTopWidth: 1,
-    borderTopColor: '#F2ECE5',
+    borderTopColor: '#F2ECE0',
     paddingTop: 12,
     marginTop: 4,
     flexDirection: 'row',
@@ -1276,9 +1276,9 @@ const styles = StyleSheet.create({
   footerBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5FBF7',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#CFE5D7',
+    borderColor: '#E3F0E8',
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 999,

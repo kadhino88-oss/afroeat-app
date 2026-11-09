@@ -154,36 +154,36 @@ const getOwnerStatusStyle = (status, t) => {
   switch (normalizeText(status).toLowerCase()) {
     case 'active':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
-        bg: '#FDECEC',
-        text: '#B83232',
+        bg: '#F8E1DD',
+        text: '#C8331A',
         label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
-        bg: '#FFF3D8',
-        text: '#8A6500',
+        bg: '#F3E7CA',
+        text: '#301904',
         label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
-        bg: '#EFE9FF',
-        text: '#6D4CDB',
+        bg: '#F2ECE0',
+        text: '#084424',
         label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
-        bg: '#F4F4F4',
-        text: '#555555',
+        bg: '#F2ECE0',
+        text: '#606D5D',
         label: normalizeText(status, t('admin.users.statusUnknownLabel')),
         icon: 'help-circle-outline',
       };
@@ -193,7 +193,7 @@ const getOwnerStatusStyle = (status, t) => {
 const getVerificationStyle = (value, t) => {
   if (value === true) {
     return {
-      bg: '#E8F5ED',
+      bg: '#E3F0E8',
       text: '#084424',
       label: t('admin.userDetails.yesLabel'),
       icon: 'checkmark-circle-outline',
@@ -201,8 +201,8 @@ const getVerificationStyle = (value, t) => {
   }
 
   return {
-    bg: '#FFF3D8',
-    text: '#8A6500',
+    bg: '#F3E7CA',
+    text: '#301904',
     label: t('admin.userDetails.noLabel'),
     icon: 'warning-outline',
   };
@@ -216,8 +216,8 @@ const getOperationalRiskStyle = (restaurant, t) => {
 
   if (!hasOwner || ownerStatus === 'suspended') {
     return {
-      bg: '#FDECEC',
-      text: '#B83232',
+      bg: '#F8E1DD',
+      text: '#C8331A',
       label: t('admin.restaurantDetails.riskHighLabel'),
       icon: 'alert-circle-outline',
     };
@@ -225,15 +225,15 @@ const getOperationalRiskStyle = (restaurant, t) => {
 
   if (!hasAddress || menuCount === 0) {
     return {
-      bg: '#FFF3D8',
-      text: '#8A6500',
+      bg: '#F3E7CA',
+      text: '#301904',
       label: t('admin.restaurantDetails.riskMediumLabel'),
       icon: 'warning-outline',
     };
   }
 
   return {
-    bg: '#E8F5ED',
+    bg: '#E3F0E8',
     text: '#084424',
     label: t('admin.restaurantDetails.riskLowLabel'),
     icon: 'checkmark-circle-outline',
@@ -374,7 +374,7 @@ const InfoCard = ({ title, children, footer }) => (
 
 const MetaRow = ({ icon, label, value, valueStyle, multiline = false }) => (
   <View style={styles.metaRow}>
-    <Ionicons name={icon} size={16} color="#6B655E" />
+    <Ionicons name={icon} size={16} color="#606D5D" />
     <Text style={styles.metaLabel}>{label}</Text>
     <Text
       style={[
@@ -599,7 +599,7 @@ export default function AdminRestaurantDetailsScreen() {
         key: 'currency',
         value: normalizeText(restaurant?.currency, 'EUR'),
         label: t('restaurant.profile.currencyLabel'),
-        accent: '#245EA8',
+        accent: '#084424',
         icon: 'cash-outline',
       },
       {
@@ -620,21 +620,21 @@ export default function AdminRestaurantDetailsScreen() {
         key: 'hasOwner',
         value: restaurant?.owner?._id ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel'),
         label: t('admin.restaurantDetails.hasOwnerFlagLabel'),
-        accent: restaurant?.owner?._id ? '#084424' : '#B83232',
+        accent: restaurant?.owner?._id ? '#084424' : '#C8331A',
         icon: 'person-outline',
       },
       {
         key: 'menuCount',
         value: String(menus.length),
         label: t('admin.restaurantDetails.menuCountFlagLabel'),
-        accent: '#7C3AED',
+        accent: '#084424',
         icon: 'list-outline',
       },
       {
         key: 'categoriesCount',
         value: String(categories.length),
         label: t('admin.restaurantDetails.categoriesLabel'),
-        accent: '#8A6500',
+        accent: '#301904',
         icon: 'grid-outline',
       },
       {
@@ -648,7 +648,7 @@ export default function AdminRestaurantDetailsScreen() {
         key: 'isOpen',
         value: restaurant?.isOpen ? t('restaurant.profile.openLabel') : t('restaurant.profile.closedLabel'),
         label: t('admin.restaurantDetails.stateFlagLabel'),
-        accent: restaurant?.isOpen ? '#084424' : '#B83232',
+        accent: restaurant?.isOpen ? '#084424' : '#C8331A',
         icon: restaurant?.isOpen ? 'checkmark-circle-outline' : 'close-circle-outline',
       },
     ];
@@ -783,7 +783,7 @@ export default function AdminRestaurantDetailsScreen() {
       <FadeInView style={styles.screen}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
+          <Ionicons name="alert-circle-outline" size={54} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>{t('admin.restaurantDetails.missingIdText')}</Text>
 
@@ -800,7 +800,7 @@ export default function AdminRestaurantDetailsScreen() {
       <FadeInView style={styles.screen}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
+          <Ionicons name="alert-circle-outline" size={54} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('restaurant.profile.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
             {errorMessage || t('admin.restaurantDetails.fetchErrorEmptyText')}
@@ -875,7 +875,7 @@ export default function AdminRestaurantDetailsScreen() {
         <View style={styles.liveMonitorCard}>
           <View style={styles.liveMonitorHeader}>
             <View style={styles.liveMonitorTitleWrap}>
-              <Ionicons name="radio-outline" size={18} color="#245EA8" />
+              <Ionicons name="radio-outline" size={18} color="#084424" />
               <Text style={styles.liveMonitorTitle}>{t('admin.restaurantDetails.liveMonitorTitle')}</Text>
             </View>
 
@@ -907,7 +907,7 @@ export default function AdminRestaurantDetailsScreen() {
           <View style={styles.heroBadges}>
             <Badge
               label={t('admin.restaurantDetails.partnerBadgeLabel')}
-              bg="#E8F5ED"
+              bg="#E3F0E8"
               text="#084424"
               icon="storefront-outline"
             />
@@ -979,7 +979,7 @@ export default function AdminRestaurantDetailsScreen() {
             label={t('restaurant.profile.openLabel')}
             value={restaurant?.isOpen ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
             valueStyle={{
-              color: restaurant?.isOpen ? '#084424' : '#B83232',
+              color: restaurant?.isOpen ? '#084424' : '#C8331A',
               fontWeight: '900',
             }}
           />
@@ -996,7 +996,7 @@ export default function AdminRestaurantDetailsScreen() {
             <StatBox
               label={t('admin.restaurantDetails.ordersLabel')}
               value={String(restaurant?.totalOrders || 0)}
-              accent="#245EA8"
+              accent="#084424"
               icon="receipt-outline"
             />
             <StatBox
@@ -1008,19 +1008,19 @@ export default function AdminRestaurantDetailsScreen() {
             <StatBox
               label={t('admin.restaurantDetails.cancelledLabel')}
               value={String(restaurant?.cancelledOrders || 0)}
-              accent="#B83232"
+              accent="#C8331A"
               icon="close-circle-outline"
             />
             <StatBox
               label={t('admin.restaurantDetails.pendingLabel')}
               value={String(restaurant?.pendingOrders || 0)}
-              accent="#8A6500"
+              accent="#301904"
               icon="time-outline"
             />
             <StatBox
               label={t('admin.restaurantDetails.avgMenuPriceLabel')}
               value={formatPrice(averageMenuPrice, restaurant?.currency || 'EUR')}
-              accent="#6D4CDB"
+              accent="#084424"
               icon="analytics-outline"
             />
           </View>
@@ -1188,7 +1188,7 @@ export default function AdminRestaurantDetailsScreen() {
 
         {!!errorMessage ? (
           <View style={styles.softErrorCard}>
-            <Ionicons name="warning-outline" size={18} color="#B83232" />
+            <Ionicons name="warning-outline" size={18} color="#C8331A" />
             <Text style={styles.softErrorText}>{errorMessage}</Text>
           </View>
         ) : null}
@@ -1218,7 +1218,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -1266,13 +1266,13 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
 
   liveMonitorCard: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 20,
     padding: 16,
     marginBottom: 16,
@@ -1293,13 +1293,13 @@ const styles = StyleSheet.create({
 
   liveMonitorTitle: {
     marginLeft: 8,
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 16,
     fontWeight: '900',
   },
 
   liveBadge: {
-    backgroundColor: '#245EA8',
+    backgroundColor: '#084424',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -1313,14 +1313,14 @@ const styles = StyleSheet.create({
   },
 
   liveMonitorText: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 8,
   },
 
   liveMonitorSubText: {
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1349,14 +1349,14 @@ const styles = StyleSheet.create({
   },
 
   heroText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 6,
   },
 
   heroSubText: {
-    color: '#7A7268',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 20,
     fontWeight: '700',
@@ -1410,7 +1410,7 @@ const styles = StyleSheet.create({
   metaLabel: {
     marginLeft: 8,
     width: 92,
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 13,
     fontWeight: '700',
   },
@@ -1436,7 +1436,7 @@ const styles = StyleSheet.create({
   statBox: {
     width: '48%',
     marginHorizontal: '1%',
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 12,
@@ -1457,7 +1457,7 @@ const styles = StyleSheet.create({
 
   statBoxLabel: {
     fontSize: 12,
-    color: '#666666',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
@@ -1477,7 +1477,7 @@ const styles = StyleSheet.create({
   },
 
   actionsSubtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 20,
     marginBottom: 16,
@@ -1496,7 +1496,7 @@ const styles = StyleSheet.create({
   },
 
   ownerActionButtonSuccess: {
-    backgroundColor: '#CDECD7',
+    backgroundColor: '#E3F0E8',
   },
 
   ownerActionButtonDisabled: {
@@ -1519,7 +1519,7 @@ const styles = StyleSheet.create({
   flagBox: {
     width: '48%',
     marginHorizontal: '1%',
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 12,
@@ -1540,13 +1540,13 @@ const styles = StyleSheet.create({
 
   flagBoxLabel: {
     fontSize: 12,
-    color: '#666666',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
   softErrorCard: {
     marginTop: 2,
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     flexDirection: 'row',
@@ -1555,7 +1555,7 @@ const styles = StyleSheet.create({
 
   softErrorText: {
     marginLeft: 8,
-    color: '#B83232',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '800',
@@ -1581,7 +1581,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,

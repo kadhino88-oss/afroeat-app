@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
     minHeight: 260,
-    backgroundColor: '#E7E2D8',
+    backgroundColor: '#F3E7CA',
     borderRadius: 16,
     overflow: 'hidden',
     position: 'relative',
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#2782E6',
+    backgroundColor: '#084424',
     borderWidth: 3,
     borderColor: '#FFFFFF',
     position: 'absolute',

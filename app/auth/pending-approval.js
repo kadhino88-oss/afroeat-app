@@ -122,7 +122,7 @@ const getRoleConfig = (role) => {
         subtitle:
           'Ton dossier partenaire a bien été reçu. Il doit être vérifié avant l’activation complète de ton espace restaurant.',
         accent: '#084424',
-        soft: '#E8F5ED',
+        soft: '#E3F0E8',
         icon: 'storefront-outline',
         loginRole: 'restaurant',
         primaryLabel: 'Retour à la connexion restaurant',
@@ -134,7 +134,7 @@ const getRoleConfig = (role) => {
         subtitle:
           'Ton dossier livreur a bien été reçu. La vérification d’identité et des éléments d’adhésion doit être validée avant activation.',
         accent: '#C8331A',
-        soft: '#FFF0E8',
+        soft: '#F3E7CA',
         icon: 'bicycle-outline',
         loginRole: 'livreur',
         primaryLabel: 'Retour à la connexion livreur',
@@ -145,8 +145,8 @@ const getRoleConfig = (role) => {
         title: 'Accès administrateur contrôlé',
         subtitle:
           'Ton espace administrateur nécessite une validation et un accès sécurisé avant ouverture complète.',
-        accent: '#245EA8',
-        soft: '#EAF3FF',
+        accent: '#084424',
+        soft: '#F2ECE0',
         icon: 'shield-checkmark-outline',
         loginRole: 'admin',
         primaryLabel: 'Retour à la connexion admin',
@@ -157,7 +157,7 @@ const getRoleConfig = (role) => {
         title: 'Compte en attente',
         subtitle: 'Ton compte est en attente de traitement.',
         accent: '#EAB02F',
-        soft: '#FFF3D8',
+        soft: '#F3E7CA',
         icon: 'time-outline',
         loginRole: 'client',
         primaryLabel: 'Retour à la connexion',
@@ -284,7 +284,7 @@ export default function PendingApprovalScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F3" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -328,7 +328,7 @@ export default function PendingApprovalScreen() {
             <Ionicons
               name="shield-checkmark-outline"
               size={18}
-              color="#777777"
+              color="#606D5D"
             />
             <Text style={styles.stepText}>
               {t('auth.pendingApproval.step3')}
@@ -381,7 +381,7 @@ export default function PendingApprovalScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F3',
+    backgroundColor: '#F2ECE0',
   },
 
   content: {
@@ -400,9 +400,9 @@ const styles = StyleSheet.create({
     height: 78,
     borderRadius: 22,
     overflow: 'hidden',
-    backgroundColor: '#FFF6E3',
+    backgroundColor: '#F3E7CA',
     borderWidth: 1,
-    borderColor: '#F3E2B5',
+    borderColor: '#F3E7CA',
     marginBottom: 10,
   },
 
@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 14,
-    color: '#666666',
+    color: '#606D5D',
     lineHeight: 22,
     textAlign: 'center',
   },
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
 
   stepText: {
     marginLeft: 10,
-    color: '#444444',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 20,
     flex: 1,
@@ -509,7 +509,7 @@ const styles = StyleSheet.create({
 
   infoText: {
     fontSize: 13.5,
-    color: '#5C5C5C',
+    color: '#606D5D',
     lineHeight: 21,
     marginBottom: 6,
   },
@@ -541,13 +541,13 @@ const styles = StyleSheet.create({
   },
 
   secondaryButtonText: {
-    color: '#444444',
+    color: '#606D5D',
     fontWeight: '800',
     fontSize: 14,
   },
 
   resetButton: {
-    backgroundColor: '#FFF0F0',
+    backgroundColor: '#F8E1DD',
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderRadius: 16,
@@ -555,7 +555,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#F3C9C9',
+    borderColor: '#F8E1DD',
   },
 
   resetButtonText: {

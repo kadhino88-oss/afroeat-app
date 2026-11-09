@@ -492,7 +492,7 @@ export default function RestaurantDashboard() {
 
       {!!loadError && (
         <View style={styles.refreshNotice}>
-          <Ionicons name="cloud-offline-outline" size={18} color="#9B4B2D" />
+          <Ionicons name="cloud-offline-outline" size={18} color="#C8331A" />
           <Text style={styles.refreshNoticeText}>{loadError}</Text>
           <Pressable
             onPress={() => fetchDashboardData(true)}
@@ -637,7 +637,7 @@ export default function RestaurantDashboard() {
           <MaterialCommunityIcons
             name="storefront-remove-outline"
             size={52}
-            color="#C8BBAA"
+            color="#606D5D"
           />
           <Text style={styles.emptyTitle}>{t('restaurant.dashboard.noRestaurantTitle')}</Text>
           <Text style={styles.emptyText}>
@@ -770,7 +770,7 @@ export default function RestaurantDashboard() {
             <MaterialCommunityIcons
               name="silverware-fork-knife"
               size={46}
-              color="#C8BBAA"
+              color="#606D5D"
             />
             <Text style={styles.emptyTitle}>{t('restaurant.dashboard.emptyMenuTitle')}</Text>
             <Text style={styles.emptyText}>
@@ -809,7 +809,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FBF6EC',
   },
-  loaderText: { marginTop: 12, color: '#777777', fontSize: 15 },
+  loaderText: { marginTop: 12, color: '#606D5D', fontSize: 15 },
 
   topActions: {
     flexDirection: 'row',
@@ -821,8 +821,8 @@ const styles = StyleSheet.create({
   refreshNotice: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF0E8',
-    borderColor: '#F2C7B2',
+    backgroundColor: '#F3E7CA',
+    borderColor: '#F3E7CA',
     borderWidth: 1,
     borderRadius: 14,
     paddingHorizontal: 12,
@@ -832,11 +832,11 @@ const styles = StyleSheet.create({
   },
   refreshNoticeText: {
     flex: 1,
-    color: '#77412C',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 18,
   },
-  refreshNoticeAction: { color: '#9B4B2D', fontWeight: '800', padding: 4 },
+  refreshNoticeAction: { color: '#C8331A', fontWeight: '800', padding: 4 },
   topButton: {
     width: 44,
     height: 44,
@@ -866,7 +866,7 @@ const styles = StyleSheet.create({
     color: '#0D1C11',
     marginBottom: 8,
   },
-  subtitle: { color: '#6B655E', fontSize: 14, lineHeight: 21 },
+  subtitle: { color: '#606D5D', fontSize: 14, lineHeight: 21 },
 
   heroCard: {
     backgroundColor: '#FFFFFF',
@@ -885,7 +885,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 18,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
@@ -897,7 +897,7 @@ const styles = StyleSheet.create({
     color: '#0D1C11',
     marginBottom: 6,
   },
-  heroText: { color: '#666666', fontSize: 14, lineHeight: 21 },
+  heroText: { color: '#606D5D', fontSize: 14, lineHeight: 21 },
   heroTags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -907,17 +907,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F2ECE0',
     marginRight: 8,
     marginBottom: 8,
   },
   heroTagText: {
-    color: '#555555',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '700',
   },
-  heroTagOpen: { backgroundColor: '#E8F5ED' },
-  heroTagClosed: { backgroundColor: '#FDECEC' },
+  heroTagOpen: { backgroundColor: '#E3F0E8' },
+  heroTagClosed: { backgroundColor: '#F8E1DD' },
   heroTagTextOpen: { color: '#084424' },
   heroTagTextClosed: { color: '#C8331A' },
 
@@ -948,7 +948,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     textAlign: 'center',
   },
-  statLabel: { fontSize: 13, color: '#777777', fontWeight: '700' },
+  statLabel: { fontSize: 13, color: '#606D5D', fontWeight: '700' },
 
   quickButtonsRow: { flexDirection: 'row', marginBottom: 20 },
   quickButtonPrimary: {
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 6,
     borderWidth: 1,
-    borderColor: '#E8F1EA',
+    borderColor: '#E3DECF',
   },
   quickButtonSecondaryText: {
     color: '#084424',
@@ -1032,14 +1032,14 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 999,
   },
-  statusBadgeAvailable: { backgroundColor: '#E8F5ED' },
-  statusBadgeUnavailable: { backgroundColor: '#FDEAEA' },
+  statusBadgeAvailable: { backgroundColor: '#E3F0E8' },
+  statusBadgeUnavailable: { backgroundColor: '#F8E1DD' },
   statusBadgeText: { fontSize: 12, fontWeight: '800' },
   statusBadgeTextAvailable: { color: '#084424' },
   statusBadgeTextUnavailable: { color: '#C8331A' },
 
   desc: {
-    color: '#666666',
+    color: '#606D5D',
     marginTop: 4,
     marginBottom: 12,
     lineHeight: 21,
@@ -1055,7 +1055,7 @@ const styles = StyleSheet.create({
   priceBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF5EC',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1069,24 +1069,24 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   categoryBadge: {
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
     marginBottom: 8,
   },
-  category: { color: '#6A5530', fontWeight: '700', fontSize: 12 },
+  category: { color: '#301904', fontWeight: '700', fontSize: 12 },
 
   tagsRow: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 14 },
   tag: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
     marginRight: 8,
     marginBottom: 8,
   },
-  tagText: { color: '#555555', fontSize: 12, fontWeight: '700' },
+  tagText: { color: '#606D5D', fontSize: 12, fontWeight: '700' },
 
   actions: {
     flexDirection: 'row',
@@ -1096,7 +1096,7 @@ const styles = StyleSheet.create({
   secondaryAction: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5FBF7',
+    backgroundColor: '#F2ECE0',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 12,
@@ -1133,7 +1133,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,

@@ -98,7 +98,7 @@ export default function PartnerApplyScreen() {
       style={styles.screen}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <StatusBar barStyle="light-content" backgroundColor="#155B38" />
+      <StatusBar barStyle="light-content" backgroundColor="#084424" />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.hero}>
           <Pressable style={styles.back} onPress={goBack} accessibilityRole="button">
@@ -154,7 +154,7 @@ export default function PartnerApplyScreen() {
             <Ionicons
               name={form.consent ? 'checkbox' : 'square-outline'}
               size={24}
-              color={form.consent ? '#084424' : '#867A6C'}
+              color={form.consent ? '#084424' : '#606D5D'}
             />
             <Text style={styles.consentText}>{t('partnerApply.consent')}</Text>
           </Pressable>
@@ -187,7 +187,7 @@ function Field({ label, multiline, ...inputProps }) {
         {...inputProps}
         multiline={multiline}
         style={[styles.input, multiline && styles.inputMultiline]}
-        placeholderTextColor="#A39A8E"
+        placeholderTextColor="#606D5D"
       />
     </View>
   );
@@ -197,30 +197,30 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#FBF6EC' },
   centered: { alignItems: 'center', justifyContent: 'center', padding: 28 },
   content: { paddingBottom: 40 },
-  hero: { paddingTop: 64, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#155B38' },
+  hero: { paddingTop: 64, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#084424' },
   back: { position: 'absolute', top: 46, left: 18, width: 42, height: 42, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.14)' },
   title: { marginTop: 34, color: '#FFFFFF', fontSize: 27, fontWeight: '900' },
-  intro: { marginTop: 10, color: '#DDEBE2', fontSize: 14, lineHeight: 21 },
-  benefits: { margin: 16, padding: 16, borderRadius: 18, backgroundColor: '#F2F7F2', borderWidth: 1, borderColor: '#DCEBDD' },
+  intro: { marginTop: 10, color: '#E3F0E8', fontSize: 14, lineHeight: 21 },
+  benefits: { margin: 16, padding: 16, borderRadius: 18, backgroundColor: '#F2ECE0', borderWidth: 1, borderColor: '#E3F0E8' },
   benefitRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 5 },
-  benefitText: { marginLeft: 9, flex: 1, color: '#183B28', fontSize: 14, fontWeight: '700' },
-  card: { marginHorizontal: 16, padding: 18, borderRadius: 22, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#F0E6D9' },
+  benefitText: { marginLeft: 9, flex: 1, color: '#084424', fontSize: 14, fontWeight: '700' },
+  card: { marginHorizontal: 16, padding: 18, borderRadius: 22, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#F3E7CA' },
   field: { marginBottom: 12 },
-  label: { marginBottom: 6, color: '#867A6C', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-  input: { minHeight: 46, borderRadius: 14, borderWidth: 1, borderColor: '#E7DDD0', paddingHorizontal: 13, color: '#24211E', fontSize: 15, backgroundColor: '#FFFDF9' },
+  label: { marginBottom: 6, color: '#606D5D', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+  input: { minHeight: 46, borderRadius: 14, borderWidth: 1, borderColor: '#F3E7CA', paddingHorizontal: 13, color: '#0D1C11', fontSize: 15, backgroundColor: '#FFFDF9' },
   inputMultiline: { minHeight: 90, paddingTop: 12, textAlignVertical: 'top' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 12 },
-  chip: { marginRight: 8, marginBottom: 8, paddingHorizontal: 13, paddingVertical: 9, borderRadius: 16, borderWidth: 1, borderColor: '#E7DDD0', backgroundColor: '#FFFDF9' },
-  chipActive: { backgroundColor: '#155B38', borderColor: '#155B38' },
-  chipText: { color: '#4A443C', fontSize: 13, fontWeight: '700' },
+  chip: { marginRight: 8, marginBottom: 8, paddingHorizontal: 13, paddingVertical: 9, borderRadius: 16, borderWidth: 1, borderColor: '#F3E7CA', backgroundColor: '#FFFDF9' },
+  chipActive: { backgroundColor: '#084424', borderColor: '#084424' },
+  chipText: { color: '#606D5D', fontSize: 13, fontWeight: '700' },
   chipTextActive: { color: '#FFFFFF' },
   consentRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 10 },
-  consentText: { flex: 1, marginLeft: 10, color: '#4A443C', fontSize: 13, lineHeight: 19 },
-  error: { marginBottom: 10, color: '#B3261E', fontSize: 13, lineHeight: 19, fontWeight: '600' },
-  submit: { minHeight: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#155B38', paddingHorizontal: 24, marginTop: 6 },
+  consentText: { flex: 1, marginLeft: 10, color: '#606D5D', fontSize: 13, lineHeight: 19 },
+  error: { marginBottom: 10, color: '#C8331A', fontSize: 13, lineHeight: 19, fontWeight: '600' },
+  submit: { minHeight: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#084424', paddingHorizontal: 24, marginTop: 6 },
   submitDisabled: { opacity: 0.6 },
   submitText: { color: '#FFFFFF', fontSize: 16, fontWeight: '900' },
   successIcon: { width: 76, height: 76, borderRadius: 38, alignItems: 'center', justifyContent: 'center', backgroundColor: '#084424', marginBottom: 20 },
-  successTitle: { color: '#171717', fontSize: 24, fontWeight: '900', textAlign: 'center' },
-  successText: { marginTop: 10, marginBottom: 24, color: '#5C675F', fontSize: 15, lineHeight: 22, textAlign: 'center' },
+  successTitle: { color: '#0D1C11', fontSize: 24, fontWeight: '900', textAlign: 'center' },
+  successText: { marginTop: 10, marginBottom: 24, color: '#606D5D', fontSize: 15, lineHeight: 22, textAlign: 'center' },
 });

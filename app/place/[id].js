@@ -84,7 +84,7 @@ export default function PublicPlaceScreen() {
 
   return (
     <View style={styles.screen}>
-      <StatusBar barStyle="light-content" backgroundColor="#155B38" />
+      <StatusBar barStyle="light-content" backgroundColor="#084424" />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.hero}>
           <Pressable
@@ -201,7 +201,7 @@ export default function PublicPlaceScreen() {
 
         {!!place.osmUrl && (
           <Pressable style={styles.attribution} onPress={() => openLink(place.osmUrl)}>
-            <Ionicons name="open-outline" size={14} color="#7C7164" />
+            <Ionicons name="open-outline" size={14} color="#606D5D" />
             <Text style={styles.attributionText}>{t('publicPlace.attribution')}</Text>
           </Pressable>
         )}
@@ -227,7 +227,7 @@ function ActionButton({ icon, label, onPress }) {
     <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => [styles.actionButton, pressed && styles.pressed]}>
       <Ionicons name={icon} size={18} color="#084424" />
       <Text style={styles.actionLabel}>{label}</Text>
-      <Ionicons name="chevron-forward" size={17} color="#968A7A" />
+      <Ionicons name="chevron-forward" size={17} color="#606D5D" />
     </Pressable>
   );
 }
@@ -235,33 +235,33 @@ function ActionButton({ icon, label, onPress }) {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingBottom: 36 },
-  hero: { minHeight: 260, paddingTop: 68, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#155B38', alignItems: 'center', justifyContent: 'center' },
+  hero: { minHeight: 260, paddingTop: 68, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#084424', alignItems: 'center', justifyContent: 'center' },
   backButton: { position: 'absolute', top: 48, left: 18, width: 42, height: 42, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.14)' },
   heroIcon: { width: 62, height: 62, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.12)', marginBottom: 13 },
-  category: { color: '#F6CA58', fontSize: 12, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1 },
+  category: { color: '#EAB02F', fontSize: 12, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1 },
   title: { marginTop: 7, color: '#FFFFFF', fontSize: 27, lineHeight: 33, fontWeight: '900', textAlign: 'center' },
-  heroCaption: { marginTop: 7, color: '#DDEBE2', fontSize: 13, fontWeight: '600' },
-  infoCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#F0E6D9' },
-  sectionTitle: { color: '#171717', fontSize: 18, fontWeight: '900', marginBottom: 12 },
-  infoRow: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#F4EEE7' },
+  heroCaption: { marginTop: 7, color: '#E3F0E8', fontSize: 13, fontWeight: '600' },
+  infoCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#F3E7CA' },
+  sectionTitle: { color: '#0D1C11', fontSize: 18, fontWeight: '900', marginBottom: 12 },
+  infoRow: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#F2ECE0' },
   infoCopy: { flex: 1, marginLeft: 11 },
-  infoLabel: { color: '#867A6C', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
-  infoValue: { marginTop: 3, color: '#24211E', fontSize: 14, lineHeight: 20, fontWeight: '600' },
-  mutedText: { color: '#82796E', fontSize: 14, lineHeight: 21 },
-  menuCard: { marginHorizontal: 16, padding: 20, borderRadius: 22, backgroundColor: '#F2F7F2', borderWidth: 1, borderColor: '#DCEBDD', alignItems: 'flex-start' },
+  infoLabel: { color: '#606D5D', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.5 },
+  infoValue: { marginTop: 3, color: '#0D1C11', fontSize: 14, lineHeight: 20, fontWeight: '600' },
+  mutedText: { color: '#606D5D', fontSize: 14, lineHeight: 21 },
+  menuCard: { marginHorizontal: 16, padding: 20, borderRadius: 22, backgroundColor: '#F2ECE0', borderWidth: 1, borderColor: '#E3F0E8', alignItems: 'flex-start' },
   menuIcon: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#FFFFFF', marginBottom: 12 },
-  menuTitle: { color: '#183B28', fontSize: 18, fontWeight: '900' },
-  menuText: { marginTop: 7, color: '#5C675F', fontSize: 14, lineHeight: 21 },
-  noteText: { marginTop: 11, color: '#7C7164', fontSize: 12, lineHeight: 18 },
-  actionsCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#F0E6D9' },
-  actionButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#F4EEE7' },
-  actionLabel: { flex: 1, marginHorizontal: 10, color: '#26382D', fontSize: 14, fontWeight: '700' },
+  menuTitle: { color: '#084424', fontSize: 18, fontWeight: '900' },
+  menuText: { marginTop: 7, color: '#606D5D', fontSize: 14, lineHeight: 21 },
+  noteText: { marginTop: 11, color: '#606D5D', fontSize: 12, lineHeight: 18 },
+  actionsCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#F3E7CA' },
+  actionButton: { minHeight: 48, flexDirection: 'row', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#F2ECE0' },
+  actionLabel: { flex: 1, marginHorizontal: 10, color: '#0D1C11', fontSize: 14, fontWeight: '700' },
   pressed: { opacity: 0.75 },
-  joinCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#155B38' },
+  joinCard: { margin: 16, padding: 18, borderRadius: 22, backgroundColor: '#084424' },
   joinTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '900' },
-  joinText: { marginTop: 7, color: '#DDEBE2', fontSize: 14, lineHeight: 21 },
+  joinText: { marginTop: 7, color: '#E3F0E8', fontSize: 14, lineHeight: 21 },
   joinButton: { marginTop: 14, minHeight: 48, borderRadius: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#084424', borderWidth: 1, borderColor: 'rgba(255,255,255,0.35)' },
   joinButtonText: { marginLeft: 8, color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
   attribution: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 12 },
-  attributionText: { marginLeft: 6, color: '#7C7164', fontSize: 11, textDecorationLine: 'underline' },
+  attributionText: { marginLeft: 6, color: '#606D5D', fontSize: 11, textDecorationLine: 'underline' },
 });

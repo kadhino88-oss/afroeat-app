@@ -202,7 +202,7 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: '#EAB02F',
-        tabBarInactiveTintColor: '#8C8C8C',
+        tabBarInactiveTintColor: '#606D5D',
         // Sur le web, la navigation est dans la barre du haut (WebNavBar).
         tabBarStyle: Platform.OS === 'web' ? { display: 'none' } : styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#F1E1A6',
+    borderColor: '#EAB02F',
     overflow: 'hidden',
   },
 

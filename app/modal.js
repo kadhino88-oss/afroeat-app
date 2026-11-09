@@ -76,7 +76,7 @@ const NOTIFICATIONS_META = [
     descriptionKey: 'modal.demoNotifications.welcomeDescription',
     icon: 'sparkles-outline',
     color: '#EAB02F',
-    bg: '#FFF3D8',
+    bg: '#F3E7CA',
   },
   {
     id: '2',
@@ -84,7 +84,7 @@ const NOTIFICATIONS_META = [
     descriptionKey: 'modal.demoNotifications.orderTrackingDescription',
     icon: 'receipt-outline',
     color: '#084424',
-    bg: '#E8F5ED',
+    bg: '#E3F0E8',
   },
   {
     id: '3',
@@ -92,7 +92,7 @@ const NOTIFICATIONS_META = [
     descriptionKey: 'modal.demoNotifications.upcomingOffersDescription',
     icon: 'gift-outline',
     color: '#C8331A',
-    bg: '#FFF0E8',
+    bg: '#F3E7CA',
   },
 ];
 
@@ -165,7 +165,7 @@ export default function ModalScreen() {
       >
         <View style={styles.heroCard}>
           <View style={styles.heroBadge}>
-            <Ionicons name="notifications-outline" size={14} color="#A36A00" />
+            <Ionicons name="notifications-outline" size={14} color="#301904" />
             <Text style={styles.heroBadgeText}>{t('modal.premiumBadge')}</Text>
           </View>
 
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     fontSize: 13,
-    color: '#777777',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 8,
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
 
   heroBadgeText: {
     marginLeft: 6,
-    color: '#A36A00',
+    color: '#301904',
     fontSize: 12,
     fontWeight: '800',
     textTransform: 'uppercase',
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   },
 
   heroText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 22,
   },
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
 
   cardDescription: {
     fontSize: 13,
-    color: '#666666',
+    color: '#606D5D',
     lineHeight: 20,
   },
 

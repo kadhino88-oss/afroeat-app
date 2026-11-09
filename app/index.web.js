@@ -19,6 +19,8 @@ import { useCart } from '../context/CartContext';
 import { getNearbyPlaces } from '../services/placeService';
 import { NEARBY_RADIUS_OPTIONS } from '../services/nearbySearchSettings';
 import PlaceBrandMark from '../components/PlaceBrandMark';
+import DishMarquee from '../components/DishMarquee';
+import { BrandFonts } from '../constants/brand';
 
 const HERO_IMAGE = 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1400&q=90';
 
@@ -292,15 +294,19 @@ export default function WebDiscoveryHome() {
             </View>
 
             <Pressable style={styles.locationAction} onPress={findNearby} accessibilityRole="button">
-              <Ionicons name="navigate-outline" size={16} color="#F3C96B" />
+              <Ionicons name="navigate-outline" size={16} color="#EAB02F" />
               <Text style={styles.locationActionText}>Trouver les adresses africaines autour de moi</Text>
             </Pressable>
           </View>
           <View style={styles.heroImageCaption}>
-            <Ionicons name="restaurant-outline" size={16} color="#F3C96B" />
+            <Ionicons name="restaurant-outline" size={16} color="#EAB02F" />
             <Text style={styles.heroImageCaptionText}>Restaurants & commerces africains</Text>
           </View>
           <View style={styles.heroOrnament} />
+        </View>
+
+        <View style={styles.marqueeWrap}>
+          <DishMarquee />
         </View>
 
         <View style={[styles.content, compact && styles.contentCompact]}>
@@ -437,7 +443,7 @@ export default function WebDiscoveryHome() {
       </ScrollView>
 
       {notice ? (
-        <View style={styles.notice} accessibilityRole="alert"><Ionicons name="information-circle-outline" size={18} color="#F3C96B" /><Text style={styles.noticeText}>{notice}</Text></View>
+        <View style={styles.notice} accessibilityRole="alert"><Ionicons name="information-circle-outline" size={18} color="#EAB02F" /><Text style={styles.noticeText}>{notice}</Text></View>
       ) : null}
     </View>
   );
@@ -448,16 +454,16 @@ const scrollToSection = (id) => {
 };
 
 const COLORS = {
-  paper: '#FBF8F1',
-  cream: '#FFF9EF',
-  ink: '#241C16',
-  cocoa: '#0F0D0A',
-  gold: '#BD861D',
-  goldLight: '#C9A14A',
-  border: '#E4DAC9',
-  muted: '#776D60',
-  card: '#FFFDF8',
-  surface: '#F3EEE4',
+  paper: '#FBF6EC',
+  cream: '#FBF6EC',
+  ink: '#0D1C11',
+  cocoa: '#084424',
+  gold: '#EAB02F',
+  goldLight: '#EAB02F',
+  border: '#E3DECF',
+  muted: '#606D5D',
+  card: '#FFFDF9',
+  surface: '#F2ECE0',
 };
 
 const styles = StyleSheet.create({
@@ -489,15 +495,15 @@ const styles = StyleSheet.create({
   hero: { width: '100%', maxWidth: 1440, minHeight: 530, paddingVertical: 68, paddingHorizontal: 70, justifyContent: 'center', backgroundColor: COLORS.cocoa, overflow: 'hidden', position: 'relative' },
   heroImage: { position: 'absolute', right: 0, top: 0, bottom: 0, width: '50%', height: '100%', opacity: 0.68 },
   heroImageCompact: { width: '100%', opacity: 0.34 },
-  heroShade: { position: 'absolute', top: 0, bottom: 0, right: '25%', width: '30%', backgroundColor: 'rgba(15,13,10,0.64)' },
-  heroShadeCompact: { left: 0, right: 0, width: '100%', backgroundColor: 'rgba(15,13,10,0.6)' },
+  heroShade: { position: 'absolute', top: 0, bottom: 0, right: '25%', width: '30%', backgroundColor: 'rgba(8,68,36,0.64)' },
+  heroShadeCompact: { left: 0, right: 0, width: '100%', backgroundColor: 'rgba(8,68,36,0.6)' },
   heroCopy: { width: '60%', maxWidth: 760, zIndex: 2 },
   eyebrowRow: { flexDirection: 'row', alignItems: 'center', gap: 9, marginBottom: 19 },
   eyebrowDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: COLORS.goldLight },
   eyebrow: { fontSize: 10, letterSpacing: 2, color: COLORS.goldLight, fontWeight: '800' },
-  heroTitle: { maxWidth: 720, fontSize: 58, lineHeight: 66, color: COLORS.cream, fontFamily: 'Georgia', fontWeight: '600', letterSpacing: -1.5 },
+  heroTitle: { maxWidth: 720, fontSize: 58, lineHeight: 66, color: COLORS.cream, fontFamily: BrandFonts.display, letterSpacing: -1.5 },
   heroTitleAccent: { color: COLORS.goldLight, fontStyle: 'italic' },
-  heroDescription: { maxWidth: 570, marginTop: 16, color: '#EDE4D7', fontSize: 15, lineHeight: 25 },
+  heroDescription: { maxWidth: 570, marginTop: 16, color: '#F3E7CA', fontSize: 15, lineHeight: 25 },
   searchForm: { maxWidth: 750, marginTop: 31, padding: 7, flexDirection: 'row', alignItems: 'center', gap: 7, borderRadius: 10, backgroundColor: COLORS.card },
   searchInputWrap: { flex: 1, minWidth: 0, height: 50, flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 13 },
   searchInput: { flex: 1, minWidth: 0, color: COLORS.ink, fontSize: 13, outlineStyle: 'none' },
@@ -516,7 +522,7 @@ const styles = StyleSheet.create({
   trustText: { color: COLORS.ink, fontSize: 12, fontWeight: '700' },
   sectionHeading: { maxWidth: 740, marginTop: 70, marginBottom: 28 },
   sectionEyebrow: { color: COLORS.gold, fontSize: 10, fontWeight: '800', letterSpacing: 2 },
-  sectionTitle: { marginTop: 9, color: COLORS.ink, fontFamily: 'Georgia', fontSize: 38, lineHeight: 45, fontWeight: '600' },
+  sectionTitle: { marginTop: 9, color: COLORS.ink, fontFamily: BrandFonts.display, fontSize: 38, lineHeight: 45 },
   sectionTitleAccent: { color: COLORS.gold, fontStyle: 'italic' },
   sectionSubtitle: { marginTop: 9, maxWidth: 640, color: COLORS.muted, fontSize: 13, lineHeight: 21 },
   offerGrid: { flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 },
@@ -526,10 +532,10 @@ const styles = StyleSheet.create({
   offerCardPressed: { opacity: 0.85, transform: [{ scale: 0.99 }] },
   offerImageWrap: { height: 185, position: 'relative', backgroundColor: COLORS.surface },
   offerImage: { width: '100%', height: '100%' },
-  offerImageShade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 85, backgroundColor: 'rgba(15,13,10,0.24)' },
+  offerImageShade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 85, backgroundColor: 'rgba(8,68,36,0.24)' },
   offerIcon: { position: 'absolute', left: 15, bottom: 14, width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.goldLight },
   offerBody: { padding: 18 },
-  offerTitle: { color: COLORS.ink, fontFamily: 'Georgia', fontSize: 20, fontWeight: '600' },
+  offerTitle: { color: COLORS.ink, fontFamily: BrandFonts.display, fontSize: 20 },
   offerDescription: { minHeight: 44, marginTop: 8, color: COLORS.muted, fontSize: 12, lineHeight: 19 },
   offerLink: { marginTop: 17, flexDirection: 'row', alignItems: 'center', gap: 8 },
   offerLinkText: { color: COLORS.ink, fontSize: 11, fontWeight: '800' },
@@ -537,7 +543,7 @@ const styles = StyleSheet.create({
   nearbyHeading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 25 },
   nearbyHeadingCompact: { flexDirection: 'column', alignItems: 'flex-start' },
   nearbyHeadingCopy: { flex: 1 },
-  nearbyTitle: { marginTop: 8, color: COLORS.ink, fontFamily: 'Georgia', fontSize: 30, lineHeight: 37, fontWeight: '600' },
+  nearbyTitle: { marginTop: 8, color: COLORS.ink, fontFamily: BrandFonts.display, fontSize: 30, lineHeight: 37 },
   nearbySubtitle: { marginTop: 8, color: COLORS.muted, fontSize: 12, lineHeight: 20 },
   nearbyButton: { minHeight: 44, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 8, backgroundColor: COLORS.goldLight },
   nearbyButtonText: { color: COLORS.ink, fontSize: 11, fontWeight: '800' },
@@ -550,18 +556,18 @@ const styles = StyleSheet.create({
   nearbyGrid: { marginTop: 21, flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
   nearbyGridCompact: { flexDirection: 'column' },
   placeCard: { width: '31.8%', minWidth: 235, overflow: 'hidden', borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.card },
-  placeImageWrap: { height: 145, position: 'relative', backgroundColor: '#EDE5D8' },
+  placeImageWrap: { height: 145, position: 'relative', backgroundColor: '#F3E7CA' },
   placeImage: { width: '100%', height: '100%' },
   placeFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
   placeType: { position: 'absolute', left: 10, bottom: 10, paddingHorizontal: 9, paddingVertical: 6, borderRadius: 5, backgroundColor: COLORS.card },
   placeTypeText: { color: COLORS.ink, fontSize: 9, fontWeight: '800' },
   placeBody: { padding: 13 },
-  placeName: { color: COLORS.ink, fontFamily: 'Georgia', fontSize: 16, fontWeight: '600' },
+  placeName: { color: COLORS.ink, fontFamily: BrandFonts.display, fontSize: 16 },
   placeAddress: { marginTop: 5, color: COLORS.muted, fontSize: 10 },
   placeDistance: { marginTop: 8, color: COLORS.gold, fontSize: 10, fontWeight: '800' },
   nearbyEmpty: { marginTop: 22, padding: 18, flexDirection: 'row', alignItems: 'center', gap: 14, borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.card },
   nearbyEmptyCompact: { flexDirection: 'column', alignItems: 'flex-start' },
-  nearbyEmptyIcon: { width: 43, height: 43, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F0E1BC' },
+  nearbyEmptyIcon: { width: 43, height: 43, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F3E7CA' },
   nearbyEmptyCopy: { flex: 1 },
   nearbyEmptyTitle: { color: COLORS.ink, fontSize: 12, fontWeight: '800' },
   nearbyEmptyText: { marginTop: 4, color: COLORS.muted, fontSize: 11, lineHeight: 17 },
@@ -573,31 +579,32 @@ const styles = StyleSheet.create({
   regionsGridTablet: { justifyContent: 'space-between' },
   regionCard: { minHeight: 154, padding: 19, borderRadius: 11, backgroundColor: COLORS.cream, borderWidth: 1, borderColor: COLORS.border, position: 'relative' },
   regionCardFeatured: { backgroundColor: COLORS.cocoa, borderColor: COLORS.cocoa },
-  regionIndex: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F0E1BC' },
+  regionIndex: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F3E7CA' },
   regionIndexText: { color: COLORS.ink, fontSize: 10, fontWeight: '800' },
-  regionTitle: { marginTop: 20, color: COLORS.ink, fontFamily: 'Georgia', fontSize: 18, fontWeight: '600' },
+  regionTitle: { marginTop: 20, color: COLORS.ink, fontFamily: BrandFonts.display, fontSize: 18 },
   regionSubtitle: { marginTop: 6, color: COLORS.muted, fontSize: 10, lineHeight: 16 },
   regionArrow: { position: 'absolute', right: 16, top: 20 },
-  partnerBanner: { marginBottom: 72, padding: 30, flexDirection: 'row', alignItems: 'center', gap: 20, borderRadius: 13, backgroundColor: '#EDE4D4' },
+  partnerBanner: { marginBottom: 72, padding: 30, flexDirection: 'row', alignItems: 'center', gap: 20, borderRadius: 13, backgroundColor: '#F3E7CA' },
   partnerBannerCompact: { flexDirection: 'column', alignItems: 'flex-start', padding: 21 },
   partnerBannerIcon: { width: 54, height: 54, borderRadius: 17, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.cream },
   partnerBannerCopy: { flex: 1 },
   partnerBannerEyebrow: { color: COLORS.gold, fontSize: 9, fontWeight: '800', letterSpacing: 1.6 },
-  partnerBannerTitle: { marginTop: 7, color: COLORS.ink, fontFamily: 'Georgia', fontSize: 21, fontWeight: '600' },
+  partnerBannerTitle: { marginTop: 7, color: COLORS.ink, fontFamily: BrandFonts.display, fontSize: 21 },
   partnerBannerText: { marginTop: 5, color: COLORS.muted, fontSize: 11, lineHeight: 17 },
   partnerBannerButton: { minHeight: 43, paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, borderRadius: 7, backgroundColor: COLORS.goldLight },
   partnerBannerButtonText: { color: COLORS.ink, fontSize: 10, fontWeight: '800' },
   footer: { width: '100%', paddingHorizontal: 42, paddingVertical: 38, backgroundColor: COLORS.cocoa },
   footerCompact: { paddingHorizontal: 20 },
   footerBrandName: { color: COLORS.cream, fontSize: 17, fontWeight: '900', letterSpacing: 3 },
-  footerTagline: { marginTop: 6, color: '#C8BDB0', fontSize: 11 },
+  footerTagline: { marginTop: 6, color: '#606D5D', fontSize: 11 },
   footerLinks: { marginTop: 24, flexDirection: 'row', flexWrap: 'wrap', gap: 21 },
-  footerLink: { color: '#F1E8DA', fontSize: 10 },
-  footerCopy: { marginTop: 24, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#493D31', color: '#C8BDB0', fontSize: 9 },
+  footerLink: { color: '#F3E7CA', fontSize: 10 },
+  footerCopy: { marginTop: 24, paddingTop: 16, borderTopWidth: 1, borderTopColor: '#0D1C11', color: '#606D5D', fontSize: 9 },
   notice: { position: 'absolute', bottom: 24, left: 20, right: 20, maxWidth: 540, minHeight: 48, paddingHorizontal: 16, paddingVertical: 10, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 9, borderRadius: 8, backgroundColor: COLORS.cocoa, elevation: 8, zIndex: 20 },
   noticeText: { color: COLORS.cream, fontSize: 11, flex: 1, lineHeight: 16 },
   heroCompact: { minHeight: 520, paddingHorizontal: 22, paddingVertical: 42, justifyContent: 'flex-end' },
   heroCopyCompact: { width: '100%' },
+  marqueeWrap: { backgroundColor: '#FBF6EC', paddingVertical: 10, width: '100%', maxWidth: '100%', overflow: 'hidden', alignSelf: 'stretch' },
   heroTitleCompact: { fontSize: 39, lineHeight: 46 },
   searchFormCompact: { flexDirection: 'column', alignItems: 'stretch', backgroundColor: 'transparent', padding: 0 },
 });

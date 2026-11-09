@@ -12,6 +12,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../context/CartContext';
 import { BrandFonts } from '../constants/brand';
+import FloatingDecor from './FloatingDecor';
 import { getUnreadNotificationCount } from '../services/notificationService';
 
 const normalizeText = (value, fallback = '') => {
@@ -81,7 +82,7 @@ export default function HomeHeader({
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.topGlow} />
+      <FloatingDecor />
 
       {/* Sur le web, logo / notifications / panier / profil sont dans la barre du haut (WebNavBar). */}
       {Platform.OS !== 'web' ? (
@@ -172,7 +173,7 @@ export default function HomeHeader({
         </View>
 
         <View style={styles.locationChevronWrap}>
-          <Ionicons name="chevron-down" size={16} color="#555555" />
+          <Ionicons name="chevron-down" size={16} color="#606D5D" />
         </View>
       </TouchableOpacity>
 
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#F1E5D6',
+    borderColor: '#F3E7CA',
     shadowColor: '#000000',
     shadowOpacity: 0.06,
     shadowRadius: 10,
@@ -289,12 +290,12 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
     borderWidth: 1,
-    borderColor: '#F1E1A6',
+    borderColor: '#EAB02F',
     overflow: 'hidden',
     shadowColor: '#000000',
     shadowOpacity: 0.04,
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
     minWidth: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#E53935',
+    backgroundColor: '#C8331A',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 4,
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: '#F8F5F1',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -396,7 +397,7 @@ const styles = StyleSheet.create({
   subtitle: {
     marginTop: 4,
     fontSize: 14,
-    color: '#6F675F',
+    color: '#606D5D',
     fontWeight: '600',
     lineHeight: 21,
   },

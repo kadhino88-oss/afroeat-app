@@ -310,14 +310,14 @@ export default function MenuScreen() {
 
               {!!item?.isPopular && (
                 <View style={styles.metaBadge}>
-                  <Ionicons name="flame-outline" size={14} color="#C05621" />
+                  <Ionicons name="flame-outline" size={14} color="#C8331A" />
                   <Text style={styles.metaBadgeText}>{t('restaurant.menuScreen.popularBadge')}</Text>
                 </View>
               )}
 
               {!!item?.isRecommended && (
                 <View style={styles.metaBadge}>
-                  <Ionicons name="star-outline" size={14} color="#7C3AED" />
+                  <Ionicons name="star-outline" size={14} color="#084424" />
                   <Text style={styles.metaBadgeText}>{t('restaurant.menuScreen.recommendedBadge')}</Text>
                 </View>
               )}
@@ -344,7 +344,7 @@ export default function MenuScreen() {
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="restaurant-outline" size={52} color="#C8BBAA" />
+            <Ionicons name="restaurant-outline" size={52} color="#606D5D" />
             <Text style={styles.emptyTitle}>{t('restaurant.menuScreen.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
               {t('restaurant.menuScreen.emptyText')}
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -476,11 +476,11 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignSelf: 'flex-start',
   },
-  badgeOpen: { backgroundColor: '#E8F5ED' },
-  badgeClosed: { backgroundColor: '#FDECEC' },
+  badgeOpen: { backgroundColor: '#E3F0E8' },
+  badgeClosed: { backgroundColor: '#F8E1DD' },
   badgeText: { fontSize: 12, fontWeight: '800' },
   badgeTextOpen: { color: '#084424' },
-  badgeTextClosed: { color: '#B83232' },
+  badgeTextClosed: { color: '#C8331A' },
 
   metaRow: {
     flexDirection: 'row',
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -511,8 +511,8 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 46,
     borderWidth: 1,
-    borderColor: '#CFE5D7',
-    backgroundColor: '#F5FBF7',
+    borderColor: '#E3F0E8',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 12,

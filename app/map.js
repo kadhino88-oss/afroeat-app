@@ -741,7 +741,7 @@ export default function MapScreen() {
                 latitude: grocery.latitude,
                 longitude: grocery.longitude,
               }}
-              pinColor="#32855A"
+              pinColor="#084424"
             >
               <Callout tooltip onPress={() => openGrocery(grocery)}>
                 <View style={styles.calloutCard}>
@@ -772,7 +772,7 @@ export default function MapScreen() {
                 latitude: business.latitude,
                 longitude: business.longitude,
               }}
-              pinColor="#7651A8"
+              pinColor="#084424"
             >
               <Callout tooltip onPress={() => openGrocery(business)}>
                 <View style={styles.calloutCard}>
@@ -804,7 +804,7 @@ export default function MapScreen() {
             {nearbyPlacesLoading ? (
               <ActivityIndicator size="large" color="#EAB02F" />
             ) : (
-              <Ionicons name="storefront-outline" size={42} color="#C9B8A3" />
+              <Ionicons name="storefront-outline" size={42} color="#EAB02F" />
             )}
             <Text style={styles.mapOverlayTitle}>
               {nearbyPlacesLoading ? t('map.loading') : t('map.noNearbyPlaces')}
@@ -915,7 +915,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 20,
   },
@@ -937,7 +937,7 @@ const styles = StyleSheet.create({
   },
 
   distanceLabel: {
-    color: '#555555',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -955,7 +955,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E8DED2',
+    borderColor: '#F3E7CA',
   },
 
   distanceChipActive: {
@@ -964,7 +964,7 @@ const styles = StyleSheet.create({
   },
 
   distanceText: {
-    color: '#555555',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -979,7 +979,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E8DED2',
+    borderColor: '#F3E7CA',
   },
 
   filterChipActive: {
@@ -988,7 +988,7 @@ const styles = StyleSheet.create({
   },
 
   filterText: {
-    color: '#555555',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -1001,7 +1001,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 26,
     overflow: 'hidden',
-    backgroundColor: '#EDE7DD',
+    backgroundColor: '#F3E7CA',
     position: 'relative',
   },
 
@@ -1031,7 +1031,7 @@ const styles = StyleSheet.create({
   mapOverlayText: {
     marginTop: 8,
     fontSize: 14,
-    color: '#777777',
+    color: '#606D5D',
     lineHeight: 20,
     textAlign: 'center',
   },
@@ -1058,7 +1058,7 @@ const styles = StyleSheet.create({
 
   footerTitle: {
     fontSize: 12,
-    color: '#666666',
+    color: '#606D5D',
     fontWeight: '700',
     flexShrink: 1,
   },
@@ -1070,7 +1070,7 @@ const styles = StyleSheet.create({
   },
 
   groceryCount: {
-    color: '#32855A',
+    color: '#084424',
   },
 
   legendDot: {
@@ -1084,19 +1084,19 @@ const styles = StyleSheet.create({
   },
 
   groceryDot: {
-    backgroundColor: '#32855A',
+    backgroundColor: '#084424',
   },
 
   businessDot: {
-    backgroundColor: '#7651A8',
+    backgroundColor: '#084424',
   },
 
   businessCount: {
-    color: '#7651A8',
+    color: '#084424',
   },
 
   attribution: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 10,
     textAlign: 'center',
     textDecorationLine: 'underline',
@@ -1104,7 +1104,7 @@ const styles = StyleSheet.create({
   },
 
   groceryError: {
-    color: '#8A5146',
+    color: '#C8331A',
     fontSize: 11,
     textAlign: 'center',
     marginTop: 3,
@@ -1119,7 +1119,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -1140,7 +1140,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 20,
@@ -1188,12 +1188,12 @@ const styles = StyleSheet.create({
   groceryCalloutSubtitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#32855A',
+    color: '#084424',
     marginBottom: 6,
   },
 
   groceryCalloutButton: {
-    backgroundColor: '#DCEEE3',
+    backgroundColor: '#E3F0E8',
     borderRadius: 12,
     paddingVertical: 10,
     alignItems: 'center',
@@ -1201,7 +1201,7 @@ const styles = StyleSheet.create({
 
   calloutAddress: {
     fontSize: 12,
-    color: '#666666',
+    color: '#606D5D',
     marginBottom: 10,
     lineHeight: 18,
   },

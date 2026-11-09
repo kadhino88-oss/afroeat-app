@@ -163,22 +163,22 @@ const getRoleStyle = (role, t) => {
   switch (normalizeRole(role)) {
     case 'client':
       return {
-        bg: '#EEF2FF',
-        text: '#245EA8',
+        bg: '#F2ECE0',
+        text: '#084424',
         icon: 'person-outline',
         label: t('admin.users.roleClientLabel'),
       };
     case 'restaurant':
       return {
-        bg: '#FFF2E8',
-        text: '#C05621',
+        bg: '#F3E7CA',
+        text: '#C8331A',
         icon: 'storefront-outline',
         label: t('admin.users.roleRestaurantLabel'),
       };
     case 'livreur':
       return {
-        bg: '#F3E8FF',
-        text: '#7C3AED',
+        bg: '#E3F0E8',
+        text: '#084424',
         icon: 'bicycle-outline',
         label: t('admin.users.roleDriverLabel'),
       };
@@ -187,15 +187,15 @@ const getRoleStyle = (role, t) => {
     case 'superadmin':
     case 'super-admin':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         icon: 'shield-checkmark-outline',
         label: t('admin.users.roleAdminLabel'),
       };
     default:
       return {
-        bg: '#F4F4F4',
-        text: '#555555',
+        bg: '#F2ECE0',
+        text: '#606D5D',
         icon: 'person-circle-outline',
         label: t('admin.users.roleDefaultLabel'),
       };
@@ -206,43 +206,43 @@ const getStatusStyle = (status, t) => {
   switch (normalizeText(status).toLowerCase()) {
     case 'active':
       return {
-        bg: '#E8F5ED',
+        bg: '#E3F0E8',
         text: '#084424',
         label: t('admin.users.statusActiveLabel'),
         icon: 'checkmark-circle-outline',
       };
     case 'suspended':
       return {
-        bg: '#FDECEC',
-        text: '#B83232',
+        bg: '#F8E1DD',
+        text: '#C8331A',
         label: t('admin.users.statusSuspendedLabel'),
         icon: 'ban-outline',
       };
     case 'pending_verification':
       return {
-        bg: '#FFF3D8',
-        text: '#8A6500',
+        bg: '#F3E7CA',
+        text: '#301904',
         label: t('admin.users.statusPendingLabel'),
         icon: 'time-outline',
       };
     case 'rejected':
       return {
-        bg: '#EFE9FF',
-        text: '#6D4CDB',
+        bg: '#F2ECE0',
+        text: '#084424',
         label: t('admin.users.statusRejectedLabel'),
         icon: 'close-circle-outline',
       };
     default:
       return {
-        bg: '#F4F4F4',
-        text: '#555555',
+        bg: '#F2ECE0',
+        text: '#606D5D',
         label: t('admin.users.statusUnknownLabel'),
         icon: 'help-circle-outline',
       };
   }
 };
 
-const InfoRow = ({ icon, label, value, iconColor = '#6B655E' }) => (
+const InfoRow = ({ icon, label, value, iconColor = '#606D5D' }) => (
   <View style={styles.infoRow}>
     <Ionicons name={icon} size={16} color={iconColor} />
     <View style={styles.infoTextWrap}>
@@ -464,7 +464,7 @@ export default function AdminUserDetailsScreen() {
       <FadeInView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="alert-circle-outline" size={54} color="#C8BBAA" />
+          <Ionicons name="alert-circle-outline" size={54} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('admin.userDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>{t('admin.userDetails.missingIdText')}</Text>
           <Pressable style={styles.primaryButton} onPress={handleGoBack}>
@@ -480,7 +480,7 @@ export default function AdminUserDetailsScreen() {
       <FadeInView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="person-circle-outline" size={54} color="#C8BBAA" />
+          <Ionicons name="person-circle-outline" size={54} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('admin.userDetails.notFoundTitle')}</Text>
           <Text style={styles.emptyText}>
             {errorMessage || t('admin.userDetails.fetchErrorFallback')}
@@ -590,13 +590,13 @@ export default function AdminUserDetailsScreen() {
             icon="id-card-outline"
             label={t('admin.users.identityVerifiedLabel')}
             value={user?.isIdentityVerified ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
-            iconColor={user?.isIdentityVerified ? '#084424' : '#8A6500'}
+            iconColor={user?.isIdentityVerified ? '#084424' : '#301904'}
           />
           <InfoRow
             icon="briefcase-outline"
             label={t('admin.users.workAuthorizedLabel')}
             value={user?.isWorkAuthorized ? t('admin.userDetails.yesLabel') : t('admin.userDetails.noLabel')}
-            iconColor={user?.isWorkAuthorized ? '#084424' : '#8A6500'}
+            iconColor={user?.isWorkAuthorized ? '#084424' : '#301904'}
           />
           {(normalizeText(user?.city) || normalizeText(user?.country)) ? (
             <InfoRow
@@ -711,7 +711,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     textAlign: 'center',
   },
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
     width: 74,
     height: 74,
     borderRadius: 37,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 14,
@@ -777,7 +777,7 @@ const styles = StyleSheet.create({
 
   email: {
     fontSize: 14,
-    color: '#666666',
+    color: '#606D5D',
     textAlign: 'center',
     marginBottom: 14,
   },
@@ -837,7 +837,7 @@ const styles = StyleSheet.create({
   infoLabel: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#777777',
+    color: '#606D5D',
     marginBottom: 4,
     textTransform: 'uppercase',
   },
@@ -845,7 +845,7 @@ const styles = StyleSheet.create({
   infoValue: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#222222',
+    color: '#0D1C11',
     lineHeight: 20,
   },
 
@@ -861,7 +861,7 @@ const styles = StyleSheet.create({
   },
 
   successButton: {
-    backgroundColor: '#CDECD7',
+    backgroundColor: '#E3F0E8',
   },
 
   primaryButtonText: {
@@ -874,9 +874,9 @@ const styles = StyleSheet.create({
   protectedBox: {
     minHeight: 52,
     borderRadius: 16,
-    backgroundColor: '#F5FBF7',
+    backgroundColor: '#F2ECE0',
     borderWidth: 1,
-    borderColor: '#CFE5D7',
+    borderColor: '#E3F0E8',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -910,7 +910,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 18,

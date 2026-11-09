@@ -145,17 +145,17 @@ const getTargetTypeLabel = (value, t) => {
 const getTargetTypeStyle = (value) => {
   switch (normalizeText(value).toLowerCase()) {
     case 'user':
-      return { bg: '#EEF2FF', text: '#245EA8' };
+      return { bg: '#F2ECE0', text: '#084424' };
     case 'restaurant':
-      return { bg: '#FFF2E8', text: '#C05621' };
+      return { bg: '#F3E7CA', text: '#C8331A' };
     case 'driver':
-      return { bg: '#F3E8FF', text: '#7C3AED' };
+      return { bg: '#E3F0E8', text: '#084424' };
     case 'order':
-      return { bg: '#EAF3FF', text: '#245EA8' };
+      return { bg: '#F2ECE0', text: '#084424' };
     case 'system':
-      return { bg: '#E8F5ED', text: '#084424' };
+      return { bg: '#E3F0E8', text: '#084424' };
     default:
-      return { bg: '#F4F4F4', text: '#555555' };
+      return { bg: '#F2ECE0', text: '#606D5D' };
   }
 };
 
@@ -496,13 +496,13 @@ export default function AdminAuditLogsScreen() {
               <Ionicons
                 name="search-outline"
                 size={18}
-                color="#777777"
+                color="#606D5D"
                 style={styles.searchIcon}
               />
               <TextInput
                 style={styles.searchInput}
                 placeholder={t('admin.auditLogs.searchPlaceholder')}
-                placeholderTextColor="#888888"
+                placeholderTextColor="#606D5D"
                 value={draftSearch}
                 onChangeText={setDraftSearch}
                 onSubmitEditing={handleApplyFilters}
@@ -515,7 +515,7 @@ export default function AdminAuditLogsScreen() {
                   onPress={() => setDraftSearch('')}
                   style={styles.clearSearchButton}
                 >
-                  <Ionicons name="close-circle" size={18} color="#999999" />
+                  <Ionicons name="close-circle" size={18} color="#606D5D" />
                 </Pressable>
               ) : null}
             </View>
@@ -582,7 +582,7 @@ export default function AdminAuditLogsScreen() {
               </Pressable>
 
               <Pressable style={styles.resetButton} onPress={handleResetFilters}>
-                <Ionicons name="refresh-circle-outline" size={16} color="#555555" />
+                <Ionicons name="refresh-circle-outline" size={16} color="#606D5D" />
                 <Text style={styles.resetButtonText}>{t('admin.users.resetButton')}</Text>
               </Pressable>
             </View>
@@ -623,7 +623,7 @@ export default function AdminAuditLogsScreen() {
 
             {!!errorMessage && logs.length === 0 ? (
               <View style={styles.errorCard}>
-                <Ionicons name="alert-circle-outline" size={18} color="#B83232" />
+                <Ionicons name="alert-circle-outline" size={18} color="#C8331A" />
                 <Text style={styles.errorText}>{errorMessage}</Text>
               </View>
             ) : null}
@@ -682,7 +682,7 @@ export default function AdminAuditLogsScreen() {
               <View style={styles.cardMetaChipsRow}>
                 {!!normalizeText(item?.ipAddress) && (
                   <View style={styles.metaBadge}>
-                    <Ionicons name="globe-outline" size={14} color="#245EA8" />
+                    <Ionicons name="globe-outline" size={14} color="#084424" />
                     <Text style={styles.metaBadgeText}>
                       {normalizeText(item?.ipAddress)}
                     </Text>
@@ -694,7 +694,7 @@ export default function AdminAuditLogsScreen() {
                     <Ionicons
                       name="phone-portrait-outline"
                       size={14}
-                      color="#6B655E"
+                      color="#606D5D"
                     />
                     <Text style={styles.metaBadgeText}>{t('admin.auditLogs.agentCapturedLabel')}</Text>
                   </View>
@@ -705,7 +705,7 @@ export default function AdminAuditLogsScreen() {
                     <Ionicons
                       name="finger-print-outline"
                       size={14}
-                      color="#7C3AED"
+                      color="#084424"
                     />
                     <Text style={styles.metaBadgeText}>{t('admin.auditLogs.targetIdLabel')}</Text>
                   </View>
@@ -716,7 +716,7 @@ export default function AdminAuditLogsScreen() {
                 <Text style={styles.footerText}>{formatDateTime(item?.createdAt)}</Text>
                 <View style={styles.footerRight}>
                   <Text style={styles.footerActionText}>{t('admin.users.viewDetailsButton')}</Text>
-                  <Ionicons name="document-text-outline" size={18} color="#777777" />
+                  <Ionicons name="document-text-outline" size={18} color="#606D5D" />
                 </View>
               </View>
             </Pressable>
@@ -724,7 +724,7 @@ export default function AdminAuditLogsScreen() {
         }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="document-text-outline" size={54} color="#C8BBAA" />
+            <Ionicons name="document-text-outline" size={54} color="#606D5D" />
             <Text style={styles.emptyTitle}>{t('admin.auditLogs.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
               {t('admin.auditLogs.emptyText')}
@@ -756,7 +756,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBF6EC',
   },
 
-  loaderText: { marginTop: 12, color: '#777777', fontSize: 15 },
+  loaderText: { marginTop: 12, color: '#606D5D', fontSize: 15 },
 
   topRow: {
     flexDirection: 'row',
@@ -800,7 +800,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -837,7 +837,7 @@ const styles = StyleSheet.create({
 
   statLabel: {
     fontSize: 11,
-    color: '#666666',
+    color: '#606D5D',
     fontWeight: '700',
     textAlign: 'center',
   },
@@ -875,7 +875,7 @@ const styles = StyleSheet.create({
   filterTitle: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#555555',
+    color: '#606D5D',
     marginBottom: 8,
   },
 
@@ -884,7 +884,7 @@ const styles = StyleSheet.create({
   },
 
   filterChip: {
-    backgroundColor: '#F3ECE4',
+    backgroundColor: '#F2ECE0',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 999,
@@ -896,7 +896,7 @@ const styles = StyleSheet.create({
   },
 
   filterChipText: {
-    color: '#555555',
+    color: '#606D5D',
     fontWeight: '700',
     fontSize: 13,
   },
@@ -931,7 +931,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E5DDD2',
+    borderColor: '#F3E7CA',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -939,7 +939,7 @@ const styles = StyleSheet.create({
   },
 
   resetButtonText: {
-    color: '#555555',
+    color: '#606D5D',
     fontWeight: '800',
     fontSize: 13,
     marginLeft: 6,
@@ -977,20 +977,20 @@ const styles = StyleSheet.create({
   },
 
   resultsText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     marginBottom: 6,
     fontWeight: '700',
   },
 
   resultsFiltersText: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 12,
     lineHeight: 18,
   },
 
   errorCard: {
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     marginBottom: 14,
@@ -1000,7 +1000,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     flex: 1,
-    color: '#B83232',
+    color: '#C8331A',
     marginLeft: 8,
     fontSize: 13,
     lineHeight: 19,
@@ -1039,7 +1039,7 @@ const styles = StyleSheet.create({
   },
 
   cardMeta: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     marginBottom: 4,
     lineHeight: 19,
@@ -1058,7 +1058,7 @@ const styles = StyleSheet.create({
   },
 
   cardDetails: {
-    color: '#333333',
+    color: '#0D1C11',
     fontSize: 14,
     lineHeight: 21,
     marginTop: 8,
@@ -1073,7 +1073,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1083,14 +1083,14 @@ const styles = StyleSheet.create({
 
   metaBadgeText: {
     marginLeft: 6,
-    color: '#555555',
+    color: '#606D5D',
     fontWeight: '700',
     fontSize: 12,
   },
 
   footerRow: {
     borderTopWidth: 1,
-    borderTopColor: '#F2ECE5',
+    borderTopColor: '#F2ECE0',
     paddingTop: 12,
     marginTop: 12,
     flexDirection: 'row',
@@ -1099,7 +1099,7 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -1134,7 +1134,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
   },

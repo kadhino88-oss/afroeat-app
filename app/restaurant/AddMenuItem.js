@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   input: {
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 14,
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   chip: {
-    backgroundColor: '#F3ECE4',
+    backgroundColor: '#F2ECE0',
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 999,

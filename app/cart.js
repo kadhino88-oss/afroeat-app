@@ -481,7 +481,7 @@ export default function CartScreen() {
 
       {!isLoggedIn && safeCartItems.length > 0 && (
         <View style={styles.guestBanner}>
-          <Ionicons name="sparkles-outline" size={16} color="#8A6500" />
+          <Ionicons name="sparkles-outline" size={16} color="#301904" />
           <Text style={styles.guestBannerText}>
             {t('cart.guestBannerText')}
           </Text>
@@ -490,7 +490,7 @@ export default function CartScreen() {
 
       {isLoggedIn && role !== 'client' && safeCartItems.length > 0 && (
         <View style={styles.roleWarningBanner}>
-          <Ionicons name="shield-outline" size={16} color="#8A2E2E" />
+          <Ionicons name="shield-outline" size={16} color="#C8331A" />
           <Text style={styles.roleWarningText}>
             {t('cart.roleWarningText')}
           </Text>
@@ -507,7 +507,7 @@ export default function CartScreen() {
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="basket-outline" size={54} color="#C4B7A6" />
+            <Ionicons name="basket-outline" size={54} color="#606D5D" />
             <Text style={styles.emptyTitle}>{t('checkout.emptyCart')}</Text>
             <Text style={styles.emptyText}>
               {t('cart.emptyText')}
@@ -668,14 +668,14 @@ const styles = StyleSheet.create({
   restaurantBanner: {
     marginHorizontal: 20,
     marginBottom: 14,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#D6EAD9',
+    borderColor: '#E3F0E8',
   },
 
   restaurantBannerText: {
@@ -690,19 +690,19 @@ const styles = StyleSheet.create({
   guestBanner: {
     marginHorizontal: 20,
     marginBottom: 14,
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'flex-start',
     borderWidth: 1,
-    borderColor: '#F2E0A8',
+    borderColor: '#EAB02F',
   },
 
   guestBannerText: {
     marginLeft: 8,
-    color: '#8A6500',
+    color: '#301904',
     fontWeight: '700',
     fontSize: 13,
     lineHeight: 19,
@@ -712,19 +712,19 @@ const styles = StyleSheet.create({
   roleWarningBanner: {
     marginHorizontal: 20,
     marginBottom: 14,
-    backgroundColor: '#FFF0F0',
+    backgroundColor: '#F8E1DD',
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'flex-start',
     borderWidth: 1,
-    borderColor: '#F1CCCC',
+    borderColor: '#F8E1DD',
   },
 
   roleWarningText: {
     marginLeft: 8,
-    color: '#8A2E2E',
+    color: '#C8331A',
     fontWeight: '700',
     fontSize: 13,
     lineHeight: 19,
@@ -760,7 +760,7 @@ const styles = StyleSheet.create({
     width: 74,
     height: 74,
     borderRadius: 16,
-    backgroundColor: '#F1ECE5',
+    backgroundColor: '#F2ECE0',
     marginRight: 12,
   },
 
@@ -778,14 +778,14 @@ const styles = StyleSheet.create({
 
   description: {
     fontSize: 13,
-    color: '#777777',
+    color: '#606D5D',
     lineHeight: 19,
     marginBottom: 6,
   },
 
   price: {
     fontSize: 14,
-    color: '#777777',
+    color: '#606D5D',
     fontWeight: '600',
   },
 
@@ -793,7 +793,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FFF4F2',
+    backgroundColor: '#F8E1DD',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -807,7 +807,7 @@ const styles = StyleSheet.create({
   quantityBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     borderRadius: 14,
     paddingHorizontal: 8,
     paddingVertical: 6,
@@ -868,7 +868,7 @@ const styles = StyleSheet.create({
 
   summaryLabel: {
     fontSize: 14,
-    color: '#777777',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
@@ -888,7 +888,7 @@ const styles = StyleSheet.create({
 
   totalLabel: {
     fontSize: 16,
-    color: '#555555',
+    color: '#606D5D',
     fontWeight: '700',
   },
 
@@ -899,7 +899,7 @@ const styles = StyleSheet.create({
   },
 
   footerHelperText: {
-    color: '#8A6500',
+    color: '#301904',
     fontSize: 13,
     lineHeight: 18,
     marginBottom: 12,
@@ -907,7 +907,7 @@ const styles = StyleSheet.create({
   },
 
   footerHelperTextDanger: {
-    color: '#8A2E2E',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 18,
     marginBottom: 12,
@@ -954,7 +954,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 22,

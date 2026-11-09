@@ -27,9 +27,9 @@ const FILTERS = ['all', 'new', 'contacted', 'approved', 'rejected'];
 
 const STATUS_TONE = {
   new: { bg: '#F3E7CA', fg: '#301904' },
-  contacted: { bg: '#E3EDF7', fg: '#1F4E79' },
+  contacted: { bg: '#F2ECE0', fg: '#084424' },
   approved: { bg: '#E3F0E8', fg: '#084424' },
-  rejected: { bg: '#F8E1DD', fg: '#8E2415' },
+  rejected: { bg: '#F8E1DD', fg: '#C8331A' },
 };
 
 const openLink = (url) => {
@@ -196,7 +196,7 @@ export default function AdminPartnerApplicationsScreen() {
                 value={notes[application._id] ?? application.adminNote ?? ''}
                 onChangeText={(value) => setNotes((previous) => ({ ...previous, [application._id]: value }))}
                 placeholder={t('admin.partnerApplications.notePlaceholder')}
-                placeholderTextColor="#8A8F85"
+                placeholderTextColor="#606D5D"
                 multiline
                 maxLength={1000}
                 style={styles.note}
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   actionGhost: { backgroundColor: '#F2ECE0' },
   actionGhostText: { color: '#0D1C11', fontWeight: '800', fontSize: 13 },
   actionReject: { backgroundColor: '#F8E1DD' },
-  actionRejectText: { color: '#8E2415', fontWeight: '800', fontSize: 13 },
+  actionRejectText: { color: '#C8331A', fontWeight: '800', fontSize: 13 },
   actionApprove: { backgroundColor: '#084424', flex: 1 },
   actionApproveText: { color: '#FBF6EC', fontWeight: '800', fontSize: 13 },
 });

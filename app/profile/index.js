@@ -109,7 +109,7 @@ const QuickCard = ({ icon, title, text, onPress }) => (
       <Text style={styles.quickCardTitle}>{title}</Text>
       <Text style={styles.quickCardText}>{text}</Text>
     </View>
-    <Ionicons name="chevron-forward" size={18} color="#777777" />
+    <Ionicons name="chevron-forward" size={18} color="#606D5D" />
   </Pressable>
 );
 
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#555555',
+    color: '#606D5D',
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
@@ -423,14 +423,14 @@ const styles = StyleSheet.create({
   },
 
   brandBadge: {
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
   },
 
   brandBadgeText: {
-    color: '#8A6500',
+    color: '#301904',
     fontSize: 12,
     fontWeight: '900',
     letterSpacing: 0.6,
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   connectedBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     paddingHorizontal: 10,
     paddingVertical: 7,
     borderRadius: 999,
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
   },
 
   heroSubtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 18,
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
   secondaryButton: {
     flex: 1,
     minHeight: 50,
-    backgroundColor: '#F4EEE6',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     paddingHorizontal: 14,
     justifyContent: 'center',
@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: '#F5FBF7',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
   },
 
   featureText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 19,
   },
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
   },
 
   quickCardText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 19,
   },
@@ -614,7 +614,7 @@ const styles = StyleSheet.create({
   },
 
   ctaText: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 16,

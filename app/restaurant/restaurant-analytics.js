@@ -123,7 +123,7 @@ export default function RestaurantAnalytics() {
           </View>
         ) : error ? (
           <View style={styles.stateCard}>
-            <Ionicons name="cloud-offline-outline" size={28} color="#A6422A" />
+            <Ionicons name="cloud-offline-outline" size={28} color="#C8331A" />
             <Text style={styles.errorText}>{error}</Text>
             <Pressable
               accessibilityRole="button"
@@ -156,7 +156,7 @@ export default function RestaurantAnalytics() {
                   ? '—'
                   : formatCurrency(averageNetEarning, analytics.currency, i18n.language)}
                 icon="basket-outline"
-                color="#245EA8"
+                color="#084424"
               />
 
               <StatCard
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     minHeight: 220,
   },
   stateText: { marginTop: 12, color: '#666', textAlign: 'center' },
-  errorText: { color: '#6A3023', textAlign: 'center', marginVertical: 14 },
+  errorText: { color: '#C8331A', textAlign: 'center', marginVertical: 14 },
   retryButton: {
     backgroundColor: '#084424',
     paddingHorizontal: 18,
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   buttonPressed: { opacity: 0.8 },
   bottomCard: {
     marginTop: 20,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     padding: 16,
     borderRadius: 18,
     flexDirection: 'row',

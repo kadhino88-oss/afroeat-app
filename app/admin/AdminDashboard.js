@@ -90,9 +90,9 @@ const getHealthStyle = (status, t) => {
 
   if (normalized === 'healthy') {
     return {
-      bg: '#E8F5ED',
+      bg: '#E3F0E8',
       text: '#084424',
-      border: '#CFE8D8',
+      border: '#E3F0E8',
       label: t('admin.dashboard.healthyLabel'),
       icon: 'checkmark-circle',
       description: t('admin.dashboard.healthyDescription'),
@@ -101,9 +101,9 @@ const getHealthStyle = (status, t) => {
 
   if (normalized === 'warning') {
     return {
-      bg: '#FFF3D8',
-      text: '#8A6500',
-      border: '#F4D89B',
+      bg: '#F3E7CA',
+      text: '#301904',
+      border: '#EAB02F',
       label: t('admin.dashboard.warningLabel'),
       icon: 'warning',
       description: t('admin.dashboard.warningDescription'),
@@ -112,9 +112,9 @@ const getHealthStyle = (status, t) => {
 
   if (normalized === 'critical') {
     return {
-      bg: '#FDECEC',
-      text: '#B83232',
-      border: '#F3C7C7',
+      bg: '#F8E1DD',
+      text: '#C8331A',
+      border: '#F8E1DD',
       label: t('admin.dashboard.criticalLabel'),
       icon: 'alert-circle',
       description: t('admin.dashboard.criticalDescription'),
@@ -122,9 +122,9 @@ const getHealthStyle = (status, t) => {
   }
 
   return {
-    bg: '#F4F4F4',
-    text: '#555555',
-    border: '#E5E5E5',
+    bg: '#F2ECE0',
+    text: '#606D5D',
+    border: '#E3DECF',
     label: t('admin.dashboard.unknownLabel'),
     icon: 'help-circle-outline',
     description: t('admin.dashboard.unknownDescription'),
@@ -136,9 +136,9 @@ const getFlagStyle = (level, t) => {
 
   if (normalized === 'critical') {
     return {
-      bg: '#FDECEC',
-      text: '#B83232',
-      border: '#F3C7C7',
+      bg: '#F8E1DD',
+      text: '#C8331A',
+      border: '#F8E1DD',
       icon: 'alert-circle',
       label: t('admin.dashboard.flagCriticalLabel'),
     };
@@ -146,18 +146,18 @@ const getFlagStyle = (level, t) => {
 
   if (normalized === 'warning') {
     return {
-      bg: '#FFF3D8',
-      text: '#8A6500',
-      border: '#F4D89B',
+      bg: '#F3E7CA',
+      text: '#301904',
+      border: '#EAB02F',
       icon: 'warning',
       label: t('admin.dashboard.flagWarningLabel'),
     };
   }
 
   return {
-    bg: '#EEF2FF',
-    text: '#334155',
-    border: '#D9E0F2',
+    bg: '#F2ECE0',
+    text: '#084424',
+    border: '#E3F0E8',
     icon: 'information-circle',
     label: t('admin.dashboard.flagInfoLabel'),
   };
@@ -214,35 +214,35 @@ const buildQuickStats = ({ users = {}, restaurants = {}, orders = {}, ops = {} }
     label: t('admin.common.restaurantsTitle'),
     value: normalizeNumber(restaurants.total),
     icon: 'storefront-outline',
-    tint: '#8A6500',
+    tint: '#301904',
   },
   {
     key: 'drivers-total',
     label: t('admin.common.driversTitle'),
     value: normalizeNumber(users.drivers),
     icon: 'bicycle-outline',
-    tint: '#7C3AED',
+    tint: '#084424',
   },
   {
     key: 'orders-total',
     label: t('admin.common.ordersTitle'),
     value: normalizeNumber(orders.total),
     icon: 'receipt-outline',
-    tint: '#B45309',
+    tint: '#C8331A',
   },
   {
     key: 'users-active',
     label: t('admin.dashboard.activeAccountsLabel'),
     value: normalizeNumber(users.active),
     icon: 'checkmark-done-outline',
-    tint: '#15803D',
+    tint: '#084424',
   },
   {
     key: 'orders-unassigned',
     label: t('admin.dashboard.unassignedLabel'),
     value: normalizeNumber(ops?.orders?.unassignedOrders),
     icon: 'alert-circle-outline',
-    tint: '#B83232',
+    tint: '#C8331A',
   },
 ];
 
@@ -562,7 +562,7 @@ export default function AdminDashboardScreen() {
       <FadeInView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
+          <Ionicons name="alert-circle-outline" size={56} color="#EAB02F" />
           <Text style={styles.emptyTitle}>{t('admin.dashboard.emptyTitle')}</Text>
           <Text style={styles.emptyText}>
             {errorMessage || t('admin.dashboard.emptyTextFallback')}
@@ -656,7 +656,7 @@ export default function AdminDashboardScreen() {
 
             <View style={styles.heroMetaRow}>
               <View style={styles.heroMetaItem}>
-                <Ionicons name="time-outline" size={15} color="#7A7268" />
+                <Ionicons name="time-outline" size={15} color="#606D5D" />
                 <Text style={styles.heroMetaText}>
                   {t('admin.dashboard.generatedOnLabel', { date: formatDateTime(system?.generatedAt) })}
                 </Text>
@@ -819,7 +819,7 @@ export default function AdminDashboardScreen() {
                 <Text style={styles.navCardTitle}>{item.title}</Text>
                 <Text style={styles.navCardText}>{item.text}</Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color="#777777" />
+              <Ionicons name="chevron-forward" size={18} color="#606D5D" />
             </Pressable>
           ))}
         </View>
@@ -855,7 +855,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -875,9 +875,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     borderWidth: 1,
-    borderColor: '#CFE8D8',
+    borderColor: '#E3F0E8',
     paddingHorizontal: 10,
     paddingVertical: 7,
     borderRadius: 999,
@@ -932,7 +932,7 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -965,7 +965,7 @@ const styles = StyleSheet.create({
   },
 
   heroText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 12,
@@ -983,7 +983,7 @@ const styles = StyleSheet.create({
 
   heroMetaText: {
     marginLeft: 6,
-    color: '#7A7268',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '700',
   },
@@ -1088,7 +1088,7 @@ const styles = StyleSheet.create({
 
   statLabel: {
     fontSize: 13,
-    color: '#666666',
+    color: '#606D5D',
     fontWeight: '700',
     lineHeight: 18,
   },
@@ -1126,7 +1126,7 @@ const styles = StyleSheet.create({
 
   compactStatLabel: {
     fontSize: 12,
-    color: '#666666',
+    color: '#606D5D',
     fontWeight: '700',
     lineHeight: 17,
   },
@@ -1153,7 +1153,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#E8F5ED',
+    backgroundColor: '#E3F0E8',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -1171,7 +1171,7 @@ const styles = StyleSheet.create({
   },
 
   highlightLabel: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '700',
@@ -1279,7 +1279,7 @@ const styles = StyleSheet.create({
   },
 
   navCardText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 19,
   },
@@ -1302,7 +1302,7 @@ const styles = StyleSheet.create({
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
   },

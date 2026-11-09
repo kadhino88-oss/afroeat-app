@@ -80,7 +80,7 @@ const formatDateTime = (value) => {
 
 const getDeliveredStatusStyle = () => {
   return {
-    bg: '#E8F5ED',
+    bg: '#E3F0E8',
     text: '#084424',
   };
 };
@@ -199,7 +199,7 @@ export default function LivraisonHistoryScreen() {
       <FadeInView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="time-outline" size={54} color="#C8BBAA" />
+          <Ionicons name="time-outline" size={54} color="#606D5D" />
           <Text style={styles.emptyTitle}>{t('livraison.history.restrictedAccessTitle')}</Text>
           <Text style={styles.emptyText}>
             {t('livraison.history.restrictedAccessText')}
@@ -336,7 +336,7 @@ export default function LivraisonHistoryScreen() {
                 </View>
 
                 <View style={styles.metaBadge}>
-                  <Ionicons name="calendar-outline" size={14} color="#245EA8" />
+                  <Ionicons name="calendar-outline" size={14} color="#084424" />
                   <Text style={styles.metaBadgeText}>
                     {formatDate(item?.updatedAt || item?.createdAt)}
                   </Text>
@@ -377,7 +377,7 @@ export default function LivraisonHistoryScreen() {
         }}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="time-outline" size={54} color="#C8BBAA" />
+            <Ionicons name="time-outline" size={54} color="#606D5D" />
             <Text style={styles.emptyTitle}>{t('livraison.history.emptyTitle')}</Text>
             <Text style={styles.emptyText}>
               {t('livraison.history.emptyText')}
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
   },
   footerRow: {
     borderTopWidth: 1,
-    borderTopColor: '#F2ECE5',
+    borderTopColor: '#F2ECE0',
     paddingTop: 12,
     marginTop: 4,
     flexDirection: 'row',

@@ -917,7 +917,7 @@ export default function RestaurantScreen() {
                   <Ionicons
                     name={isFavorite ? 'heart' : 'heart-outline'}
                     size={19}
-                    color={isFavorite ? '#FF7866' : '#FFFFFF'}
+                    color={isFavorite ? '#C8331A' : '#FFFFFF'}
                   />
                 )}
               </Pressable>
@@ -983,7 +983,7 @@ export default function RestaurantScreen() {
                 <Ionicons
                   name="cloud-offline-outline"
                   size={18}
-                  color="#A85A24"
+                  color="#C8331A"
                 />
                 <Text style={styles.refreshWarningText}>
                   {t('restaurant.refreshFailed')}
@@ -1035,7 +1035,7 @@ export default function RestaurantScreen() {
               )}
 
               <View style={styles.metaRow}>
-                <Ionicons name="card-outline" size={16} color="#245EA8" />
+                <Ionicons name="card-outline" size={16} color="#084424" />
                 <Text style={styles.metaText}>
                   {t('restaurant.deliveryFee', { amount: formatPrice(restaurant.deliveryFee, restaurant.currency) })}
                 </Text>
@@ -1051,12 +1051,12 @@ export default function RestaurantScreen() {
             <Text style={styles.menuSectionTitle}>{t('restaurant.menu')}</Text>
 
             <View style={styles.menuSearchBox}>
-              <Ionicons name="search-outline" size={18} color="#8A8278" />
+              <Ionicons name="search-outline" size={18} color="#606D5D" />
               <TextInput
                 value={menuSearch}
                 onChangeText={setMenuSearch}
                 placeholder={t('restaurant.searchMenu')}
-                placeholderTextColor="#9B938A"
+                placeholderTextColor="#606D5D"
                 style={styles.menuSearchInput}
                 returnKeyType="search"
                 accessibilityLabel={t('restaurant.searchMenu')}
@@ -1067,7 +1067,7 @@ export default function RestaurantScreen() {
                   accessibilityRole="button"
                   accessibilityLabel={t('restaurant.clearMenuSearch')}
                 >
-                  <Ionicons name="close-circle" size={19} color="#8A8278" />
+                  <Ionicons name="close-circle" size={19} color="#606D5D" />
                 </Pressable>
               )}
             </View>
@@ -1167,7 +1167,7 @@ const styles = StyleSheet.create({
   cover: {
     width: '100%',
     height: 270,
-    backgroundColor: '#E9E1D5',
+    backgroundColor: '#F3E7CA',
   },
 
   overlay: {
@@ -1260,7 +1260,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F4C95D',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 999,
@@ -1282,7 +1282,7 @@ const styles = StyleSheet.create({
   },
 
   heroMeta: {
-    color: '#F7F7F7',
+    color: '#F2ECE0',
     fontSize: 14,
     fontWeight: '700',
   },
@@ -1299,8 +1299,8 @@ const styles = StyleSheet.create({
   refreshWarning: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF2E4',
-    borderColor: '#F0D4B8',
+    backgroundColor: '#F3E7CA',
+    borderColor: '#F3E7CA',
     borderWidth: 1,
     borderRadius: 14,
     paddingHorizontal: 12,
@@ -1312,7 +1312,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     marginRight: 8,
-    color: '#7A4A24',
+    color: '#301904',
     fontSize: 12,
     lineHeight: 17,
     fontWeight: '600',
@@ -1340,7 +1340,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 4,
     borderWidth: 1,
-    borderColor: '#F1E7DA',
+    borderColor: '#F3E7CA',
   },
 
   quickStatValue: {
@@ -1353,7 +1353,7 @@ const styles = StyleSheet.create({
   quickStatLabel: {
     fontSize: 11,
     fontWeight: '800',
-    color: '#777777',
+    color: '#606D5D',
     textTransform: 'uppercase',
     letterSpacing: 0.2,
   },
@@ -1364,7 +1364,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 18,
     borderWidth: 1,
-    borderColor: '#F2E9DD',
+    borderColor: '#F2ECE0',
   },
 
   metaRow: {
@@ -1376,14 +1376,14 @@ const styles = StyleSheet.create({
   metaText: {
     flex: 1,
     marginLeft: 8,
-    color: '#5F5A54',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '700',
   },
 
   descriptionBlock: {
-    color: '#555555',
+    color: '#606D5D',
     marginTop: 4,
     lineHeight: 21,
     fontSize: 14,
@@ -1392,7 +1392,7 @@ const styles = StyleSheet.create({
   debugSourceBadge: {
     alignSelf: 'flex-start',
     marginTop: 10,
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -1401,13 +1401,13 @@ const styles = StyleSheet.create({
   debugSourceText: {
     fontSize: 11,
     fontWeight: '800',
-    color: '#8A6500',
+    color: '#301904',
   },
 
   menuSectionTitle: {
     fontSize: 22,
     fontWeight: '900',
-    color: '#1F1F1F',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
@@ -1417,7 +1417,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E9E1D8',
+    borderColor: '#F3E7CA',
     borderRadius: 15,
     paddingHorizontal: 13,
     marginTop: 10,
@@ -1426,7 +1426,7 @@ const styles = StyleSheet.create({
 
   menuSearchInput: {
     flex: 1,
-    color: '#1F1F1F',
+    color: '#0D1C11',
     fontSize: 14,
     paddingVertical: 10,
     paddingHorizontal: 9,
@@ -1443,7 +1443,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E9E1D8',
+    borderColor: '#F3E7CA',
     borderRadius: 999,
     paddingHorizontal: 13,
     marginRight: 8,
@@ -1455,7 +1455,7 @@ const styles = StyleSheet.create({
   },
 
   categoryFilterText: {
-    color: '#655E56',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1482,7 +1482,7 @@ const styles = StyleSheet.create({
   categoryTitle: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#1F1F1F',
+    color: '#0D1C11',
     marginTop: 18,
     marginBottom: 6,
     marginHorizontal: 16,
@@ -1522,18 +1522,18 @@ const styles = StyleSheet.create({
   itemName: {
     fontWeight: '800',
     fontSize: 16,
-    color: '#1A1A1A',
+    color: '#0D1C11',
   },
 
   desc: {
-    color: '#777777',
+    color: '#606D5D',
     marginTop: 6,
     lineHeight: 18,
     fontSize: 13,
   },
 
   storyText: {
-    color: '#9A6A3C',
+    color: '#C8331A',
     fontStyle: 'italic',
     marginTop: 6,
     lineHeight: 17,
@@ -1556,7 +1556,7 @@ const styles = StyleSheet.create({
   },
 
   tagBadge: {
-    backgroundColor: '#FFF3D8',
+    backgroundColor: '#F3E7CA',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 999,
@@ -1565,13 +1565,13 @@ const styles = StyleSheet.create({
   },
 
   tagBadgeText: {
-    color: '#8A6500',
+    color: '#301904',
     fontSize: 11,
     fontWeight: '800',
   },
 
   tagBadgeSecondary: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 999,
@@ -1580,13 +1580,13 @@ const styles = StyleSheet.create({
   },
 
   tagBadgeSecondaryText: {
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 11,
     fontWeight: '800',
   },
 
   unavailableBadge: {
-    backgroundColor: '#FDEAEA',
+    backgroundColor: '#F8E1DD',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 999,
@@ -1618,17 +1618,17 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#F2E9DD',
+    borderColor: '#F2ECE0',
   },
 
   emptyTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#1A1A1A',
+    color: '#0D1C11',
   },
 
   emptyText: {
-    color: '#777777',
+    color: '#606D5D',
     marginTop: 6,
     lineHeight: 20,
   },
@@ -1643,12 +1643,12 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#666666',
+    color: '#606D5D',
   },
 
   errorText: {
     fontSize: 15,
-    color: '#333333',
+    color: '#0D1C11',
     textAlign: 'center',
   },
 

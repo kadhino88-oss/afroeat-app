@@ -92,9 +92,9 @@ const getHealthStyle = (status, t) => {
 
   if (normalized === 'healthy') {
     return {
-      bg: '#E8F5ED',
+      bg: '#E3F0E8',
       text: '#084424',
-      border: '#CFE8D8',
+      border: '#E3F0E8',
       label: t('admin.dashboard.healthyLabel'),
       icon: 'checkmark-circle',
       description: t('admin.ops.healthyDescription'),
@@ -103,9 +103,9 @@ const getHealthStyle = (status, t) => {
 
   if (normalized === 'warning') {
     return {
-      bg: '#FFF3D8',
-      text: '#8A6500',
-      border: '#F4D89B',
+      bg: '#F3E7CA',
+      text: '#301904',
+      border: '#EAB02F',
       label: t('admin.dashboard.warningLabel'),
       icon: 'warning',
       description: t('admin.ops.warningDescription'),
@@ -114,9 +114,9 @@ const getHealthStyle = (status, t) => {
 
   if (normalized === 'critical') {
     return {
-      bg: '#FDECEC',
-      text: '#B83232',
-      border: '#F3C7C7',
+      bg: '#F8E1DD',
+      text: '#C8331A',
+      border: '#F8E1DD',
       label: t('admin.dashboard.criticalLabel'),
       icon: 'alert-circle',
       description: t('admin.ops.criticalDescription'),
@@ -124,9 +124,9 @@ const getHealthStyle = (status, t) => {
   }
 
   return {
-    bg: '#F4F4F4',
-    text: '#555555',
-    border: '#E5E5E5',
+    bg: '#F2ECE0',
+    text: '#606D5D',
+    border: '#E3DECF',
     label: t('admin.dashboard.unknownLabel'),
     icon: 'help-circle-outline',
     description: t('admin.dashboard.unknownDescription'),
@@ -138,9 +138,9 @@ const getFlagStyle = (level, t) => {
 
   if (normalized === 'critical') {
     return {
-      bg: '#FDECEC',
-      text: '#B83232',
-      border: '#F3C7C7',
+      bg: '#F8E1DD',
+      text: '#C8331A',
+      border: '#F8E1DD',
       icon: 'alert-circle',
       label: t('admin.dashboard.flagCriticalLabel'),
     };
@@ -148,18 +148,18 @@ const getFlagStyle = (level, t) => {
 
   if (normalized === 'warning') {
     return {
-      bg: '#FFF3D8',
-      text: '#8A6500',
-      border: '#F4D89B',
+      bg: '#F3E7CA',
+      text: '#301904',
+      border: '#EAB02F',
       icon: 'warning',
       label: t('admin.dashboard.flagWarningLabel'),
     };
   }
 
   return {
-    bg: '#EEF2FF',
-    text: '#334155',
-    border: '#D9E0F2',
+    bg: '#F2ECE0',
+    text: '#084424',
+    border: '#E3F0E8',
     icon: 'information-circle',
     label: t('admin.dashboard.flagInfoLabel'),
   };
@@ -407,14 +407,14 @@ export default function AdminOpsScreen() {
         label: t('admin.common.driversTitle'),
         value: entities.totalDrivers,
         iconName: 'bicycle-outline',
-        tint: '#7C3AED',
+        tint: '#084424',
       },
       {
         key: 'active-users',
         label: t('admin.dashboard.activeLabel'),
         value: entities.activeUsers,
         iconName: 'checkmark-done-outline',
-        tint: '#15803D',
+        tint: '#084424',
       },
     ],
     [entities, t]
@@ -427,21 +427,21 @@ export default function AdminOpsScreen() {
         label: t('admin.dashboard.pendingLabel'),
         value: entities.pendingUsers,
         iconName: 'time-outline',
-        tint: '#8A6500',
+        tint: '#301904',
       },
       {
         key: 'suspended-users',
         label: t('admin.dashboard.suspendedLabel'),
         value: entities.suspendedUsers,
         iconName: 'ban-outline',
-        tint: '#B83232',
+        tint: '#C8331A',
       },
       {
         key: 'active-restaurants',
         label: t('admin.ops.activeRestaurantsLabel'),
         value: entities.activeRestaurantsOwners,
         iconName: 'restaurant-outline',
-        tint: '#245EA8',
+        tint: '#084424',
       },
       {
         key: 'active-drivers',
@@ -475,14 +475,14 @@ export default function AdminOpsScreen() {
         label: t('order.status.preparing'),
         value: orders.preparingOrders,
         iconName: 'restaurant-outline',
-        tint: '#8A6500',
+        tint: '#301904',
       },
       {
         key: 'delivering-orders',
         label: t('order.status.on_the_way'),
         value: orders.deliveringOrders,
         iconName: 'bicycle-outline',
-        tint: '#245EA8',
+        tint: '#084424',
       },
       {
         key: 'delivered-orders',
@@ -496,7 +496,7 @@ export default function AdminOpsScreen() {
         label: t('order.status.cancelled'),
         value: orders.cancelledOrders,
         iconName: 'close-circle-outline',
-        tint: '#B83232',
+        tint: '#C8331A',
       },
     ],
     [orders, t]
@@ -523,14 +523,14 @@ export default function AdminOpsScreen() {
         label: t('admin.dashboard.newOrders24hLabel'),
         value: orders.newOrders24h,
         iconName: 'time-outline',
-        tint: '#245EA8',
+        tint: '#084424',
       },
       {
         key: 'audit-logs-24h',
         label: t('admin.dashboard.adminLogs24hLabel'),
         value: audit.recentAuditLogs24h || audit.recentAuditLogs,
         iconName: 'document-text-outline',
-        tint: '#7C3AED',
+        tint: '#084424',
       },
     ],
     [entities, orders, audit, t]
@@ -542,25 +542,25 @@ export default function AdminOpsScreen() {
         key: 'unassigned',
         label: t('admin.dashboard.unassignedLabel'),
         value: orders.unassignedOrders,
-        tint: '#B83232',
+        tint: '#C8331A',
       },
       {
         key: 'unpaid',
         label: t('admin.dashboard.unpaidLabel'),
         value: orders.unpaidOrders,
-        tint: '#8A6500',
+        tint: '#301904',
       },
       {
         key: 'delivering',
         label: t('admin.ops.liveTripsLabel'),
         value: orders.deliveringOrders,
-        tint: '#245EA8',
+        tint: '#084424',
       },
       {
         key: 'audit24h',
         label: t('admin.ops.audit24hLabel'),
         value: audit.recentAuditLogs24h || audit.recentAuditLogs,
-        tint: '#7C3AED',
+        tint: '#084424',
       },
     ],
     [orders, audit, t]
@@ -631,7 +631,7 @@ export default function AdminOpsScreen() {
       <FadeInView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
         <View style={styles.emptyContainer}>
-          <Ionicons name="alert-circle-outline" size={56} color="#D8B28A" />
+          <Ionicons name="alert-circle-outline" size={56} color="#EAB02F" />
           <Text style={styles.emptyTitle}>{t('admin.ops.emptyTitle')}</Text>
           <Text style={styles.emptyText}>
             {errorMessage || t('admin.ops.emptyTextFallback')}
@@ -737,7 +737,7 @@ export default function AdminOpsScreen() {
         <View style={styles.liveOpsCard}>
           <View style={styles.liveOpsHeader}>
             <View style={styles.liveOpsTitleWrap}>
-              <Ionicons name="radio-outline" size={18} color="#245EA8" />
+              <Ionicons name="radio-outline" size={18} color="#084424" />
               <Text style={styles.liveOpsTitle}>{t('admin.ops.liveOpsMonitorTitle')}</Text>
             </View>
 
@@ -789,7 +789,7 @@ export default function AdminOpsScreen() {
         <Text style={styles.sectionTitle}>{t('admin.ops.quickAccessSupervisionTitle')}</Text>
         <View style={styles.quickActionsGrid}>
           <Pressable style={styles.quickActionCard} onPress={handleOpenOrders}>
-            <Ionicons name="receipt-outline" size={20} color="#245EA8" />
+            <Ionicons name="receipt-outline" size={20} color="#084424" />
             <Text style={styles.quickActionTitle}>{t('admin.common.ordersTitle')}</Text>
             <Text style={styles.quickActionText}>{t('admin.ops.ordersQuickText')}</Text>
           </Pressable>
@@ -801,7 +801,7 @@ export default function AdminOpsScreen() {
           </Pressable>
 
           <Pressable style={styles.quickActionCard} onPress={handleOpenUsers}>
-            <Ionicons name="people-outline" size={20} color="#7C3AED" />
+            <Ionicons name="people-outline" size={20} color="#084424" />
             <Text style={styles.quickActionTitle}>{t('admin.common.usersTitle')}</Text>
             <Text style={styles.quickActionText}>{t('admin.ops.usersQuickText')}</Text>
           </Pressable>
@@ -819,7 +819,7 @@ export default function AdminOpsScreen() {
             style={[styles.quickActionCard, styles.quickActionCardWide]}
             onPress={handleOpenAuditLogs}
           >
-            <Ionicons name="document-text-outline" size={20} color="#B83232" />
+            <Ionicons name="document-text-outline" size={20} color="#C8331A" />
             <Text style={styles.quickActionTitle}>{t('admin.dashboard.navAuditTitle')}</Text>
             <Text style={styles.quickActionText}>
               {t('admin.ops.auditQuickText')}
@@ -944,7 +944,7 @@ export default function AdminOpsScreen() {
             <MaterialCommunityIcons
               name="account-question-outline"
               size={20}
-              color="#8A6500"
+              color="#301904"
             />
             <Text style={styles.alertText}>
               {t('admin.ops.unassignedOrdersAlertLabel', { count: normalizeNumber(orders.unassignedOrders) })}
@@ -952,7 +952,7 @@ export default function AdminOpsScreen() {
           </View>
 
           <View style={styles.alertRow}>
-            <Ionicons name="card-outline" size={20} color="#B83232" />
+            <Ionicons name="card-outline" size={20} color="#C8331A" />
             <Text style={styles.alertText}>
               {t('admin.ops.unpaidOrdersAlertLabel', { count: normalizeNumber(orders.unpaidOrders) })}
             </Text>
@@ -962,7 +962,7 @@ export default function AdminOpsScreen() {
             <Ionicons
               name="document-text-outline"
               size={20}
-              color="#245EA8"
+              color="#084424"
             />
             <Text style={styles.alertText}>
               {t('admin.ops.auditLogs24hAlertLabel', { count: normalizeNumber(audit.recentAuditLogs24h || audit.recentAuditLogs) })}
@@ -970,7 +970,7 @@ export default function AdminOpsScreen() {
           </View>
 
           <View style={[styles.alertRow, styles.alertRowLast]}>
-            <Ionicons name="close-circle-outline" size={20} color="#B83232" />
+            <Ionicons name="close-circle-outline" size={20} color="#C8331A" />
             <Text style={styles.alertText}>
               {t('admin.ops.cancelledOrders7dAlertLabel', { count: normalizeNumber(orders.cancelledOrders7d) })}
             </Text>
@@ -979,7 +979,7 @@ export default function AdminOpsScreen() {
 
         {!!errorMessage && (
           <View style={styles.softErrorCard}>
-            <Ionicons name="warning-outline" size={18} color="#B83232" />
+            <Ionicons name="warning-outline" size={18} color="#C8331A" />
             <Text style={styles.softErrorText}>{errorMessage}</Text>
           </View>
         )}
@@ -1000,7 +1000,7 @@ const styles = StyleSheet.create({
   },
   loaderText: {
     marginTop: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -1043,7 +1043,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: {
-    color: '#6B655E',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -1073,13 +1073,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   heroText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 8,
   },
   heroSubText: {
-    color: '#7A7268',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 20,
     fontWeight: '700',
@@ -1101,7 +1101,7 @@ const styles = StyleSheet.create({
   },
 
   liveOpsCard: {
-    backgroundColor: '#EEF4FF',
+    backgroundColor: '#F2ECE0',
     borderRadius: 20,
     padding: 16,
     marginBottom: 14,
@@ -1125,10 +1125,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: 16,
     fontWeight: '900',
-    color: '#245EA8',
+    color: '#084424',
   },
   liveBadge: {
-    backgroundColor: '#245EA8',
+    backgroundColor: '#084424',
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -1140,13 +1140,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   liveOpsText: {
-    color: '#4F5F88',
+    color: '#084424',
     fontSize: 14,
     lineHeight: 21,
     marginBottom: 8,
   },
   liveOpsSubText: {
-    color: '#245EA8',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '800',
   },
@@ -1176,7 +1176,7 @@ const styles = StyleSheet.create({
   metricStripItem: {
     width: '48%',
     marginHorizontal: '1%',
-    backgroundColor: '#FAF7F2',
+    backgroundColor: '#F2ECE0',
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 12,
@@ -1188,7 +1188,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   metricStripLabel: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 12,
     fontWeight: '700',
     lineHeight: 17,
@@ -1259,7 +1259,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   quickActionText: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '700',
@@ -1305,7 +1305,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 13,
-    color: '#666666',
+    color: '#606D5D',
     fontWeight: '700',
     lineHeight: 18,
   },
@@ -1344,7 +1344,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   highlightLabel: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 13,
     lineHeight: 18,
     fontWeight: '700',
@@ -1429,7 +1429,7 @@ const styles = StyleSheet.create({
   },
   alertText: {
     marginLeft: 10,
-    color: '#333333',
+    color: '#0D1C11',
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '700',
@@ -1438,7 +1438,7 @@ const styles = StyleSheet.create({
 
   softErrorCard: {
     marginTop: 14,
-    backgroundColor: '#FDECEC',
+    backgroundColor: '#F8E1DD',
     borderRadius: 16,
     padding: 14,
     flexDirection: 'row',
@@ -1446,7 +1446,7 @@ const styles = StyleSheet.create({
   },
   softErrorText: {
     marginLeft: 8,
-    color: '#B83232',
+    color: '#C8331A',
     fontSize: 13,
     lineHeight: 19,
     fontWeight: '800',
@@ -1469,7 +1469,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
   },

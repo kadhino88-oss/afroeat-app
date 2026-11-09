@@ -79,6 +79,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#E8E1D8',
+    borderColor: '#F3E7CA',
   },
 });

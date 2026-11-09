@@ -96,8 +96,8 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.dashboardSubtitle'),
       iconType: 'ionicons',
       iconName: 'grid-outline',
-      accent: '#5A32A3',
-      soft: '#F1EAFE',
+      accent: '#084424',
+      soft: '#F2ECE0',
       route: '/admin/AdminDashboard',
     },
     {
@@ -107,7 +107,7 @@ export default function AdminIndexScreen() {
       iconType: 'ionicons',
       iconName: 'pulse-outline',
       accent: '#C8331A',
-      soft: '#FFF0E8',
+      soft: '#F3E7CA',
       route: '/admin/ops',
     },
     {
@@ -117,7 +117,7 @@ export default function AdminIndexScreen() {
       iconType: 'ionicons',
       iconName: 'people-outline',
       accent: '#084424',
-      soft: '#E8F5ED',
+      soft: '#E3F0E8',
       route: '/admin/users',
     },
     {
@@ -127,7 +127,7 @@ export default function AdminIndexScreen() {
       iconType: 'material',
       iconName: 'storefront-outline',
       accent: '#EAB02F',
-      soft: '#FFF3D8',
+      soft: '#F3E7CA',
       route: '/admin/restaurants',
     },
     {
@@ -136,8 +136,8 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.driversSubtitle'),
       iconType: 'ionicons',
       iconName: 'bicycle-outline',
-      accent: '#246BFD',
-      soft: '#EAF1FF',
+      accent: '#084424',
+      soft: '#F2ECE0',
       route: '/admin/drivers',
     },
     {
@@ -147,7 +147,7 @@ export default function AdminIndexScreen() {
       iconType: 'ionicons',
       iconName: 'receipt-outline',
       accent: '#0D1C11',
-      soft: '#F2F2F2',
+      soft: '#F2ECE0',
       route: '/admin/orders',
     },
     {
@@ -156,8 +156,8 @@ export default function AdminIndexScreen() {
       subtitle: t('payouts.reconciliationSubtitle'),
       iconType: 'ionicons',
       iconName: 'wallet-outline',
-      accent: '#8A4B12',
-      soft: '#FFF1DD',
+      accent: '#301904',
+      soft: '#F3E7CA',
       route: '/admin/payouts',
     },
     {
@@ -166,8 +166,8 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.supportSubtitle'),
       iconType: 'ionicons',
       iconName: 'chatbubble-ellipses-outline',
-      accent: '#5A32A3',
-      soft: '#F1EAFE',
+      accent: '#084424',
+      soft: '#F2ECE0',
       route: '/admin/support',
     },
     {
@@ -186,8 +186,8 @@ export default function AdminIndexScreen() {
       subtitle: t('admin.index.auditSubtitle'),
       iconType: 'ionicons',
       iconName: 'shield-checkmark-outline',
-      accent: '#8A2D3B',
-      soft: '#FCECEF',
+      accent: '#C8331A',
+      soft: '#F8E1DD',
       route: '/admin/audit-logs',
     },
   ]), [t]);
@@ -265,8 +265,8 @@ export default function AdminIndexScreen() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F7F4FB" />
-        <ActivityIndicator size="large" color="#5A32A3" />
+        <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
+        <ActivityIndicator size="large" color="#084424" />
         <Text style={styles.loaderText}>{t('admin.index.loaderText')}</Text>
       </View>
     );
@@ -314,7 +314,7 @@ export default function AdminIndexScreen() {
 
   return (
     <FadeInView style={styles.screen}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F7F4FB" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -334,7 +334,7 @@ export default function AdminIndexScreen() {
               <Ionicons
                 name="shield-checkmark-outline"
                 size={64}
-                color="#5A32A3"
+                color="#084424"
               />
             </View>
           </View>
@@ -371,7 +371,7 @@ export default function AdminIndexScreen() {
                 style={styles.quickCard}
                 onPress={() => handleNavigate(item.route)}
               >
-                <Ionicons name={item.icon} size={26} color="#5A32A3" />
+                <Ionicons name={item.icon} size={26} color="#084424" />
                 <Text style={styles.quickText}>{item.label}</Text>
               </Pressable>
             ))}
@@ -404,7 +404,7 @@ export default function AdminIndexScreen() {
               <Ionicons
                 name="chevron-forward-outline"
                 size={20}
-                color="#8A8A8A"
+                color="#606D5D"
               />
             </Pressable>
           ))}
@@ -430,7 +430,7 @@ export default function AdminIndexScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#F7F4FB',
+    backgroundColor: '#F2ECE0',
   },
 
   content: {
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
 
   loader: {
     flex: 1,
-    backgroundColor: '#F7F4FB',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 14,
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
   eyebrow: {
     fontSize: 12,
     fontWeight: '900',
-    color: '#5A32A3',
+    color: '#084424',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 8,
@@ -490,12 +490,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#151515',
+    color: '#0D1C11',
     marginBottom: 10,
   },
 
   subtitle: {
-    color: '#666666',
+    color: '#606D5D',
     fontSize: 14,
     lineHeight: 22,
   },
@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
     width: 74,
     height: 74,
     borderRadius: 22,
-    backgroundColor: '#F3EDFF',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
   },
 
   heroStatPill: {
-    backgroundColor: '#F6F2FF',
+    backgroundColor: '#F2ECE0',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 999,
@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
   },
 
   heroStatText: {
-    color: '#5A32A3',
+    color: '#084424',
     fontWeight: '800',
     fontSize: 12,
   },
@@ -601,13 +601,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#131313',
+    color: '#0D1C11',
     marginBottom: 4,
   },
 
   cardSubtitle: {
     fontSize: 13,
-    color: '#6C6C6C',
+    color: '#606D5D',
     lineHeight: 19,
   },
 
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
   },
 
   bottomText: {
-    color: '#DFDFDF',
+    color: '#E3DECF',
     fontSize: 14,
     lineHeight: 22,
   },

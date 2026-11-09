@@ -50,12 +50,12 @@ const getNotifIcon = (type) => {
   switch (type) {
     case NOTIF_TYPES.ORDER_CONFIRMED:  return { name: 'checkmark-circle',    color: '#084424' };
     case NOTIF_TYPES.ORDER_PREPARING:  return { name: 'flame',                color: '#C8331A' };
-    case NOTIF_TYPES.ORDER_DELIVERING: return { name: 'bicycle',              color: '#245EA8' };
+    case NOTIF_TYPES.ORDER_DELIVERING: return { name: 'bicycle',              color: '#084424' };
     case NOTIF_TYPES.ORDER_DELIVERED:  return { name: 'gift',                 color: '#084424' };
     case NOTIF_TYPES.ORDER_CANCELLED:  return { name: 'close-circle',         color: '#C8331A' };
     case NOTIF_TYPES.PROMO:            return { name: 'pricetag',             color: '#EAB02F' };
     case NOTIF_TYPES.WELCOME:          return { name: 'sparkles',             color: '#EAB02F' };
-    default:                           return { name: 'notifications-circle', color: '#245EA8' };
+    default:                           return { name: 'notifications-circle', color: '#084424' };
   }
 };
 
@@ -392,22 +392,22 @@ export default function NotificationsScreen() {
 const styles = StyleSheet.create({
   container:         { flex: 1, backgroundColor: '#FBF6EC' },
   header:            { flexDirection: 'row', alignItems: 'center', paddingTop: 54, paddingHorizontal: 16, paddingBottom: 12, backgroundColor: '#FBF6EC' },
-  backBtn:           { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#EDE5D8' },
+  backBtn:           { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#F3E7CA' },
   headerCenter:      { flex: 1, flexDirection: 'row', alignItems: 'center', marginLeft: 12, gap: 8 },
   headerTitle:       { fontSize: 20, fontWeight: '900', color: '#111' },
   headerBadge:       { backgroundColor: '#EAB02F', borderRadius: 10, paddingHorizontal: 7, paddingVertical: 2 },
   headerBadgeText:   { fontSize: 12, fontWeight: '900', color: '#111' },
-  headerAction:      { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#EDE5D8' },
+  headerAction:      { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#F3E7CA' },
   pressed:           { opacity: 0.75 },
   filters:           { flexDirection: 'row', paddingHorizontal: 16, marginBottom: 8, gap: 8 },
-  filterBtn:         { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#F0E9DF', borderWidth: 1, borderColor: '#E8DDD0' },
+  filterBtn:         { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#F2ECE0', borderWidth: 1, borderColor: '#F3E7CA' },
   filterBtnActive:   { backgroundColor: '#111', borderColor: '#111' },
   filterText:        { fontSize: 13, fontWeight: '700', color: '#777' },
   filterTextActive:  { color: '#FFF' },
   list:              { paddingHorizontal: 16, paddingBottom: 32 },
   listEmpty:         { flex: 1, justifyContent: 'center' },
-  item:              { flexDirection: 'row', backgroundColor: '#FFF', borderRadius: 18, padding: 14, marginBottom: 10, borderWidth: 1, borderColor: '#F2E9DD', gap: 12 },
-  itemUnread:        { borderColor: '#EAB02F', backgroundColor: '#FFFDF5' },
+  item:              { flexDirection: 'row', backgroundColor: '#FFF', borderRadius: 18, padding: 14, marginBottom: 10, borderWidth: 1, borderColor: '#F2ECE0', gap: 12 },
+  itemUnread:        { borderColor: '#EAB02F', backgroundColor: '#F2ECE0' },
   itemPressed:       { opacity: 0.82 },
   iconWrap:          { width: 46, height: 46, borderRadius: 23, justifyContent: 'center', alignItems: 'center', flexShrink: 0 },
   itemContent:       { flex: 1 },

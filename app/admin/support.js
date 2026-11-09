@@ -46,7 +46,7 @@ export default function AdminSupportScreen() {
   }, [loadTickets]));
 
   if (auth.loading) {
-    return <View style={styles.center}><ActivityIndicator color="#5A32A3" size="large" /></View>;
+    return <View style={styles.center}><ActivityIndicator color="#084424" size="large" /></View>;
   }
   if (!auth.isAuthenticated || !auth.token) return <Redirect href="/auth/login?role=admin" />;
   if (String(auth.role || auth.user?.role || '').toLowerCase() !== 'admin') return <Redirect href="/(tabs)" />;
@@ -85,10 +85,10 @@ export default function AdminSupportScreen() {
       <Text style={styles.subtitle}>{t('admin.support.subtitle')}</Text>
 
       {loading && tickets.length === 0 ? (
-        <ActivityIndicator color="#5A32A3" size="large" style={styles.loader} />
+        <ActivityIndicator color="#084424" size="large" style={styles.loader} />
       ) : tickets.length === 0 ? (
         <View style={styles.emptyCard}>
-          <Ionicons name="chatbubble-ellipses-outline" size={32} color="#8A4B12" />
+          <Ionicons name="chatbubble-ellipses-outline" size={32} color="#301904" />
           <Text style={styles.emptyText}>{t('admin.support.empty')}</Text>
         </View>
       ) : tickets.map((ticket) => (
@@ -116,7 +116,7 @@ export default function AdminSupportScreen() {
                 value={responses[ticket._id] || ''}
                 onChangeText={(value) => setResponses((previous) => ({ ...previous, [ticket._id]: value }))}
                 placeholder={t('admin.support.responsePlaceholder')}
-                placeholderTextColor="#918A82"
+                placeholderTextColor="#606D5D"
                 multiline
                 maxLength={2000}
                 textAlignVertical="top"
@@ -148,33 +148,33 @@ export default function AdminSupportScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F7F4FB' },
+  screen: { flex: 1, backgroundColor: '#F2ECE0' },
   content: { padding: 20, paddingBottom: 48 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F7F4FB' },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F2ECE0' },
   backButton: { width: 42, height: 42, borderRadius: 14, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', marginBottom: 20 },
-  eyebrow: { color: '#8A4B12', fontSize: 11, letterSpacing: 1.5, fontWeight: '900' },
-  title: { color: '#1D1B20', fontSize: 27, fontWeight: '900', marginTop: 7 },
-  subtitle: { color: '#6C6670', fontSize: 14, lineHeight: 21, marginTop: 6, marginBottom: 18 },
+  eyebrow: { color: '#301904', fontSize: 11, letterSpacing: 1.5, fontWeight: '900' },
+  title: { color: '#0D1C11', fontSize: 27, fontWeight: '900', marginTop: 7 },
+  subtitle: { color: '#606D5D', fontSize: 14, lineHeight: 21, marginTop: 6, marginBottom: 18 },
   loader: { marginTop: 42 },
   emptyCard: { backgroundColor: '#FFF', borderRadius: 18, padding: 24, alignItems: 'center', gap: 10 },
-  emptyText: { color: '#5B5350', fontSize: 14, textAlign: 'center' },
-  ticketCard: { backgroundColor: '#FFF', borderRadius: 18, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: '#E9E3EF' },
+  emptyText: { color: '#606D5D', fontSize: 14, textAlign: 'center' },
+  ticketCard: { backgroundColor: '#FFF', borderRadius: 18, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: '#F2ECE0' },
   ticketTop: { flexDirection: 'row', justifyContent: 'space-between', gap: 10, alignItems: 'flex-start' },
   ticketHeading: { flex: 1 },
-  subject: { fontSize: 16, lineHeight: 21, color: '#201D22', fontWeight: '900' },
-  meta: { fontSize: 11, lineHeight: 16, color: '#77717A', marginTop: 5 },
-  status: { color: '#9A4E13', fontSize: 10, fontWeight: '900', textTransform: 'uppercase' },
+  subject: { fontSize: 16, lineHeight: 21, color: '#0D1C11', fontWeight: '900' },
+  meta: { fontSize: 11, lineHeight: 16, color: '#606D5D', marginTop: 5 },
+  status: { color: '#301904', fontSize: 10, fontWeight: '900', textTransform: 'uppercase' },
   statusResolved: { color: '#084424' },
-  message: { color: '#38343B', fontSize: 14, lineHeight: 21, marginTop: 13 },
-  existingResponse: { backgroundColor: '#F7F4FB', borderRadius: 10, padding: 12, marginTop: 12 },
-  responseLabel: { color: '#5A32A3', fontSize: 11, fontWeight: '900', marginBottom: 5 },
-  responseText: { color: '#38343B', fontSize: 13, lineHeight: 19 },
-  responseInput: { minHeight: 78, borderWidth: 1, borderColor: '#DDD5E5', borderRadius: 11, padding: 11, color: '#28242B', marginTop: 14 },
+  message: { color: '#0D1C11', fontSize: 14, lineHeight: 21, marginTop: 13 },
+  existingResponse: { backgroundColor: '#F2ECE0', borderRadius: 10, padding: 12, marginTop: 12 },
+  responseLabel: { color: '#084424', fontSize: 11, fontWeight: '900', marginBottom: 5 },
+  responseText: { color: '#0D1C11', fontSize: 13, lineHeight: 19 },
+  responseInput: { minHeight: 78, borderWidth: 1, borderColor: '#E3F0E8', borderRadius: 11, padding: 11, color: '#0D1C11', marginTop: 14 },
   actions: { flexDirection: 'row', gap: 9, marginTop: 10 },
   actionButton: { minHeight: 42, borderRadius: 11, paddingHorizontal: 13, justifyContent: 'center', alignItems: 'center' },
-  progressButton: { backgroundColor: '#F1EAFE' },
-  resolveButton: { backgroundColor: '#5A32A3', flex: 1 },
+  progressButton: { backgroundColor: '#F2ECE0' },
+  resolveButton: { backgroundColor: '#084424', flex: 1 },
   actionText: { fontSize: 12, fontWeight: '900' },
-  progressText: { color: '#5A32A3' },
+  progressText: { color: '#084424' },
   resolveText: { color: '#FFF' },
 });
