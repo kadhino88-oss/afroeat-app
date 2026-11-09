@@ -17,6 +17,7 @@ import { router, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
+import { BrandFonts } from '../../constants/brand';
 import * as Location from 'expo-location';
 import { getNearbyRestaurants } from '../../services/restaurantService';
 import { getNearbyPlaces } from '../../services/placeService';
@@ -876,7 +877,7 @@ export default function HomeScreen() {
 
             {hasRating && (
               <View style={styles.badge}>
-                <Ionicons name="star" size={13} color="#D4A017" />
+                <Ionicons name="star" size={13} color="#EAB02F" />
                 <Text style={styles.badgeText}>{rating}</Text>
               </View>
             )}
@@ -903,7 +904,7 @@ export default function HomeScreen() {
 
             {!!item?.isFeatured && (
               <View style={styles.featuredBadge}>
-                <Ionicons name="flash-outline" size={12} color="#1E1E1E" />
+                <Ionicons name="flash-outline" size={12} color="#0D1C11" />
                 <Text style={styles.featuredBadgeText}>{t('home.featured')}</Text>
               </View>
             )}
@@ -922,7 +923,7 @@ export default function HomeScreen() {
             </Text>
 
             <View style={styles.restaurantMetaRow}>
-              <Ionicons name="location-outline" size={14} color="#777777" />
+              <Ionicons name="location-outline" size={14} color="#606D5D" />
               <Text style={styles.restaurantAddress} numberOfLines={1}>
                 {item?.address}
               </Text>
@@ -932,7 +933,7 @@ export default function HomeScreen() {
               <View style={styles.restaurantFooterRow}>
                 {!!deliveryFee && (
                   <View style={styles.deliveryFeeBadge}>
-                    <Ionicons name="bicycle-outline" size={14} color="#1F6F43" />
+                    <Ionicons name="bicycle-outline" size={14} color="#084424" />
                     <Text style={styles.deliveryFeeText}>{deliveryFee}</Text>
                   </View>
                 )}
@@ -957,7 +958,7 @@ export default function HomeScreen() {
 
   return (
     <FadeInView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
         data={filteredRestaurants}
@@ -976,7 +977,7 @@ export default function HomeScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => loadRestaurants(true)}
-            tintColor="#D4A017"
+            tintColor="#EAB02F"
           />
         }
         ListHeaderComponent={
@@ -1188,7 +1189,7 @@ export default function HomeScreen() {
                         <MaterialCommunityIcons
                           name={item.icon}
                           size={24}
-                          color="#D4A017"
+                          color="#EAB02F"
                         />
                       </View>
                       <Text style={styles.categoryText}>{t(item.titleKey)}</Text>
@@ -1258,7 +1259,7 @@ export default function HomeScreen() {
 
             {!!errorMessage && !loading && (
               <View style={styles.errorCard}>
-                <Ionicons name="warning-outline" size={18} color="#B63B3B" />
+                <Ionicons name="warning-outline" size={18} color="#C8331A" />
                 <Text style={styles.errorText}>{errorMessage}</Text>
               </View>
             )}
@@ -1267,7 +1268,7 @@ export default function HomeScreen() {
         ListEmptyComponent={
           loading || publicDirectoryLoading ? (
             <View style={styles.loaderWrapper}>
-              <ActivityIndicator size="large" color="#D4A017" />
+              <ActivityIndicator size="large" color="#EAB02F" />
               <Text style={styles.loaderText}>
                 {t('home.loadingRestaurants')}
               </Text>
@@ -1300,7 +1301,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   listContent: {
@@ -1310,7 +1311,7 @@ const styles = StyleSheet.create({
   },
 
   heroCard: {
-    backgroundColor: '#1F6F43',
+    backgroundColor: '#084424',
     borderRadius: 28,
     padding: 20,
     marginBottom: 20,
@@ -1346,7 +1347,8 @@ const styles = StyleSheet.create({
 
   heroTitle: {
     fontSize: 25,
-    fontWeight: '900',
+    fontFamily: BrandFonts.display,
+    fontWeight: 'normal',
     color: '#FFFFFF',
     marginBottom: 8,
     lineHeight: 31,
@@ -1360,7 +1362,7 @@ const styles = StyleSheet.create({
   },
 
   heroButton: {
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 14,
@@ -1375,7 +1377,7 @@ const styles = StyleSheet.create({
   },
 
   heroButtonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -1416,7 +1418,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     height: 52,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontSize: 15,
   },
 
@@ -1444,7 +1446,7 @@ const styles = StyleSheet.create({
   },
 
   searchDishCountText: {
-    color: '#1F6F43',
+    color: '#084424',
     fontSize: 12,
     fontWeight: '900',
   },
@@ -1485,7 +1487,7 @@ const styles = StyleSheet.create({
   searchDishName: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   searchDishRestaurant: {
@@ -1497,14 +1499,14 @@ const styles = StyleSheet.create({
   searchDishPrice: {
     marginTop: 6,
     fontSize: 13,
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '900',
   },
 
   sectionTitle: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 14,
   },
 
@@ -1545,7 +1547,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     textAlign: 'center',
   },
 
@@ -1565,8 +1567,8 @@ const styles = StyleSheet.create({
   },
 
   chipActive: {
-    backgroundColor: '#1F6F43',
-    borderColor: '#1F6F43',
+    backgroundColor: '#084424',
+    borderColor: '#084424',
   },
 
   chipPressed: {
@@ -1610,13 +1612,13 @@ const styles = StyleSheet.create({
     height: 84,
     borderRadius: 12,
     marginBottom: 8,
-    backgroundColor: '#F3E6D7',
+    backgroundColor: '#F1EBDA',
   },
 
   moodDishName: {
     fontWeight: '800',
     fontSize: 13,
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginBottom: 2,
   },
 
@@ -1629,7 +1631,7 @@ const styles = StyleSheet.create({
   moodDishPrice: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#D96C2D',
+    color: '#C8331A',
   },
 
   moodEmptyText: {
@@ -1646,7 +1648,7 @@ const styles = StyleSheet.create({
   },
 
   seeAll: {
-    color: '#D4A017',
+    color: '#EAB02F',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -1683,7 +1685,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#F5EFE8',
+    backgroundColor: '#F2ECE0',
   },
 
   publicListingLabel: {
@@ -1715,7 +1717,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginLeft: 4,
   },
 
@@ -1742,11 +1744,11 @@ const styles = StyleSheet.create({
   },
 
   statusBadgeTextOpen: {
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   statusBadgeTextClosed: {
-    color: '#B63B3B',
+    color: '#C8331A',
   },
 
   featuredBadge: {
@@ -1764,7 +1766,7 @@ const styles = StyleSheet.create({
   featuredBadgeText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginLeft: 4,
   },
 
@@ -1781,19 +1783,19 @@ const styles = StyleSheet.create({
   restaurantName: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     flex: 1,
     marginRight: 10,
   },
 
   deliveryTime: {
     fontSize: 13,
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '800',
   },
 
   restaurantCuisine: {
-    color: '#D96C2D',
+    color: '#C8331A',
     fontSize: 14,
     fontWeight: '700',
     marginTop: 8,
@@ -1806,7 +1808,7 @@ const styles = StyleSheet.create({
   },
 
   restaurantAddress: {
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 13,
     marginLeft: 6,
     flex: 1,
@@ -1846,7 +1848,7 @@ const styles = StyleSheet.create({
 
   deliveryFeeText: {
     marginLeft: 6,
-    color: '#1F6F43',
+    color: '#084424',
     fontWeight: '700',
     fontSize: 12,
   },
@@ -1863,7 +1865,7 @@ const styles = StyleSheet.create({
 
   loaderText: {
     marginTop: 12,
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
   },
 
@@ -1881,7 +1883,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     flex: 1,
-    color: '#B63B3B',
+    color: '#C8331A',
     fontSize: 13,
     fontWeight: '600',
     marginLeft: 8,
@@ -1897,28 +1899,28 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#1E1E1E',
+    color: '#0D1C11',
     marginTop: 14,
     marginBottom: 8,
   },
 
   emptyText: {
     textAlign: 'center',
-    color: '#777777',
+    color: '#606D5D',
     fontSize: 15,
     lineHeight: 22,
   },
 
   retryButton: {
     marginTop: 18,
-    backgroundColor: '#D4A017',
+    backgroundColor: '#EAB02F',
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 14,
   },
 
   retryButtonText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
     fontWeight: '800',
     fontSize: 14,
   },

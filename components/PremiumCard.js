@@ -70,7 +70,7 @@ export default function PremiumCard({
 
             {safeRating ? (
               <View style={styles.ratingWrap}>
-                <Ionicons name="star" size={12} color="#D4A017" />
+                <Ionicons name="star" size={12} color="#EAB02F" />
                 <Text style={styles.ratingText}>{safeRating}</Text>
               </View>
             ) : null}
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: '#EEE4D8',
+    borderColor: '#E3DECF',
     overflow: 'hidden',
     shadowColor: '#000000',
     shadowOpacity: 0.06,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 150,
-    backgroundColor: '#F3E6D7',
+    backgroundColor: '#F1EBDA',
   },
 
   badge: {
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 11,
     fontWeight: '900',
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   content: {
@@ -163,14 +163,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 17,
     fontWeight: '900',
-    color: '#111111',
+    color: '#0D1C11',
     marginRight: 10,
   },
 
   ratingWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFF8EA',
+    backgroundColor: '#F3E7CA',
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 999,
@@ -180,13 +180,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '800',
     marginLeft: 4,
-    color: '#111111',
+    color: '#0D1C11',
   },
 
   subtitle: {
     marginTop: 8,
     fontSize: 13,
-    color: '#777777',
+    color: '#606D5D',
     lineHeight: 18,
   },
 
@@ -200,14 +200,14 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 15,
     fontWeight: '900',
-    color: '#D96C2D',
+    color: '#C8331A',
   },
 
   arrowWrap: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#F5EFE8',
+    backgroundColor: '#F2ECE0',
     justifyContent: 'center',
     alignItems: 'center',
   },

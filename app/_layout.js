@@ -1,6 +1,8 @@
 import '../services/webAlert';
 import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { Fraunces_600SemiBold, Fraunces_700Bold } from '@expo-google-fonts/fraunces';
 import { StyleSheet, StatusBar } from 'react-native';
 import AppStripeProvider from '../components/AppStripeProvider';
 import { AuthProvider, useAuth } from '../context/AuthContext';
@@ -21,6 +23,9 @@ import '../i18n';
 
 function AppStack() {
   const { isAuthenticated, token } = useAuth();
+
+  // Polices de marque : chargées sans bloquer le rendu (repli sur la police système).
+  useFonts({ Fraunces_600SemiBold, Fraunces_700Bold });
 
   /**
    * =========================================================
@@ -51,7 +56,7 @@ function AppStack() {
 
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFF8F0" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <Stack
         initialRouteName="index"

@@ -20,8 +20,8 @@ const getVariantStyles = (variant) => {
       return {
         container: styles.secondaryButton,
         text: styles.secondaryText,
-        icon: '#1F6F43',
-        loader: '#1F6F43',
+        icon: '#084424',
+        loader: '#084424',
       };
 
     case 'dark':
@@ -44,8 +44,8 @@ const getVariantStyles = (variant) => {
       return {
         container: styles.ghostButton,
         text: styles.ghostText,
-        icon: '#1E1E1E',
-        loader: '#1E1E1E',
+        icon: '#0D1C11',
+        loader: '#0D1C11',
       };
 
     case 'primary':
@@ -53,8 +53,8 @@ const getVariantStyles = (variant) => {
       return {
         container: styles.primaryButton,
         text: styles.primaryText,
-        icon: '#1E1E1E',
-        loader: '#1E1E1E',
+        icon: '#0D1C11',
+        loader: '#0D1C11',
       };
   }
 };
@@ -189,8 +189,8 @@ const styles = StyleSheet.create({
   },
 
   primaryButton: {
-    backgroundColor: '#D4A017',
-    borderColor: '#D4A017',
+    backgroundColor: '#EAB02F',
+    borderColor: '#EAB02F',
   },
 
   secondaryButton: {
@@ -199,18 +199,18 @@ const styles = StyleSheet.create({
   },
 
   darkButton: {
-    backgroundColor: '#111111',
-    borderColor: '#111111',
+    backgroundColor: '#0D1C11',
+    borderColor: '#0D1C11',
   },
 
   dangerButton: {
-    backgroundColor: '#C0392B',
-    borderColor: '#C0392B',
+    backgroundColor: '#C8331A',
+    borderColor: '#C8331A',
   },
 
   ghostButton: {
     backgroundColor: 'transparent',
-    borderColor: '#E7DDD2',
+    borderColor: '#E3DECF',
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -240,11 +240,11 @@ const styles = StyleSheet.create({
   },
 
   primaryText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   secondaryText: {
-    color: '#1F6F43',
+    color: '#084424',
   },
 
   darkText: {
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   },
 
   ghostText: {
-    color: '#1E1E1E',
+    color: '#0D1C11',
   },
 
   leftIcon: {

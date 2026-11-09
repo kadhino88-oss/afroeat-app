@@ -161,7 +161,7 @@ export default function TabsLayout() {
   if (loading) {
     return (
       <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#D4A017" />
+        <ActivityIndicator size="large" color="#EAB02F" />
       </View>
     );
   }
@@ -201,7 +201,7 @@ export default function TabsLayout() {
       initialRouteName="index"
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#D4A017',
+        tabBarActiveTintColor: '#EAB02F',
         tabBarInactiveTintColor: '#8C8C8C',
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
@@ -281,14 +281,14 @@ export default function TabsLayout() {
 const styles = StyleSheet.create({
   loader: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   scene: {
     flex: 1,
-    backgroundColor: '#FFF8F0',
+    backgroundColor: '#FBF6EC',
   },
 
   tabBar: {
