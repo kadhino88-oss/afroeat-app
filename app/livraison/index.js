@@ -415,7 +415,7 @@ export default function LivreurDashboardScreen() {
                       <Text style={styles.primary}>
                         {item.paymentMethod === 'cash' && next === 'Livrée'
                           ? t('livraison.confirmCashAndDelivered')
-                          : t(`livraison.status.${DELIVERY_STATUS_SLUG[next] || 'confirmed'}`, next)}
+                          : next === 'En livraison' ? t('livraison.startDelivery') : next === 'Livrée' ? t('livraison.markDelivered') : t(`livraison.status.${DELIVERY_STATUS_SLUG[next] || 'confirmed'}`, next)}
                       </Text>
                     )}
                   </Pressable>

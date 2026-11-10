@@ -1449,7 +1449,9 @@
       "recenterButton": "重新居中",
       "openGpsButton": "打开 GPS",
       "restaurantFallback": "AFROEAT 餐厅"
-    }
+    },
+    "startDelivery": "开始配送",
+    "markDelivered": "标记为已送达"
   },
   "admin": {
     "common": {

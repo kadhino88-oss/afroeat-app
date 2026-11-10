@@ -66,9 +66,17 @@ const normalizeText = (v, f = '') => {
 
 const formatPrice = (v, c = 'EUR') => {
   const a = normalizeNumber(v);
-  if (c === 'USD') return `$${a.toFixed(2)}`;
-  if (c === 'XOF' || c === 'XAF') return `${a.toFixed(0)} ${c}`;
-  return `${a.toFixed(2)} €`;
+  const code = String(c || 'EUR').toUpperCase();
+  try {
+    return new Intl.NumberFormat('fr-CH', {
+      style: 'currency',
+      currency: code,
+      minimumFractionDigits: code === 'XOF' || code === 'XAF' ? 0 : 2,
+      maximumFractionDigits: code === 'XOF' || code === 'XAF' ? 0 : 2,
+    }).format(a);
+  } catch {
+    return `${a.toFixed(2)} ${code}`;
+  }
 };
 
 const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
@@ -225,7 +233,7 @@ export default function LivraisonOrdersScreen() {
 
             <View style={styles.summary}>
               <Text>{t('livraison.itemsCount', { count: totalItems })}</Text>
-              <Text>{formatPrice(totalAmount)}</Text>
+              <Text>{formatPrice(totalAmount, orders[0]?.currency)}</Text>
             </View>
 
             <FlatList
@@ -271,7 +279,7 @@ export default function LivraisonOrdersScreen() {
 
             <Text>
               {t('livraison.itemsCount', { count: getItemsCount(item.items) })} •{' '}
-              {formatPrice(item.totalPrice)}
+              {formatPrice(item.totalPrice, item.currency)}
             </Text>
 
             <Text style={styles.date}>

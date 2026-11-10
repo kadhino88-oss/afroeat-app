@@ -47,8 +47,17 @@ const normalizeArray = (v) => (Array.isArray(v) ? v : []);
 
 const formatPrice = (v, c = 'EUR') => {
   const a = normalizeNumber(v);
-  if (c === 'XOF' || c === 'XAF') return `${a.toFixed(0)} ${c}`;
-  return `${a.toFixed(2)} €`;
+  const code = String(c || 'EUR').toUpperCase();
+  try {
+    return new Intl.NumberFormat('fr-CH', {
+      style: 'currency',
+      currency: code,
+      minimumFractionDigits: code === 'XOF' || code === 'XAF' ? 0 : 2,
+      maximumFractionDigits: code === 'XOF' || code === 'XAF' ? 0 : 2,
+    }).format(a);
+  } catch {
+    return `${a.toFixed(2)} ${code}`;
+  }
 };
 
 const DELIVERY_STATUS_SLUG = {
@@ -231,7 +240,7 @@ export default function LivraisonOrderDetailsScreen() {
         <View style={styles.card}>
           <Text>{t(`livraison.status.${DELIVERY_STATUS_SLUG[order.status] || 'confirmed'}`, order.status)}</Text>
           <Text>{t('livraison.itemsCount', { count: itemsCount })}</Text>
-          <Text>{formatPrice(order.totalPrice)}</Text>
+          <Text>{formatPrice(order.totalPrice, order.currency)}</Text>
         </View>
 
         <View style={styles.card}>
@@ -259,7 +268,7 @@ export default function LivraisonOrderDetailsScreen() {
               <Text style={styles.primaryText}>
                 {order.paymentMethod === 'cash' && nextStatus === 'Livrée'
                   ? t('livraison.confirmCashAndDelivered')
-                  : t(`livraison.status.${DELIVERY_STATUS_SLUG[nextStatus] || 'confirmed'}`, nextStatus)}
+                  : nextStatus === 'En livraison' ? t('livraison.startDelivery') : nextStatus === 'Livrée' ? t('livraison.markDelivered') : t(`livraison.status.${DELIVERY_STATUS_SLUG[nextStatus] || 'confirmed'}`, nextStatus)}
               </Text>
             )}
           </Pressable>
