@@ -498,3 +498,17 @@ return `${hours} h`;
 
 return `${hours} h ${remainingMinutes} min`;
 };
+
+/**
+ * Disponibilité réelle du livreur (enregistrée côté serveur) : sans elle, aucune course ne peut
+ * lui être attribuée.
+ */
+export const getMyDeliveryProfile = async (token) => {
+  const response = await apiGet(API_ENDPOINTS.delivery.profile, token);
+  return response?.profile || null;
+};
+
+export const setMyAvailability = async (available, token) => {
+  const response = await apiPut(API_ENDPOINTS.delivery.availability, { available: Boolean(available) }, token);
+  return Boolean(response?.available);
+};
