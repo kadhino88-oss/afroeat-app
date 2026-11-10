@@ -1650,7 +1650,12 @@
     "drivers": {
       "driverNameFallback": "Afroeat 配送员",
       "fetchErrorFallback": "加载错误",
-      "updateStatusErrorFallback": "无法修改状态"
+      "updateStatusErrorFallback": "无法修改状态",
+      "title": "配送员",
+      "subtitle": "首次配送前请核实身份和工作许可。",
+      "verified": "已核实",
+      "toVerify": "待核实",
+      "openDetails": "查看资料并核实 →"
     },
     "orders": {
       "fetchErrorFallback": "无法加载订单。",

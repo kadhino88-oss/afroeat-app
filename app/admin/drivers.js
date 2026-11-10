@@ -288,6 +288,21 @@ export default function AdminDriversScreen() {
       <FlatList
         data={drivers}
         keyExtractor={(item) => item._id}
+        contentContainerStyle={styles.list}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => (router.canGoBack() ? router.back() : router.replace('/admin'))}
+              style={styles.back}
+            >
+              <Ionicons name="arrow-back" size={21} color="#0D1C11" />
+            </Pressable>
+            <Text style={styles.eyebrow}>AFROEAT · ADMIN</Text>
+            <Text style={styles.pageTitle}>{t('admin.drivers.title')}</Text>
+            <Text style={styles.pageSubtitle}>{t('admin.drivers.subtitle')}</Text>
+          </View>
+        }
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -297,14 +312,34 @@ export default function AdminDriversScreen() {
         renderItem={({ item }) => {
           const status = getStatusStyle(item.accountStatus, t);
 
+          const verified = item.isIdentityVerified && item.isWorkAuthorized;
           return (
             <View style={styles.card}>
-              <Text style={styles.title}>{item.name}</Text>
-              <Text>{item.email}</Text>
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push(`/admin/drivers-details/${item._id}`)}
+              >
+                <Text style={styles.title}>{item.name}</Text>
+                <Text>{item.email}</Text>
+              </Pressable>
 
-              <View style={[styles.badge, { backgroundColor: status.bg }]}>
-                <Text style={{ color: status.text }}>{status.label}</Text>
+              <View style={styles.badges}>
+                <View style={[styles.badge, { backgroundColor: status.bg }]}>
+                  <Text style={{ color: status.text }}>{status.label}</Text>
+                </View>
+                <View style={[styles.badge, { backgroundColor: verified ? '#E3F0E8' : '#F3E7CA' }]}>
+                  <Text style={{ color: verified ? '#084424' : '#301904' }}>
+                    {verified ? t('admin.drivers.verified') : t('admin.drivers.toVerify')}
+                  </Text>
+                </View>
               </View>
+
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push(`/admin/drivers-details/${item._id}`)}
+              >
+                <Text style={styles.open}>{t('admin.drivers.openDetails')}</Text>
+              </Pressable>
 
               <Pressable onPress={() => toggleStatus(item)}>
                 <Text style={styles.action}>
@@ -331,6 +366,14 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FBF6EC' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 
+  list: { paddingBottom: 40, maxWidth: 900, width: '100%', alignSelf: 'center' },
+  header: { paddingHorizontal: 12, paddingTop: 20, paddingBottom: 4 },
+  back: { width: 42, height: 42, borderRadius: 14, backgroundColor: '#FFFDF9', justifyContent: 'center', alignItems: 'center', marginBottom: 16, borderWidth: 1, borderColor: '#E3DECF' },
+  eyebrow: { color: '#C8331A', fontSize: 11, letterSpacing: 1.5, fontWeight: '900' },
+  pageTitle: { color: '#0D1C11', fontSize: 28, marginTop: 7, fontWeight: '900' },
+  pageSubtitle: { color: '#606D5D', fontSize: 14, lineHeight: 21, marginTop: 6 },
+  badges: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  open: { marginTop: 10, color: '#084424', fontWeight: 'bold' },
   card: {
     backgroundColor: '#FFF',
     margin: 12,

@@ -1650,7 +1650,12 @@
     "drivers": {
       "driverNameFallback": "Livreur Afroeat",
       "fetchErrorFallback": "Erreur chargement",
-      "updateStatusErrorFallback": "Impossible de modifier le statut"
+      "updateStatusErrorFallback": "Impossible de modifier le statut",
+      "title": "Livreurs",
+      "subtitle": "Vérifie l’identité et l’autorisation de travail avant la première course.",
+      "verified": "Vérifié",
+      "toVerify": "À vérifier",
+      "openDetails": "Voir la fiche et vérifier →"
     },
     "orders": {
       "fetchErrorFallback": "Impossible de charger les commandes.",
