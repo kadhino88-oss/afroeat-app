@@ -240,27 +240,23 @@
       "opNotifSubtitle": "Alerts for orders, incidents and critical events",
       "contactPrefTitle": "Contact preferences",
       "contactPrefSubtitle": "Manage email, phone and visible information",
-      "contactInfoTitle": "Contact",
-      "contactInfoBody": "This module can later be linked to the restaurant profile and communication preferences.",
       "sectionBusinessConfig": "Business configuration",
       "hoursTitle": "Opening hours",
       "hoursSubtitle": "Set the restaurant's opening hours",
       "hoursInfoTitle": "Hours",
-      "hoursInfoBody": "A full day-by-day hours management screen can be connected here.",
+      "hoursInfoBody": "For now, open or close your restaurant with “Receive orders”. Automatic daily opening hours will come in a later version.",
       "deliveryZonesTitle": "Delivery & zones",
       "deliveryZonesSubtitle": "Manage delivery fees and areas",
-      "deliveryInfoTitle": "Delivery",
-      "deliveryInfoBody": "A premium screen dedicated to delivery zones and fees can be created next.",
       "paymentTitle": "Payment & billing",
       "paymentSubtitle": "Prepare the restaurant's financial settings",
       "paymentInfoTitle": "Payment",
-      "paymentInfoBody": "The payment/billing block can be linked to payment methods and the back office.",
+      "paymentInfoBody": "Restaurant payouts are activated with the AFROEAT team before launch. We will contact you to set up your payout account.",
       "sectionAccount": "Account",
       "profileTitle": "Restaurant profile",
       "profileSubtitle": "Edit the account's main information",
       "securityTitle": "Security",
       "securitySubtitle": "Password, access and account protection",
-      "securityInfoBody": "The security module can later be connected to advanced password and session management.",
+      "securityInfoBody": "To change your password or report suspicious access, contact the AFROEAT team from the Help page.",
       "logoutRowSubtitle": "Leave the restaurant space"
     },
     "profile": {
@@ -462,6 +458,15 @@
       "addFirstDishButton": "Add a first dish",
       "dishesCount_one": "{{count}} dish",
       "dishesCount_other": "{{count}} dishes"
+    },
+    "deliverySettings": {
+      "title": "Delivery",
+      "subtitle": "Set your delivery fee and minimum order. Customers see them before ordering.",
+      "fee": "Delivery fee",
+      "minimum": "Minimum order",
+      "save": "Save",
+      "saved": "Delivery settings saved.",
+      "invalid": "Enter valid amounts (0 or more)."
     }
   },
   "profile": {
