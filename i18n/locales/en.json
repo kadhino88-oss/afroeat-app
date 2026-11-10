@@ -1949,7 +1949,11 @@
       "contact": "Contact",
       "website": "Website",
       "unknown": "Not specified",
-      "subtitle": "African businesses that want to join AFROEAT."
+      "subtitle": "African businesses that want to join AFROEAT.",
+      "status_new": "New",
+      "status_contacted": "Contacted",
+      "status_approved": "Approved",
+      "status_rejected": "Rejected"
     }
   },
   "payouts": {

@@ -1949,7 +1949,11 @@
       "contact": "Contacto",
       "website": "Sitio web",
       "unknown": "No indicado",
-      "subtitle": "Negocios africanos que quieren unirse a AFROEAT."
+      "subtitle": "Negocios africanos que quieren unirse a AFROEAT.",
+      "status_new": "Nueva",
+      "status_contacted": "Contactada",
+      "status_approved": "Aprobada",
+      "status_rejected": "Rechazada"
     }
   },
   "payouts": {

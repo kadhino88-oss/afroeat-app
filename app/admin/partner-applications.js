@@ -78,7 +78,7 @@ export default function AdminPartnerApplicationsScreen() {
   const labels = useMemo(
     () => ({
       type: (value) => t(`partnerApply.type_${value}`, { defaultValue: value }),
-      status: (value) => t(`admin.partnerApplications.${value}`, { defaultValue: value }),
+      status: (value) => t(`admin.partnerApplications.status_${value}`, { defaultValue: value }),
     }),
     [t]
   );

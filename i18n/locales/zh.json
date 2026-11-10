@@ -1949,7 +1949,11 @@
       "contact": "联系方式",
       "website": "网站",
       "unknown": "未说明",
-      "subtitle": "希望加入 AFROEAT 的非洲商家。"
+      "subtitle": "希望加入 AFROEAT 的非洲商家。",
+      "status_new": "新申请",
+      "status_contacted": "已联系",
+      "status_approved": "已批准",
+      "status_rejected": "已拒绝"
     }
   },
   "payouts": {

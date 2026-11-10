@@ -1949,7 +1949,11 @@
       "contact": "Kontakt",
       "website": "Website",
       "unknown": "Nicht angegeben",
-      "subtitle": "Afrikanische Betriebe, die AFROEAT beitreten möchten."
+      "subtitle": "Afrikanische Betriebe, die AFROEAT beitreten möchten.",
+      "status_new": "Neu",
+      "status_contacted": "Kontaktiert",
+      "status_approved": "Genehmigt",
+      "status_rejected": "Abgelehnt"
     }
   },
   "payouts": {

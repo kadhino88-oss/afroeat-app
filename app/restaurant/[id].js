@@ -404,6 +404,8 @@ export default function RestaurantScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [addingId, setAddingId] = useState(null);
+  // Confirmation discrète sur le bouton « + » (plus de fenêtre bloquante à chaque ajout).
+  const [justAddedId, setJustAddedId] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteBusy, setFavoriteBusy] = useState(false);
   const requestIdRef = useRef(0);
@@ -647,7 +649,8 @@ export default function RestaurantScreen() {
         };
 
         await Promise.resolve(addToCart(cartItem));
-        Alert.alert(t('restaurant.addedToCart'), item.name);
+        setJustAddedId(item._id);
+        setTimeout(() => setJustAddedId((current) => (current === item._id ? null : current)), 1500);
       } catch (error) {
         Alert.alert(
           t('restaurant.error'),
@@ -814,6 +817,13 @@ export default function RestaurantScreen() {
             >
               {isAdding ? (
                 <ActivityIndicator size="small" color="#000000" />
+              ) : justAddedId === item._id ? (
+                <Ionicons
+                  name="checkmark"
+                  size={20}
+                  color="#000000"
+                  accessibilityLabel={t('restaurant.addedToCart')}
+                />
               ) : (
                 <Ionicons name="add" size={20} color="#000000" />
               )}
@@ -822,7 +832,7 @@ export default function RestaurantScreen() {
         </View>
       );
     },
-    [restaurant, addingId, handleAddToCart, t]
+    [restaurant, addingId, justAddedId, handleAddToCart, t]
   );
 
   /**

@@ -1949,7 +1949,11 @@
       "contact": "Contatto",
       "website": "Sito web",
       "unknown": "Non indicato",
-      "subtitle": "Attività africane che vogliono unirsi ad AFROEAT."
+      "subtitle": "Attività africane che vogliono unirsi ad AFROEAT.",
+      "status_new": "Nuova",
+      "status_contacted": "Contattata",
+      "status_approved": "Approvata",
+      "status_rejected": "Rifiutata"
     }
   },
   "payouts": {
