@@ -261,7 +261,8 @@ export default function RoleSelectionScreen() {
       }
 
       if (role === 'restaurant') {
-        router.push('/auth/register-restaurant');
+        // Les comptes restaurant ne se créent pas en libre-service : candidature puis validation.
+        router.push('/partner-apply');
         return;
       }
 

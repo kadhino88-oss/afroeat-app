@@ -168,7 +168,8 @@ const getRegisterRouteByRole = (role) => {
   const normalized = normalizeRole(role);
 
   if (normalized === 'restaurant') {
-    return '/auth/register-restaurant';
+    // Candidature partenaire (les comptes restaurant sont créés après validation).
+    return '/partner-apply';
   }
 
   if (normalized === 'livreur') {
