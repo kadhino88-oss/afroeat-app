@@ -427,7 +427,21 @@
       "subtotalLabel": "Subtotal",
       "serviceFeeLabel": "Service fee",
       "taxesLabel": "Taxes",
-      "discountLabel": "Discount"
+      "discountLabel": "Discount",
+      "actionsTitle": "Actions",
+      "acceptOrder": "Accept order",
+      "startPreparing": "Start preparing",
+      "assignDriver": "Assign a courier",
+      "changeDriver": "Change courier",
+      "pickDriver": "Select",
+      "noDriversAvailable": "No verified courier is online right now.",
+      "assignedDriver": "Courier: {{name}}",
+      "driverFallback": "AfroEat courier",
+      "cancelOrder": "Decline / cancel order",
+      "confirmCancel": "Confirm cancellation",
+      "actionError": "Action failed. Please try again.",
+      "driversError": "Could not load couriers.",
+      "assignError": "Could not assign this courier."
     },
     "dashboard": {
       "dishFallbackName": "African dish",

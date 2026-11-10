@@ -427,7 +427,21 @@
       "subtotalLabel": "Zwischensumme",
       "serviceFeeLabel": "Servicegebühr",
       "taxesLabel": "Steuern",
-      "discountLabel": "Rabatt"
+      "discountLabel": "Rabatt",
+      "actionsTitle": "Aktionen",
+      "acceptOrder": "Bestellung annehmen",
+      "startPreparing": "Zubereitung starten",
+      "assignDriver": "Kurier zuweisen",
+      "changeDriver": "Kurier wechseln",
+      "pickDriver": "Wählen",
+      "noDriversAvailable": "Derzeit ist kein verifizierter Kurier online.",
+      "assignedDriver": "Kurier: {{name}}",
+      "driverFallback": "AfroEat-Kurier",
+      "cancelOrder": "Bestellung ablehnen / stornieren",
+      "confirmCancel": "Stornierung bestätigen",
+      "actionError": "Aktion fehlgeschlagen. Bitte erneut versuchen.",
+      "driversError": "Kuriere konnten nicht geladen werden.",
+      "assignError": "Dieser Kurier konnte nicht zugewiesen werden."
     },
     "dashboard": {
       "dishFallbackName": "Afrikanisches Gericht",

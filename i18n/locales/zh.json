@@ -427,7 +427,21 @@
       "subtotalLabel": "小计",
       "serviceFeeLabel": "服务费",
       "taxesLabel": "税费",
-      "discountLabel": "折扣"
+      "discountLabel": "折扣",
+      "actionsTitle": "操作",
+      "acceptOrder": "接受订单",
+      "startPreparing": "开始备餐",
+      "assignDriver": "指派骑手",
+      "changeDriver": "更换骑手",
+      "pickDriver": "选择",
+      "noDriversAvailable": "目前没有已验证的骑手在线。",
+      "assignedDriver": "骑手：{{name}}",
+      "driverFallback": "AfroEat 骑手",
+      "cancelOrder": "拒绝 / 取消订单",
+      "confirmCancel": "确认取消",
+      "actionError": "操作失败，请重试。",
+      "driversError": "无法加载骑手列表。",
+      "assignError": "无法指派该骑手。"
     },
     "dashboard": {
       "dishFallbackName": "非洲菜品",

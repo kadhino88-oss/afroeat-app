@@ -427,7 +427,21 @@
       "subtotalLabel": "Sous-total",
       "serviceFeeLabel": "Frais de service",
       "taxesLabel": "Taxes",
-      "discountLabel": "Remise"
+      "discountLabel": "Remise",
+      "actionsTitle": "Actions",
+      "acceptOrder": "Accepter la commande",
+      "startPreparing": "Lancer la préparation",
+      "assignDriver": "Assigner un livreur",
+      "changeDriver": "Changer de livreur",
+      "pickDriver": "Choisir",
+      "noDriversAvailable": "Aucun livreur vérifié n'est en ligne pour le moment.",
+      "assignedDriver": "Livreur : {{name}}",
+      "driverFallback": "Livreur AfroEat",
+      "cancelOrder": "Refuser / annuler la commande",
+      "confirmCancel": "Confirmer l'annulation",
+      "actionError": "Action impossible. Réessaie.",
+      "driversError": "Impossible de charger les livreurs.",
+      "assignError": "Impossible d'assigner ce livreur."
     },
     "dashboard": {
       "dishFallbackName": "Plat africain",

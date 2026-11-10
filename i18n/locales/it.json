@@ -427,7 +427,21 @@
       "subtotalLabel": "Subtotale",
       "serviceFeeLabel": "Costo del servizio",
       "taxesLabel": "Tasse",
-      "discountLabel": "Sconto"
+      "discountLabel": "Sconto",
+      "actionsTitle": "Azioni",
+      "acceptOrder": "Accetta l'ordine",
+      "startPreparing": "Avvia la preparazione",
+      "assignDriver": "Assegna un rider",
+      "changeDriver": "Cambia rider",
+      "pickDriver": "Scegli",
+      "noDriversAvailable": "Nessun rider verificato è online al momento.",
+      "assignedDriver": "Rider: {{name}}",
+      "driverFallback": "Rider AfroEat",
+      "cancelOrder": "Rifiuta / annulla l'ordine",
+      "confirmCancel": "Conferma l'annullamento",
+      "actionError": "Azione non riuscita. Riprova.",
+      "driversError": "Impossibile caricare i rider.",
+      "assignError": "Impossibile assegnare questo rider."
     },
     "dashboard": {
       "dishFallbackName": "Piatto africano",
