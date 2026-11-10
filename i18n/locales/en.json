@@ -466,7 +466,14 @@
       "minimum": "Minimum order",
       "save": "Save",
       "saved": "Delivery settings saved.",
-      "invalid": "Enter valid amounts (0 or more)."
+      "invalid": "Enter valid amounts (0 or more).",
+      "positionTitle": "Map position",
+      "positionSet": "Your restaurant is on the map: nearby customers can see it.",
+      "positionMissing": "Your restaurant is not on the map yet: customers cannot find it.",
+      "useAddress": "Place at the restaurant address",
+      "useDevice": "Use my current location (I am at the restaurant)",
+      "positionSaved": "Position saved.",
+      "locationDenied": "Allow location access to use your current position."
     }
   },
   "profile": {

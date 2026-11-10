@@ -22,3 +22,10 @@ test('« Livraison & zones » ouvre un vrai écran, « Préférences de contact 
   const screen = read('app/restaurant/delivery-settings.js');
   assert.match(screen, /updateMyRestaurant\(restaurant\._id, \{ deliveryFee, minimumOrderAmount \}, token\)/);
 });
+
+test('le restaurateur peut placer son restaurant sur la carte (adresse ou position actuelle)', () => {
+  const src = read('app/restaurant/delivery-settings.js');
+  assert.match(src, /locateFromAddress: true/);
+  assert.match(src, /getCurrentPositionAsync/);
+  assert.match(src, /positionMissing/);
+});

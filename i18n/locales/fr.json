@@ -466,7 +466,14 @@
       "minimum": "Minimum de commande",
       "save": "Enregistrer",
       "saved": "Réglages de livraison enregistrés.",
-      "invalid": "Saisis des montants valides (0 ou plus)."
+      "invalid": "Saisis des montants valides (0 ou plus).",
+      "positionTitle": "Position sur la carte",
+      "positionSet": "Ton restaurant est placé sur la carte : les clients proches le voient.",
+      "positionMissing": "Ton restaurant n’est pas encore placé sur la carte : les clients ne peuvent pas le trouver.",
+      "useAddress": "Placer à l’adresse du restaurant",
+      "useDevice": "Utiliser ma position actuelle (je suis au restaurant)",
+      "positionSaved": "Position enregistrée.",
+      "locationDenied": "Autorise la localisation pour utiliser ta position actuelle."
     }
   },
   "profile": {
