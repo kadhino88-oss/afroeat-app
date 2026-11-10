@@ -32,14 +32,18 @@ const normalizeArray = (value) => {
 };
 
 const formatPrice = (value, currency = 'EUR') => {
-  const amount = normalizeNumber(value, 0);
-
-  if (currency === 'USD') return `$${amount.toFixed(2)}`;
-  if (currency === 'GBP') return `£${amount.toFixed(2)}`;
-  if (currency === 'XOF' || currency === 'XAF') return `${amount.toFixed(0)} ${currency}`;
-  if (currency === 'CAD') return `${amount.toFixed(2)} $CA`;
-
-  return `${amount.toFixed(2)} €`;
+  const a = Number(value) || 0;
+  const code = String(currency || 'EUR').toUpperCase();
+  try {
+    return new Intl.NumberFormat('fr-CH', {
+      style: 'currency',
+      currency: code,
+      minimumFractionDigits: code === 'XOF' || code === 'XAF' ? 0 : 2,
+      maximumFractionDigits: code === 'XOF' || code === 'XAF' ? 0 : 2,
+    }).format(a);
+  } catch {
+    return `${a.toFixed(2)} ${code}`;
+  }
 };
 
 const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };

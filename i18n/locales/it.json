@@ -1449,7 +1449,9 @@
       "recenterButton": "Ricentra",
       "openGpsButton": "Apri GPS",
       "restaurantFallback": "Ristorante AFROEAT"
-    }
+    },
+    "startDelivery": "Avvia la consegna",
+    "markDelivered": "Segna come consegnato"
   },
   "admin": {
     "common": {
