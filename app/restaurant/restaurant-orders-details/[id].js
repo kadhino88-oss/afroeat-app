@@ -17,6 +17,8 @@ import FadeInView from '../../../components/FadeInView';
 import { useAuth } from '../../../context/AuthContext';
 import { apiGet } from '../../../services/apiClient';
 import { API_ENDPOINTS } from '../../../constants/api';
+import { updateOrderStatus } from '../../../services/orderService';
+import { getActiveDrivers, assignDriverToOrder } from '../../../services/driverService';
 import i18n from '../../../i18n';
 
 const LIVE_REFRESH_MS = 15000;
@@ -355,6 +357,12 @@ export default function RestaurantOrderDetailsScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [loadError, setLoadError] = useState('');
+  const [actionBusy, setActionBusy] = useState('');
+  const [actionError, setActionError] = useState('');
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [driverPickerOpen, setDriverPickerOpen] = useState(false);
+  const [drivers, setDrivers] = useState([]);
+  const [driversLoading, setDriversLoading] = useState(false);
 
   const fetchOrder = useCallback(
     async (manual = false, silent = false) => {
@@ -447,6 +455,62 @@ export default function RestaurantOrderDetailsScreen() {
     () => formatDateTime(order?.createdAt || order?.created_at || order?.date),
     [order]
   );
+
+  const rawStatus = normalizeText(order?.status);
+  const assignedDriver =
+    order?.deliveryPerson && typeof order.deliveryPerson === 'object'
+      ? order.deliveryPerson
+      : null;
+  const hasDriver = !!(assignedDriver?._id || (typeof order?.deliveryPerson === 'string' && order.deliveryPerson));
+  const canConfirm = rawStatus === 'En attente';
+  const canPrepare = rawStatus === 'Confirmée';
+  const canCancel = ['En attente', 'Confirmée', 'En préparation'].includes(rawStatus);
+  const canAssign = ['Confirmée', 'En préparation'].includes(rawStatus);
+
+  const runStatusChange = async (nextStatus) => {
+    if (!order?._id || actionBusy) return;
+    setActionBusy(nextStatus);
+    setActionError('');
+    try {
+      await updateOrderStatus(order._id, nextStatus, token);
+      setConfirmCancel(false);
+      await fetchOrder(false, true);
+    } catch (error) {
+      setActionError(error?.message || t('restaurant.orderDetails.actionError'));
+    } finally {
+      setActionBusy('');
+    }
+  };
+
+  const openDriverPicker = async () => {
+    setDriverPickerOpen(true);
+    setDriversLoading(true);
+    setActionError('');
+    try {
+      const res = await getActiveDrivers(token, { limit: 50 });
+      setDrivers(normalizeArray(res?.drivers));
+    } catch (error) {
+      setDrivers([]);
+      setActionError(error?.message || t('restaurant.orderDetails.driversError'));
+    } finally {
+      setDriversLoading(false);
+    }
+  };
+
+  const assignDriver = async (driverId) => {
+    if (!order?._id || actionBusy) return;
+    setActionBusy('assign');
+    setActionError('');
+    try {
+      await assignDriverToOrder(order._id, driverId, token);
+      setDriverPickerOpen(false);
+      await fetchOrder(false, true);
+    } catch (error) {
+      setActionError(error?.message || t('restaurant.orderDetails.assignError'));
+    } finally {
+      setActionBusy('');
+    }
+  };
 
   if (loading) {
     return (
@@ -551,6 +615,116 @@ export default function RestaurantOrderDetailsScreen() {
             <Text style={styles.metaValue}>{normalizeText(order?.status, '—')}</Text>
           </View>
         </View>
+
+        {/* ACTIONS */}
+        {(canConfirm || canPrepare || canCancel || canAssign || hasDriver) && (
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>{t('restaurant.orderDetails.actionsTitle')}</Text>
+
+            {canConfirm && (
+              <Pressable
+                style={styles.actionPrimary}
+                accessibilityRole="button"
+                disabled={!!actionBusy}
+                onPress={() => runStatusChange('Confirmée')}
+              >
+                {actionBusy === 'Confirmée' ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.actionPrimaryText}>{t('restaurant.orderDetails.acceptOrder')}</Text>
+                )}
+              </Pressable>
+            )}
+
+            {canPrepare && (
+              <Pressable
+                style={styles.actionPrimary}
+                accessibilityRole="button"
+                disabled={!!actionBusy}
+                onPress={() => runStatusChange('En préparation')}
+              >
+                {actionBusy === 'En préparation' ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.actionPrimaryText}>{t('restaurant.orderDetails.startPreparing')}</Text>
+                )}
+              </Pressable>
+            )}
+
+            {hasDriver && (
+              <View style={styles.infoRow}>
+                <Ionicons name="bicycle-outline" size={18} color="#084424" />
+                <Text style={styles.infoText}>
+                  {t('restaurant.orderDetails.assignedDriver', {
+                    name: normalizeText(assignedDriver?.name, t('restaurant.orderDetails.driverFallback')),
+                  })}
+                </Text>
+              </View>
+            )}
+
+            {canAssign && (
+              <Pressable
+                style={styles.actionSecondary}
+                accessibilityRole="button"
+                disabled={!!actionBusy}
+                onPress={() => (driverPickerOpen ? setDriverPickerOpen(false) : openDriverPicker())}
+              >
+                <Text style={styles.actionSecondaryText}>
+                  {hasDriver ? t('restaurant.orderDetails.changeDriver') : t('restaurant.orderDetails.assignDriver')}
+                </Text>
+              </Pressable>
+            )}
+
+            {canAssign && driverPickerOpen && (
+              <View style={styles.driverList}>
+                {driversLoading ? (
+                  <ActivityIndicator color="#084424" />
+                ) : drivers.length === 0 ? (
+                  <Text style={styles.emptyText}>{t('restaurant.orderDetails.noDriversAvailable')}</Text>
+                ) : (
+                  drivers.map((driver) => (
+                    <Pressable
+                      key={driver._id}
+                      style={styles.driverRow}
+                      accessibilityRole="button"
+                      disabled={!!actionBusy}
+                      onPress={() => assignDriver(driver._id)}
+                    >
+                      <Ionicons name="person-circle-outline" size={22} color="#084424" />
+                      <Text style={styles.driverName}>{driver.name}</Text>
+                      {actionBusy === 'assign' ? (
+                        <ActivityIndicator color="#084424" />
+                      ) : (
+                        <Text style={styles.driverPick}>{t('restaurant.orderDetails.pickDriver')}</Text>
+                      )}
+                    </Pressable>
+                  ))
+                )}
+              </View>
+            )}
+
+            {canCancel && (
+              <Pressable
+                style={styles.actionDanger}
+                accessibilityRole="button"
+                disabled={!!actionBusy}
+                onPress={() => (confirmCancel ? runStatusChange('Annulée') : setConfirmCancel(true))}
+              >
+                {actionBusy === 'Annulée' ? (
+                  <ActivityIndicator color="#C8331A" />
+                ) : (
+                  <Text style={styles.actionDangerText}>
+                    {confirmCancel
+                      ? t('restaurant.orderDetails.confirmCancel')
+                      : t('restaurant.orderDetails.cancelOrder')}
+                  </Text>
+                )}
+              </Pressable>
+            )}
+
+            {!!actionError && <Text style={styles.actionErrorText}>{actionError}</Text>}
+          </View>
+        )}
 
         {/* CLIENT */}
         <View style={styles.card}>
@@ -677,6 +851,17 @@ export default function RestaurantOrderDetailsScreen() {
  */
 
 const styles = StyleSheet.create({
+  actionPrimary: { backgroundColor: '#084424', borderRadius: 14, paddingVertical: 14, alignItems: 'center', marginTop: 12 },
+  actionPrimaryText: { color: '#FFFFFF', fontWeight: '900', fontSize: 15 },
+  actionSecondary: { borderWidth: 1, borderColor: '#084424', borderRadius: 14, paddingVertical: 12, alignItems: 'center', marginTop: 12 },
+  actionSecondaryText: { color: '#084424', fontWeight: '800', fontSize: 14 },
+  actionDanger: { borderRadius: 14, paddingVertical: 12, alignItems: 'center', marginTop: 12, backgroundColor: '#F8E1DD' },
+  actionDangerText: { color: '#C8331A', fontWeight: '800', fontSize: 14 },
+  actionErrorText: { color: '#C8331A', marginTop: 10, fontSize: 13 },
+  driverList: { marginTop: 10, gap: 8 },
+  driverRow: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, borderRadius: 12, backgroundColor: '#F2ECE0' },
+  driverName: { flex: 1, color: '#0D1C11', fontWeight: '700' },
+  driverPick: { color: '#084424', fontWeight: '900' },
   container: {
     flex: 1,
     backgroundColor: '#FBF6EC',

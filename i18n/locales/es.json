@@ -427,7 +427,21 @@
       "subtotalLabel": "Subtotal",
       "serviceFeeLabel": "Tarifa de servicio",
       "taxesLabel": "Impuestos",
-      "discountLabel": "Descuento"
+      "discountLabel": "Descuento",
+      "actionsTitle": "Acciones",
+      "acceptOrder": "Aceptar pedido",
+      "startPreparing": "Empezar la preparación",
+      "assignDriver": "Asignar un repartidor",
+      "changeDriver": "Cambiar de repartidor",
+      "pickDriver": "Elegir",
+      "noDriversAvailable": "Ningún repartidor verificado está en línea ahora.",
+      "assignedDriver": "Repartidor: {{name}}",
+      "driverFallback": "Repartidor AfroEat",
+      "cancelOrder": "Rechazar / cancelar pedido",
+      "confirmCancel": "Confirmar la cancelación",
+      "actionError": "No se pudo realizar la acción. Inténtalo de nuevo.",
+      "driversError": "No se pudieron cargar los repartidores.",
+      "assignError": "No se pudo asignar este repartidor."
     },
     "dashboard": {
       "dishFallbackName": "Plato africano",
