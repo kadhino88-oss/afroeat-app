@@ -404,7 +404,11 @@ export default function RestaurantOrders() {
           const statusStyle = getStatusStyle(item?.status);
 
           return (
-            <View style={styles.card}>
+            <Pressable
+              style={styles.card}
+              accessibilityRole="button"
+              onPress={() => item?._id && router.push(`/restaurant/restaurant-orders-details/${item._id}`)}
+            >
               <View style={styles.cardTopRow}>
                 <View style={styles.cardLeft}>
                   <Text style={styles.cardTitle}>
@@ -448,7 +452,7 @@ export default function RestaurantOrders() {
                   </Text>
                 </View>
               </View>
-            </View>
+            </Pressable>
           );
         }}
         ListEmptyComponent={
