@@ -19,6 +19,7 @@ import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
 import { BrandFonts } from '../../constants/brand';
 import {
+  createPartnerInvite,
   getAdminPartnerApplications,
   updatePartnerApplication,
 } from '../../services/partnerApplicationService';
@@ -45,6 +46,7 @@ export default function AdminPartnerApplicationsScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [busyId, setBusyId] = useState('');
+  const [invites, setInvites] = useState({});
 
   const load = useCallback(
     async (quiet = false) => {
@@ -110,6 +112,35 @@ export default function AdminPartnerApplicationsScreen() {
     } finally {
       setBusyId('');
     }
+  };
+
+  const sendInvite = async (application) => {
+    try {
+      setBusyId(application._id);
+      const result = await createPartnerInvite(application._id, auth.token);
+      if (!result?.inviteUrl) throw new Error(t('admin.partnerApplications.updateError'));
+      setInvites((previous) => ({ ...previous, [application._id]: result.inviteUrl }));
+      setItems((previous) =>
+        previous.map((item) => (item._id === application._id ? { ...item, status: 'approved' } : item))
+      );
+    } catch (error) {
+      Alert.alert(t('common.error'), error?.message || t('admin.partnerApplications.updateError'));
+    } finally {
+      setBusyId('');
+    }
+  };
+
+  const copyInvite = async (url) => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        Alert.alert('Lien copié', "Envoie-le au restaurateur (WhatsApp, e-mail). Il est valable 7 jours et ne sert qu'une fois.");
+        return;
+      }
+    } catch {
+      // Copie indisponible : le lien reste affiché, on le sélectionne à la main.
+    }
+    Alert.alert('Lien d\'invitation', url);
   };
 
   return (
@@ -203,6 +234,16 @@ export default function AdminPartnerApplicationsScreen() {
                 accessibilityLabel={t('admin.partnerApplications.notePlaceholder')}
               />
 
+              {invites[application._id] ? (
+                <View style={styles.inviteBox}>
+                  <Text style={styles.inviteTitle}>Lien d&apos;invitation (affiché une seule fois)</Text>
+                  <Text selectable style={styles.inviteUrl}>{invites[application._id]}</Text>
+                  <Pressable onPress={() => copyInvite(invites[application._id])} style={[styles.action, styles.actionApprove]}>
+                    <Text style={styles.actionApproveText}>Copier le lien</Text>
+                  </Pressable>
+                </View>
+              ) : null}
+
               <View style={styles.actions}>
                 <Pressable
                   disabled={busy}
@@ -219,14 +260,15 @@ export default function AdminPartnerApplicationsScreen() {
                   <Text style={styles.actionRejectText}>{t('admin.partnerApplications.reject')}</Text>
                 </Pressable>
                 <Pressable
-                  disabled={busy}
-                  onPress={() => setStatus(application, 'approved')}
+                  disabled={busy || application.status === 'rejected'}
+                  onPress={() => sendInvite(application)}
                   style={[styles.action, styles.actionApprove]}
+                  accessibilityRole="button"
                 >
                   {busy ? (
                     <ActivityIndicator color="#FBF6EC" />
                   ) : (
-                    <Text style={styles.actionApproveText}>{t('admin.partnerApplications.approve')}</Text>
+                    <Text style={styles.actionApproveText}>Approuver et inviter</Text>
                   )}
                 </Pressable>
               </View>
@@ -276,4 +318,7 @@ const styles = StyleSheet.create({
   actionRejectText: { color: '#C8331A', fontWeight: '800', fontSize: 13 },
   actionApprove: { backgroundColor: '#084424', flex: 1 },
   actionApproveText: { color: '#FBF6EC', fontWeight: '800', fontSize: 13 },
+  inviteBox: { marginTop: 12, backgroundColor: '#E3F0E8', borderRadius: 14, padding: 12, gap: 8 },
+  inviteTitle: { color: '#084424', fontWeight: '800', fontSize: 13 },
+  inviteUrl: { color: '#0D1C11', fontSize: 12 },
 });

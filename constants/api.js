@@ -187,6 +187,8 @@ export const API_ENDPOINTS = {
   // ─── Inscription des commerces ─────────────────────────
   partnerApplications: {
     create: () => '/partner-applications',
+    invite: (token) => `/partner-applications/invite/${safePathParam(token)}`,
+    inviteRegister: (token) => `/partner-applications/invite/${safePathParam(token)}/register`,
   },
 
   // ─── Nearby places ─────────────────────────────────────
@@ -246,6 +248,7 @@ export const API_ENDPOINTS = {
     fleetMap:         '/admin/fleet/map',
     partnerApplications: '/admin/partner-applications',
     partnerApplicationById: (id) => `/admin/partner-applications/${safePathParam(id)}`,
+    partnerApplicationInvite: (id) => `/admin/partner-applications/${safePathParam(id)}/invite`,
     auditLogs:        '/admin/audit-logs',
     auditLogById:     (id) => `/admin/audit-logs/${safePathParam(id)}`,
   },
