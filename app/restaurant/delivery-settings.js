@@ -12,6 +12,7 @@ import {
 import { router, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import * as Location from 'expo-location';
 
 import { useAuth } from '../../context/AuthContext';
 import { Brand, BrandFonts } from '../../constants/brand';
@@ -31,6 +32,7 @@ export default function RestaurantDeliverySettingsScreen() {
   const [minimum, setMinimum] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [locating, setLocating] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -70,6 +72,31 @@ export default function RestaurantDeliverySettingsScreen() {
       Alert.alert(t('common.error'), error?.message || '');
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Sans position, le restaurant n'apparaît pas aux clients à proximité.
+  const hasPosition = Number.isFinite(
+    Number(restaurant?.latitude ?? restaurant?.location?.latitude ?? NaN)
+  ) && (restaurant?.latitude ?? restaurant?.location?.latitude) !== null;
+
+  const placeRestaurant = async (mode) => {
+    try {
+      setLocating(true);
+      let payload = { locateFromAddress: true };
+      if (mode === 'device') {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') throw new Error(t('restaurant.deliverySettings.locationDenied'));
+        const position = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+        payload = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+      }
+      const updated = await updateMyRestaurant(restaurant._id, payload, token);
+      setRestaurant(updated);
+      Alert.alert(t('restaurant.deliverySettings.positionTitle'), t('restaurant.deliverySettings.positionSaved'));
+    } catch (error) {
+      Alert.alert(t('common.error'), error?.message || '');
+    } finally {
+      setLocating(false);
     }
   };
 
@@ -113,6 +140,37 @@ export default function RestaurantDeliverySettingsScreen() {
           </Pressable>
         </View>
       )}
+
+      {!loading && restaurant?._id ? (
+        <View style={[styles.card, styles.cardSpaced]}>
+          <Text style={styles.sectionTitle}>{t('restaurant.deliverySettings.positionTitle')}</Text>
+          <Text style={[styles.status, hasPosition ? styles.statusOk : styles.statusMissing]}>
+            {hasPosition
+              ? t('restaurant.deliverySettings.positionSet')
+              : t('restaurant.deliverySettings.positionMissing')}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            disabled={locating}
+            onPress={() => placeRestaurant('address')}
+            style={[styles.button, locating && styles.buttonDisabled]}
+          >
+            {locating ? (
+              <ActivityIndicator color={Brand.primaryForeground} />
+            ) : (
+              <Text style={styles.buttonText}>{t('restaurant.deliverySettings.useAddress')}</Text>
+            )}
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            disabled={locating}
+            onPress={() => placeRestaurant('device')}
+            style={[styles.buttonGhost, locating && styles.buttonDisabled]}
+          >
+            <Text style={styles.buttonGhostText}>{t('restaurant.deliverySettings.useDevice')}</Text>
+          </Pressable>
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
@@ -130,4 +188,11 @@ const styles = StyleSheet.create({
   button: { marginTop: 18, minHeight: 48, borderRadius: 14, backgroundColor: Brand.primary, justifyContent: 'center', alignItems: 'center' },
   buttonDisabled: { opacity: 0.6 },
   buttonText: { color: Brand.primaryForeground, fontWeight: '800', fontSize: 15 },
+  cardSpaced: { marginTop: 16 },
+  sectionTitle: { fontFamily: BrandFonts.displaySemi, fontSize: 18, color: Brand.foreground },
+  status: { marginTop: 8, fontSize: 14, lineHeight: 20 },
+  statusOk: { color: Brand.primary },
+  statusMissing: { color: Brand.ember },
+  buttonGhost: { marginTop: 10, minHeight: 48, borderRadius: 14, borderWidth: 1, borderColor: Brand.primary, justifyContent: 'center', alignItems: 'center' },
+  buttonGhostText: { color: Brand.primary, fontWeight: '800', fontSize: 15 },
 });

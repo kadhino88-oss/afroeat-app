@@ -466,7 +466,14 @@
       "minimum": "最低订单金额",
       "save": "保存",
       "saved": "配送设置已保存。",
-      "invalid": "请输入有效金额（0 或以上）。"
+      "invalid": "请输入有效金额（0 或以上）。",
+      "positionTitle": "地图位置",
+      "positionSet": "你的餐厅已在地图上：附近的顾客可以看到。",
+      "positionMissing": "你的餐厅尚未在地图上：顾客无法找到。",
+      "useAddress": "按餐厅地址定位",
+      "useDevice": "使用我当前的位置（我在餐厅）",
+      "positionSaved": "位置已保存。",
+      "locationDenied": "请允许定位以使用当前位置。"
     }
   },
   "profile": {

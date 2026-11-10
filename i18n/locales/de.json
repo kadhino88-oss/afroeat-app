@@ -466,7 +466,14 @@
       "minimum": "Mindestbestellwert",
       "save": "Speichern",
       "saved": "Liefereinstellungen gespeichert.",
-      "invalid": "Gib gültige Beträge ein (0 oder mehr)."
+      "invalid": "Gib gültige Beträge ein (0 oder mehr).",
+      "positionTitle": "Position auf der Karte",
+      "positionSet": "Dein Restaurant ist auf der Karte: Kunden in der Nähe sehen es.",
+      "positionMissing": "Dein Restaurant ist noch nicht auf der Karte: Kunden können es nicht finden.",
+      "useAddress": "An der Restaurantadresse platzieren",
+      "useDevice": "Meinen aktuellen Standort verwenden (ich bin im Restaurant)",
+      "positionSaved": "Position gespeichert.",
+      "locationDenied": "Erlaube den Standortzugriff, um deine aktuelle Position zu nutzen."
     }
   },
   "profile": {

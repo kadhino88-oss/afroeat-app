@@ -466,7 +466,14 @@
       "minimum": "Pedido mínimo",
       "save": "Guardar",
       "saved": "Ajustes de entrega guardados.",
-      "invalid": "Introduce importes válidos (0 o más)."
+      "invalid": "Introduce importes válidos (0 o más).",
+      "positionTitle": "Posición en el mapa",
+      "positionSet": "Tu restaurante está en el mapa: los clientes cercanos lo ven.",
+      "positionMissing": "Tu restaurante aún no está en el mapa: los clientes no pueden encontrarlo.",
+      "useAddress": "Ubicar en la dirección del restaurante",
+      "useDevice": "Usar mi ubicación actual (estoy en el restaurante)",
+      "positionSaved": "Posición guardada.",
+      "locationDenied": "Permite la ubicación para usar tu posición actual."
     }
   },
   "profile": {
