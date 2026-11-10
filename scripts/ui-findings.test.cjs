@@ -36,3 +36,11 @@ test("admin : la liste des livreurs mène à la fiche de vérification", () => {
   assert.match(src, /router\.push\(`\/admin\/drivers-details\/\$\{item\._id\}`\)/);
   assert.match(src, /t\('admin\.drivers\.title'\)/);
 });
+
+test('livreur : la disponibilité est enregistrée sur le serveur (plus un interrupteur local)', () => {
+  const src = read('app/livraison/profile.js');
+  assert.match(src, /await setMyAvailability\(next, token\)/);
+  assert.match(src, /setOnline\(Boolean\(profile\.isAvailable\)\)/);
+  assert.match(src, /useState\(false\)/);
+  assert.match(read('services/deliveryService.js'), /apiPut\(API_ENDPOINTS\.delivery\.availability, \{ available: Boolean\(available\) \}/);
+});

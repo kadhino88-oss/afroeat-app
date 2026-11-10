@@ -16,7 +16,11 @@ import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import AccountPrivacyLink from '../../components/AccountPrivacyLink';
 import { useAuth } from '../../context/AuthContext';
-import { getAssignedOrders } from '../../services/deliveryService';
+import {
+  getAssignedOrders,
+  getMyDeliveryProfile,
+  setMyAvailability,
+} from '../../services/deliveryService';
 
 /**
  * HELPERS
@@ -56,7 +60,9 @@ export default function LivraisonProfileScreen() {
 
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [online, setOnline] = useState(true);
+  // État réel enregistré sur le serveur (et non un simple interrupteur local).
+  const [online, setOnline] = useState(false);
+  const [savingOnline, setSavingOnline] = useState(false);
 
   /**
    * FETCH GLOBAL DRIVER DATA
@@ -71,9 +77,13 @@ export default function LivraisonProfileScreen() {
     try {
       setLoading(true);
 
-      const data = await getAssignedOrders(token);
+      const [data, profile] = await Promise.all([
+        getAssignedOrders(token),
+        getMyDeliveryProfile(token).catch(() => null),
+      ]);
 
       setOrders(normalizeArray(data));
+      if (profile) setOnline(Boolean(profile.isAvailable));
     } catch (e) {
       console.log(e);
       Alert.alert(t('common.error'), t('livraison.profile.errorLoadBody'));
@@ -115,15 +125,23 @@ export default function LivraisonProfileScreen() {
    * ACTIONS
    */
 
-  const toggleOnline = () => {
-    setOnline((prev) => !prev);
-
-    Alert.alert(
-      t('livraison.profile.statusTitle'),
-      !online
-        ? t('livraison.profile.onlineNowMessage')
-        : t('livraison.profile.offlineNowMessage')
-    );
+  const toggleOnline = async () => {
+    if (savingOnline) return;
+    const next = !online;
+    try {
+      setSavingOnline(true);
+      const saved = await setMyAvailability(next, token);
+      setOnline(saved);
+      Alert.alert(
+        t('livraison.profile.statusTitle'),
+        saved ? t('livraison.profile.onlineNowMessage') : t('livraison.profile.offlineNowMessage')
+      );
+    } catch (error) {
+      // Ex. : identité pas encore vérifiée par l'équipe AFROEAT.
+      Alert.alert(t('common.error'), error?.message || t('livraison.profile.errorLoadBody'));
+    } finally {
+      setSavingOnline(false);
+    }
   };
 
   /**
@@ -174,7 +192,7 @@ export default function LivraisonProfileScreen() {
               {online ? t('livraison.profile.onlineStatus') : t('livraison.profile.offlineStatus')}
             </Text>
 
-            <Switch value={online} onValueChange={toggleOnline} />
+            <Switch value={online} onValueChange={toggleOnline} disabled={savingOnline} />
           </View>
         </View>
 
