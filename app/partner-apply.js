@@ -23,7 +23,7 @@ const TYPES = ['restaurant', 'grocery', 'shop', 'drinks', 'other'];
 
 const typeFromCategory = (category) => {
   if (category === 'african-grocery') return 'grocery';
-  if (category === 'restaurant' || category === 'african-fast-food') return 'restaurant';
+  if (category === 'restaurant' || category === 'african-fast-food' || !category) return 'restaurant';
   return 'shop';
 };
 
