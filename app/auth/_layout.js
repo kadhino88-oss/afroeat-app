@@ -28,6 +28,7 @@ export default function AuthLayout() {
       <Stack.Screen name="register-client" />
       <Stack.Screen name="register-restaurant" />
       <Stack.Screen name="register-driver" />
+      <Stack.Screen name="invite" />
       {/* ⚠️ nom exact du fichier : pending-approval.js */}
       <Stack.Screen name="pending-approval" />
     </Stack>
