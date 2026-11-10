@@ -316,12 +316,7 @@ export default function RestaurantSettingsScreen() {
             iconBg="#F2ECE0"
             title={t('restaurant.settings.contactPrefTitle')}
             subtitle={t('restaurant.settings.contactPrefSubtitle')}
-            onPress={() =>
-              handleSimpleInfo(
-                t('restaurant.settings.contactInfoTitle'),
-                t('restaurant.settings.contactInfoBody')
-              )
-            }
+            onPress={() => router.push('/restaurant/restaurant-profile')}
           />
         </View>
 
@@ -348,12 +343,7 @@ export default function RestaurantSettingsScreen() {
             iconBg="#F3E7CA"
             title={t('restaurant.settings.deliveryZonesTitle')}
             subtitle={t('restaurant.settings.deliveryZonesSubtitle')}
-            onPress={() =>
-              handleSimpleInfo(
-                t('restaurant.settings.deliveryInfoTitle'),
-                t('restaurant.settings.deliveryInfoBody')
-              )
-            }
+            onPress={() => router.push('/restaurant/delivery-settings')}
           />
 
           <SettingRow

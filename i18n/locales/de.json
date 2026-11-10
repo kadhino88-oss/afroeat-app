@@ -240,27 +240,23 @@
       "opNotifSubtitle": "Warnungen zu Bestellungen, Vorfällen und kritischen Ereignissen",
       "contactPrefTitle": "Kontaktpräferenzen",
       "contactPrefSubtitle": "E-Mail, Telefon und sichtbare Informationen verwalten",
-      "contactInfoTitle": "Kontakt",
-      "contactInfoBody": "Dieses Modul kann später mit dem Restaurantprofil und den Kommunikationspräferenzen verknüpft werden.",
       "sectionBusinessConfig": "Geschäftskonfiguration",
       "hoursTitle": "Öffnungszeiten",
       "hoursSubtitle": "Die Öffnungszeiten des Restaurants festlegen",
       "hoursInfoTitle": "Öffnungszeiten",
-      "hoursInfoBody": "Hier kann später ein vollständiger Bildschirm zur Verwaltung der täglichen Öffnungszeiten angebunden werden.",
+      "hoursInfoBody": "Öffne oder schließe dein Restaurant vorerst mit „Bestellungen empfangen“. Automatische Öffnungszeiten pro Tag folgen in einer späteren Version.",
       "deliveryZonesTitle": "Lieferung & Zonen",
       "deliveryZonesSubtitle": "Liefergebühren und -gebiete steuern",
-      "deliveryInfoTitle": "Lieferung",
-      "deliveryInfoBody": "Als Nächstes kann ein Premium-Bildschirm für Liefergebiete und -gebühren erstellt werden.",
       "paymentTitle": "Zahlung & Abrechnung",
       "paymentSubtitle": "Die Finanzeinstellungen des Restaurants vorbereiten",
       "paymentInfoTitle": "Zahlung",
-      "paymentInfoBody": "Der Block Zahlung/Abrechnung kann mit Zahlungsmethoden und dem Backoffice verknüpft werden.",
+      "paymentInfoBody": "Auszahlungen an Restaurants werden vor dem Start mit dem AFROEAT-Team aktiviert. Wir kontaktieren dich, um dein Auszahlungskonto einzurichten.",
       "sectionAccount": "Konto",
       "profileTitle": "Restaurantprofil",
       "profileSubtitle": "Die Hauptinformationen des Kontos bearbeiten",
       "securityTitle": "Sicherheit",
       "securitySubtitle": "Passwort, Zugriff und Kontoschutz",
-      "securityInfoBody": "Das Sicherheitsmodul kann später mit einer erweiterten Passwort- und Sitzungsverwaltung verbunden werden.",
+      "securityInfoBody": "Um dein Passwort zu ändern oder einen verdächtigen Zugriff zu melden, kontaktiere das AFROEAT-Team über die Hilfeseite.",
       "logoutRowSubtitle": "Den Restaurantbereich verlassen"
     },
     "profile": {
@@ -462,6 +458,15 @@
       "addFirstDishButton": "Erstes Gericht hinzufügen",
       "dishesCount_one": "{{count}} Gericht",
       "dishesCount_other": "{{count}} Gerichte"
+    },
+    "deliverySettings": {
+      "title": "Lieferung",
+      "subtitle": "Lege Liefergebühr und Mindestbestellwert fest. Kunden sehen sie vor der Bestellung.",
+      "fee": "Liefergebühr",
+      "minimum": "Mindestbestellwert",
+      "save": "Speichern",
+      "saved": "Liefereinstellungen gespeichert.",
+      "invalid": "Gib gültige Beträge ein (0 oder mehr)."
     }
   },
   "profile": {

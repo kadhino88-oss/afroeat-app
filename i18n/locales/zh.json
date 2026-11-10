@@ -240,27 +240,23 @@
       "opNotifSubtitle": "订单、事件和关键事件提醒",
       "contactPrefTitle": "联系方式偏好",
       "contactPrefSubtitle": "管理邮箱、电话及可见信息",
-      "contactInfoTitle": "联系方式",
-      "contactInfoBody": "该模块之后可与餐厅资料和沟通偏好设置关联。",
       "sectionBusinessConfig": "业务配置",
       "hoursTitle": "营业时间",
       "hoursSubtitle": "设置餐厅的营业时间段",
       "hoursInfoTitle": "营业时间",
-      "hoursInfoBody": "之后可在此接入按天管理营业时间的完整页面。",
+      "hoursInfoBody": "目前请通过“接收订单”开启或关闭餐厅。按天自动营业时间将在后续版本中提供。",
       "deliveryZonesTitle": "配送与区域",
       "deliveryZonesSubtitle": "管理配送费用和配送范围",
-      "deliveryInfoTitle": "配送",
-      "deliveryInfoBody": "接下来可以创建一个专门用于配送区域和费用的高级页面。",
       "paymentTitle": "支付与结算",
       "paymentSubtitle": "准备餐厅的财务设置",
       "paymentInfoTitle": "支付",
-      "paymentInfoBody": "支付/结算模块之后可与支付方式和后台系统关联。",
+      "paymentInfoBody": "餐厅结算将在上线前与 AFROEAT 团队一起开通。我们会联系你设置收款账户。",
       "sectionAccount": "账户",
       "profileTitle": "餐厅资料",
       "profileSubtitle": "编辑账户的主要信息",
       "securityTitle": "安全",
       "securitySubtitle": "密码、访问权限及账户保护",
-      "securityInfoBody": "安全模块之后可与高级密码及会话管理功能关联。",
+      "securityInfoBody": "如需修改密码或报告可疑登录，请通过帮助页面联系 AFROEAT 团队。",
       "logoutRowSubtitle": "退出餐厅空间"
     },
     "profile": {
@@ -462,6 +458,15 @@
       "addFirstDishButton": "添加第一道菜品",
       "dishesCount_one": "{{count}} 道菜品",
       "dishesCount_other": "{{count}} 道菜品"
+    },
+    "deliverySettings": {
+      "title": "配送",
+      "subtitle": "设置配送费和最低订单金额。顾客下单前可以看到。",
+      "fee": "配送费",
+      "minimum": "最低订单金额",
+      "save": "保存",
+      "saved": "配送设置已保存。",
+      "invalid": "请输入有效金额（0 或以上）。"
     }
   },
   "profile": {

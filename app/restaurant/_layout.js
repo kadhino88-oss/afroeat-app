@@ -175,6 +175,7 @@ export default function RestaurantLayout() {
       <Stack.Screen name="RestaurantDashboard" />
       <Stack.Screen name="restaurant-profile" />
       <Stack.Screen name="restaurant-settings" />
+      <Stack.Screen name="delivery-settings" />
       <Stack.Screen name="restaurant-analytics" />
       <Stack.Screen name="MenuScreen" />
       <Stack.Screen name="AddMenuItem" />
