@@ -266,7 +266,8 @@ export default function RoleSelectionScreen() {
         return;
       }
 
-      router.push('/auth/register-driver');
+      // Livreur : candidature puis invitation (le livreur crée lui-même son compte).
+      router.push('/courier-apply');
     },
     [setSelectedRole]
   );

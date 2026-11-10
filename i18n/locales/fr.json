@@ -2011,7 +2011,8 @@
     "errorGeneric": "Impossible d’envoyer la demande. Vérifie les champs et réessaie.",
     "joinTitle": "C’est ton commerce ?",
     "joinText": "Ajoute ton logo et tes plats, et reçois des commandes avec une livraison pensée pour être plus abordable.",
-    "joinButton": "Rejoindre AFROEAT"
+    "joinButton": "Rejoindre AFROEAT",
+    "type_courier": "Livreur"
   },
   "paymentCards": {
     "noCardTitle": "Aucune carte enregistrée",

@@ -2011,7 +2011,8 @@
     "errorGeneric": "Impossibile inviare la richiesta. Controlla i campi e riprova.",
     "joinTitle": "È la tua attività?",
     "joinText": "Aggiungi il tuo logo e i tuoi piatti e ricevi ordini con una consegna pensata per essere più accessibile.",
-    "joinButton": "Unisciti a AFROEAT"
+    "joinButton": "Unisciti a AFROEAT",
+    "type_courier": "Corriere"
   },
   "paymentCards": {
     "noCardTitle": "Nessuna carta salvata",

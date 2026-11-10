@@ -82,8 +82,10 @@ export default function PartnerInviteScreen() {
     }
   };
 
+  const isCourier = invite?.businessType === 'courier';
+
   const goToLogin = () =>
-    router.replace({ pathname: '/auth/login', params: { role: 'restaurant', email: invite?.email || '' } });
+    router.replace({ pathname: '/auth/login', params: { role: isCourier ? 'livreur' : 'restaurant' } });
 
   return (
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -117,8 +119,14 @@ export default function PartnerInviteScreen() {
           <View style={styles.card}>
             <Text style={styles.title}>Bienvenue sur AfroEats</Text>
             <Text style={styles.text}>
-              Ta candidature pour <Text style={styles.strong}>{invite?.businessName}</Text> est acceptée. Crée ton
-              compte : tu choisis toi-même ton mot de passe, personne d&apos;autre ne le connaît.
+              {isCourier ? (
+                <>Ta candidature de livreur est acceptée.</>
+              ) : (
+                <>
+                  Ta candidature pour <Text style={styles.strong}>{invite?.businessName}</Text> est acceptée.
+                </>
+              )}{' '}
+              Crée ton compte : tu choisis toi-même ton mot de passe, personne d&apos;autre ne le connaît.
             </Text>
 
             <Text style={styles.label}>Adresse e-mail (celle de ta candidature)</Text>

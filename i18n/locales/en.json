@@ -2011,7 +2011,8 @@
     "errorGeneric": "Could not send the request. Check the fields and try again.",
     "joinTitle": "Is this your business?",
     "joinText": "Add your logo and dishes, and receive orders with a delivery designed to be more affordable.",
-    "joinButton": "Join AFROEAT"
+    "joinButton": "Join AFROEAT",
+    "type_courier": "Courier"
   },
   "paymentCards": {
     "noCardTitle": "No saved card",
