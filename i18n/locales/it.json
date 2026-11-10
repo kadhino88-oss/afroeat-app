@@ -1650,7 +1650,12 @@
     "drivers": {
       "driverNameFallback": "Fattorino Afroeat",
       "fetchErrorFallback": "Errore di caricamento",
-      "updateStatusErrorFallback": "Impossibile modificare lo stato"
+      "updateStatusErrorFallback": "Impossibile modificare lo stato",
+      "title": "Corrieri",
+      "subtitle": "Verifica identità e permesso di lavoro prima della prima consegna.",
+      "verified": "Verificato",
+      "toVerify": "Da verificare",
+      "openDetails": "Apri la scheda e verifica →"
     },
     "orders": {
       "fetchErrorFallback": "Impossibile caricare gli ordini.",

@@ -1650,7 +1650,12 @@
     "drivers": {
       "driverNameFallback": "Repartidor Afroeat",
       "fetchErrorFallback": "Error de carga",
-      "updateStatusErrorFallback": "No se pudo modificar el estado"
+      "updateStatusErrorFallback": "No se pudo modificar el estado",
+      "title": "Repartidores",
+      "subtitle": "Verifica la identidad y el permiso de trabajo antes de la primera entrega.",
+      "verified": "Verificado",
+      "toVerify": "Por verificar",
+      "openDetails": "Ver ficha y verificar →"
     },
     "orders": {
       "fetchErrorFallback": "No se pudieron cargar los pedidos.",

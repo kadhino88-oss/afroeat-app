@@ -30,3 +30,9 @@ test('page blanche après déploiement : rechargement unique', () => {
   assert.match(src, /< 30000\) return/);
   assert.match(read('app/_layout.js'), /import '\.\.\/services\/webChunkRecovery';/);
 });
+
+test("admin : la liste des livreurs mène à la fiche de vérification", () => {
+  const src = read('app/admin/drivers.js');
+  assert.match(src, /router\.push\(`\/admin\/drivers-details\/\$\{item\._id\}`\)/);
+  assert.match(src, /t\('admin\.drivers\.title'\)/);
+});

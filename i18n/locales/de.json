@@ -1650,7 +1650,12 @@
     "drivers": {
       "driverNameFallback": "Afroeat-Fahrer",
       "fetchErrorFallback": "Ladefehler",
-      "updateStatusErrorFallback": "Der Status konnte nicht geändert werden"
+      "updateStatusErrorFallback": "Der Status konnte nicht geändert werden",
+      "title": "Kuriere",
+      "subtitle": "Prüfe Identität und Arbeitserlaubnis vor der ersten Lieferung.",
+      "verified": "Geprüft",
+      "toVerify": "Zu prüfen",
+      "openDetails": "Profil öffnen und prüfen →"
     },
     "orders": {
       "fetchErrorFallback": "Bestellungen konnten nicht geladen werden.",
