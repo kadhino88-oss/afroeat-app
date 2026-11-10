@@ -2011,7 +2011,8 @@
     "errorGeneric": "No se pudo enviar la solicitud. Revisa los campos e inténtalo de nuevo.",
     "joinTitle": "¿Es tu comercio?",
     "joinText": "Añade tu logotipo y tus platos, y recibe pedidos con un reparto pensado para ser más asequible.",
-    "joinButton": "Unirse a AFROEAT"
+    "joinButton": "Unirse a AFROEAT",
+    "type_courier": "Repartidor"
   },
   "paymentCards": {
     "noCardTitle": "Ninguna tarjeta guardada",

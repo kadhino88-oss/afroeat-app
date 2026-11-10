@@ -173,7 +173,7 @@ const getRegisterRouteByRole = (role) => {
   }
 
   if (normalized === 'livreur') {
-    return '/auth/register-driver';
+    return '/courier-apply';
   }
 
   return '/auth/register-client';

@@ -2011,7 +2011,8 @@
     "errorGeneric": "无法提交申请。请检查各项内容后重试。",
     "joinTitle": "这是你的商家吗？",
     "joinText": "添加你的标志和菜品，通过力求更实惠的配送接收订单。",
-    "joinButton": "加入 AFROEAT"
+    "joinButton": "加入 AFROEAT",
+    "type_courier": "配送员"
   },
   "paymentCards": {
     "noCardTitle": "尚未保存银行卡",
