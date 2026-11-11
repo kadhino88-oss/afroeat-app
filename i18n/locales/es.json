@@ -1130,7 +1130,8 @@
       "sessionUnavailable": "El contexto de la sesión no está disponible.",
       "sessionSaveFailed": "No se pudo guardar la sesión.",
       "failedTitle": "Inicio de sesión fallido",
-      "serverErrorFallback": "Error del servidor, inténtalo de nuevo."
+      "serverErrorFallback": "Error del servidor, inténtalo de nuevo.",
+      "forgotPassword": "¿Olvidaste tu contraseña?"
     },
     "roles": {
       "client": {
@@ -2113,5 +2114,22 @@
     "errorSame": "La nueva contraseña debe ser distinta de la anterior.",
     "errorIncorrect": "La contraseña actual es incorrecta.",
     "errorGeneric": "No se pudo cambiar la contraseña. Inténtalo de nuevo."
+  },
+  "forgotPassword": {
+    "title": "Contraseña olvidada",
+    "subtitle": "Introduce el correo de tu cuenta. Si existe, te enviaremos un enlace para elegir una nueva contraseña.",
+    "emailLabel": "Correo electrónico",
+    "submit": "Enviar el enlace",
+    "sent": "Si hay una cuenta con este correo, acabamos de enviar un mensaje. El enlace es válido durante 1 hora. Revisa también tu carpeta de spam.",
+    "errorEmail": "Introduce un correo válido.",
+    "errorGeneric": "No se pudo enviar. Inténtalo de nuevo.",
+    "backToLogin": "Volver al inicio de sesión"
+  },
+  "resetPassword": {
+    "title": "Nueva contraseña",
+    "invalidLink": "Este enlace no es válido o ha caducado. Solicita uno nuevo.",
+    "requestNew": "Solicitar un nuevo enlace",
+    "success": "Tu contraseña ha sido cambiada. Ya puedes iniciar sesión.",
+    "goLogin": "Iniciar sesión"
   }
 }

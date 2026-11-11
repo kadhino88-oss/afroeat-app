@@ -1130,7 +1130,8 @@
       "sessionUnavailable": "Le contexte de session est indisponible.",
       "sessionSaveFailed": "Impossible d'enregistrer la session.",
       "failedTitle": "Connexion impossible",
-      "serverErrorFallback": "Erreur serveur, réessaie."
+      "serverErrorFallback": "Erreur serveur, réessaie.",
+      "forgotPassword": "Mot de passe oublié ?"
     },
     "roles": {
       "client": {
@@ -2113,5 +2114,22 @@
     "errorSame": "Le nouveau mot de passe doit être différent de l'ancien.",
     "errorIncorrect": "Le mot de passe actuel est incorrect.",
     "errorGeneric": "Modification impossible. Réessaie."
+  },
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "subtitle": "Entre l'adresse e-mail de ton compte. Si elle existe, nous t'envoyons un lien pour choisir un nouveau mot de passe.",
+    "emailLabel": "Adresse e-mail",
+    "submit": "Envoyer le lien",
+    "sent": "Si un compte correspond à cette adresse, un e-mail vient d'être envoyé. Le lien est valable 1 heure. Pense à vérifier tes courriers indésirables.",
+    "errorEmail": "Entre une adresse e-mail valide.",
+    "errorGeneric": "Envoi impossible. Réessaie.",
+    "backToLogin": "Retour à la connexion"
+  },
+  "resetPassword": {
+    "title": "Nouveau mot de passe",
+    "invalidLink": "Ce lien est invalide ou a expiré. Demande un nouveau lien.",
+    "requestNew": "Demander un nouveau lien",
+    "success": "Ton mot de passe a été modifié. Tu peux maintenant te connecter.",
+    "goLogin": "Me connecter"
   }
 }
