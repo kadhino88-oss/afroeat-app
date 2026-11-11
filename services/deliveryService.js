@@ -512,3 +512,12 @@ export const setMyAvailability = async (available, token) => {
   const response = await apiPut(API_ENDPOINTS.delivery.availability, { available: Boolean(available) }, token);
   return Boolean(response?.available);
 };
+
+/** Gains réels du livreur (sa part de la livraison, pas le total de la commande). */
+export const getMyDeliveryEarnings = async (token) => {
+  const response = await apiGet(API_ENDPOINTS.delivery.earnings, token);
+  return {
+    total: Number(response?.totalEarnings) || 0,
+    currency: String(response?.currency || 'EUR').toUpperCase(),
+  };
+};
