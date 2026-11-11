@@ -19,6 +19,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   getAssignedOrders,
   getMyDeliveryProfile,
+  getMyDeliveryEarnings,
   setMyAvailability,
 } from '../../services/deliveryService';
 
@@ -37,7 +38,14 @@ const normalizeNumber = (v, f = 0) => {
 
 const normalizeArray = (v) => (Array.isArray(v) ? v : []);
 
-const formatPrice = (v) => `${normalizeNumber(v).toFixed(2)} €`;
+const formatPrice = (v, currency = 'EUR') => {
+  const code = String(currency || 'EUR').toUpperCase();
+  try {
+    return new Intl.NumberFormat('fr-CH', { style: 'currency', currency: code }).format(normalizeNumber(v));
+  } catch {
+    return `${normalizeNumber(v).toFixed(2)} ${code}`;
+  }
+};
 
 /**
  * SCREEN
@@ -59,6 +67,7 @@ export default function LivraisonProfileScreen() {
   );
 
   const [orders, setOrders] = useState([]);
+  const [earnings, setEarnings] = useState({ total: 0, currency: 'EUR' });
   const [loading, setLoading] = useState(true);
   // État réel enregistré sur le serveur (et non un simple interrupteur local).
   const [online, setOnline] = useState(false);
@@ -77,12 +86,14 @@ export default function LivraisonProfileScreen() {
     try {
       setLoading(true);
 
-      const [data, profile] = await Promise.all([
+      const [data, profile, myEarnings] = await Promise.all([
         getAssignedOrders(token),
         getMyDeliveryProfile(token).catch(() => null),
+        getMyDeliveryEarnings(token).catch(() => null),
       ]);
 
       setOrders(normalizeArray(data));
+      if (myEarnings) setEarnings(myEarnings);
       if (profile) setOnline(Boolean(profile.isAvailable));
     } catch (e) {
       console.log(e);
@@ -105,18 +116,12 @@ export default function LivraisonProfileScreen() {
   const stats = useMemo(() => {
     const delivered = orders.filter((o) => o?.status === 'Livrée');
 
-    const revenue = delivered.reduce(
-      (s, o) => s + normalizeNumber(o?.totalPrice),
-      0
-    );
-
     const active = orders.filter(
       (o) => o?.status !== 'Livrée'
     ).length;
 
     return {
       total: delivered.length,
-      revenue,
       active,
     };
   }, [orders]);
@@ -202,7 +207,7 @@ export default function LivraisonProfileScreen() {
 
           <Text>{t('livraison.profile.deliveriesCountLabel', { count: stats.total })}</Text>
           <Text>{t('livraison.profile.activeCountLabel', { count: stats.active })}</Text>
-          <Text>{t('livraison.profile.revenueLabel', { amount: formatPrice(stats.revenue) })}</Text>
+          <Text>{t('livraison.profile.revenueLabel', { amount: formatPrice(earnings.total, earnings.currency) })}</Text>
         </View>
 
         {/* NAV */}
