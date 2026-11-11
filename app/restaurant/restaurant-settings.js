@@ -379,12 +379,7 @@ export default function RestaurantSettingsScreen() {
             iconBg="#E3F0E8"
             title={t('restaurant.settings.securityTitle')}
             subtitle={t('restaurant.settings.securitySubtitle')}
-            onPress={() =>
-              handleSimpleInfo(
-                t('restaurant.settings.securityTitle'),
-                t('restaurant.settings.securityInfoBody')
-              )
-            }
+            onPress={() => router.push('/change-password')}
           />
 
           <SettingRow

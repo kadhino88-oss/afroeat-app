@@ -2071,5 +2071,23 @@
     "permissionError": "Permite el acceso a tus fotos para elegir una.",
     "tooLargeError": "Esta foto es demasiado pesada. Prueba con otra.",
     "uploadError": "No se pudo enviar. Comprueba tu conexión e inténtalo de nuevo."
+  },
+  "changePassword": {
+    "title": "Cambiar la contraseña",
+    "linkText": "Actualiza tu contraseña.",
+    "subtitle": "Por tu seguridad, introduce tu contraseña actual y elige una nueva.",
+    "currentLabel": "Contraseña actual",
+    "newLabel": "Nueva contraseña",
+    "confirmLabel": "Confirmar la nueva contraseña",
+    "rules": "Mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial.",
+    "submit": "Cambiar la contraseña",
+    "success": "Tu contraseña ha sido cambiada.",
+    "done": "Listo",
+    "errorRequired": "Rellena todos los campos.",
+    "errorWeak": "La nueva contraseña es demasiado débil: mínimo 8 caracteres con mayúscula, minúscula, número y carácter especial.",
+    "errorMismatch": "Las dos contraseñas nuevas no coinciden.",
+    "errorSame": "La nueva contraseña debe ser distinta de la anterior.",
+    "errorIncorrect": "La contraseña actual es incorrecta.",
+    "errorGeneric": "No se pudo cambiar la contraseña. Inténtalo de nuevo."
   }
 }

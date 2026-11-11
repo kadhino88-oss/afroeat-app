@@ -2071,5 +2071,23 @@
     "permissionError": "Autorise l'accès à tes photos pour en choisir une.",
     "tooLargeError": "Cette photo est trop lourde. Essaie-en une autre.",
     "uploadError": "Envoi impossible. Vérifie ta connexion et réessaie."
+  },
+  "changePassword": {
+    "title": "Changer le mot de passe",
+    "linkText": "Mets à jour ton mot de passe.",
+    "subtitle": "Pour ta sécurité, entre ton mot de passe actuel puis choisis-en un nouveau.",
+    "currentLabel": "Mot de passe actuel",
+    "newLabel": "Nouveau mot de passe",
+    "confirmLabel": "Confirmer le nouveau mot de passe",
+    "rules": "8 caractères minimum, avec majuscule, minuscule, chiffre et caractère spécial.",
+    "submit": "Modifier le mot de passe",
+    "success": "Ton mot de passe a été modifié.",
+    "done": "Terminé",
+    "errorRequired": "Remplis tous les champs.",
+    "errorWeak": "Le nouveau mot de passe est trop faible : 8 caractères minimum avec majuscule, minuscule, chiffre et caractère spécial.",
+    "errorMismatch": "Les deux nouveaux mots de passe ne correspondent pas.",
+    "errorSame": "Le nouveau mot de passe doit être différent de l'ancien.",
+    "errorIncorrect": "Le mot de passe actuel est incorrect.",
+    "errorGeneric": "Modification impossible. Réessaie."
   }
 }
