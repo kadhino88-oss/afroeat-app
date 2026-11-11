@@ -1042,7 +1042,10 @@
       "preparing": "En preparación",
       "onTheWay": "En camino",
       "delivered": "Entregado"
-    }
+    },
+    "cancelOrder": "Cancelar el pedido",
+    "cancelConfirm": "Confirmar la cancelación",
+    "cancelError": "No se pudo cancelar. Inténtalo de nuevo."
   },
   "payment": {
     "orderNotFoundBody": "Pedido no encontrado.",
