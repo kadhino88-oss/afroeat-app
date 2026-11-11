@@ -294,7 +294,12 @@
       "preparationTimeSaveError": "无法保存备餐时间。",
       "statusLabel": "状态",
       "viewMenuButton": "查看我的菜单",
-      "viewOrdersButton": "查看我的订单"
+      "viewOrdersButton": "查看我的订单",
+      "logoTitle": "餐厅标志",
+      "logoHelp": "您的标志将显示在餐厅名称旁边。",
+      "coverTitle": "封面照片",
+      "coverHelp": "一张展示您的美食或店面的好照片。",
+      "imageSaveError": "无法保存照片。"
     },
     "menuScreen": {
       "dishFallback": "菜品",
@@ -2057,5 +2062,14 @@
     "usedCard": "使用的银行卡",
     "change": "更换",
     "addCard": "添加银行卡"
+  },
+  "imageUpload": {
+    "choose": "选择照片",
+    "change": "更换照片",
+    "remove": "移除",
+    "noPhoto": "暂无照片",
+    "permissionError": "请允许访问相册以选择照片。",
+    "tooLargeError": "这张照片太大，请换一张。",
+    "uploadError": "上传失败，请检查网络后重试。"
   }
 }

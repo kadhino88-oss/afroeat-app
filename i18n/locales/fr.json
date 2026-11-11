@@ -294,7 +294,12 @@
       "preparationTimeSaveError": "Impossible d’enregistrer le délai.",
       "statusLabel": "Statut",
       "viewMenuButton": "Voir mon menu",
-      "viewOrdersButton": "Voir mes commandes"
+      "viewOrdersButton": "Voir mes commandes",
+      "logoTitle": "Logo du restaurant",
+      "logoHelp": "Ton logo s'affiche à côté du nom de ton restaurant.",
+      "coverTitle": "Photo de couverture",
+      "coverHelp": "Une belle photo de ta cuisine ou de ta devanture.",
+      "imageSaveError": "Impossible d'enregistrer la photo."
     },
     "menuScreen": {
       "dishFallback": "Plat",
@@ -2057,5 +2062,14 @@
     "usedCard": "Carte utilisée",
     "change": "Changer",
     "addCard": "Ajouter une carte"
+  },
+  "imageUpload": {
+    "choose": "Choisir une photo",
+    "change": "Changer la photo",
+    "remove": "Retirer",
+    "noPhoto": "Aucune photo",
+    "permissionError": "Autorise l'accès à tes photos pour en choisir une.",
+    "tooLargeError": "Cette photo est trop lourde. Essaie-en une autre.",
+    "uploadError": "Envoi impossible. Vérifie ta connexion et réessaie."
   }
 }

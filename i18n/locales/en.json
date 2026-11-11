@@ -294,7 +294,12 @@
       "preparationTimeSaveError": "Could not save the preparation time.",
       "statusLabel": "Status",
       "viewMenuButton": "View my menu",
-      "viewOrdersButton": "View my orders"
+      "viewOrdersButton": "View my orders",
+      "logoTitle": "Restaurant logo",
+      "logoHelp": "Your logo appears next to your restaurant name.",
+      "coverTitle": "Cover photo",
+      "coverHelp": "A nice photo of your food or your storefront.",
+      "imageSaveError": "Could not save the photo."
     },
     "menuScreen": {
       "dishFallback": "Dish",
@@ -2057,5 +2062,14 @@
     "usedCard": "Card used",
     "change": "Change",
     "addCard": "Add a card"
+  },
+  "imageUpload": {
+    "choose": "Choose a photo",
+    "change": "Change photo",
+    "remove": "Remove",
+    "noPhoto": "No photo",
+    "permissionError": "Allow access to your photos to pick one.",
+    "tooLargeError": "This photo is too large. Try another one.",
+    "uploadError": "Upload failed. Check your connection and try again."
   }
 }
