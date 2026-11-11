@@ -772,7 +772,7 @@ export default function OrderDetailScreen() {
             );
           })}
 
-          {order?.status === 'En attente' && (
+          {order?.status === 'pending' && (
             <View style={styles.cancelAction}>
               <Pressable
                 accessibilityRole="button"
