@@ -1042,7 +1042,10 @@
       "preparing": "Préparation",
       "onTheWay": "En livraison",
       "delivered": "Livrée"
-    }
+    },
+    "cancelOrder": "Annuler la commande",
+    "cancelConfirm": "Confirmer l'annulation",
+    "cancelError": "Annulation impossible. Réessaie."
   },
   "payment": {
     "orderNotFoundBody": "Commande introuvable.",

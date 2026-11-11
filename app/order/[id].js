@@ -18,7 +18,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import { useAuth } from '../../context/AuthContext';
-import { getOrderById, getOrderTracking } from '../../services/orderService';
+import { getOrderById, getOrderTracking, updateOrderStatus } from '../../services/orderService';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -332,6 +332,8 @@ export default function OrderDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [cancelStep, setCancelStep] = useState('idle'); // idle | confirm | busy
+  const [cancelError, setCancelError] = useState('');
   const requestInFlightRef = useRef(false);
   const hasOrderRef = useRef(false);
   const loadedOrderIdRef = useRef(null);
@@ -770,6 +772,37 @@ export default function OrderDetailScreen() {
             );
           })}
 
+          {order?.status === 'En attente' && (
+            <View style={styles.cancelAction}>
+              <Pressable
+                accessibilityRole="button"
+                disabled={cancelStep === 'busy'}
+                style={styles.cancelButton}
+                onPress={async () => {
+                  if (cancelStep === 'idle') {
+                    setCancelStep('confirm');
+                    return;
+                  }
+                  try {
+                    setCancelStep('busy');
+                    setCancelError('');
+                    await updateOrderStatus(order._id, 'Annulée', token);
+                    setCancelStep('idle');
+                    await load(false, true);
+                  } catch (e) {
+                    setCancelStep('idle');
+                    setCancelError(e?.message || t('order.cancelError'));
+                  }
+                }}
+              >
+                <Text style={styles.cancelButtonText}>
+                  {cancelStep === 'confirm' ? t('order.cancelConfirm') : cancelStep === 'busy' ? '…' : t('order.cancelOrder')}
+                </Text>
+              </Pressable>
+              {!!cancelError && <Text style={styles.cancelErrorText}>{cancelError}</Text>}
+            </View>
+          )}
+
           {normalizeStatus(order?.status) === 'cancelled' && (
             <View style={styles.cancelBox}>
               <Ionicons name="close-circle-outline" size={18} color="#C8331A" />
@@ -830,6 +863,10 @@ export default function OrderDetailScreen() {
  */
 
 const styles = StyleSheet.create({
+  cancelAction: { marginTop: 14 },
+  cancelButton: { backgroundColor: '#F8E1DD', borderRadius: 14, paddingVertical: 12, alignItems: 'center' },
+  cancelButtonText: { color: '#C8331A', fontWeight: '800', fontSize: 14 },
+  cancelErrorText: { color: '#C8331A', marginTop: 8, fontSize: 13 },
   container: {
     flex: 1,
     backgroundColor: '#FBF6EC',
