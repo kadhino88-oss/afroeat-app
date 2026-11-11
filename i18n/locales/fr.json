@@ -498,6 +498,27 @@
       "useDevice": "Utiliser ma position actuelle (je suis au restaurant)",
       "positionSaved": "Position enregistrée.",
       "locationDenied": "Autorise la localisation pour utiliser ta position actuelle."
+    },
+    "openingHours": {
+      "title": "Horaires d'ouverture",
+      "subtitle": "Tes clients ne peuvent commander que pendant tes horaires. Le fuseau utilisé est celui de Genève.",
+      "enable": "Utiliser des horaires",
+      "enabledHelp": "Les commandes sont acceptées uniquement pendant ces créneaux (et si ton restaurant est ouvert).",
+      "disabledHelp": "Sans horaires, c'est le bouton Ouvert / Fermé qui décide.",
+      "closed": "Fermé",
+      "opensAt": "ouverture",
+      "closesAt": "fermeture",
+      "midnightHelp": "Une fermeture après minuit est possible, par exemple 18:00 – 02:00.",
+      "save": "Enregistrer les horaires",
+      "saved": "Tes horaires sont enregistrés.",
+      "invalid": "Horaire invalide pour {{day}} (format 11:00, ouverture et fermeture différentes).",
+      "day_mon": "Lundi",
+      "day_tue": "Mardi",
+      "day_wed": "Mercredi",
+      "day_thu": "Jeudi",
+      "day_fri": "Vendredi",
+      "day_sat": "Samedi",
+      "day_sun": "Dimanche"
     }
   },
   "profile": {

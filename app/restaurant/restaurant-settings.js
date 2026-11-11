@@ -329,12 +329,7 @@ export default function RestaurantSettingsScreen() {
             iconBg="#F3E7CA"
             title={t('restaurant.settings.hoursTitle')}
             subtitle={t('restaurant.settings.hoursSubtitle')}
-            onPress={() =>
-              handleSimpleInfo(
-                t('restaurant.settings.hoursInfoTitle'),
-                t('restaurant.settings.hoursInfoBody')
-              )
-            }
+            onPress={() => router.push('/restaurant/opening-hours')}
           />
 
           <SettingRow

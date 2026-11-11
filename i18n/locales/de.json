@@ -498,6 +498,27 @@
       "useDevice": "Meinen aktuellen Standort verwenden (ich bin im Restaurant)",
       "positionSaved": "Position gespeichert.",
       "locationDenied": "Erlaube den Standortzugriff, um deine aktuelle Position zu nutzen."
+    },
+    "openingHours": {
+      "title": "Öffnungszeiten",
+      "subtitle": "Kunden können nur während deiner Öffnungszeiten bestellen. Es gilt die Zeitzone von Genf.",
+      "enable": "Öffnungszeiten verwenden",
+      "enabledHelp": "Bestellungen werden nur in diesen Zeitfenstern angenommen (und wenn dein Restaurant geöffnet ist).",
+      "disabledHelp": "Ohne Öffnungszeiten entscheidet der Schalter Geöffnet / Geschlossen.",
+      "closed": "Geschlossen",
+      "opensAt": "Öffnung",
+      "closesAt": "Schließung",
+      "midnightHelp": "Eine Schließung nach Mitternacht ist möglich, z. B. 18:00 – 02:00.",
+      "save": "Öffnungszeiten speichern",
+      "saved": "Deine Öffnungszeiten sind gespeichert.",
+      "invalid": "Ungültige Zeiten für {{day}} (Format 11:00, Öffnung und Schließung müssen verschieden sein).",
+      "day_mon": "Montag",
+      "day_tue": "Dienstag",
+      "day_wed": "Mittwoch",
+      "day_thu": "Donnerstag",
+      "day_fri": "Freitag",
+      "day_sat": "Samstag",
+      "day_sun": "Sonntag"
     }
   },
   "profile": {
