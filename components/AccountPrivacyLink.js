@@ -8,6 +8,22 @@ export default function AccountPrivacyLink() {
   const { t } = useTranslation();
 
   return (
+    <>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={t('changePassword.title')}
+      onPress={() => router.push('/change-password')}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+    >
+      <View style={styles.iconWrap}>
+        <Ionicons name="key-outline" size={21} color="#084424" />
+      </View>
+      <View style={styles.copy}>
+        <Text style={styles.title}>{t('changePassword.title')}</Text>
+        <Text style={styles.subtitle}>{t('changePassword.linkText')}</Text>
+      </View>
+      <Ionicons name="chevron-forward" size={18} color="#606D5D" />
+    </Pressable>
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={t('profile.home.dataPrivacyTitle')}
@@ -23,6 +39,7 @@ export default function AccountPrivacyLink() {
       </View>
       <Ionicons name="chevron-forward" size={18} color="#606D5D" />
     </Pressable>
+    </>
   );
 }
 

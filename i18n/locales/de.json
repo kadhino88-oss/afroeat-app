@@ -2071,5 +2071,23 @@
     "permissionError": "Erlaube den Zugriff auf deine Fotos, um eines auszuwählen.",
     "tooLargeError": "Dieses Foto ist zu groß. Versuche ein anderes.",
     "uploadError": "Upload fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut."
+  },
+  "changePassword": {
+    "title": "Passwort ändern",
+    "linkText": "Aktualisiere dein Passwort.",
+    "subtitle": "Gib zu deiner Sicherheit dein aktuelles Passwort ein und wähle ein neues.",
+    "currentLabel": "Aktuelles Passwort",
+    "newLabel": "Neues Passwort",
+    "confirmLabel": "Neues Passwort bestätigen",
+    "rules": "Mindestens 8 Zeichen mit Groß- und Kleinbuchstaben, Ziffer und Sonderzeichen.",
+    "submit": "Passwort ändern",
+    "success": "Dein Passwort wurde geändert.",
+    "done": "Fertig",
+    "errorRequired": "Fülle alle Felder aus.",
+    "errorWeak": "Das neue Passwort ist zu schwach: mindestens 8 Zeichen mit Groß- und Kleinbuchstaben, Ziffer und Sonderzeichen.",
+    "errorMismatch": "Die beiden neuen Passwörter stimmen nicht überein.",
+    "errorSame": "Das neue Passwort muss sich vom alten unterscheiden.",
+    "errorIncorrect": "Das aktuelle Passwort ist falsch.",
+    "errorGeneric": "Passwort konnte nicht geändert werden. Versuche es erneut."
   }
 }

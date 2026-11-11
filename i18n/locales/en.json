@@ -2071,5 +2071,23 @@
     "permissionError": "Allow access to your photos to pick one.",
     "tooLargeError": "This photo is too large. Try another one.",
     "uploadError": "Upload failed. Check your connection and try again."
+  },
+  "changePassword": {
+    "title": "Change password",
+    "linkText": "Update your password.",
+    "subtitle": "For your security, enter your current password, then choose a new one.",
+    "currentLabel": "Current password",
+    "newLabel": "New password",
+    "confirmLabel": "Confirm new password",
+    "rules": "At least 8 characters, with an uppercase letter, a lowercase letter, a digit and a special character.",
+    "submit": "Change password",
+    "success": "Your password has been changed.",
+    "done": "Done",
+    "errorRequired": "Fill in all fields.",
+    "errorWeak": "The new password is too weak: at least 8 characters with an uppercase letter, a lowercase letter, a digit and a special character.",
+    "errorMismatch": "The two new passwords do not match.",
+    "errorSame": "The new password must be different from the old one.",
+    "errorIncorrect": "The current password is incorrect.",
+    "errorGeneric": "Could not change the password. Try again."
   }
 }

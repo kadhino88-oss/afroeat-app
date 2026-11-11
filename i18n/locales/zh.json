@@ -2071,5 +2071,23 @@
     "permissionError": "请允许访问相册以选择照片。",
     "tooLargeError": "这张照片太大，请换一张。",
     "uploadError": "上传失败，请检查网络后重试。"
+  },
+  "changePassword": {
+    "title": "修改密码",
+    "linkText": "更新您的密码。",
+    "subtitle": "为了您的安全，请输入当前密码，然后设置新密码。",
+    "currentLabel": "当前密码",
+    "newLabel": "新密码",
+    "confirmLabel": "确认新密码",
+    "rules": "至少 8 个字符，包含大写字母、小写字母、数字和特殊字符。",
+    "submit": "修改密码",
+    "success": "您的密码已修改。",
+    "done": "完成",
+    "errorRequired": "请填写所有字段。",
+    "errorWeak": "新密码太弱：至少 8 个字符，包含大写字母、小写字母、数字和特殊字符。",
+    "errorMismatch": "两次输入的新密码不一致。",
+    "errorSame": "新密码必须与旧密码不同。",
+    "errorIncorrect": "当前密码不正确。",
+    "errorGeneric": "无法修改密码，请重试。"
   }
 }
