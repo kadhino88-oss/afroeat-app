@@ -121,10 +121,6 @@ export default function RestaurantSettingsScreen() {
     router.replace('/restaurant/RestaurantDashboard');
   }, []);
 
-  const handleSimpleInfo = useCallback((title, message) => {
-    Alert.alert(title, message);
-  }, []);
-
   const handleSaveCriticalPreferences = useCallback(async () => {
     if (!token || !restaurantId) {
       Alert.alert(t('common.error'), t('restaurant.settings.errorSaveBody'));
@@ -347,12 +343,7 @@ export default function RestaurantSettingsScreen() {
             iconBg="#E3F0E8"
             title={t('restaurant.settings.paymentTitle')}
             subtitle={t('restaurant.settings.paymentSubtitle')}
-            onPress={() =>
-              handleSimpleInfo(
-                t('restaurant.settings.paymentInfoTitle'),
-                t('restaurant.settings.paymentInfoBody')
-              )
-            }
+            onPress={() => router.push('/account/payouts')}
           />
         </View>
 
