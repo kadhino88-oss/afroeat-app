@@ -1130,7 +1130,8 @@
       "sessionUnavailable": "The session context is unavailable.",
       "sessionSaveFailed": "Could not save the session.",
       "failedTitle": "Login failed",
-      "serverErrorFallback": "Server error, try again."
+      "serverErrorFallback": "Server error, try again.",
+      "forgotPassword": "Forgot password?"
     },
     "roles": {
       "client": {
@@ -2113,5 +2114,22 @@
     "errorSame": "The new password must be different from the old one.",
     "errorIncorrect": "The current password is incorrect.",
     "errorGeneric": "Could not change the password. Try again."
+  },
+  "forgotPassword": {
+    "title": "Forgot password",
+    "subtitle": "Enter your account's email address. If it exists, we'll send you a link to choose a new password.",
+    "emailLabel": "Email address",
+    "submit": "Send the link",
+    "sent": "If an account matches this address, an email has just been sent. The link is valid for 1 hour. Check your spam folder too.",
+    "errorEmail": "Enter a valid email address.",
+    "errorGeneric": "Could not send. Try again.",
+    "backToLogin": "Back to login"
+  },
+  "resetPassword": {
+    "title": "New password",
+    "invalidLink": "This link is invalid or has expired. Request a new one.",
+    "requestNew": "Request a new link",
+    "success": "Your password has been changed. You can now log in.",
+    "goLogin": "Log in"
   }
 }

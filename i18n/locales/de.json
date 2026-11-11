@@ -1130,7 +1130,8 @@
       "sessionUnavailable": "Der Sitzungskontext ist nicht verfügbar.",
       "sessionSaveFailed": "Die Sitzung konnte nicht gespeichert werden.",
       "failedTitle": "Anmeldung fehlgeschlagen",
-      "serverErrorFallback": "Serverfehler, versuche es erneut."
+      "serverErrorFallback": "Serverfehler, versuche es erneut.",
+      "forgotPassword": "Passwort vergessen?"
     },
     "roles": {
       "client": {
@@ -2113,5 +2114,22 @@
     "errorSame": "Das neue Passwort muss sich vom alten unterscheiden.",
     "errorIncorrect": "Das aktuelle Passwort ist falsch.",
     "errorGeneric": "Passwort konnte nicht geändert werden. Versuche es erneut."
+  },
+  "forgotPassword": {
+    "title": "Passwort vergessen",
+    "subtitle": "Gib die E-Mail-Adresse deines Kontos ein. Falls sie existiert, senden wir dir einen Link, um ein neues Passwort zu wählen.",
+    "emailLabel": "E-Mail-Adresse",
+    "submit": "Link senden",
+    "sent": "Falls ein Konto zu dieser Adresse gehört, wurde soeben eine E-Mail gesendet. Der Link ist 1 Stunde gültig. Prüfe auch deinen Spam-Ordner.",
+    "errorEmail": "Gib eine gültige E-Mail-Adresse ein.",
+    "errorGeneric": "Senden nicht möglich. Versuche es erneut.",
+    "backToLogin": "Zurück zur Anmeldung"
+  },
+  "resetPassword": {
+    "title": "Neues Passwort",
+    "invalidLink": "Dieser Link ist ungültig oder abgelaufen. Fordere einen neuen an.",
+    "requestNew": "Neuen Link anfordern",
+    "success": "Dein Passwort wurde geändert. Du kannst dich jetzt anmelden.",
+    "goLogin": "Anmelden"
   }
 }

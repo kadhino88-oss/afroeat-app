@@ -1130,7 +1130,8 @@
       "sessionUnavailable": "会话上下文不可用。",
       "sessionSaveFailed": "无法保存会话。",
       "failedTitle": "登录失败",
-      "serverErrorFallback": "服务器错误，请重试。"
+      "serverErrorFallback": "服务器错误，请重试。",
+      "forgotPassword": "忘记密码？"
     },
     "roles": {
       "client": {
@@ -2113,5 +2114,22 @@
     "errorSame": "新密码必须与旧密码不同。",
     "errorIncorrect": "当前密码不正确。",
     "errorGeneric": "无法修改密码，请重试。"
+  },
+  "forgotPassword": {
+    "title": "忘记密码",
+    "subtitle": "请输入您的账户邮箱。如果存在，我们会发送一个链接供您设置新密码。",
+    "emailLabel": "电子邮箱",
+    "submit": "发送链接",
+    "sent": "如果有账户与该邮箱匹配，我们刚刚已发送邮件。链接 1 小时内有效。请同时检查垃圾邮件。",
+    "errorEmail": "请输入有效的电子邮箱。",
+    "errorGeneric": "发送失败，请重试。",
+    "backToLogin": "返回登录"
+  },
+  "resetPassword": {
+    "title": "新密码",
+    "invalidLink": "此链接无效或已过期，请重新申请。",
+    "requestNew": "重新申请链接",
+    "success": "您的密码已修改，现在可以登录。",
+    "goLogin": "登录"
   }
 }

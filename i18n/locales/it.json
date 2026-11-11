@@ -1130,7 +1130,8 @@
       "sessionUnavailable": "Il contesto della sessione non è disponibile.",
       "sessionSaveFailed": "Impossibile salvare la sessione.",
       "failedTitle": "Accesso non riuscito",
-      "serverErrorFallback": "Errore del server, riprova."
+      "serverErrorFallback": "Errore del server, riprova.",
+      "forgotPassword": "Password dimenticata?"
     },
     "roles": {
       "client": {
@@ -2113,5 +2114,22 @@
     "errorSame": "La nuova password deve essere diversa dalla precedente.",
     "errorIncorrect": "La password attuale non è corretta.",
     "errorGeneric": "Impossibile cambiare la password. Riprova."
+  },
+  "forgotPassword": {
+    "title": "Password dimenticata",
+    "subtitle": "Inserisci l'e-mail del tuo account. Se esiste, ti invieremo un link per scegliere una nuova password.",
+    "emailLabel": "Indirizzo e-mail",
+    "submit": "Invia il link",
+    "sent": "Se esiste un account con questo indirizzo, abbiamo appena inviato un'e-mail. Il link è valido per 1 ora. Controlla anche lo spam.",
+    "errorEmail": "Inserisci un indirizzo e-mail valido.",
+    "errorGeneric": "Invio non riuscito. Riprova.",
+    "backToLogin": "Torna all'accesso"
+  },
+  "resetPassword": {
+    "title": "Nuova password",
+    "invalidLink": "Questo link non è valido o è scaduto. Richiedine uno nuovo.",
+    "requestNew": "Richiedi un nuovo link",
+    "success": "La tua password è stata modificata. Ora puoi accedere.",
+    "goLogin": "Accedi"
   }
 }
