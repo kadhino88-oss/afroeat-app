@@ -214,7 +214,7 @@ export default function LivraisonProfileScreen() {
         <View style={styles.card}>
           <Pressable
             style={styles.nav}
-            onPress={() => router.push('/livraison/livraison-orders')}
+            onPress={() => router.push('/livraison/orders')}
           >
             <Ionicons name="list-outline" size={20} />
             <Text style={styles.navText}>{t('livraison.profile.myDeliveriesNav')}</Text>

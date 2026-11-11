@@ -121,7 +121,7 @@ export default function LivraisonHistoryScreen() {
       return;
     }
 
-    router.replace('/livraison-orders');
+    router.replace('/livraison/orders');
   }, []);
 
   const fetchHistory = useCallback(
