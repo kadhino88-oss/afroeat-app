@@ -16,7 +16,12 @@
     "profile": "我的",
     "back": "返回",
     "cart": "购物车",
-    "signIn": "登录"
+    "signIn": "登录",
+    "dashboard": "控制台",
+    "menu": "菜单",
+    "missions": "配送任务",
+    "history": "历史记录",
+    "partners": "合作伙伴"
   },
   "moods": {
     "title": "此刻想吃点什么？",

@@ -13,7 +13,7 @@ export const isNavHidden = (pathname) =>
   pathname === '/' || pathname.startsWith('/auth');
 
 /** Pages principales : pas de bouton « retour ». */
-const ROOT_PATHS = ['/', '/explore', '/orders', '/profile', '/index'];
+const ROOT_PATHS = ['/', '/explore', '/orders', '/profile', '/index', '/restaurant/RestaurantDashboard', '/livraison', '/admin'];
 
 export const isRootPath = (pathname) => ROOT_PATHS.includes(pathname);
 
@@ -24,11 +24,47 @@ const LINKS = [
   { key: 'profile', href: '/(tabs)/profile', match: (p) => p.startsWith('/profile'), icon: 'person-outline' },
 ];
 
+const norm = (role) => String(role || '').trim().toLowerCase();
+
+/** Liens et page d'accueil selon le rôle : un partenaire ne voit pas le menu du client. */
+const LINKS_BY_ROLE = {
+  restaurant: {
+    home: '/restaurant/RestaurantDashboard',
+    links: [
+      { key: 'dashboard', href: '/restaurant/RestaurantDashboard', match: (p) => p === '/restaurant/RestaurantDashboard', icon: 'speedometer-outline' },
+      { key: 'orders', href: '/restaurant/restaurant-orders', match: (p) => p.startsWith('/restaurant/restaurant-orders'), icon: 'receipt-outline' },
+      { key: 'menu', href: '/restaurant/MenuScreen', match: (p) => p.startsWith('/restaurant/MenuScreen') || p.includes('MenuItem'), icon: 'restaurant-outline' },
+      { key: 'profile', href: '/restaurant/restaurant-profile', match: (p) => p.startsWith('/restaurant/restaurant-profile') || p.startsWith('/restaurant/restaurant-settings'), icon: 'person-outline' },
+    ],
+  },
+  livreur: {
+    home: '/livraison',
+    links: [
+      { key: 'missions', href: '/livraison', match: (p) => p === '/livraison' || p.startsWith('/livraison/livraison-orders'), icon: 'bicycle-outline' },
+      { key: 'history', href: '/livraison/history', match: (p) => p.startsWith('/livraison/history'), icon: 'time-outline' },
+      { key: 'profile', href: '/livraison/profile', match: (p) => p.startsWith('/livraison/profile'), icon: 'person-outline' },
+    ],
+  },
+  admin: {
+    home: '/admin',
+    links: [
+      { key: 'dashboard', href: '/admin', match: (p) => p === '/admin', icon: 'speedometer-outline' },
+      { key: 'orders', href: '/admin/orders', match: (p) => p.startsWith('/admin/orders'), icon: 'receipt-outline' },
+      { key: 'partners', href: '/admin/partner-applications', match: (p) => p.startsWith('/admin/partner-applications'), icon: 'people-outline' },
+    ],
+  },
+};
+LINKS_BY_ROLE.driver = LINKS_BY_ROLE.livreur;
+LINKS_BY_ROLE.delivery = LINKS_BY_ROLE.livreur;
+
 export default function WebNavBar() {
   const { t } = useTranslation();
   const pathname = usePathname() || '/';
   const { width } = useWindowDimensions();
-  const { isAuthenticated } = useAuth() || {};
+  const { isAuthenticated, role, user } = useAuth() || {};
+  const partner = isAuthenticated ? LINKS_BY_ROLE[norm(role || user?.role)] : null;
+  const links = partner ? partner.links : LINKS;
+  const homeHref = partner ? partner.home : '/(tabs)';
   const cart = useCart() || {};
 
   if (isNavHidden(pathname)) return null;
@@ -39,7 +75,7 @@ export default function WebNavBar() {
 
   const goBack = () => {
     if (router.canGoBack()) router.back();
-    else router.replace('/(tabs)');
+    else router.replace(homeHref);
   };
 
   return (
@@ -58,7 +94,7 @@ export default function WebNavBar() {
             </Pressable>
           ) : null}
 
-          <Pressable accessibilityRole="link" onPress={() => router.replace('/(tabs)')} style={styles.brand}>
+          <Pressable accessibilityRole="link" onPress={() => router.replace(homeHref)} style={styles.brand}>
             <View style={styles.logo}><Text style={styles.logoLetter}>A</Text></View>
             {!tiny ? (
               <Text style={styles.brandName}>
@@ -69,7 +105,7 @@ export default function WebNavBar() {
         </View>
 
         <View style={styles.links}>
-          {LINKS.map((link) => {
+          {links.map((link) => {
             const active = link.match(pathname);
             return (
               <Pressable
@@ -105,6 +141,7 @@ export default function WebNavBar() {
               )}
             </Pressable>
           ) : null}
+          {partner ? null : (
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('nav.cart')}
@@ -117,6 +154,7 @@ export default function WebNavBar() {
               <View style={styles.badge}><Text style={styles.badgeText}>{cartCount > 99 ? '99+' : cartCount}</Text></View>
             ) : null}
           </Pressable>
+          )}
         </View>
       </View>
     </View>
