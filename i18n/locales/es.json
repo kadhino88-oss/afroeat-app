@@ -498,6 +498,27 @@
       "useDevice": "Usar mi ubicación actual (estoy en el restaurante)",
       "positionSaved": "Posición guardada.",
       "locationDenied": "Permite la ubicación para usar tu posición actual."
+    },
+    "openingHours": {
+      "title": "Horario de apertura",
+      "subtitle": "Los clientes solo pueden pedir durante tu horario. Se usa la zona horaria de Ginebra.",
+      "enable": "Usar horario",
+      "enabledHelp": "Los pedidos solo se aceptan en estas franjas (y si tu restaurante está abierto).",
+      "disabledHelp": "Sin horario, decide el botón Abierto / Cerrado.",
+      "closed": "Cerrado",
+      "opensAt": "apertura",
+      "closesAt": "cierre",
+      "midnightHelp": "Es posible cerrar después de medianoche, por ejemplo 18:00 – 02:00.",
+      "save": "Guardar el horario",
+      "saved": "Tu horario está guardado.",
+      "invalid": "Horario no válido para {{day}} (formato 11:00, apertura y cierre deben ser distintos).",
+      "day_mon": "Lunes",
+      "day_tue": "Martes",
+      "day_wed": "Miércoles",
+      "day_thu": "Jueves",
+      "day_fri": "Viernes",
+      "day_sat": "Sábado",
+      "day_sun": "Domingo"
     }
   },
   "profile": {

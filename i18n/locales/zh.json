@@ -498,6 +498,27 @@
       "useDevice": "使用我当前的位置（我在餐厅）",
       "positionSaved": "位置已保存。",
       "locationDenied": "请允许定位以使用当前位置。"
+    },
+    "openingHours": {
+      "title": "营业时间",
+      "subtitle": "顾客只能在您的营业时间内下单。使用日内瓦时区。",
+      "enable": "启用营业时间",
+      "enabledHelp": "仅在这些时段（且餐厅处于营业状态时）接受订单。",
+      "disabledHelp": "未设置营业时间时，由“营业 / 打烊”按钮决定。",
+      "closed": "休息",
+      "opensAt": "开门时间",
+      "closesAt": "关门时间",
+      "midnightHelp": "可以在午夜后关门，例如 18:00 – 02:00。",
+      "save": "保存营业时间",
+      "saved": "您的营业时间已保存。",
+      "invalid": "{{day}}的时间无效（格式 11:00，开门与关门时间需不同）。",
+      "day_mon": "星期一",
+      "day_tue": "星期二",
+      "day_wed": "星期三",
+      "day_thu": "星期四",
+      "day_fri": "星期五",
+      "day_sat": "星期六",
+      "day_sun": "星期日"
     }
   },
   "profile": {

@@ -498,6 +498,27 @@
       "useDevice": "Use my current location (I am at the restaurant)",
       "positionSaved": "Position saved.",
       "locationDenied": "Allow location access to use your current position."
+    },
+    "openingHours": {
+      "title": "Opening hours",
+      "subtitle": "Customers can only order during your opening hours. The time zone used is Geneva's.",
+      "enable": "Use opening hours",
+      "enabledHelp": "Orders are only accepted during these slots (and when your restaurant is open).",
+      "disabledHelp": "Without opening hours, the Open / Closed button decides.",
+      "closed": "Closed",
+      "opensAt": "opening time",
+      "closesAt": "closing time",
+      "midnightHelp": "Closing after midnight is possible, for example 18:00 – 02:00.",
+      "save": "Save opening hours",
+      "saved": "Your opening hours are saved.",
+      "invalid": "Invalid hours for {{day}} (format 11:00, opening and closing must differ).",
+      "day_mon": "Monday",
+      "day_tue": "Tuesday",
+      "day_wed": "Wednesday",
+      "day_thu": "Thursday",
+      "day_fri": "Friday",
+      "day_sat": "Saturday",
+      "day_sun": "Sunday"
     }
   },
   "profile": {
