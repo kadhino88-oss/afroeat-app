@@ -294,7 +294,12 @@
       "preparationTimeSaveError": "No se pudo guardar el tiempo de preparación.",
       "statusLabel": "Estado",
       "viewMenuButton": "Ver mi menú",
-      "viewOrdersButton": "Ver mis pedidos"
+      "viewOrdersButton": "Ver mis pedidos",
+      "logoTitle": "Logo del restaurante",
+      "logoHelp": "Tu logo aparece junto al nombre de tu restaurante.",
+      "coverTitle": "Foto de portada",
+      "coverHelp": "Una buena foto de tu cocina o de tu local.",
+      "imageSaveError": "No se pudo guardar la foto."
     },
     "menuScreen": {
       "dishFallback": "Plato",
@@ -2057,5 +2062,14 @@
     "usedCard": "Tarjeta utilizada",
     "change": "Cambiar",
     "addCard": "Añadir una tarjeta"
+  },
+  "imageUpload": {
+    "choose": "Elegir una foto",
+    "change": "Cambiar la foto",
+    "remove": "Quitar",
+    "noPhoto": "Sin foto",
+    "permissionError": "Permite el acceso a tus fotos para elegir una.",
+    "tooLargeError": "Esta foto es demasiado pesada. Prueba con otra.",
+    "uploadError": "No se pudo enviar. Comprueba tu conexión e inténtalo de nuevo."
   }
 }

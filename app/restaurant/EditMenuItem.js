@@ -14,6 +14,7 @@ import { router, useLocalSearchParams, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
+import ImageUploadField from '../../components/ImageUploadField';
 import { useAuth } from '../../context/AuthContext';
 import { apiPut } from '../../services/apiClient';
 import { API_ENDPOINTS } from '../../constants/api';
@@ -221,14 +222,7 @@ export default function EditMenuItem() {
           />
 
           <Text style={styles.label}>{t('restaurant.addMenuItem.imageLabel')}</Text>
-          <TextInput
-            style={styles.input}
-            value={image}
-            onChangeText={setImage}
-            placeholder="https://..."
-            placeholderTextColor="#999"
-            autoCapitalize="none"
-          />
+          <ImageUploadField value={image} onChange={setImage} />
 
           <Text style={styles.label}>{t('restaurant.addMenuItem.categoryLabel')}</Text>
           <View style={styles.chipsRow}>

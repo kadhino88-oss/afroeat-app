@@ -310,6 +310,11 @@ export const API_ENDPOINTS = {
     markDelivered:  (orderId) => `/delivery/orders/${safePathParam(orderId)}/status`,
   },
 
+  // ─── Images (plats, logos) ──────────────────────────────
+  images: {
+    upload: '/images',
+  },
+
   // ─── Uploads ────────────────────────────────────────────
   uploads: {
     image:          '/uploads/image',

@@ -294,7 +294,12 @@
       "preparationTimeSaveError": "Die Zubereitungszeit konnte nicht gespeichert werden.",
       "statusLabel": "Status",
       "viewMenuButton": "Mein Menü ansehen",
-      "viewOrdersButton": "Meine Bestellungen ansehen"
+      "viewOrdersButton": "Meine Bestellungen ansehen",
+      "logoTitle": "Restaurant-Logo",
+      "logoHelp": "Dein Logo erscheint neben dem Namen deines Restaurants.",
+      "coverTitle": "Titelbild",
+      "coverHelp": "Ein schönes Foto deiner Gerichte oder deines Lokals.",
+      "imageSaveError": "Das Foto konnte nicht gespeichert werden."
     },
     "menuScreen": {
       "dishFallback": "Gericht",
@@ -2057,5 +2062,14 @@
     "usedCard": "Verwendete Karte",
     "change": "Ändern",
     "addCard": "Karte hinzufügen"
+  },
+  "imageUpload": {
+    "choose": "Foto auswählen",
+    "change": "Foto ändern",
+    "remove": "Entfernen",
+    "noPhoto": "Kein Foto",
+    "permissionError": "Erlaube den Zugriff auf deine Fotos, um eines auszuwählen.",
+    "tooLargeError": "Dieses Foto ist zu groß. Versuche ein anderes.",
+    "uploadError": "Upload fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut."
   }
 }
