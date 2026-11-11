@@ -16,7 +16,12 @@
     "profile": "Perfil",
     "back": "Volver",
     "cart": "Carrito",
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "dashboard": "Panel",
+    "menu": "Menú",
+    "missions": "Entregas",
+    "history": "Historial",
+    "partners": "Socios"
   },
   "moods": {
     "title": "¿Qué se te antoja?",

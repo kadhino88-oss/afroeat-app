@@ -16,7 +16,12 @@
     "profile": "Profil",
     "back": "Retour",
     "cart": "Panier",
-    "signIn": "Connexion"
+    "signIn": "Connexion",
+    "dashboard": "Tableau de bord",
+    "menu": "Menu",
+    "missions": "Missions",
+    "history": "Historique",
+    "partners": "Partenaires"
   },
   "moods": {
     "title": "Envie du moment ?",

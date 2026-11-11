@@ -16,7 +16,12 @@
     "profile": "Profile",
     "back": "Back",
     "cart": "Cart",
-    "signIn": "Sign in"
+    "signIn": "Sign in",
+    "dashboard": "Dashboard",
+    "menu": "Menu",
+    "missions": "Deliveries",
+    "history": "History",
+    "partners": "Partners"
   },
   "moods": {
     "title": "Craving something?",

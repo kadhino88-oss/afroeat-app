@@ -16,7 +16,12 @@
     "profile": "Profilo",
     "back": "Indietro",
     "cart": "Carrello",
-    "signIn": "Accedi"
+    "signIn": "Accedi",
+    "dashboard": "Pannello",
+    "menu": "Menu",
+    "missions": "Consegne",
+    "history": "Cronologia",
+    "partners": "Partner"
   },
   "moods": {
     "title": "Cosa ti va oggi?",

@@ -16,7 +16,12 @@
     "profile": "Profil",
     "back": "Zurück",
     "cart": "Warenkorb",
-    "signIn": "Anmelden"
+    "signIn": "Anmelden",
+    "dashboard": "Übersicht",
+    "menu": "Speisekarte",
+    "missions": "Lieferungen",
+    "history": "Verlauf",
+    "partners": "Partner"
   },
   "moods": {
     "title": "Worauf hast du Lust?",
