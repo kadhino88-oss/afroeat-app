@@ -16,3 +16,9 @@ test('opening-hours screen saves a Monday-to-Sunday schedule', () => {
   assert.match(src, /const DAYS = \['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'\]/);
   assert.match(src, /updateMyRestaurant\(restaurant\._id, \{ openingHours: payload \}/);
 });
+
+test('restaurant payment row opens the payouts screen', () => {
+  const settings = read('app', 'restaurant', 'restaurant-settings.js');
+  assert.match(settings, /router\.push\('\/account\/payouts'\)/);
+  assert.doesNotMatch(settings, /paymentInfoBody/);
+});
