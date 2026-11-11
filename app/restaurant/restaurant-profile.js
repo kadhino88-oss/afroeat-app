@@ -16,6 +16,7 @@ import { router, useFocusEffect, Redirect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import AccountPrivacyLink from '../../components/AccountPrivacyLink';
+import ImageUploadField from '../../components/ImageUploadField';
 import { useAuth } from '../../context/AuthContext';
 import { getMyRestaurant, updateMyRestaurant } from '../../services/restaurantService';
 import i18n from '../../i18n';
@@ -63,6 +64,8 @@ const normalizeRestaurant = (data) => {
     phone: normalizeText(r.phone, i18n.t('profile.info.notProvided')),
     email: normalizeText(r.email),
     description: normalizeText(r.description),
+    image: normalizeText(r.image),
+    coverImage: normalizeText(r.coverImage),
     city: normalizeText(r.city),
     country: normalizeText(r.country),
     currency: normalizeText(r.currency, 'EUR'),
@@ -170,6 +173,19 @@ export default function RestaurantProfile() {
       setRefreshing(false);
     }
   }, [token, currentRole]);
+
+  const saveRestaurantImage = useCallback(
+    async (field, url) => {
+      try {
+        const updated = await updateMyRestaurant(restaurantId, { [field]: url }, token);
+        const safe = normalizeRestaurant(updated);
+        if (safe) setRestaurant(safe);
+      } catch (error) {
+        Alert.alert(t('common.error'), error?.message || t('restaurant.profile.imageSaveError'));
+      }
+    },
+    [restaurantId, token, t]
+  );
 
   const savePreparationTime = useCallback(async () => {
     const rawValue = preparationTimeInput.trim();
@@ -379,6 +395,24 @@ export default function RestaurantProfile() {
             label={t('restaurant.profile.statusLabel')}
             value={openState.label}
             valueStyle={{ color: openState.color, fontWeight: '900' }}
+          />
+        </InfoCard>
+
+        <InfoCard title={t('restaurant.profile.logoTitle')}>
+          <Text style={styles.preparationHelp}>{t('restaurant.profile.logoHelp')}</Text>
+          <ImageUploadField
+            value={restaurant?.image}
+            onChange={(url) => saveRestaurantImage('image', url)}
+            aspect={[1, 1]}
+          />
+        </InfoCard>
+
+        <InfoCard title={t('restaurant.profile.coverTitle')}>
+          <Text style={styles.preparationHelp}>{t('restaurant.profile.coverHelp')}</Text>
+          <ImageUploadField
+            value={restaurant?.coverImage}
+            onChange={(url) => saveRestaurantImage('coverImage', url)}
+            aspect={[16, 9]}
           />
         </InfoCard>
 
