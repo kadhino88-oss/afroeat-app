@@ -15,3 +15,10 @@ test('partners get their own navigation and no client cart', () => {
 test('clients and visitors keep the original links', () => {
   assert.match(src, /const links = partner \? partner\.links : LINKS/);
 });
+
+test('courier links point to the deliveries list, not to a missing page', () => {
+  const read = (...p) => fs.readFileSync(path.join(__dirname, '..', ...p), 'utf8');
+  assert.doesNotMatch(read('app', 'livraison', 'profile.js'), /livraison-orders/);
+  assert.doesNotMatch(read('app', 'livraison', 'history.js'), /livraison-orders/);
+  assert.doesNotMatch(read('components', 'WebNavBar.web.js'), /livraison-orders/);
+});

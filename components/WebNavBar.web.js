@@ -40,7 +40,7 @@ const LINKS_BY_ROLE = {
   livreur: {
     home: '/livraison',
     links: [
-      { key: 'missions', href: '/livraison', match: (p) => p === '/livraison' || p.startsWith('/livraison/livraison-orders'), icon: 'bicycle-outline' },
+      { key: 'missions', href: '/livraison', match: (p) => p === '/livraison' || p.startsWith('/livraison/orders'), icon: 'bicycle-outline' },
       { key: 'history', href: '/livraison/history', match: (p) => p.startsWith('/livraison/history'), icon: 'time-outline' },
       { key: 'profile', href: '/livraison/profile', match: (p) => p.startsWith('/livraison/profile'), icon: 'person-outline' },
     ],
