@@ -2019,7 +2019,9 @@
       "status_new": "新申请",
       "status_contacted": "已联系",
       "status_approved": "已批准",
-      "status_rejected": "已拒绝"
+      "status_rejected": "已拒绝",
+      "inviteEmailed": "链接也已通过电子邮件发送至 {{email}}。",
+      "inviteNotEmailed": "尚未配置电子邮件：请自行将此链接发送给合作伙伴。"
     }
   },
   "payouts": {

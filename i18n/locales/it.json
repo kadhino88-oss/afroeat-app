@@ -2019,7 +2019,9 @@
       "status_new": "Nuova",
       "status_contacted": "Contattata",
       "status_approved": "Approvata",
-      "status_rejected": "Rifiutata"
+      "status_rejected": "Rifiutata",
+      "inviteEmailed": "Il link è stato inviato anche via e-mail a {{email}}.",
+      "inviteNotEmailed": "L'e-mail non è ancora configurata: invia tu stesso il link al partner."
     }
   },
   "payouts": {

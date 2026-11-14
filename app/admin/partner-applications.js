@@ -41,6 +41,7 @@ export default function AdminPartnerApplicationsScreen() {
   const { t } = useTranslation();
   const auth = useAuth() || {};
   const [filter, setFilter] = useState('new');
+  const [emailed, setEmailed] = useState({});
   const [items, setItems] = useState([]);
   const [notes, setNotes] = useState({});
   const [loading, setLoading] = useState(true);
@@ -120,6 +121,7 @@ export default function AdminPartnerApplicationsScreen() {
       const result = await createPartnerInvite(application._id, auth.token);
       if (!result?.inviteUrl) throw new Error(t('admin.partnerApplications.updateError'));
       setInvites((previous) => ({ ...previous, [application._id]: result.inviteUrl }));
+      setEmailed((previous) => ({ ...previous, [application._id]: Boolean(result.emailSent) }));
       setItems((previous) =>
         previous.map((item) => (item._id === application._id ? { ...item, status: 'approved' } : item))
       );
@@ -237,6 +239,11 @@ export default function AdminPartnerApplicationsScreen() {
               {invites[application._id] ? (
                 <View style={styles.inviteBox}>
                   <Text style={styles.inviteTitle}>Lien d&apos;invitation (affiché une seule fois)</Text>
+                  <Text style={styles.inviteUrl}>
+                    {emailed[application._id]
+                      ? t('admin.partnerApplications.inviteEmailed', { email: application.email })
+                      : t('admin.partnerApplications.inviteNotEmailed')}
+                  </Text>
                   <Text selectable style={styles.inviteUrl}>{invites[application._id]}</Text>
                   <Pressable onPress={() => copyInvite(invites[application._id])} style={[styles.action, styles.actionApprove]}>
                     <Text style={styles.actionApproveText}>Copier le lien</Text>
