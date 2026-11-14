@@ -1711,7 +1711,10 @@
       "subtitle": "Prüfe Identität und Arbeitserlaubnis vor der ersten Lieferung.",
       "verified": "Geprüft",
       "toVerify": "Zu prüfen",
-      "openDetails": "Profil öffnen und prüfen →"
+      "openDetails": "Profil öffnen und prüfen →",
+      "emptyTitle": "Noch keine Kuriere registriert",
+      "emptyBody": "Ein Kurier erscheint hier, sobald seine Bewerbung genehmigt und sein Konto über den Einladungslink erstellt wurde.",
+      "emptyAction": "Bewerbungen ansehen →"
     },
     "orders": {
       "fetchErrorFallback": "Bestellungen konnten nicht geladen werden.",

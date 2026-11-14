@@ -1711,7 +1711,10 @@
       "subtitle": "首次配送前请核实身份和工作许可。",
       "verified": "已核实",
       "toVerify": "待核实",
-      "openDetails": "查看资料并核实 →"
+      "openDetails": "查看资料并核实 →",
+      "emptyTitle": "暂无已注册的配送员",
+      "emptyBody": "配送员的申请获批并通过邀请链接创建账户后，会显示在这里。",
+      "emptyAction": "查看申请 →"
     },
     "orders": {
       "fetchErrorFallback": "无法加载订单。",

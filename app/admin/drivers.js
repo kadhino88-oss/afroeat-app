@@ -303,6 +303,24 @@ export default function AdminDriversScreen() {
             <Text style={styles.pageSubtitle}>{t('admin.drivers.subtitle')}</Text>
           </View>
         }
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <Text style={styles.emptyTitle}>
+              {errorMessage || t('admin.drivers.emptyTitle')}
+            </Text>
+            {!errorMessage && (
+              <>
+                <Text style={styles.emptyBody}>{t('admin.drivers.emptyBody')}</Text>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => router.push('/admin/partner-applications')}
+                >
+                  <Text style={styles.open}>{t('admin.drivers.emptyAction')}</Text>
+                </Pressable>
+              </>
+            )}
+          </View>
+        }
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -374,6 +392,9 @@ const styles = StyleSheet.create({
   pageSubtitle: { color: '#606D5D', fontSize: 14, lineHeight: 21, marginTop: 6 },
   badges: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   open: { marginTop: 10, color: '#084424', fontWeight: 'bold' },
+  empty: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginTop: 8 },
+  emptyTitle: { fontSize: 16, fontWeight: 'bold', color: '#0D1C11' },
+  emptyBody: { marginTop: 8, color: '#4A5A50', lineHeight: 20 },
   card: {
     backgroundColor: '#FFF',
     margin: 12,
