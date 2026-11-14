@@ -2019,7 +2019,9 @@
       "status_new": "New",
       "status_contacted": "Contacted",
       "status_approved": "Approved",
-      "status_rejected": "Rejected"
+      "status_rejected": "Rejected",
+      "inviteEmailed": "The link was also emailed to {{email}}.",
+      "inviteNotEmailed": "Email is not configured yet: send this link to the partner yourself."
     }
   },
   "payouts": {

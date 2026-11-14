@@ -20,3 +20,11 @@ test('admin : écran enregistré et accessible depuis le tableau de bord', () =>
   assert.match(read('app', 'admin', '_layout.js'), /name="partner-applications"/);
   assert.match(read('app', 'admin', 'index.js'), /route: '\/admin\/partner-applications'/);
 });
+
+test('admin sees whether the invitation link was also emailed to the applicant', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const src = fs.readFileSync(path.join(__dirname, '..', 'app', 'admin', 'partner-applications.js'), 'utf8');
+  assert.match(src, /result\.emailSent/);
+  assert.match(src, /admin\.partnerApplications\.inviteEmailed/);
+});
