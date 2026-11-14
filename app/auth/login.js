@@ -290,12 +290,7 @@ export default function LoginScreen() {
 
       const normalizedLoggedRole = normalizeRole(safeUser?.role);
 
-      // Un administrateur entre depuis n'importe quelle page de connexion : il est envoyé vers /admin.
-      if (
-        currentRole !== 'admin' &&
-        normalizedLoggedRole !== 'admin' &&
-        normalizedLoggedRole !== currentRole
-      ) {
+      if (currentRole !== 'admin' && normalizedLoggedRole !== currentRole) {
         throw new Error(t('auth.login.wrongSpaceError'));
       }
 
