@@ -1711,7 +1711,10 @@
       "subtitle": "Vérifie l’identité et l’autorisation de travail avant la première course.",
       "verified": "Vérifié",
       "toVerify": "À vérifier",
-      "openDetails": "Voir la fiche et vérifier →"
+      "openDetails": "Voir la fiche et vérifier →",
+      "emptyTitle": "Aucun livreur inscrit pour l’instant",
+      "emptyBody": "Un livreur apparaît ici une fois sa candidature approuvée et son compte créé avec le lien d’invitation.",
+      "emptyAction": "Voir les candidatures →"
     },
     "orders": {
       "fetchErrorFallback": "Impossible de charger les commandes.",

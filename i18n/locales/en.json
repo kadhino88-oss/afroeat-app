@@ -1711,7 +1711,10 @@
       "subtitle": "Check identity and work authorisation before the first delivery.",
       "verified": "Verified",
       "toVerify": "To verify",
-      "openDetails": "Open profile and verify →"
+      "openDetails": "Open profile and verify →",
+      "emptyTitle": "No couriers registered yet",
+      "emptyBody": "A courier appears here once their application is approved and their account is created with the invitation link.",
+      "emptyAction": "View applications →"
     },
     "orders": {
       "fetchErrorFallback": "Unable to load orders.",

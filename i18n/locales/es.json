@@ -1711,7 +1711,10 @@
       "subtitle": "Verifica la identidad y el permiso de trabajo antes de la primera entrega.",
       "verified": "Verificado",
       "toVerify": "Por verificar",
-      "openDetails": "Ver ficha y verificar →"
+      "openDetails": "Ver ficha y verificar →",
+      "emptyTitle": "Aún no hay repartidores registrados",
+      "emptyBody": "Un repartidor aparece aquí cuando su solicitud se aprueba y crea su cuenta con el enlace de invitación.",
+      "emptyAction": "Ver solicitudes →"
     },
     "orders": {
       "fetchErrorFallback": "No se pudieron cargar los pedidos.",
