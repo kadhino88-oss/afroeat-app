@@ -1,14 +1,19 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { router, usePathname } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { BrandFonts } from '../constants/brand';
-import { MAX_CONTENT_WIDTH } from '../hooks/use-grid-columns';
 
-/** Pages sans barre (page d'accueil du site et écrans de connexion / inscription). */
+/**
+ * Barre du haut du site web.
+ * - Site public : même apparence que l'en-tête de la page d'accueil (logo, AFROEAT, liens).
+ * - Administration : barre sombre « ADMINISTRATION », pour ne jamais confondre les deux espaces.
+ */
+
+/** Pages sans barre (la page d'accueil a son propre en-tête identique ; écrans de connexion). */
 export const isNavHidden = (pathname) =>
   pathname === '/' || pathname.startsWith('/auth');
 
@@ -17,11 +22,15 @@ const ROOT_PATHS = ['/', '/explore', '/orders', '/profile', '/index', '/restaura
 
 export const isRootPath = (pathname) => ROOT_PATHS.includes(pathname);
 
-const LINKS = [
-  { key: 'home', href: '/(tabs)', match: (p) => p === '/' || p === '/index', icon: 'home-outline' },
-  { key: 'explore', href: '/(tabs)/explore', match: (p) => p.startsWith('/explore'), icon: 'compass-outline' },
-  { key: 'orders', href: '/(tabs)/orders', match: (p) => p.startsWith('/orders') || p.startsWith('/order'), icon: 'receipt-outline' },
-  { key: 'profile', href: '/(tabs)/profile', match: (p) => p.startsWith('/profile'), icon: 'person-outline' },
+const EXPLORE = '/(tabs)/explore';
+
+/** Liens du site public : les mêmes que sur la page d'accueil. */
+const SITE_LINKS = [
+  { key: 'explore', labelKey: 'nav.explore', href: EXPLORE, match: (p) => p.startsWith('/explore'), icon: 'compass-outline' },
+  { key: 'restaurants', label: 'Restaurants', href: { pathname: EXPLORE, params: { category: 'Africaine' } }, match: () => false, icon: 'restaurant-outline', wideOnly: true },
+  { key: 'groceries', label: 'Épiceries', href: { pathname: EXPLORE, params: { category: 'Épicerie' } }, match: () => false, icon: 'basket-outline', wideOnly: true },
+  { key: 'shops', label: 'Boutiques afro', href: { pathname: EXPLORE, params: { category: 'Boutique' } }, match: () => false, icon: 'storefront-outline', wideOnly: true },
+  { key: 'orders', labelKey: 'nav.orders', href: '/(tabs)/orders', match: (p) => p.startsWith('/orders') || p.startsWith('/order'), icon: 'receipt-outline', authOnly: true },
 ];
 
 const norm = (role) => String(role || '').trim().toLowerCase();
@@ -31,31 +40,33 @@ const LINKS_BY_ROLE = {
   restaurant: {
     home: '/restaurant/RestaurantDashboard',
     links: [
-      { key: 'dashboard', href: '/restaurant/RestaurantDashboard', match: (p) => p === '/restaurant/RestaurantDashboard', icon: 'speedometer-outline' },
-      { key: 'orders', href: '/restaurant/restaurant-orders', match: (p) => p.startsWith('/restaurant/restaurant-orders'), icon: 'receipt-outline' },
-      { key: 'menu', href: '/restaurant/MenuScreen', match: (p) => p.startsWith('/restaurant/MenuScreen') || p.includes('MenuItem'), icon: 'restaurant-outline' },
-      { key: 'profile', href: '/restaurant/restaurant-profile', match: (p) => p.startsWith('/restaurant/restaurant-profile') || p.startsWith('/restaurant/restaurant-settings'), icon: 'person-outline' },
+      { key: 'dashboard', labelKey: 'nav.dashboard', href: '/restaurant/RestaurantDashboard', match: (p) => p === '/restaurant/RestaurantDashboard', icon: 'speedometer-outline' },
+      { key: 'orders', labelKey: 'nav.orders', href: '/restaurant/restaurant-orders', match: (p) => p.startsWith('/restaurant/restaurant-orders'), icon: 'receipt-outline' },
+      { key: 'menu', labelKey: 'nav.menu', href: '/restaurant/MenuScreen', match: (p) => p.startsWith('/restaurant/MenuScreen') || p.includes('MenuItem'), icon: 'restaurant-outline' },
+      { key: 'profile', labelKey: 'nav.profile', href: '/restaurant/restaurant-profile', match: (p) => p.startsWith('/restaurant/restaurant-profile') || p.startsWith('/restaurant/restaurant-settings'), icon: 'person-outline' },
     ],
   },
   livreur: {
     home: '/livraison',
     links: [
-      { key: 'missions', href: '/livraison', match: (p) => p === '/livraison' || p.startsWith('/livraison/orders'), icon: 'bicycle-outline' },
-      { key: 'history', href: '/livraison/history', match: (p) => p.startsWith('/livraison/history'), icon: 'time-outline' },
-      { key: 'profile', href: '/livraison/profile', match: (p) => p.startsWith('/livraison/profile'), icon: 'person-outline' },
+      { key: 'missions', labelKey: 'nav.missions', href: '/livraison', match: (p) => p === '/livraison' || p.startsWith('/livraison/orders'), icon: 'bicycle-outline' },
+      { key: 'history', labelKey: 'nav.history', href: '/livraison/history', match: (p) => p.startsWith('/livraison/history'), icon: 'time-outline' },
+      { key: 'profile', labelKey: 'nav.profile', href: '/livraison/profile', match: (p) => p.startsWith('/livraison/profile'), icon: 'person-outline' },
     ],
   },
   admin: {
     home: '/admin',
     links: [
-      { key: 'dashboard', href: '/admin', match: (p) => p === '/admin', icon: 'speedometer-outline' },
-      { key: 'orders', href: '/admin/orders', match: (p) => p.startsWith('/admin/orders'), icon: 'receipt-outline' },
-      { key: 'partners', href: '/admin/partner-applications', match: (p) => p.startsWith('/admin/partner-applications'), icon: 'people-outline' },
+      { key: 'dashboard', labelKey: 'nav.dashboard', href: '/admin', match: (p) => p === '/admin', icon: 'speedometer-outline' },
+      { key: 'orders', labelKey: 'nav.orders', href: '/admin/orders', match: (p) => p.startsWith('/admin/orders'), icon: 'receipt-outline' },
+      { key: 'partners', labelKey: 'nav.partners', href: '/admin/partner-applications', match: (p) => p.startsWith('/admin/partner-applications'), icon: 'people-outline' },
     ],
   },
 };
 LINKS_BY_ROLE.driver = LINKS_BY_ROLE.livreur;
 LINKS_BY_ROLE.delivery = LINKS_BY_ROLE.livreur;
+
+const LOGO = require('../assets/images/icon.png');
 
 export default function WebNavBar() {
   const { t } = useTranslation();
@@ -68,17 +79,26 @@ export default function WebNavBar() {
   const onAdminArea = pathname === '/admin' || pathname.startsWith('/admin/');
   const partner =
     isAuthenticated && !(isAdmin && !onAdminArea) ? LINKS_BY_ROLE[currentRole] : null;
-  const links = partner ? partner.links : LINKS;
-  const homeHref = partner ? partner.home : '/(tabs)';
   const cart = useCart() || {};
 
   if (isNavHidden(pathname)) return null;
 
   const compact = width < 760;
   const tiny = width < 560;
+  const wide = width >= 1080;
+  const dark = Boolean(partner) && onAdminArea;
+  const homeHref = partner ? partner.home : '/';
   const cartCount = typeof cart.getTotalItems === 'function' ? Number(cart.getTotalItems()) || 0 : 0;
 
-  // Espaces partenaire et admin : la déconnexion est toujours à portée de main dans la barre.
+  const links = partner
+    ? partner.links
+    : SITE_LINKS.filter(
+        (link) => (!link.authOnly || isAuthenticated) && (!link.wideOnly || wide)
+      );
+
+  const label = (link) => (link.labelKey ? t(link.labelKey) : link.label);
+  const userName = String(user?.firstName || user?.name || '').trim();
+
   const signOut = async () => {
     if (typeof logout === 'function') await logout();
     router.replace('/');
@@ -89,48 +109,57 @@ export default function WebNavBar() {
     else router.replace(homeHref);
   };
 
+  const ink = dark ? '#FBF6EC' : '#0D1C11';
+
   return (
-    <View style={styles.bar}>
-      <View style={styles.inner}>
+    <View style={[styles.bar, dark && styles.barDark]}>
+      <View style={[styles.inner, compact && styles.innerCompact]}>
         <View style={styles.left}>
           {!isRootPath(pathname) ? (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={t('nav.back')}
               onPress={goBack}
-              style={styles.back}
+              style={[styles.back, dark && styles.backDark]}
             >
-              <Ionicons name="arrow-back" size={20} color="#084424" />
-              {!compact ? <Text style={styles.backText}>{t('nav.back')}</Text> : null}
+              <Ionicons name="arrow-back" size={18} color={ink} />
             </Pressable>
           ) : null}
 
-          <Pressable accessibilityRole="link" onPress={() => router.replace(homeHref)} style={styles.brand}>
-            <View style={styles.logo}><Text style={styles.logoLetter}>A</Text></View>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel="AFROEAT"
+            onPress={() => router.replace(homeHref)}
+            style={[styles.brand, compact && styles.brandCompact]}
+          >
+            <Image source={LOGO} style={styles.logo} contentFit="cover" />
             {!tiny ? (
-              <Text style={styles.brandName}>
-                Afro<Text style={styles.brandAccent}>Eats</Text>
-              </Text>
+              <View>
+                <Text style={[styles.brandName, { color: ink }]}>AFROEAT</Text>
+                <Text style={styles.brandTagline}>
+                  {dark ? 'ADMINISTRATION' : 'LES SAVEURS DE CHEZ NOUS'}
+                </Text>
+              </View>
             ) : null}
           </Pressable>
         </View>
 
-        <View style={styles.links}>
+        <View style={[styles.nav, compact && styles.navCompact]}>
           {links.map((link) => {
             const active = link.match(pathname);
             return (
               <Pressable
                 key={link.key}
                 accessibilityRole="link"
-                accessibilityLabel={t(`nav.${link.key}`)}
+                accessibilityLabel={label(link)}
                 onPress={() => router.navigate(link.href)}
-                style={[styles.link, active && styles.linkActive]}
+                style={styles.navItem}
               >
                 {compact ? (
-                  <Ionicons name={link.icon} size={20} color={active ? '#084424' : '#606D5D'} />
+                  <Ionicons name={link.icon} size={20} color={active ? '#EAB02F' : ink} />
                 ) : (
-                  <Text style={[styles.linkText, active && styles.linkTextActive]}>
-                    {t(`nav.${link.key}`)}
+                  <Text style={[styles.navText, { color: ink }, active && styles.navTextActive]}>
+                    {label(link)}
                   </Text>
                 )}
               </Pressable>
@@ -138,62 +167,95 @@ export default function WebNavBar() {
           })}
         </View>
 
-        <View style={styles.right}>
+        <View style={styles.actions}>
           {isAdmin ? (
             <Pressable
               accessibilityRole="link"
+              accessibilityLabel={t(onAdminArea ? 'nav.viewSite' : 'nav.administration')}
               onPress={() => router.push(onAdminArea ? '/' : '/admin')}
-              style={styles.signIn}
+              style={[styles.outline, dark && styles.outlineDark]}
             >
-              {tiny ? (
-                <Ionicons name={onAdminArea ? 'globe-outline' : 'shield-checkmark-outline'} size={18} color="#084424" />
-              ) : (
-                <Text style={styles.signInText}>
+              <Ionicons
+                name={onAdminArea ? 'globe-outline' : 'shield-checkmark-outline'}
+                size={17}
+                color={ink}
+              />
+              {!compact ? (
+                <Text style={[styles.outlineText, { color: ink }]}>
                   {t(onAdminArea ? 'nav.viewSite' : 'nav.administration')}
                 </Text>
-              )}
+              ) : null}
             </Pressable>
           ) : null}
-          {!isAuthenticated ? (
+
+          {partner ? null : (
             <Pressable
               accessibilityRole="button"
-              onPress={() => router.push('/auth/login')}
-              style={styles.signIn}
+              accessibilityLabel={t('nav.cart')}
+              onPress={() => router.push('/cart')}
+              style={styles.cartButton}
             >
-              {tiny ? (
-                <Ionicons name="log-in-outline" size={18} color="#084424" />
-              ) : (
-                <Text style={styles.signInText}>{t('nav.signIn')}</Text>
-              )}
+              <Ionicons name="bag-handle-outline" size={20} color="#0D1C11" />
+              {cartCount > 0 ? (
+                <View style={styles.cartBadge}>
+                  <Text style={styles.cartBadgeText}>{cartCount > 99 ? '99+' : cartCount}</Text>
+                </View>
+              ) : null}
+            </Pressable>
+          )}
+
+          {!isAuthenticated ? (
+            <>
+              {!compact ? (
+                <Pressable
+                  accessibilityRole="link"
+                  onPress={() => router.push({ pathname: '/auth/login', params: { role: 'client' } })}
+                  style={styles.loginButton}
+                >
+                  <Text style={styles.loginButtonText}>{t('nav.signIn')}</Text>
+                </Pressable>
+              ) : null}
+              <Pressable
+                accessibilityRole="link"
+                onPress={() => router.push(compact ? '/auth/login' : '/auth/register-client')}
+                style={[styles.signupButton, compact && styles.signupButtonCompact]}
+              >
+                <Text style={styles.signupButtonText}>
+                  {compact ? t('nav.signIn') : 'S’inscrire'}
+                </Text>
+              </Pressable>
+            </>
+          ) : null}
+
+          {isAuthenticated && !partner && !isAdmin ? (
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel={t('nav.profile')}
+              onPress={() => router.push('/profile')}
+              style={styles.outline}
+            >
+              <Ionicons name="person-circle-outline" size={18} color="#0D1C11" />
+              {!compact ? (
+                <Text style={styles.outlineText}>{userName || t('nav.profile')}</Text>
+              ) : null}
             </Pressable>
           ) : null}
+
           {isAuthenticated && (partner || isAdmin) ? (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={t('profile.menu.logoutLabel')}
               onPress={signOut}
-              style={styles.signOut}
+              style={[styles.outline, dark ? styles.signOutDark : styles.signOut]}
             >
-              <Ionicons name="log-out-outline" size={18} color="#C8331A" />
+              <Ionicons name="log-out-outline" size={17} color={dark ? '#F3E7CA' : '#C8331A'} />
               {!compact ? (
-                <Text style={styles.signOutText}>{t('profile.menu.logoutLabel')}</Text>
+                <Text style={[styles.outlineText, { color: dark ? '#F3E7CA' : '#C8331A' }]}>
+                  {t('profile.menu.logoutLabel')}
+                </Text>
               ) : null}
             </Pressable>
           ) : null}
-          {partner ? null : (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('nav.cart')}
-            onPress={() => router.push('/cart')}
-            style={styles.cart}
-          >
-            <Ionicons name="basket-outline" size={20} color="#FBF6EC" />
-            {!compact ? <Text style={styles.cartText}>{t('nav.cart')}</Text> : null}
-            {cartCount > 0 ? (
-              <View style={styles.badge}><Text style={styles.badgeText}>{cartCount > 99 ? '99+' : cartCount}</Text></View>
-            ) : null}
-          </Pressable>
-          )}
         </View>
       </View>
     </View>
@@ -203,90 +265,96 @@ export default function WebNavBar() {
 const styles = StyleSheet.create({
   bar: {
     width: '100%',
-    backgroundColor: '#FFFDF9',
+    alignItems: 'center',
+    backgroundColor: '#FBF6EC',
     borderBottomWidth: 1,
     borderBottomColor: '#E3DECF',
     zIndex: 50,
   },
+  barDark: { backgroundColor: '#0D1C11', borderBottomColor: '#0D1C11' },
   inner: {
     width: '100%',
-    maxWidth: MAX_CONTENT_WIDTH,
-    alignSelf: 'center',
-    minHeight: 64,
-    paddingHorizontal: 16,
+    maxWidth: 1440,
+    minHeight: 82,
+    paddingHorizontal: 36,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: 16,
   },
-  left: { flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 0 },
+  innerCompact: { minHeight: 64, paddingHorizontal: 14, gap: 8 },
+  left: { flexDirection: 'row', alignItems: 'center', gap: 12, flexShrink: 0 },
   back: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFDF9',
+    borderWidth: 1,
+    borderColor: '#E3DECF',
+  },
+  backDark: { backgroundColor: 'transparent', borderColor: '#3A4A3E' },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: 11 },
+  brandCompact: { gap: 7 },
+  logo: { width: 42, height: 42, borderRadius: 13 },
+  brandName: { fontSize: 18, fontWeight: '900', letterSpacing: 2.5 },
+  brandTagline: { marginTop: 2, fontSize: 8, fontWeight: '700', letterSpacing: 1.25, color: '#EAB02F' },
+  nav: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 27 },
+  navCompact: { gap: 14 },
+  navItem: { paddingVertical: 8 },
+  navText: { fontSize: 13, fontWeight: '600' },
+  navTextActive: { color: '#EAB02F', fontWeight: '800' },
+  actions: { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 0 },
+  cartButton: {
+    position: 'relative',
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFDF9',
+    borderWidth: 1,
+    borderColor: '#E3DECF',
+  },
+  cartBadge: {
+    position: 'absolute',
+    top: -3,
+    right: -4,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#EAB02F',
+  },
+  cartBadgeText: { color: '#FBF6EC', fontSize: 9, fontWeight: '800' },
+  loginButton: { height: 42, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' },
+  loginButtonText: { color: '#0D1C11', fontSize: 13, fontWeight: '700' },
+  signupButton: {
+    minHeight: 42,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#EAB02F',
+  },
+  signupButtonCompact: { minHeight: 38, paddingHorizontal: 12 },
+  signupButtonText: { color: '#FBF6EC', fontSize: 12, fontWeight: '800' },
+  outline: {
+    height: 42,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRadius: 999,
-    backgroundColor: '#F2ECE0',
-  },
-  backText: { color: '#084424', fontWeight: '700', fontSize: 14 },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  logo: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: '#084424',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoLetter: { color: '#FBF6EC', fontWeight: '800', fontSize: 16 },
-  brandName: { fontFamily: BrandFonts.display, fontSize: 20, color: '#0D1C11' },
-  brandAccent: { color: '#C8331A' },
-  links: { flexDirection: 'row', alignItems: 'center', gap: 0, flexShrink: 1 },
-  link: { paddingVertical: 8, paddingHorizontal: 10, borderRadius: 999 },
-  linkActive: { backgroundColor: '#F3E7CA' },
-  linkText: { color: '#606D5D', fontWeight: '600', fontSize: 15 },
-  linkTextActive: { color: '#084424' },
-  right: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 0 },
-  signIn: {
-    paddingVertical: 8,
     paddingHorizontal: 14,
-    borderRadius: 999,
+    borderRadius: 9,
     borderWidth: 1,
     borderColor: '#E3DECF',
     backgroundColor: '#FFFDF9',
   },
-  signInText: { color: '#084424', fontWeight: '700', fontSize: 14 },
-  signOut: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: '#F0D2CB',
-    backgroundColor: '#FFF6F3',
-  },
-  signOutText: { color: '#C8331A', fontWeight: '700', fontSize: 14 },
-  cart: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingVertical: 9,
-    paddingHorizontal: 14,
-    borderRadius: 999,
-    backgroundColor: '#084424',
-  },
-  cartText: { color: '#FBF6EC', fontWeight: '700', fontSize: 14 },
-  badge: {
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    paddingHorizontal: 4,
-    backgroundColor: '#EAB02F',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  badgeText: { color: '#301904', fontSize: 11, fontWeight: '800' },
+  outlineDark: { backgroundColor: 'transparent', borderColor: '#3A4A3E' },
+  outlineText: { color: '#0D1C11', fontSize: 12, fontWeight: '700' },
+  signOut: { borderColor: '#F0D2CB', backgroundColor: '#FFF6F3' },
+  signOutDark: { backgroundColor: 'transparent', borderColor: '#3A4A3E' },
 });
