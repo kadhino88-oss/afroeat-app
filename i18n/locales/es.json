@@ -2033,6 +2033,28 @@
       "accountUpgradedTitle": "Solicitud aprobada, cuenta activada",
       "accountUpgradedCourier": "{{email}} ya tenía una cuenta: ahora es una cuenta de repartidor. Inicia sesión con su contraseña habitual. Después verifica su identidad en «Repartidores».",
       "accountUpgradedBusiness": "{{email}} ya tenía una cuenta: ahora es una cuenta de comercio. Inicia sesión con su contraseña habitual."
+    },
+    "verification": {
+      "title": "Verificación de identidad",
+      "subtitle": "Documentos enviados por repartidores y comercios. Cada consulta queda registrada.",
+      "filter": {
+        "pending": "Por revisar",
+        "approved": "Validadas",
+        "rejected": "Rechazadas"
+      },
+      "emptyTitle": "Ningún documento",
+      "emptyBody": "Los documentos enviados por los socios aparecen aquí.",
+      "sentOn": "Enviado el {{date}}",
+      "view": "Ver documento",
+      "viewLogged": "La apertura queda registrada en el registro de auditoría.",
+      "fileDeleted": "Archivo borrado (plazo de conservación superado).",
+      "reasonPlaceholder": "Motivo (obligatorio al rechazar)",
+      "reasonRequired": "Indica el motivo del rechazo.",
+      "approve": "Validar",
+      "reject": "Rechazar",
+      "loadError": "No se pudo cargar.",
+      "navTitle": "Verificación de identidad",
+      "navText": "Revisar los documentos de repartidores y comercios."
     }
   },
   "payouts": {
@@ -2154,5 +2176,45 @@
     "title": "Página no encontrada",
     "body": "Esta página no existe o se ha movido.",
     "action": "Volver al inicio"
+  },
+  "verification": {
+    "title": "Verificación de identidad",
+    "subtitle": "Envía los documentos solicitados. El equipo de AFROEAT los revisa antes de tu primera actividad.",
+    "kind": {
+      "identity": "Documento de identidad",
+      "work_permit": "Permiso de trabajo",
+      "business_registration": "Extracto del registro mercantil"
+    },
+    "kindHelp": {
+      "identity": "Pasaporte o documento de identidad vigente, foto nítida, documento completo visible.",
+      "work_permit": "Permiso de residencia o trabajo que te autoriza a trabajar en Suiza o Francia.",
+      "business_registration": "Extracto reciente que acredita tu negocio (registro mercantil o equivalente)."
+    },
+    "status": {
+      "missing": "Por enviar",
+      "pending": "En revisión",
+      "approved": "Validado",
+      "rejected": "Rechazado"
+    },
+    "send": "Enviar",
+    "replace": "Reemplazar",
+    "remove": "Retirar",
+    "removeTitle": "¿Retirar este documento?",
+    "removeBody": "El archivo se borrará de inmediato.",
+    "rejectedReason": "Motivo del rechazo: {{reason}}",
+    "deletedOn": "El archivo se borrará como máximo el {{date}}.",
+    "consentLabel": "Acepto que AFROEAT trate estos documentos únicamente para verificar mi identidad y mi derecho a ejercer.",
+    "consentRequired": "Marca primero la casilla de consentimiento.",
+    "privacyTitle": "Cómo se protegen tus documentos",
+    "privacyBody": "Los archivos están cifrados y solo los ve la administración de AFROEAT; cada consulta queda registrada. Se borran automáticamente tras {{pending}} días sin decisión o {{decided}} días después de la decisión.",
+    "privacyLink": "Leer la política de privacidad",
+    "verifiedBanner": "Tu identidad está verificada.",
+    "unavailable": "El envío de documentos aún no está disponible. Inténtalo pronto.",
+    "loadError": "No se pudo cargar la verificación.",
+    "uploadError": "No se pudo enviar. Inténtalo de nuevo.",
+    "tooLargeError": "Foto demasiado pesada. Hazla con menor resolución.",
+    "permissionError": "Permite el acceso a las fotos para enviar un documento.",
+    "cta": "Enviar mis documentos",
+    "restaurantRow": "Documento de identidad y registro mercantil"
   }
 }

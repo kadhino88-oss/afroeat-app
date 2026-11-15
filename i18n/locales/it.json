@@ -2033,6 +2033,28 @@
       "accountUpgradedTitle": "Candidatura approvata, account attivato",
       "accountUpgradedCourier": "{{email}} aveva già un account: ora è un account corriere. Accede con la sua password abituale. Poi verifica la sua identità in «Corrieri».",
       "accountUpgradedBusiness": "{{email}} aveva già un account: ora è un account commerciante. Accede con la sua password abituale."
+    },
+    "verification": {
+      "title": "Verifica dell’identità",
+      "subtitle": "Documenti inviati da corrieri e commercianti. Ogni consultazione è registrata.",
+      "filter": {
+        "pending": "Da esaminare",
+        "approved": "Convalidate",
+        "rejected": "Rifiutate"
+      },
+      "emptyTitle": "Nessun documento",
+      "emptyBody": "I documenti inviati dai partner compaiono qui.",
+      "sentOn": "Inviato il {{date}}",
+      "view": "Vedi documento",
+      "viewLogged": "L’apertura viene registrata nel registro di audit.",
+      "fileDeleted": "File eliminato (periodo di conservazione scaduto).",
+      "reasonPlaceholder": "Motivo (obbligatorio in caso di rifiuto)",
+      "reasonRequired": "Indica il motivo del rifiuto.",
+      "approve": "Convalida",
+      "reject": "Rifiuta",
+      "loadError": "Impossibile caricare.",
+      "navTitle": "Verifica dell’identità",
+      "navText": "Esamina i documenti di corrieri e commercianti."
     }
   },
   "payouts": {
@@ -2154,5 +2176,45 @@
     "title": "Pagina non trovata",
     "body": "Questa pagina non esiste o è stata spostata.",
     "action": "Torna alla home"
+  },
+  "verification": {
+    "title": "Verifica dell’identità",
+    "subtitle": "Invia i documenti richiesti. Il team AFROEAT li verifica prima della tua prima attività.",
+    "kind": {
+      "identity": "Documento d’identità",
+      "work_permit": "Permesso di lavoro",
+      "business_registration": "Estratto del registro delle imprese"
+    },
+    "kindHelp": {
+      "identity": "Passaporto o carta d’identità valida, foto nitida, documento interamente visibile.",
+      "work_permit": "Permesso di soggiorno o di lavoro valido per lavorare in Svizzera o Francia.",
+      "business_registration": "Estratto recente che attesta la tua attività (registro delle imprese o equivalente)."
+    },
+    "status": {
+      "missing": "Da inviare",
+      "pending": "In verifica",
+      "approved": "Convalidato",
+      "rejected": "Rifiutato"
+    },
+    "send": "Invia",
+    "replace": "Sostituisci",
+    "remove": "Rimuovi",
+    "removeTitle": "Rimuovere questo documento?",
+    "removeBody": "Il file verrà eliminato subito.",
+    "rejectedReason": "Motivo del rifiuto: {{reason}}",
+    "deletedOn": "Il file sarà eliminato al più tardi il {{date}}.",
+    "consentLabel": "Accetto che AFROEAT tratti questi documenti solo per verificare la mia identità e il mio diritto a operare.",
+    "consentRequired": "Spunta prima la casella di consenso.",
+    "privacyTitle": "Come sono protetti i tuoi documenti",
+    "privacyBody": "I file sono cifrati e visibili solo all’amministrazione AFROEAT; ogni consultazione è registrata. Vengono eliminati automaticamente dopo {{pending}} giorni senza decisione o {{decided}} giorni dopo la decisione.",
+    "privacyLink": "Leggi l’informativa sulla privacy",
+    "verifiedBanner": "La tua identità è verificata.",
+    "unavailable": "L’invio dei documenti non è ancora disponibile. Riprova presto.",
+    "loadError": "Impossibile caricare la verifica.",
+    "uploadError": "Invio non riuscito. Riprova.",
+    "tooLargeError": "Foto troppo pesante. Riscattala con risoluzione inferiore.",
+    "permissionError": "Consenti l’accesso alle foto per inviare un documento.",
+    "cta": "Invia i miei documenti",
+    "restaurantRow": "Documento d’identità e registro imprese"
   }
 }

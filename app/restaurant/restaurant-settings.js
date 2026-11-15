@@ -345,6 +345,14 @@ export default function RestaurantSettingsScreen() {
             subtitle={t('restaurant.settings.paymentSubtitle')}
             onPress={() => router.push('/account/payouts')}
           />
+          <SettingRow
+            icon="shield-checkmark-outline"
+            iconColor="#084424"
+            iconBg="#E3F0E8"
+            title={t('verification.title')}
+            subtitle={t('verification.restaurantRow')}
+            onPress={() => router.push('/account/verification')}
+          />
         </View>
 
         <View style={styles.section}>
