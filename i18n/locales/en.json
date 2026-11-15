@@ -1177,8 +1177,8 @@
     },
     "headline": {
       "title": "Welcome to AFROEAT",
-      "subtitle": "Choose your area to access a dedicated, premium and secure experience.",
-      "description": "Restaurants, delivery and a top-tier customer experience in one international platform."
+      "subtitle": "Choose your space to sign in or sign up.",
+      "description": "Customer, partner restaurant or courier: each has its own space."
     },
     "roleCards": {
       "client": {
@@ -1433,7 +1433,10 @@
       "activeCountLabel": "Active: {{count}}",
       "revenueLabel": "Revenue: {{amount}}",
       "myDeliveriesNav": "My deliveries",
-      "historyNav": "History"
+      "historyNav": "History",
+      "verificationTitle": "Verification in progress",
+      "verificationBody": "Before your first delivery, the AFROEAT team checks your ID and your right to work.",
+      "verificationNext": "We will contact you by phone or e-mail. Once approved, you can go online here."
     },
     "orderDetail": {
       "notFound": "Order not found",
@@ -2044,7 +2047,7 @@
     "countryCodeError": "Enter the two-letter ISO country code, such as FR or CI.",
     "countryLabel": "Payout account country",
     "countryPlaceholder": "ISO2 code, for example FR",
-    "countryHelp": "This must match the Stripe account country and be enabled by Afroeat.",
+    "countryHelp": "Choose the country where your bank account is held.",
     "continueButton": "Continue Stripe setup",
     "connectButton": "Set up payouts with Stripe",
     "refreshButton": "Refresh status",
@@ -2060,7 +2063,9 @@
     "retryFailed": "The payout still needs review.",
     "resolutionNoteError": "Describe the manual settlement or review in at least 10 characters.",
     "resolutionNotePlaceholder": "Record the reconciliation completed outside Stripe…",
-    "reconciliationResolve": "Close after manual reconciliation"
+    "reconciliationResolve": "Close after manual reconciliation",
+    "countrySwitzerland": "Switzerland",
+    "countryFrance": "France"
   },
   "partnerApply": {
     "title": "Join AFROEAT",

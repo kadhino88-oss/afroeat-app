@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { Stack, Redirect } from 'expo-router';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import NotFoundScreen from '../+not-found';
+import { isAdminAreaAllowed } from '../../services/adminHost';
 import { useAuth } from '../../context/AuthContext';
 
 /**
@@ -81,6 +83,11 @@ export default function AdminLayout() {
   }, [user]);
 
   const hasValidSession = Boolean(isAuthenticated && token);
+
+  // Sur le site public, l'administration se comporte comme une page qui n'existe pas.
+  if (!isAdminAreaAllowed()) {
+    return <NotFoundScreen />;
+  }
 
   if (loading) {
     return (

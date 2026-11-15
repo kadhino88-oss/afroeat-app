@@ -1177,8 +1177,8 @@
     },
     "headline": {
       "title": "Bienvenue sur AFROEAT",
-      "subtitle": "Choisis ton espace pour accéder à un parcours dédié, premium et sécurisé.",
-      "description": "Restaurants, livraison et expérience client haut de gamme dans une seule plateforme internationale."
+      "subtitle": "Choisis ton espace pour te connecter ou t’inscrire.",
+      "description": "Client, restaurant partenaire ou livreur : chacun a son propre espace."
     },
     "roleCards": {
       "client": {
@@ -1433,7 +1433,10 @@
       "activeCountLabel": "Actives : {{count}}",
       "revenueLabel": "Revenus : {{amount}}",
       "myDeliveriesNav": "Mes livraisons",
-      "historyNav": "Historique"
+      "historyNav": "Historique",
+      "verificationTitle": "Vérification en cours",
+      "verificationBody": "Avant ta première course, l’équipe AFROEAT vérifie ta pièce d’identité et ton autorisation de travail.",
+      "verificationNext": "Nous te contactons par téléphone ou par e-mail. Dès que c’est validé, tu pourras te mettre en ligne ici."
     },
     "orderDetail": {
       "notFound": "Commande introuvable",
@@ -2044,7 +2047,7 @@
     "countryCodeError": "Saisis le code pays ISO à deux lettres, par exemple FR ou CI.",
     "countryLabel": "Pays du compte de versement",
     "countryPlaceholder": "Code ISO2, par exemple FR",
-    "countryHelp": "Ce code doit correspondre au pays du compte Stripe et être autorisé par Afroeat.",
+    "countryHelp": "Choisis le pays où se trouve ton compte bancaire.",
     "continueButton": "Continuer la configuration Stripe",
     "connectButton": "Configurer les versements avec Stripe",
     "refreshButton": "Actualiser le statut",
@@ -2060,7 +2063,9 @@
     "retryFailed": "Le versement nécessite encore une vérification.",
     "resolutionNoteError": "Décris en au moins 10 caractères le règlement ou contrôle manuel effectué.",
     "resolutionNotePlaceholder": "Note le rapprochement effectué hors Stripe…",
-    "reconciliationResolve": "Clôturer après rapprochement manuel"
+    "reconciliationResolve": "Clôturer après rapprochement manuel",
+    "countrySwitzerland": "Suisse",
+    "countryFrance": "France"
   },
   "partnerApply": {
     "title": "Rejoindre AFROEAT",

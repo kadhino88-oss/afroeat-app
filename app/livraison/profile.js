@@ -72,6 +72,8 @@ export default function LivraisonProfileScreen() {
   // État réel enregistré sur le serveur (et non un simple interrupteur local).
   const [online, setOnline] = useState(false);
   const [savingOnline, setSavingOnline] = useState(false);
+  // null = inconnu (profil pas encore chargé) ; false = vérification par AFROEAT en attente.
+  const [verified, setVerified] = useState(null);
 
   /**
    * FETCH GLOBAL DRIVER DATA
@@ -94,7 +96,10 @@ export default function LivraisonProfileScreen() {
 
       setOrders(normalizeArray(data));
       if (myEarnings) setEarnings(myEarnings);
-      if (profile) setOnline(Boolean(profile.isAvailable));
+      if (profile) {
+        setOnline(Boolean(profile.isAvailable));
+        setVerified(Boolean(profile.isIdentityVerified) && profile.isWorkAuthorized !== false);
+      }
     } catch (e) {
       console.log(e);
       Alert.alert(t('common.error'), t('livraison.profile.errorLoadBody'));
@@ -197,8 +202,20 @@ export default function LivraisonProfileScreen() {
               {online ? t('livraison.profile.onlineStatus') : t('livraison.profile.offlineStatus')}
             </Text>
 
-            <Switch value={online} onValueChange={toggleOnline} disabled={savingOnline} />
+            <Switch
+              value={online}
+              onValueChange={toggleOnline}
+              disabled={savingOnline || verified === false}
+            />
           </View>
+
+          {verified === false ? (
+            <View style={styles.verifyBox}>
+              <Text style={styles.verifyTitle}>{t('livraison.profile.verificationTitle')}</Text>
+              <Text style={styles.verifyText}>{t('livraison.profile.verificationBody')}</Text>
+              <Text style={styles.verifyText}>{t('livraison.profile.verificationNext')}</Text>
+            </View>
+          ) : null}
         </View>
 
         {/* STATS */}
@@ -283,6 +300,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  verifyBox: {
+    marginTop: 14,
+    padding: 14,
+    borderRadius: 12,
+    backgroundColor: '#FBF1D9',
+    borderWidth: 1,
+    borderColor: '#EAB02F',
+  },
+  verifyTitle: { color: '#301904', fontWeight: '800', fontSize: 15 },
+  verifyText: { marginTop: 6, color: '#4A3A1A', fontSize: 14, lineHeight: 20 },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',

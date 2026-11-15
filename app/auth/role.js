@@ -196,7 +196,6 @@ export default function RoleSelectionScreen() {
   const authRole = auth.role;
   const homeRoute = auth.homeRoute;
   const setSelectedRole = auth.setSelectedRole;
-  const clearAllLocalAppData = auth.clearAllLocalAppData;
 
   const headline = useMemo(
     () => ({
@@ -272,18 +271,6 @@ export default function RoleSelectionScreen() {
     [setSelectedRole]
   );
 
-  const handleResetLocalData = useCallback(async () => {
-    try {
-      if (typeof clearAllLocalAppData === 'function') {
-        await clearAllLocalAppData();
-      }
-    } catch (error) {
-      console.log('Erreur handleResetLocalData:', error);
-    } finally {
-      router.replace('/auth/role');
-    }
-  }, [clearAllLocalAppData]);
-
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -335,20 +322,6 @@ export default function RoleSelectionScreen() {
           <Text style={styles.subtitle}>{headline.subtitle}</Text>
           <Text style={styles.description}>{headline.description}</Text>
 
-          <View style={styles.heroStatsRow}>
-            <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>{t('auth.role.heroStats.client')}</Text>
-              <Text style={styles.heroStatLabel}>{t('auth.role.heroStats.order')}</Text>
-            </View>
-            <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>{t('auth.role.heroStats.restaurant')}</Text>
-              <Text style={styles.heroStatLabel}>{t('auth.role.heroStats.management')}</Text>
-            </View>
-            <View style={styles.heroStatCard}>
-              <Text style={styles.heroStatValue}>{t('auth.role.heroStats.driver')}</Text>
-              <Text style={styles.heroStatLabel}>{t('auth.role.heroStats.mission')}</Text>
-            </View>
-          </View>
         </View>
 
         <View style={styles.section}>
@@ -413,16 +386,6 @@ export default function RoleSelectionScreen() {
           ))}
         </View>
 
-        <Pressable
-          style={({ pressed }) => [
-            styles.resetButton,
-            pressed && styles.buttonPressed,
-          ]}
-          onPress={handleResetLocalData}
-        >
-          <Ionicons name="refresh-outline" size={18} color="#C8331A" />
-          <Text style={styles.resetButtonText}>{t('auth.role.resetLocalAccounts')}</Text>
-        </Pressable>
       </ScrollView>
     </FadeInView>
   );

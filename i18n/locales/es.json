@@ -1177,8 +1177,8 @@
     },
     "headline": {
       "title": "Bienvenido a AFROEAT",
-      "subtitle": "Elige tu área para acceder a una experiencia dedicada, premium y segura.",
-      "description": "Restaurantes, entrega y una experiencia de cliente de primer nivel en una sola plataforma internacional."
+      "subtitle": "Elige tu espacio para iniciar sesión o registrarte.",
+      "description": "Cliente, restaurante asociado o repartidor: cada uno tiene su propio espacio."
     },
     "roleCards": {
       "client": {
@@ -1433,7 +1433,10 @@
       "activeCountLabel": "Activas: {{count}}",
       "revenueLabel": "Ingresos: {{amount}}",
       "myDeliveriesNav": "Mis entregas",
-      "historyNav": "Historial"
+      "historyNav": "Historial",
+      "verificationTitle": "Verificación en curso",
+      "verificationBody": "Antes de tu primer reparto, el equipo de AFROEAT verifica tu documento de identidad y tu permiso de trabajo.",
+      "verificationNext": "Te contactaremos por teléfono o correo. En cuanto se valide, podrás conectarte aquí."
     },
     "orderDetail": {
       "notFound": "Pedido no encontrado",
@@ -2044,7 +2047,7 @@
     "countryCodeError": "Introduce el código ISO de dos letras, como FR o CI.",
     "countryLabel": "País de la cuenta de pagos",
     "countryPlaceholder": "Código ISO2, por ejemplo FR",
-    "countryHelp": "Debe coincidir con el país de la cuenta Stripe y estar habilitado por Afroeat.",
+    "countryHelp": "Elige el país donde está tu cuenta bancaria.",
     "continueButton": "Continuar configuración de Stripe",
     "connectButton": "Configurar pagos con Stripe",
     "refreshButton": "Actualizar estado",
@@ -2060,7 +2063,9 @@
     "retryFailed": "El pago todavía requiere revisión.",
     "resolutionNoteError": "Describe el pago o la revisión manual con al menos 10 caracteres.",
     "resolutionNotePlaceholder": "Registra la conciliación realizada fuera de Stripe…",
-    "reconciliationResolve": "Cerrar tras la conciliación manual"
+    "reconciliationResolve": "Cerrar tras la conciliación manual",
+    "countrySwitzerland": "Suiza",
+    "countryFrance": "Francia"
   },
   "partnerApply": {
     "title": "Unirse a AFROEAT",

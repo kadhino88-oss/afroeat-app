@@ -16,6 +16,7 @@ import {
 import { router, useLocalSearchParams, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
+import { isAdminAreaAllowed } from '../../services/adminHost';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/authService';
 import { useTranslation } from 'react-i18next';
@@ -344,6 +345,11 @@ export default function LoginScreen() {
         <Text style={styles.loaderText}>Chargement...</Text>
       </View>
     );
+  }
+
+  // Sur le site public, la connexion administrateur n'existe pas.
+  if (currentRole === 'admin' && !isAdminAreaAllowed()) {
+    return <Redirect href="/auth/role" />;
   }
 
   if (redirectHref) {

@@ -1177,8 +1177,8 @@
     },
     "headline": {
       "title": "Benvenuto su AFROEAT",
-      "subtitle": "Scegli la tua area per accedere a un percorso dedicato, premium e sicuro.",
-      "description": "Ristoranti, consegne ed esperienza cliente di alto livello in un'unica piattaforma internazionale."
+      "subtitle": "Scegli il tuo spazio per accedere o registrarti.",
+      "description": "Cliente, ristorante partner o corriere: ognuno ha il proprio spazio."
     },
     "roleCards": {
       "client": {
@@ -1433,7 +1433,10 @@
       "activeCountLabel": "Attive: {{count}}",
       "revenueLabel": "Ricavi: {{amount}}",
       "myDeliveriesNav": "Le mie consegne",
-      "historyNav": "Cronologia"
+      "historyNav": "Cronologia",
+      "verificationTitle": "Verifica in corso",
+      "verificationBody": "Prima della tua prima consegna, il team AFROEAT verifica il tuo documento d’identità e il tuo permesso di lavoro.",
+      "verificationNext": "Ti contatteremo per telefono o e-mail. Appena convalidato, potrai andare online qui."
     },
     "orderDetail": {
       "notFound": "Ordine non trovato",
@@ -2044,7 +2047,7 @@
     "countryCodeError": "Inserisci il codice paese ISO di due lettere, ad esempio FR o CI.",
     "countryLabel": "Paese del conto pagamenti",
     "countryPlaceholder": "Codice ISO2, ad esempio FR",
-    "countryHelp": "Deve corrispondere al paese del conto Stripe ed essere abilitato da Afroeat.",
+    "countryHelp": "Scegli il paese in cui si trova il tuo conto bancario.",
     "continueButton": "Continua configurazione Stripe",
     "connectButton": "Configura i pagamenti con Stripe",
     "refreshButton": "Aggiorna stato",
@@ -2060,7 +2063,9 @@
     "retryFailed": "Il pagamento richiede ancora una verifica.",
     "resolutionNoteError": "Descrivi la verifica o il pagamento manuale con almeno 10 caratteri.",
     "resolutionNotePlaceholder": "Registra la riconciliazione eseguita fuori da Stripe…",
-    "reconciliationResolve": "Chiudi dopo la riconciliazione manuale"
+    "reconciliationResolve": "Chiudi dopo la riconciliazione manuale",
+    "countrySwitzerland": "Svizzera",
+    "countryFrance": "Francia"
   },
   "partnerApply": {
     "title": "Unisciti a AFROEAT",

@@ -7,7 +7,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,6 +20,12 @@ import {
   createStripeConnectOnboardingLink,
   getStripeConnectStatus,
 } from '../../services/stripeConnectService';
+
+/** Pays où les versements sont ouverts (pilote : Genève, Annemasse, Annecy). */
+const PAYOUT_COUNTRIES = [
+  { code: 'CH', labelKey: 'payouts.countrySwitzerland' },
+  { code: 'FR', labelKey: 'payouts.countryFrance' },
+];
 
 export default function PayoutsScreen() {
   const { t } = useTranslation();
@@ -140,18 +145,26 @@ export default function PayoutsScreen() {
       {!status?.connected && (
         <View style={styles.formCard}>
           <Text style={styles.label}>{t('payouts.countryLabel')}</Text>
-          <TextInput
-            value={countryCode}
-            onChangeText={(value) => setCountryCode(value.replace(/[^a-z]/gi, '').slice(0, 2).toUpperCase())}
-            autoCapitalize="characters"
-            autoCorrect={false}
-            maxLength={2}
-            placeholder={t('payouts.countryPlaceholder')}
-            placeholderTextColor="#606D5D"
-            editable={!opening}
-            accessibilityLabel={t('payouts.countryLabel')}
-            style={styles.input}
-          />
+          <View style={styles.countryRow}>
+            {PAYOUT_COUNTRIES.map((country) => {
+              const selected = countryCode === country.code;
+              return (
+                <Pressable
+                  key={country.code}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected }}
+                  accessibilityLabel={t(country.labelKey)}
+                  disabled={opening}
+                  onPress={() => setCountryCode(country.code)}
+                  style={[styles.countryChip, selected && styles.countryChipSelected]}
+                >
+                  <Text style={[styles.countryChipText, selected && styles.countryChipTextSelected]}>
+                    {t(country.labelKey)}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
           <Text style={styles.bodySmall}>{t('payouts.countryHelp')}</Text>
         </View>
       )}
@@ -202,6 +215,11 @@ const styles = StyleSheet.create({
   statusText: { color: '#0D1C11', fontSize: 16, fontWeight: '800' },
   formCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 18, marginBottom: 16 },
   label: { color: '#0D1C11', fontWeight: '800', marginBottom: 8 },
+  countryRow: { flexDirection: 'row', gap: 10 },
+  countryChip: { flex: 1, minHeight: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 11, borderWidth: 1, borderColor: '#E3DECF', backgroundColor: '#FFFDF9' },
+  countryChipSelected: { borderColor: '#084424', backgroundColor: '#084424' },
+  countryChipText: { color: '#0D1C11', fontWeight: '700', fontSize: 15 },
+  countryChipTextSelected: { color: '#FBF6EC' },
   input: { borderWidth: 1, borderColor: '#E3DECF', borderRadius: 11, minHeight: 50, paddingHorizontal: 14, fontSize: 16, color: '#0D1C11' },
   primaryButton: { minHeight: 54, borderRadius: 13, backgroundColor: '#084424', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingHorizontal: 16 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '900' },
