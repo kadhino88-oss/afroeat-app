@@ -254,7 +254,7 @@ export default function WebDiscoveryHome() {
               )
             ) : (
               <>
-                {!compact ? <Pressable style={styles.loginButton} onPress={() => router.push({ pathname: '/auth/login', params: { role: 'client' } })}><Text style={styles.loginButtonText}>Connexion</Text></Pressable> : null}
+                {!compact ? <Pressable style={styles.loginButton} onPress={() => router.push('/auth/role')}><Text style={styles.loginButtonText}>Connexion</Text></Pressable> : null}
                 <Pressable style={[styles.signupButton, compact && styles.signupButtonCompact]} onPress={() => router.push('/auth/register-client')}><Text style={styles.signupButtonText}>S’inscrire</Text></Pressable>
               </>
             )}

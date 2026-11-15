@@ -1177,8 +1177,8 @@
     },
     "headline": {
       "title": "欢迎使用 AFROEAT",
-      "subtitle": "选择您的专区，享受专属、优选且安全的体验。",
-      "description": "餐厅、配送与顶级顾客体验，尽在这一国际化平台。"
+      "subtitle": "选择你的空间以登录或注册。",
+      "description": "顾客、合作餐厅或配送员：各有专属空间。"
     },
     "roleCards": {
       "client": {
@@ -1433,7 +1433,10 @@
       "activeCountLabel": "进行中：{{count}}",
       "revenueLabel": "收入：{{amount}}",
       "myDeliveriesNav": "我的配送",
-      "historyNav": "历史记录"
+      "historyNav": "历史记录",
+      "verificationTitle": "正在审核",
+      "verificationBody": "在你首次配送前，AFROEAT 团队会核实你的身份证件和工作许可。",
+      "verificationNext": "我们会通过电话或电子邮件联系你。审核通过后，你即可在此上线。"
     },
     "orderDetail": {
       "notFound": "未找到订单",
@@ -2044,7 +2047,7 @@
     "countryCodeError": "请输入两位 ISO 国家代码，例如 FR 或 CI。",
     "countryLabel": "收款账户所在国家",
     "countryPlaceholder": "ISO2 代码，例如 FR",
-    "countryHelp": "该代码必须与 Stripe 账户国家一致，并已获 Afroeat 开通。",
+    "countryHelp": "请选择你的银行账户所在国家。",
     "continueButton": "继续 Stripe 设置",
     "connectButton": "使用 Stripe 设置收款",
     "refreshButton": "刷新状态",
@@ -2060,7 +2063,9 @@
     "retryFailed": "该笔款项仍需检查。",
     "resolutionNoteError": "请至少用 10 个字符说明已完成的手动结算或审核。",
     "resolutionNotePlaceholder": "记录在 Stripe 之外完成的对账…",
-    "reconciliationResolve": "手动对账后关闭"
+    "reconciliationResolve": "手动对账后关闭",
+    "countrySwitzerland": "瑞士",
+    "countryFrance": "法国"
   },
   "partnerApply": {
     "title": "加入 AFROEAT",
