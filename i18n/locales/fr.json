@@ -2033,6 +2033,28 @@
       "accountUpgradedTitle": "Candidature approuvée, compte activé",
       "accountUpgradedCourier": "{{email}} avait déjà un compte : il est devenu un compte livreur. Il se connecte avec son mot de passe habituel. Vérifie ensuite son identité dans « Livreurs ».",
       "accountUpgradedBusiness": "{{email}} avait déjà un compte : il est devenu un compte commerçant. Il se connecte avec son mot de passe habituel."
+    },
+    "verification": {
+      "title": "Vérification d’identité",
+      "subtitle": "Pièces envoyées par les livreurs et les commerçants. Chaque consultation est enregistrée.",
+      "filter": {
+        "pending": "À traiter",
+        "approved": "Validées",
+        "rejected": "Refusées"
+      },
+      "emptyTitle": "Aucune pièce ici",
+      "emptyBody": "Les pièces envoyées par les partenaires apparaissent ici.",
+      "sentOn": "Envoyée le {{date}}",
+      "view": "Voir la pièce",
+      "viewLogged": "L’ouverture est enregistrée dans le journal d’audit.",
+      "fileDeleted": "Fichier effacé (durée de conservation dépassée).",
+      "reasonPlaceholder": "Motif (obligatoire en cas de refus)",
+      "reasonRequired": "Indique le motif du refus.",
+      "approve": "Valider",
+      "reject": "Refuser",
+      "loadError": "Chargement impossible.",
+      "navTitle": "Vérification d’identité",
+      "navText": "Valider les pièces des livreurs et des commerçants."
     }
   },
   "payouts": {
@@ -2154,5 +2176,45 @@
     "title": "Page introuvable",
     "body": "Cette page n’existe pas ou a été déplacée.",
     "action": "Retour à l’accueil"
+  },
+  "verification": {
+    "title": "Vérification d’identité",
+    "subtitle": "Envoie les pièces demandées. L’équipe AFROEAT les vérifie avant ta première activité.",
+    "kind": {
+      "identity": "Pièce d’identité",
+      "work_permit": "Autorisation de travail",
+      "business_registration": "Extrait du registre du commerce"
+    },
+    "kindHelp": {
+      "identity": "Passeport ou carte d’identité en cours de validité, photo nette, tout le document visible.",
+      "work_permit": "Permis de séjour ou de travail qui t’autorise à travailler en Suisse ou en France.",
+      "business_registration": "Extrait récent qui prouve l’existence de ton commerce (registre du commerce ou équivalent)."
+    },
+    "status": {
+      "missing": "À envoyer",
+      "pending": "En cours de vérification",
+      "approved": "Validé",
+      "rejected": "Refusé"
+    },
+    "send": "Envoyer",
+    "replace": "Remplacer",
+    "remove": "Retirer",
+    "removeTitle": "Retirer ce document ?",
+    "removeBody": "Le fichier sera effacé immédiatement.",
+    "rejectedReason": "Motif du refus : {{reason}}",
+    "deletedOn": "Le fichier sera effacé le {{date}} au plus tard.",
+    "consentLabel": "J’accepte qu’AFROEAT traite ces documents uniquement pour vérifier mon identité et mon droit d’exercer.",
+    "consentRequired": "Coche d’abord la case d’accord.",
+    "privacyTitle": "Comment tes documents sont protégés",
+    "privacyBody": "Les fichiers sont chiffrés et vus uniquement par l’administration AFROEAT, chaque consultation est enregistrée. Ils sont effacés automatiquement après {{pending}} jours sans décision, ou {{decided}} jours après la décision.",
+    "privacyLink": "Lire la politique de confidentialité",
+    "verifiedBanner": "Ton identité est vérifiée.",
+    "unavailable": "L’envoi de documents n’est pas encore ouvert. Réessaie bientôt.",
+    "loadError": "Impossible de charger la vérification.",
+    "uploadError": "Envoi impossible. Réessaie.",
+    "tooLargeError": "Photo trop lourde. Prends-la de plus loin ou avec moins de détails.",
+    "permissionError": "Autorise l’accès aux photos pour envoyer un document.",
+    "cta": "Envoyer mes documents",
+    "restaurantRow": "Pièce d’identité et registre du commerce"
   }
 }

@@ -315,6 +315,16 @@ export const API_ENDPOINTS = {
     upload: '/images',
   },
 
+  // ─── Vérification d'identité des partenaires ───────────
+  verification: {
+    me: '/verification/me',
+    documents: '/verification/documents',
+    documentById: (id) => `/verification/documents/${safePathParam(id)}`,
+    adminList: (status) => `/admin/verification?status=${encodeURIComponent(status)}`,
+    adminFile: (id) => `/admin/verification/${safePathParam(id)}/file`,
+    adminReview: (id) => `/admin/verification/${safePathParam(id)}`,
+  },
+
   // ─── Uploads ────────────────────────────────────────────
   uploads: {
     image:          '/uploads/image',

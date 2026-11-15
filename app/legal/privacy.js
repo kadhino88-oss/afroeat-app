@@ -19,6 +19,14 @@ const SECTIONS = [
     ],
   },
   {
+    heading: 'Pièces justificatives des partenaires',
+    body: [
+      "Les livreurs et les commerçants envoient une pièce d'identité et, selon le cas, une autorisation de travail ou un extrait du registre du commerce. Nous les utilisons uniquement pour vérifier l'identité et le droit d'exercer, avec ton accord donné à l'envoi.",
+      "Les fichiers sont chiffrés, ne sont visibles que de l'administration AFROEAT, et chaque consultation est enregistrée. Ils sont effacés automatiquement 90 jours après l'envoi sans décision, ou 30 jours après la décision. Seule la décision (date et résultat) est conservée.",
+      "Tu peux retirer un document non validé à tout moment depuis l'application, ou demander l'effacement de ton dossier au support.",
+    ],
+  },
+  {
     heading: "À quoi servent ces données",
     body: [
       "Créer et sécuriser ton compte, préparer et livrer tes commandes, traiter les paiements, te prévenir de l'avancement de ta commande et répondre à tes demandes d'aide.",

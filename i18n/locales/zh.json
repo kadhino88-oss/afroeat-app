@@ -2033,6 +2033,28 @@
       "accountUpgradedTitle": "申请已批准，账户已激活",
       "accountUpgradedCourier": "{{email}} 已有账户：现已转为配送员账户，使用原密码登录。请随后在“配送员”中核实其身份。",
       "accountUpgradedBusiness": "{{email}} 已有账户：现已转为商家账户，使用原密码登录。"
+    },
+    "verification": {
+      "title": "身份验证",
+      "subtitle": "配送员和商家提交的文件，每次查看均有记录。",
+      "filter": {
+        "pending": "待处理",
+        "approved": "已通过",
+        "rejected": "已拒绝"
+      },
+      "emptyTitle": "暂无文件",
+      "emptyBody": "合作伙伴提交的文件将显示在这里。",
+      "sentOn": "提交于 {{date}}",
+      "view": "查看文件",
+      "viewLogged": "查看将记录在审计日志中。",
+      "fileDeleted": "文件已删除（超过保存期限）。",
+      "reasonPlaceholder": "原因（拒绝时必填）",
+      "reasonRequired": "请填写拒绝原因。",
+      "approve": "通过",
+      "reject": "拒绝",
+      "loadError": "无法加载。",
+      "navTitle": "身份验证",
+      "navText": "审核配送员和商家的文件。"
     }
   },
   "payouts": {
@@ -2154,5 +2176,45 @@
     "title": "页面未找到",
     "body": "此页面不存在或已被移动。",
     "action": "返回首页"
+  },
+  "verification": {
+    "title": "身份验证",
+    "subtitle": "请发送所需文件。AFROEAT 团队将在你开始前进行审核。",
+    "kind": {
+      "identity": "身份证件",
+      "work_permit": "工作许可",
+      "business_registration": "商业登记证明"
+    },
+    "kindHelp": {
+      "identity": "有效护照或身份证，照片清晰，证件完整可见。",
+      "work_permit": "允许你在瑞士或法国工作的居留或工作许可。",
+      "business_registration": "证明你商家存在的近期文件（商业登记或同等文件）。"
+    },
+    "status": {
+      "missing": "待上传",
+      "pending": "审核中",
+      "approved": "已通过",
+      "rejected": "已拒绝"
+    },
+    "send": "上传",
+    "replace": "替换",
+    "remove": "删除",
+    "removeTitle": "删除此文件？",
+    "removeBody": "文件将立即删除。",
+    "rejectedReason": "拒绝原因：{{reason}}",
+    "deletedOn": "文件最迟将于 {{date}} 删除。",
+    "consentLabel": "我同意 AFROEAT 仅为核实我的身份和从业资格而处理这些文件。",
+    "consentRequired": "请先勾选同意框。",
+    "privacyTitle": "你的文件如何受到保护",
+    "privacyBody": "文件已加密，仅 AFROEAT 管理员可查看，每次查看均有记录。无决定时 {{pending}} 天后自动删除，决定后 {{decided}} 天自动删除。",
+    "privacyLink": "阅读隐私政策",
+    "verifiedBanner": "你的身份已通过验证。",
+    "unavailable": "文件上传尚未开放，请稍后再试。",
+    "loadError": "无法加载验证信息。",
+    "uploadError": "上传失败，请重试。",
+    "tooLargeError": "照片过大，请降低分辨率重拍。",
+    "permissionError": "请允许访问照片以发送文件。",
+    "cta": "上传我的文件",
+    "restaurantRow": "身份证件与商业登记"
   }
 }

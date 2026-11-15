@@ -214,6 +214,9 @@ export default function LivraisonProfileScreen() {
               <Text style={styles.verifyTitle}>{t('livraison.profile.verificationTitle')}</Text>
               <Text style={styles.verifyText}>{t('livraison.profile.verificationBody')}</Text>
               <Text style={styles.verifyText}>{t('livraison.profile.verificationNext')}</Text>
+              <Pressable accessibilityRole="button" onPress={() => router.push('/account/verification')} style={styles.verifyButton}>
+                <Text style={styles.verifyButtonText}>{t('verification.cta')}</Text>
+              </Pressable>
             </View>
           ) : null}
         </View>
@@ -308,6 +311,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#EAB02F',
   },
+  verifyButton: { marginTop: 12, minHeight: 44, borderRadius: 10, alignItems: 'center', justifyContent: 'center', backgroundColor: '#084424' },
+  verifyButtonText: { color: '#FBF6EC', fontWeight: '800' },
   verifyTitle: { color: '#301904', fontWeight: '800', fontSize: 15 },
   verifyText: { marginTop: 6, color: '#4A3A1A', fontSize: 14, lineHeight: 20 },
   row: {

@@ -2033,6 +2033,28 @@
       "accountUpgradedTitle": "Application approved, account activated",
       "accountUpgradedCourier": "{{email}} already had an account: it is now a courier account. They sign in with their usual password. Then verify their identity under “Couriers”.",
       "accountUpgradedBusiness": "{{email}} already had an account: it is now a business account. They sign in with their usual password."
+    },
+    "verification": {
+      "title": "Identity verification",
+      "subtitle": "Documents sent by couriers and businesses. Every access is logged.",
+      "filter": {
+        "pending": "To review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "emptyTitle": "Nothing here",
+      "emptyBody": "Documents sent by partners appear here.",
+      "sentOn": "Sent on {{date}}",
+      "view": "View document",
+      "viewLogged": "Opening is recorded in the audit log.",
+      "fileDeleted": "File erased (retention period over).",
+      "reasonPlaceholder": "Reason (required when rejecting)",
+      "reasonRequired": "Enter the reason for rejection.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "loadError": "Unable to load.",
+      "navTitle": "Identity verification",
+      "navText": "Review couriers’ and businesses’ documents."
     }
   },
   "payouts": {
@@ -2154,5 +2176,45 @@
     "title": "Page not found",
     "body": "This page does not exist or has been moved.",
     "action": "Back to home"
+  },
+  "verification": {
+    "title": "Identity verification",
+    "subtitle": "Send the requested documents. The AFROEAT team checks them before your first activity.",
+    "kind": {
+      "identity": "ID document",
+      "work_permit": "Work authorization",
+      "business_registration": "Business registration extract"
+    },
+    "kindHelp": {
+      "identity": "Valid passport or ID card, sharp photo, whole document visible.",
+      "work_permit": "Residence or work permit allowing you to work in Switzerland or France.",
+      "business_registration": "Recent extract proving your business exists (commercial register or equivalent)."
+    },
+    "status": {
+      "missing": "To send",
+      "pending": "Under review",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "send": "Send",
+    "replace": "Replace",
+    "remove": "Remove",
+    "removeTitle": "Remove this document?",
+    "removeBody": "The file will be erased immediately.",
+    "rejectedReason": "Reason for rejection: {{reason}}",
+    "deletedOn": "The file will be erased by {{date}} at the latest.",
+    "consentLabel": "I agree that AFROEAT processes these documents only to verify my identity and right to operate.",
+    "consentRequired": "Please tick the consent box first.",
+    "privacyTitle": "How your documents are protected",
+    "privacyBody": "Files are encrypted and seen only by AFROEAT administration; every access is logged. They are erased automatically {{pending}} days after upload without a decision, or {{decided}} days after the decision.",
+    "privacyLink": "Read the privacy policy",
+    "verifiedBanner": "Your identity is verified.",
+    "unavailable": "Document upload is not open yet. Please try again soon.",
+    "loadError": "Unable to load verification.",
+    "uploadError": "Upload failed. Please retry.",
+    "tooLargeError": "Photo too large. Retake it with a lower resolution.",
+    "permissionError": "Allow photo access to send a document.",
+    "cta": "Send my documents",
+    "restaurantRow": "ID document and business registration"
   }
 }

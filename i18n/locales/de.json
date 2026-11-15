@@ -2033,6 +2033,28 @@
       "accountUpgradedTitle": "Bewerbung genehmigt, Konto aktiviert",
       "accountUpgradedCourier": "{{email}} hatte bereits ein Konto: Es ist jetzt ein Kurierkonto. Die Anmeldung erfolgt mit dem gewohnten Passwort. Prüfe danach die Identität unter „Kuriere“.",
       "accountUpgradedBusiness": "{{email}} hatte bereits ein Konto: Es ist jetzt ein Händlerkonto. Die Anmeldung erfolgt mit dem gewohnten Passwort."
+    },
+    "verification": {
+      "title": "Identitätsprüfung",
+      "subtitle": "Von Kurieren und Händlern gesendete Dokumente. Jeder Zugriff wird protokolliert.",
+      "filter": {
+        "pending": "Zu prüfen",
+        "approved": "Bestätigt",
+        "rejected": "Abgelehnt"
+      },
+      "emptyTitle": "Keine Dokumente",
+      "emptyBody": "Von Partnern gesendete Dokumente erscheinen hier.",
+      "sentOn": "Gesendet am {{date}}",
+      "view": "Dokument ansehen",
+      "viewLogged": "Das Öffnen wird im Audit-Protokoll erfasst.",
+      "fileDeleted": "Datei gelöscht (Aufbewahrungsfrist abgelaufen).",
+      "reasonPlaceholder": "Grund (bei Ablehnung erforderlich)",
+      "reasonRequired": "Bitte Ablehnungsgrund angeben.",
+      "approve": "Bestätigen",
+      "reject": "Ablehnen",
+      "loadError": "Laden nicht möglich.",
+      "navTitle": "Identitätsprüfung",
+      "navText": "Dokumente von Kurieren und Händlern prüfen."
     }
   },
   "payouts": {
@@ -2154,5 +2176,45 @@
     "title": "Seite nicht gefunden",
     "body": "Diese Seite existiert nicht oder wurde verschoben.",
     "action": "Zur Startseite"
+  },
+  "verification": {
+    "title": "Identitätsprüfung",
+    "subtitle": "Sende die verlangten Dokumente. Das AFROEAT-Team prüft sie vor deiner ersten Tätigkeit.",
+    "kind": {
+      "identity": "Ausweisdokument",
+      "work_permit": "Arbeitsbewilligung",
+      "business_registration": "Handelsregisterauszug"
+    },
+    "kindHelp": {
+      "identity": "Gültiger Pass oder Personalausweis, scharfes Foto, ganzes Dokument sichtbar.",
+      "work_permit": "Aufenthalts- oder Arbeitsbewilligung für die Schweiz oder Frankreich.",
+      "business_registration": "Aktueller Auszug, der dein Geschäft belegt (Handelsregister oder gleichwertig)."
+    },
+    "status": {
+      "missing": "Ausstehend",
+      "pending": "In Prüfung",
+      "approved": "Bestätigt",
+      "rejected": "Abgelehnt"
+    },
+    "send": "Senden",
+    "replace": "Ersetzen",
+    "remove": "Entfernen",
+    "removeTitle": "Dokument entfernen?",
+    "removeBody": "Die Datei wird sofort gelöscht.",
+    "rejectedReason": "Ablehnungsgrund: {{reason}}",
+    "deletedOn": "Die Datei wird spätestens am {{date}} gelöscht.",
+    "consentLabel": "Ich stimme zu, dass AFROEAT diese Dokumente ausschliesslich zur Prüfung meiner Identität und Berechtigung verarbeitet.",
+    "consentRequired": "Bitte zuerst das Einverständnis ankreuzen.",
+    "privacyTitle": "So werden deine Dokumente geschützt",
+    "privacyBody": "Die Dateien sind verschlüsselt und nur für die AFROEAT-Verwaltung sichtbar; jeder Zugriff wird protokolliert. Sie werden nach {{pending}} Tagen ohne Entscheidung oder {{decided}} Tage nach der Entscheidung automatisch gelöscht.",
+    "privacyLink": "Datenschutzerklärung lesen",
+    "verifiedBanner": "Deine Identität ist bestätigt.",
+    "unavailable": "Der Dokumentenupload ist noch nicht geöffnet. Bitte bald erneut versuchen.",
+    "loadError": "Prüfung konnte nicht geladen werden.",
+    "uploadError": "Upload fehlgeschlagen. Bitte erneut versuchen.",
+    "tooLargeError": "Foto zu gross. Bitte mit geringerer Auflösung aufnehmen.",
+    "permissionError": "Erlaube den Fotozugriff, um ein Dokument zu senden.",
+    "cta": "Meine Dokumente senden",
+    "restaurantRow": "Ausweis und Handelsregister"
   }
 }
