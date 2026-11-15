@@ -1372,6 +1372,14 @@
       "infoText2": "Una vez verificado, será posible la redirección al espacio de negocio correspondiente.",
       "changeSpace": "Cambiar de espacio",
       "resetAccounts": "Reiniciar cuentas locales"
+    },
+    "twoFactor": {
+      "title": "Verificación en dos pasos",
+      "hint": "Introduce el código de 6 dígitos de tu app de autenticación o un código de respaldo.",
+      "submit": "Verificar",
+      "cancel": "Cancelar",
+      "invalid": "Código incorrecto.",
+      "expired": "Inicio de sesión caducado, vuelve a empezar."
     }
   },
   "livraison": {
@@ -2062,6 +2070,27 @@
       "loadError": "No se pudo cargar.",
       "navTitle": "Verificación de identidad",
       "navText": "Revisar los documentos de repartidores y comercios."
+    },
+    "security": {
+      "navTitle": "Seguridad de la cuenta",
+      "navText": "Doble autenticación, códigos de respaldo",
+      "title": "Doble autenticación",
+      "intro": "Añade una segunda protección: se pedirá un código de 6 dígitos de una app de autenticación (Google Authenticator, Microsoft Authenticator, 1Password…) en cada inicio de sesión.",
+      "enabled": "Activada",
+      "password": "Contraseña",
+      "codePlaceholder": "Código o código de respaldo",
+      "disable": "Desactivar",
+      "unavailable": "Función no disponible (falta la clave de cifrado).",
+      "step1": "1. Añade la cuenta en tu app",
+      "openApp": "Abrir en la app",
+      "manualKey": "O introduce esta clave manualmente:",
+      "step2": "2. Introduce el código mostrado",
+      "confirm": "Confirmar y activar",
+      "backupTitle": "Códigos de respaldo",
+      "backupText": "Guarda estos 8 códigos en un lugar seguro: cada uno sirve una vez si pierdes el móvil. No se mostrarán de nuevo.",
+      "backupDone": "He anotado mis códigos",
+      "wrongCode": "Contraseña o código incorrecto.",
+      "enable": "Activar la doble autenticación"
     }
   },
   "payouts": {

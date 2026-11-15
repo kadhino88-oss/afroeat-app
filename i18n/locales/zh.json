@@ -1372,6 +1372,14 @@
       "infoText2": "审核通过后，即可跳转至相应的业务空间。",
       "changeSpace": "切换空间",
       "resetAccounts": "重置本地账号"
+    },
+    "twoFactor": {
+      "title": "两步验证",
+      "hint": "请输入验证器应用中的6位验证码，或备用码。",
+      "submit": "验证",
+      "cancel": "取消",
+      "invalid": "验证码错误。",
+      "expired": "登录已过期，请重新开始。"
     }
   },
   "livraison": {
@@ -2062,6 +2070,27 @@
       "loadError": "无法加载。",
       "navTitle": "身份验证",
       "navText": "审核配送员和商家的文件。"
+    },
+    "security": {
+      "navTitle": "账户安全",
+      "navText": "两步验证、备用码",
+      "title": "两步验证",
+      "intro": "增加第二重保护：每次登录都需要验证器应用（Google Authenticator、Microsoft Authenticator、1Password 等）生成的6位验证码。",
+      "enabled": "已启用",
+      "password": "密码",
+      "codePlaceholder": "验证码或备用码",
+      "disable": "停用",
+      "unavailable": "此功能不可用（缺少加密密钥）。",
+      "step1": "1. 将账户添加到您的应用",
+      "openApp": "在应用中打开",
+      "manualKey": "或手动输入此密钥：",
+      "step2": "2. 输入显示的验证码",
+      "confirm": "确认并启用",
+      "backupTitle": "备用码",
+      "backupText": "请妥善保存这8个备用码：丢失手机时每个只能使用一次，之后不再显示。",
+      "backupDone": "我已记下备用码",
+      "wrongCode": "密码或验证码错误。",
+      "enable": "启用两步验证"
     }
   },
   "payouts": {

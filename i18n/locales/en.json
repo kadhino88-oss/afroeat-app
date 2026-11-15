@@ -1372,6 +1372,14 @@
       "infoText2": "Once verified, redirection to the corresponding business space will be possible.",
       "changeSpace": "Change space",
       "resetAccounts": "Reset local accounts"
+    },
+    "twoFactor": {
+      "title": "Two-step verification",
+      "hint": "Enter the 6-digit code from your authenticator app, or a backup code.",
+      "submit": "Verify",
+      "cancel": "Cancel",
+      "invalid": "Incorrect code.",
+      "expired": "Sign-in expired, please start again."
     }
   },
   "livraison": {
@@ -2062,6 +2070,27 @@
       "loadError": "Unable to load.",
       "navTitle": "Identity verification",
       "navText": "Review couriers’ and businesses’ documents."
+    },
+    "security": {
+      "navTitle": "Account security",
+      "navText": "Two-factor authentication, backup codes",
+      "title": "Two-factor authentication",
+      "intro": "Add a second layer of protection: a 6-digit code from an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…) is required at every sign-in.",
+      "enabled": "Enabled",
+      "password": "Password",
+      "codePlaceholder": "Code or backup code",
+      "disable": "Disable",
+      "unavailable": "This feature is unavailable (missing encryption key).",
+      "step1": "1. Add the account to your app",
+      "openApp": "Open in app",
+      "manualKey": "Or enter this key manually:",
+      "step2": "2. Enter the code shown",
+      "confirm": "Confirm and enable",
+      "backupTitle": "Backup codes",
+      "backupText": "Keep these 8 codes somewhere safe: each works once if you lose your phone. They will not be shown again.",
+      "backupDone": "I saved my codes",
+      "wrongCode": "Incorrect password or code.",
+      "enable": "Enable two-factor authentication"
     }
   },
   "payouts": {

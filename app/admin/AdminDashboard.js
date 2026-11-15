@@ -335,6 +335,13 @@ const buildNavigationItems = (t) => [
     route: '/admin/audit-logs',
   },
   {
+    key: 'security',
+    title: t('admin.security.navTitle'),
+    text: t('admin.security.navText'),
+    icon: <Ionicons name="lock-closed-outline" size={22} color="#084424" />,
+    route: '/admin/security',
+  },
+  {
     key: 'verification',
     title: t('admin.verification.navTitle'),
     text: t('admin.verification.navText'),

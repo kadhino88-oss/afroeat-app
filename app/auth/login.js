@@ -19,6 +19,7 @@ import FadeInView from '../../components/FadeInView';
 import { isAdminAreaAllowed } from '../../services/adminHost';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/authService';
+import { setPendingChallenge } from '../../services/twoFactorChallenge';
 import { useTranslation } from 'react-i18next';
 
 /**
@@ -281,6 +282,12 @@ export default function LoginScreen() {
         password: safePassword,
         role: currentRole,
       });
+
+      if (response?.requires2FA) {
+        setPendingChallenge(response.challengeToken);
+        router.push('/auth/two-factor');
+        return;
+      }
 
       const safeUser = response?.user || null;
       const safeToken = response?.token || '';

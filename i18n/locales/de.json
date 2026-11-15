@@ -1372,6 +1372,14 @@
       "infoText2": "Nach der Überprüfung ist die Weiterleitung zum entsprechenden Geschäftsbereich möglich.",
       "changeSpace": "Bereich wechseln",
       "resetAccounts": "Lokale Konten zurücksetzen"
+    },
+    "twoFactor": {
+      "title": "Bestätigung in zwei Schritten",
+      "hint": "Geben Sie den 6-stelligen Code Ihrer Authenticator-App oder einen Backup-Code ein.",
+      "submit": "Bestätigen",
+      "cancel": "Abbrechen",
+      "invalid": "Falscher Code.",
+      "expired": "Anmeldung abgelaufen, bitte erneut starten."
     }
   },
   "livraison": {
@@ -2062,6 +2070,27 @@
       "loadError": "Laden nicht möglich.",
       "navTitle": "Identitätsprüfung",
       "navText": "Dokumente von Kurieren und Händlern prüfen."
+    },
+    "security": {
+      "navTitle": "Kontosicherheit",
+      "navText": "Zwei-Faktor-Authentifizierung, Backup-Codes",
+      "title": "Zwei-Faktor-Authentifizierung",
+      "intro": "Zusätzlicher Schutz: Bei jeder Anmeldung wird ein 6-stelliger Code einer Authenticator-App (Google Authenticator, Microsoft Authenticator, 1Password…) verlangt.",
+      "enabled": "Aktiviert",
+      "password": "Passwort",
+      "codePlaceholder": "Code oder Backup-Code",
+      "disable": "Deaktivieren",
+      "unavailable": "Diese Funktion ist nicht verfügbar (Verschlüsselungsschlüssel fehlt).",
+      "step1": "1. Konto in Ihrer App hinzufügen",
+      "openApp": "In der App öffnen",
+      "manualKey": "Oder diesen Schlüssel manuell eingeben:",
+      "step2": "2. Angezeigten Code eingeben",
+      "confirm": "Bestätigen und aktivieren",
+      "backupTitle": "Backup-Codes",
+      "backupText": "Bewahren Sie diese 8 Codes sicher auf: Jeder gilt einmal, falls Sie Ihr Handy verlieren. Sie werden nicht erneut angezeigt.",
+      "backupDone": "Codes notiert",
+      "wrongCode": "Passwort oder Code falsch.",
+      "enable": "Zwei-Faktor-Authentifizierung aktivieren"
     }
   },
   "payouts": {
