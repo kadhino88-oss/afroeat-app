@@ -168,7 +168,11 @@
     "retryQuote": "Réessayer le calcul",
     "quoteChangedTitle": "Devis mis à jour",
     "quoteChangedBody": "Le prix ou la devise a changé. Vérifie le nouveau total avant de valider.",
-    "editAddress": "Modifier l’adresse"
+    "editAddress": "Modifier l’adresse",
+    "newAddressPlaceholder": "Nouvelle adresse (rue, numéro, ville)",
+    "saveAddress": "Enregistrer",
+    "removeAddress": "Retirer cette adresse",
+    "addressSaveError": "Adresse non enregistrée. Réessaie."
   },
   "restaurant": {
     "popular": "Populaire",

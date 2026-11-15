@@ -168,7 +168,11 @@
     "retryQuote": "Retry calculation",
     "quoteChangedTitle": "Quote updated",
     "quoteChangedBody": "The price or currency changed. Review the new total before placing the order.",
-    "editAddress": "Edit address"
+    "editAddress": "Edit address",
+    "newAddressPlaceholder": "New address (street, number, city)",
+    "saveAddress": "Save",
+    "removeAddress": "Remove this address",
+    "addressSaveError": "Address could not be saved. Try again."
   },
   "restaurant": {
     "popular": "Popular",

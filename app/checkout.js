@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   StatusBar,
   Platform,
+  TextInput,
 } from 'react-native';
 import OwnImage from '../components/OwnImage';
 import { router } from 'expo-router';
@@ -19,6 +20,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { createOrder, getOrderQuote } from '../services/orderService';
 import { useTranslation } from 'react-i18next';
+import { listMyAddresses, saveMyAddress, removeMyAddress } from '../services/userService';
 
 /**
  * =========================================================
@@ -204,7 +206,7 @@ export default function CheckoutScreen() {
     return normalizeText(safeCartItems?.[0]?.restaurantName, 'Restaurant');
   }, [getRestaurantName, safeCartItems]);
 
-  const deliveryAddress = useMemo(() => {
+  const profileAddress = useMemo(() => {
     return normalizeText(
       user?.address ||
         user?.adresse ||
@@ -213,6 +215,54 @@ export default function CheckoutScreen() {
       ''
     );
   }, [user]);
+
+  // Carnet d'adresses : l'adresse choisie ici remplace celle du profil pour cette commande.
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [pickedAddressId, setPickedAddressId] = useState(null);
+  const [newAddress, setNewAddress] = useState('');
+  const [addingAddress, setAddingAddress] = useState(false);
+
+  useEffect(() => {
+    if (!isLoggedIn || user?.role !== 'client') return undefined;
+    let active = true;
+    listMyAddresses(token)
+      .then((list) => active && setSavedAddresses(list))
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [isLoggedIn, token, user?.role]);
+
+  const pickedAddress = savedAddresses.find((a) => a.id === pickedAddressId) || null;
+  const deliveryAddress = pickedAddress?.address || profileAddress;
+
+  const handleAddAddress = useCallback(async () => {
+    const value = normalizeText(newAddress);
+    if (value.length < 5) return;
+    try {
+      setAddingAddress(true);
+      const list = await saveMyAddress({ address: value, isDefault: savedAddresses.length === 0 }, token);
+      setSavedAddresses(list);
+      setPickedAddressId(list.find((a) => a.address.toLowerCase() === value.toLowerCase())?.id || null);
+      setNewAddress('');
+    } catch (error) {
+      Alert.alert(t('common.error'), error?.message || t('checkout.addressSaveError'));
+    } finally {
+      setAddingAddress(false);
+    }
+  }, [newAddress, savedAddresses.length, token, t]);
+
+  const handleRemoveAddress = useCallback(
+    async (id) => {
+      try {
+        setSavedAddresses(await removeMyAddress(id, token));
+        setPickedAddressId((current) => (current === id ? null : current));
+      } catch (error) {
+        Alert.alert(t('common.error'), error?.message || t('checkout.addressSaveError'));
+      }
+    },
+    [token, t]
+  );
 
   const normalizedItems = useMemo(() => {
     return buildOrderItemsPayload(safeCartItems);
@@ -747,6 +797,50 @@ export default function CheckoutScreen() {
                   : t('checkout.addressPlaceholder')}
               </Text>
 
+              {isLoggedIn && user?.role === 'client' ? (
+                <View style={styles.savedBlock}>
+                  <View style={styles.savedRow}>
+                    {savedAddresses.map((a) => {
+                      const selected = (pickedAddressId ? a.id === pickedAddressId : a.address === deliveryAddress);
+                      return (
+                        <View key={a.id} style={[styles.savedChip, selected && styles.savedChipOn]}>
+                          <Pressable accessibilityRole="button" onPress={() => setPickedAddressId(a.id)}>
+                            <Text style={[styles.savedChipText, selected && styles.savedChipTextOn]} numberOfLines={1}>
+                              {a.label || a.address.split(',')[0]}
+                            </Text>
+                          </Pressable>
+                          <Pressable accessibilityRole="button" accessibilityLabel={t('checkout.removeAddress')} onPress={() => handleRemoveAddress(a.id)}>
+                            <Ionicons name="close" size={14} color={selected ? '#FFFFFF' : '#606D5D'} />
+                          </Pressable>
+                        </View>
+                      );
+                    })}
+                  </View>
+                  {savedAddresses.length < 5 ? (
+                    <View style={styles.savedAdd}>
+                      <TextInput
+                        style={styles.savedInput}
+                        value={newAddress}
+                        onChangeText={setNewAddress}
+                        placeholder={t('checkout.newAddressPlaceholder')}
+                        placeholderTextColor="#9AA597"
+                        onSubmitEditing={handleAddAddress}
+                        returnKeyType="done"
+                        maxLength={300}
+                      />
+                      <Pressable
+                        accessibilityRole="button"
+                        disabled={addingAddress || normalizeText(newAddress).length < 5}
+                        onPress={handleAddAddress}
+                        style={[styles.savedAddBtn, (addingAddress || normalizeText(newAddress).length < 5) && { opacity: 0.4 }]}
+                      >
+                        <Text style={styles.savedAddBtnText}>{t('checkout.saveAddress')}</Text>
+                      </Pressable>
+                    </View>
+                  ) : null}
+                </View>
+              ) : null}
+
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel={t('checkout.viewProfile')}
@@ -1058,6 +1152,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  savedBlock: { marginTop: 10, gap: 10 },
+  savedRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  savedChip: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, borderColor: '#E3DECF', backgroundColor: '#FFFFFF', borderRadius: 999, paddingVertical: 7, paddingHorizontal: 12, maxWidth: 220 },
+  savedChipOn: { backgroundColor: '#084424', borderColor: '#084424' },
+  savedChipText: { color: '#0D1C11', fontWeight: '700', fontSize: 13 },
+  savedChipTextOn: { color: '#FFFFFF' },
+  savedAdd: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  savedInput: { flex: 1, borderWidth: 1, borderColor: '#E3DECF', borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, color: '#0D1C11', fontSize: 14 },
+  savedAddBtn: { backgroundColor: '#EAB02F', borderRadius: 12, paddingVertical: 11, paddingHorizontal: 14 },
+  savedAddBtnText: { color: '#0D1C11', fontWeight: '900', fontSize: 13 },
   addressCard: {
     marginHorizontal: 20,
     marginBottom: 14,
