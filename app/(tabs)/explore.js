@@ -42,6 +42,8 @@ import useGridColumns, { MAX_CONTENT_WIDTH } from '../../hooks/use-grid-columns'
  * =========================================================
  */
 
+const IS_WEB = Platform.OS === 'web';
+
 const withTimeout = (promise, timeoutMs, message) =>
   new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error(message)), timeoutMs);
@@ -1123,25 +1125,36 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
   const renderHeader = useCallback(() => {
     return (
       <View>
-        <HomeHeader
-          userName={displayName}
-          locationText={displayAddress}
-          avatarUri={displayAvatar}
-          user={user}
-        />
+        {IS_WEB ? (
+          <View style={styles.webHeading}>
+            <Text accessibilityRole="header" style={styles.webTitle}>
+              {t('explore.title')}
+            </Text>
+            <Text style={styles.webSubtitle}>{t('explore.subtitle')}</Text>
+          </View>
+        ) : (
+          <>
+            <HomeHeader
+              userName={displayName}
+              locationText={displayAddress}
+              avatarUri={displayAvatar}
+              user={user}
+            />
 
-        <View style={styles.heroCard}>
-          <View style={styles.heroIconWrap}>
-            <Ionicons name="compass-outline" size={22} color="#084424" />
-          </View>
-          <View style={styles.heroTextBlock}>
-            <Text style={styles.title}>{t('explore.title')}</Text>
-            <Text style={styles.subtitle}>{t('explore.subtitle')}</Text>
-          </View>
-        </View>
+            <View style={styles.heroCard}>
+              <View style={styles.heroIconWrap}>
+                <Ionicons name="compass-outline" size={22} color="#084424" />
+              </View>
+              <View style={styles.heroTextBlock}>
+                <Text style={styles.title}>{t('explore.title')}</Text>
+                <Text style={styles.subtitle}>{t('explore.subtitle')}</Text>
+              </View>
+            </View>
+          </>
+        )}
 
         <View style={styles.searchCard}>
-          <View style={styles.searchBox}>
+          <View style={[styles.searchBox, IS_WEB && styles.webSearchBox]}>
             <Ionicons name="search-outline" size={22} color="#606D5D" />
 
             <TextInput
@@ -1249,7 +1262,8 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           }}
         />
 
-        <View style={styles.distanceSection}>
+        <View style={IS_WEB ? styles.webToolbar : null}>
+        <View style={[styles.distanceSection, IS_WEB && styles.webDistance]}>
           <Text style={styles.distanceLabel}>{t('explore.distance')}</Text>
           <View style={styles.distanceOptions}>
             {NEARBY_RADIUS_OPTIONS.map((distance) => (
@@ -1285,6 +1299,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           style={({ pressed }) => [
             styles.openOnlyChip,
             openOnly && styles.openOnlyChipActive,
+            IS_WEB && styles.webOpenOnly,
             pressed && styles.filterChipPressed,
           ]}
           onPress={() => setOpenOnly((current) => !current)}
@@ -1303,6 +1318,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
             {t('explore.openNow')}
           </Text>
         </Pressable>
+        </View>
 
         {(needsLocationPermission || usingDefaultArea) && (
           <View style={styles.locationNotice}>
@@ -1398,12 +1414,17 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t('explore.openRestaurant', { name: item?.name })}
-          style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+          style={({ pressed, hovered }) => [
+            styles.card,
+            IS_WEB && styles.webCard,
+            IS_WEB && hovered && styles.webCardHover,
+            pressed && styles.cardPressed,
+          ]}
           onPress={() => handleOpenDirectoryItem(item)}
         >
-          <View style={styles.cardImageWrap}>
+          <View style={[styles.cardImageWrap, IS_WEB && styles.webImageWrap]}>
             {showPlaceholder ? (
-              <View style={[styles.cardImage, styles.cardImagePlaceholder]}>
+              <View style={[styles.cardImage, styles.cardImagePlaceholder, IS_WEB && styles.webImage]}>
                 <PlaceBrandMark
                   logoUrl={item?.logoUrl}
                   website={item?.website}
@@ -1414,7 +1435,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
             ) : (
               <Image
                 source={{ uri: imageUri }}
-                style={styles.cardImage}
+                style={[styles.cardImage, IS_WEB && styles.webImage]}
                 contentFit="cover"
                 cachePolicy="memory-disk"
                 transition={180}
@@ -1445,7 +1466,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
             ) : null}
           </View>
 
-          <View style={styles.cardBody}>
+          <View style={[styles.cardBody, IS_WEB && styles.webCardBody]}>
             <View style={styles.cardTop}>
               <Text style={styles.cardTitle} numberOfLines={1}>
                 {item?.name}
@@ -1614,6 +1635,39 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
  */
 
 const styles = StyleSheet.create({
+  webHeading: { paddingTop: 28, paddingBottom: 18 },
+  webTitle: { fontSize: 32, fontWeight: '900', color: '#0D1C11', letterSpacing: -0.5 },
+  webSubtitle: { marginTop: 6, fontSize: 15, lineHeight: 22, color: '#606D5D', maxWidth: 640 },
+  webSearchBox: { minHeight: 52, borderRadius: 14, marginBottom: 14, maxWidth: 720 },
+  webToolbar: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginBottom: 14,
+  },
+  webDistance: { marginBottom: 0 },
+  webOpenOnly: { marginBottom: 0 },
+  webCard: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    borderRadius: 16,
+    shadowOpacity: 0,
+    elevation: 0,
+    marginBottom: 28,
+    overflow: 'visible',
+    cursor: 'pointer',
+  },
+  webCardHover: { transform: [{ translateY: -2 }] },
+  webImageWrap: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    height: 190,
+    backgroundColor: '#F2ECE0',
+  },
+  webImage: { height: '100%' },
+  webCardBody: { paddingHorizontal: 2, paddingTop: 12, paddingBottom: 0 },
   container: {
     flex: 1,
     backgroundColor: '#FBF6EC',
