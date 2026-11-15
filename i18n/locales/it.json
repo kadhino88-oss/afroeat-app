@@ -1444,9 +1444,10 @@
       "trackingButton": "Tracciamento"
     },
     "trackingWeb": {
-      "title": "Tracciamento del fattorino disponibile su mobile",
-      "text": "Il tracciamento GPS in tempo reale utilizza tecnologia mobile nativa. Apri AFROEAT con Expo Go sul tuo telefono per seguire la tua consegna sulla mappa.",
-      "backButton": "Torna alle consegne"
+      "backButton": "Torna alle consegne",
+      "advance": "Passa a: {{status}}",
+      "you": "Tu",
+      "client": "Cliente"
     },
     "tracking": {
       "insightDelivered": "Consegna completata con successo.",

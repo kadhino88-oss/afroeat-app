@@ -1444,9 +1444,10 @@
       "trackingButton": "Suivi"
     },
     "trackingWeb": {
-      "title": "Suivi livreur disponible sur mobile",
-      "text": "Le suivi GPS en temps réel utilise une technologie native mobile. Ouvre AFROEAT avec Expo Go sur ton téléphone pour suivre ta livraison sur la carte.",
-      "backButton": "Retour aux courses"
+      "backButton": "Retour aux courses",
+      "advance": "Passer à : {{status}}",
+      "you": "Vous",
+      "client": "Client"
     },
     "tracking": {
       "insightDelivered": "Livraison terminée avec succès.",

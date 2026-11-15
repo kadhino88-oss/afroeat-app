@@ -1444,9 +1444,10 @@
       "trackingButton": "Tracking"
     },
     "trackingWeb": {
-      "title": "Driver tracking available on mobile",
-      "text": "Real-time GPS tracking uses native mobile technology. Open AFROEAT with Expo Go on your phone to track your delivery on the map.",
-      "backButton": "Back to deliveries"
+      "backButton": "Back to deliveries",
+      "advance": "Move to: {{status}}",
+      "you": "You",
+      "client": "Customer"
     },
     "tracking": {
       "insightDelivered": "Delivery completed successfully.",

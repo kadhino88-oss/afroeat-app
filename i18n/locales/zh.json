@@ -1444,9 +1444,10 @@
       "trackingButton": "追踪"
     },
     "trackingWeb": {
-      "title": "骑手追踪功能仅支持手机端",
-      "text": "实时 GPS 追踪使用原生移动技术。请在手机上通过 Expo Go 打开 AFROEAT，以在地图上追踪你的配送。",
-      "backButton": "返回配送列表"
+      "backButton": "返回配送列表",
+      "advance": "切换为：{{status}}",
+      "you": "您",
+      "client": "客户"
     },
     "tracking": {
       "insightDelivered": "配送已成功完成。",
