@@ -2024,7 +2024,10 @@
       "status_approved": "Approvata",
       "status_rejected": "Rifiutata",
       "inviteEmailed": "Il link è stato inviato anche via e-mail a {{email}}.",
-      "inviteNotEmailed": "L'e-mail non è ancora configurata: invia tu stesso il link al partner."
+      "inviteNotEmailed": "L'e-mail non è ancora configurata: invia tu stesso il link al partner.",
+      "accountUpgradedTitle": "Candidatura approvata, account attivato",
+      "accountUpgradedCourier": "{{email}} aveva già un account: ora è un account corriere. Accede con la sua password abituale. Poi verifica la sua identità in «Corrieri».",
+      "accountUpgradedBusiness": "{{email}} aveva già un account: ora è un account commerciante. Accede con la sua password abituale."
     }
   },
   "payouts": {

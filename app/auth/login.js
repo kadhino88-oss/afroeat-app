@@ -503,15 +503,6 @@ export default function LoginScreen() {
             )}
           </View>
 
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>{t('auth.login.infoTitle')}</Text>
-            <Text style={styles.infoText}>
-              {t('auth.login.infoText1')}
-            </Text>
-            <Text style={styles.infoText}>
-              {t('auth.login.infoText2')}
-            </Text>
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </FadeInView>

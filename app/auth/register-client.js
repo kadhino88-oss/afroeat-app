@@ -354,13 +354,6 @@ export default function RegisterClientScreen() {
               </Pressable>
             </View>
 
-            <View style={styles.infoBox}>
-              <Text style={styles.infoTitle}>{t('auth.registerClient.paymentLaterTitle')}</Text>
-              <Text style={styles.infoText}>
-                {t('auth.registerClient.paymentLaterText')}
-              </Text>
-            </View>
-
             <Pressable
               style={({ pressed }) => [
                 styles.button,

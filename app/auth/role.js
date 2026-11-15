@@ -413,16 +413,6 @@ export default function RoleSelectionScreen() {
           ))}
         </View>
 
-        <View style={styles.infoPanel}>
-          <Text style={styles.infoTitle}>{t('auth.role.premiumEntryTitle')}</Text>
-          <Text style={styles.infoText}>
-            {t('auth.role.premiumEntryText1')}
-          </Text>
-          <Text style={styles.infoText}>
-            {t('auth.role.premiumEntryText2')}
-          </Text>
-        </View>
-
         <Pressable
           style={({ pressed }) => [
             styles.resetButton,

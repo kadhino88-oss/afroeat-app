@@ -2024,7 +2024,10 @@
       "status_approved": "已批准",
       "status_rejected": "已拒绝",
       "inviteEmailed": "链接也已通过电子邮件发送至 {{email}}。",
-      "inviteNotEmailed": "尚未配置电子邮件：请自行将此链接发送给合作伙伴。"
+      "inviteNotEmailed": "尚未配置电子邮件：请自行将此链接发送给合作伙伴。",
+      "accountUpgradedTitle": "申请已批准，账户已激活",
+      "accountUpgradedCourier": "{{email}} 已有账户：现已转为配送员账户，使用原密码登录。请随后在“配送员”中核实其身份。",
+      "accountUpgradedBusiness": "{{email}} 已有账户：现已转为商家账户，使用原密码登录。"
     }
   },
   "payouts": {

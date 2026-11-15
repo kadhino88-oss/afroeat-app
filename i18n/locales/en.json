@@ -2024,7 +2024,10 @@
       "status_approved": "Approved",
       "status_rejected": "Rejected",
       "inviteEmailed": "The link was also emailed to {{email}}.",
-      "inviteNotEmailed": "Email is not configured yet: send this link to the partner yourself."
+      "inviteNotEmailed": "Email is not configured yet: send this link to the partner yourself.",
+      "accountUpgradedTitle": "Application approved, account activated",
+      "accountUpgradedCourier": "{{email}} already had an account: it is now a courier account. They sign in with their usual password. Then verify their identity under “Couriers”.",
+      "accountUpgradedBusiness": "{{email}} already had an account: it is now a business account. They sign in with their usual password."
     }
   },
   "payouts": {
