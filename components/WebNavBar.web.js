@@ -61,7 +61,7 @@ export default function WebNavBar() {
   const { t } = useTranslation();
   const pathname = usePathname() || '/';
   const { width } = useWindowDimensions();
-  const { isAuthenticated, role, user } = useAuth() || {};
+  const { isAuthenticated, role, user, logout } = useAuth() || {};
   const currentRole = norm(role || user?.role);
   const isAdmin = Boolean(isAuthenticated) && currentRole === 'admin';
   // L'administrateur a deux espaces distincts : le site public et l'administration (/admin).
@@ -77,6 +77,12 @@ export default function WebNavBar() {
   const compact = width < 760;
   const tiny = width < 560;
   const cartCount = typeof cart.getTotalItems === 'function' ? Number(cart.getTotalItems()) || 0 : 0;
+
+  // Espaces partenaire et admin : la déconnexion est toujours à portée de main dans la barre.
+  const signOut = async () => {
+    if (typeof logout === 'function') await logout();
+    router.replace('/');
+  };
 
   const goBack = () => {
     if (router.canGoBack()) router.back();
@@ -161,6 +167,19 @@ export default function WebNavBar() {
               )}
             </Pressable>
           ) : null}
+          {isAuthenticated && (partner || isAdmin) ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('profile.menu.logoutLabel')}
+              onPress={signOut}
+              style={styles.signOut}
+            >
+              <Ionicons name="log-out-outline" size={18} color="#C8331A" />
+              {!compact ? (
+                <Text style={styles.signOutText}>{t('profile.menu.logoutLabel')}</Text>
+              ) : null}
+            </Pressable>
+          ) : null}
           {partner ? null : (
           <Pressable
             accessibilityRole="button"
@@ -238,6 +257,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFDF9',
   },
   signInText: { color: '#084424', fontWeight: '700', fontSize: 14 },
+  signOut: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#F0D2CB',
+    backgroundColor: '#FFF6F3',
+  },
+  signOutText: { color: '#C8331A', fontWeight: '700', fontSize: 14 },
   cart: {
     flexDirection: 'row',
     alignItems: 'center',
