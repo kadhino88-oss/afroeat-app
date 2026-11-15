@@ -11,6 +11,7 @@ import {
   Pressable,
   Alert,
   RefreshControl,
+  Platform,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useFocusEffect, router } from 'expo-router';
@@ -753,11 +754,11 @@ export default function RestaurantScreen() {
       const itemImageSource = getMenuItemImageSource(item, restaurant);
 
       return (
-        <View style={styles.card}>
+        <View style={[styles.card, IS_WEB && styles.webCard]}>
           <View style={styles.cardContent}>
             <Image
               source={itemImageSource}
-              style={styles.itemImage}
+              style={[styles.itemImage, IS_WEB && styles.webItemImage]}
               contentFit="cover"
               cachePolicy="memory-disk"
               transition={160}
@@ -873,10 +874,10 @@ export default function RestaurantScreen() {
    */
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, IS_WEB && styles.webContainer]}>
       <StatusBar barStyle="light-content" />
 
-      <View style={styles.heroWrapper}>
+      <View style={[styles.heroWrapper, IS_WEB && styles.webHero]}>
         <Image
           source={heroImageSource}
           style={styles.cover}
@@ -888,7 +889,7 @@ export default function RestaurantScreen() {
         <View style={styles.overlay} />
         <View style={styles.overlaySoft} />
 
-        <View style={styles.topBar}>
+        <View style={[styles.topBar, IS_WEB && styles.webTopBar]}>
           <Pressable
             style={({ pressed }) => [
               styles.iconBtn,
@@ -1010,6 +1011,7 @@ export default function RestaurantScreen() {
               </View>
             )}
 
+            {!IS_WEB && (
             <View style={styles.quickStatsRow}>
               <View style={styles.quickStatCard}>
                 <Text style={styles.quickStatValue}>{menu.length}</Text>
@@ -1026,6 +1028,7 @@ export default function RestaurantScreen() {
                   <Text style={styles.quickStatLabel}>{t('restaurant.featuredDishes')}</Text>
               </View>
             </View>
+            )}
 
             <View style={styles.infoCard}>
               <View style={styles.metaRow}>
@@ -1164,7 +1167,22 @@ export default function RestaurantScreen() {
  * =========================================================
  */
 
+const IS_WEB = Platform.OS === 'web';
+
 const styles = StyleSheet.create({
+  webContainer: { width: '100%', maxWidth: 1040, alignSelf: 'center' },
+  webHero: { borderRadius: 20, overflow: 'hidden', marginTop: 16, marginHorizontal: 16 },
+  webTopBar: { top: 16 },
+  webCard: {
+    marginHorizontal: 16,
+    marginVertical: 5,
+    padding: 16,
+    shadowOpacity: 0,
+    elevation: 0,
+    borderWidth: 1,
+    borderColor: '#EDE5D2',
+  },
+  webItemImage: { width: 112, height: 112, borderRadius: 14, marginRight: 16 },
   container: {
     flex: 1,
     backgroundColor: '#FBF6EC',
