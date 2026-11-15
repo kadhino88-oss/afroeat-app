@@ -626,8 +626,9 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
       return '/livraison';
     }
 
+    // Sur le web, l'administrateur peut parcourir le site public.
     if (currentRole === 'admin') {
-      return '/admin';
+      return Platform.OS === 'web' ? null : '/admin';
     }
 
     return null;
