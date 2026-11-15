@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   StatusBar,
   RefreshControl,
+  Platform,
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -784,6 +785,7 @@ export default function RestaurantDashboard() {
         }
         contentContainerStyle={[
           styles.listContent,
+          WEB_COLUMN,
           menuItems.length === 0 && styles.emptyListContent,
         ]}
         refreshControl={
@@ -797,6 +799,8 @@ export default function RestaurantDashboard() {
     </FadeInView>
   );
 }
+
+const WEB_COLUMN = Platform.OS === 'web' ? { width: '100%', maxWidth: 1040, alignSelf: 'center' } : null;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FBF6EC' },

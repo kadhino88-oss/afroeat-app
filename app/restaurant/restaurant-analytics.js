@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
@@ -110,7 +111,7 @@ export default function RestaurantAnalytics() {
     <FadeInView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, WEB_COLUMN]}>
         <Text style={styles.title}>{t('restaurant.analytics.title')}</Text>
         <Text style={styles.subtitle}>
           {t('restaurant.analytics.subtitle')}
@@ -179,6 +180,8 @@ export default function RestaurantAnalytics() {
     </FadeInView>
   );
 }
+
+const WEB_COLUMN = Platform.OS === 'web' ? { width: '100%', maxWidth: 1040, alignSelf: 'center' } : null;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FBF6EC' },

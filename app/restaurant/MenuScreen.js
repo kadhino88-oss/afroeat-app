@@ -9,6 +9,7 @@ import {
   StatusBar,
   Alert,
   RefreshControl,
+  Platform,
 } from 'react-native';
 import { router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -227,6 +228,7 @@ export default function MenuScreen() {
         }
         contentContainerStyle={[
           styles.content,
+          WEB_COLUMN,
           items.length === 0 && styles.emptyListContent,
         ]}
         ListHeaderComponent={
@@ -362,6 +364,8 @@ export default function MenuScreen() {
     </FadeInView>
   );
 }
+
+const WEB_COLUMN = Platform.OS === 'web' ? { width: '100%', maxWidth: 1040, alignSelf: 'center' } : null;
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#FBF6EC' },
