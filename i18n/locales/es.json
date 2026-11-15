@@ -1866,7 +1866,8 @@
       "ownerUpdateErrorFallback": "No se pudo modificar el estado del propietario.",
       "ownerNameFallback": "Propietario no especificado",
       "menuItemNameFallback": "Artículo",
-      "menuItemCategoryFallback": "Categoría"
+      "menuItemCategoryFallback": "Categoría",
+      "manageMenu": "Gestionar menú y fotos"
     },
     "driverDetails": {
       "invalidDriverAlert": "Repartidor no válido.",

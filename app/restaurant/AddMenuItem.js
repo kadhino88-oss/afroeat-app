@@ -57,7 +57,7 @@ export default function AddMenuItem() {
     ? params.restaurantId[0]
     : params?.restaurantId;
 
-  const canAccess = isAuthenticated && role === 'restaurant';
+  const canAccess = isAuthenticated && (role === 'restaurant' || role === 'admin');
 
   const [restaurantId, setRestaurantId] = useState(
     normalizeText(initialRestaurantId)
@@ -136,7 +136,8 @@ export default function AddMenuItem() {
       await apiPost(API_ENDPOINTS.menu.create, payload, token);
 
       Alert.alert(t('restaurant.settings.successTitle'), t('restaurant.addMenuItem.successBody'));
-      router.replace('/restaurant/MenuScreen');
+      if (role === 'admin') router.back();
+      else router.replace('/restaurant/MenuScreen');
     } catch (error) {
       console.log('Erreur ajout plat :', error);
       Alert.alert(

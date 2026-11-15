@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Stack, Redirect } from 'expo-router';
+import { Stack, Redirect, useSegments } from 'expo-router';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 
@@ -60,6 +60,7 @@ const getRestaurantStatus = (user) => {
 
 export default function RestaurantLayout() {
   const auth = useAuth() || {};
+  const segments = useSegments();
 
   const user = auth.user ?? null;
   const role = auth.role;
@@ -116,7 +117,9 @@ export default function RestaurantLayout() {
   }
 
   if (currentRole !== 'restaurant') {
-    if (isAdminRole(currentRole)) {
+    // L'administrateur peut gérer le menu d'un restaurant (écrans de menu uniquement).
+    const adminMenuScreens = ['MenuScreen', 'AddMenuItem', 'EditMenuItem', '[id]'];
+    if (isAdminRole(currentRole) && !adminMenuScreens.includes(segments[1])) {
       return <Redirect href="/admin" />;
     }
 

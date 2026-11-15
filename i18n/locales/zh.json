@@ -1866,7 +1866,8 @@
       "ownerUpdateErrorFallback": "无法修改所有者状态。",
       "ownerNameFallback": "未提供所有者信息",
       "menuItemNameFallback": "商品",
-      "menuItemCategoryFallback": "分类"
+      "menuItemCategoryFallback": "分类",
+      "manageMenu": "管理菜单和照片"
     },
     "driverDetails": {
       "invalidDriverAlert": "无效的骑手。",

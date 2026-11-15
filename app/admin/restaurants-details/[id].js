@@ -1106,6 +1106,17 @@ export default function AdminRestaurantDetailsScreen() {
           />
         </InfoCard>
 
+        <Pressable
+          accessibilityRole="button"
+          style={styles.manageMenuButton}
+          onPress={() =>
+            router.push({ pathname: '/restaurant/MenuScreen', params: { restaurantId } })
+          }
+        >
+          <Ionicons name="restaurant-outline" size={18} color="#0D1C11" />
+          <Text style={styles.manageMenuText}>{t('admin.restaurantDetails.manageMenu')}</Text>
+        </Pressable>
+
         <View style={styles.actionsCard}>
           <Text style={styles.actionsTitle}>{t('admin.restaurantDetails.adminActionTitle')}</Text>
           <Text style={styles.actionsSubtitle}>
@@ -1198,6 +1209,17 @@ export default function AdminRestaurantDetailsScreen() {
 }
 
 const styles = StyleSheet.create({
+  manageMenuButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#EAB02F',
+    borderRadius: 14,
+    paddingVertical: 14,
+    marginBottom: 14,
+  },
+  manageMenuText: { color: '#0D1C11', fontWeight: '900', fontSize: 15 },
   screen: {
     flex: 1,
     backgroundColor: '#FBF6EC',

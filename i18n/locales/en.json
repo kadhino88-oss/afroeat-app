@@ -1866,7 +1866,8 @@
       "ownerUpdateErrorFallback": "Unable to update the owner's status.",
       "ownerNameFallback": "Owner not provided",
       "menuItemNameFallback": "Item",
-      "menuItemCategoryFallback": "Category"
+      "menuItemCategoryFallback": "Category",
+      "manageMenu": "Manage menu and photos"
     },
     "driverDetails": {
       "invalidDriverAlert": "Invalid driver.",
