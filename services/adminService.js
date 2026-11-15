@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut } from './apiClient';
+import { apiGet, apiPatch, apiPost, apiPut } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
 const DEFAULT_PAGE = 1;
@@ -561,3 +561,12 @@ export const startTwoFactorSetup = async (token) => apiPost(API_ENDPOINTS.admin.
 export const confirmTwoFactor = async (code, token) => apiPost(API_ENDPOINTS.admin.twoFactorEnable, { code }, token);
 export const disableTwoFactor = async ({ password, code }, token) =>
   apiPost(API_ENDPOINTS.admin.twoFactorDisable, { password, code }, token);
+
+// Codes promo (remises financées par la plateforme).
+export const listPromoCodes = async (token) => {
+  const r = await apiGet(API_ENDPOINTS.admin.promoCodes, token);
+  return Array.isArray(r?.promoCodes) ? r.promoCodes : [];
+};
+export const createPromoCode = async (payload, token) => apiPost(API_ENDPOINTS.admin.promoCodes, payload, token);
+export const setPromoCodeActive = async (id, active, token) =>
+  apiPatch(`${API_ENDPOINTS.admin.promoCodes}/${encodeURIComponent(id)}`, { active }, token);

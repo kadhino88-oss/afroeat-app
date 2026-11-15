@@ -172,7 +172,13 @@
     "newAddressPlaceholder": "Nueva dirección (calle, número, ciudad)",
     "saveAddress": "Guardar",
     "removeAddress": "Quitar esta dirección",
-    "addressSaveError": "No se pudo guardar la dirección."
+    "addressSaveError": "No se pudo guardar la dirección.",
+    "promoPlaceholder": "Código promocional",
+    "promoApply": "Aplicar",
+    "promoApplied": "Código {{code}} aplicado: −{{amount}}",
+    "promoRemove": "Quitar",
+    "discount": "Descuento",
+    "promoInvalid": "Código promocional no válido."
   },
   "restaurant": {
     "popular": "Popular",
@@ -2095,6 +2101,21 @@
       "backupDone": "He anotado mis códigos",
       "wrongCode": "Contraseña o código incorrecto.",
       "enable": "Activar la doble autenticación"
+    },
+    "promo": {
+      "navTitle": "Códigos promocionales",
+      "navText": "Crear y seguir descuentos de lanzamiento",
+      "title": "Códigos promocionales",
+      "intro": "El descuento lo financia la plataforma: nunca reduce la parte del restaurante ni del repartidor y se limita al 80 % de tu margen.",
+      "code": "CÓDIGO (p. ej. BIENVENIDO10)",
+      "percent": "Porcentaje",
+      "fixed": "Importe fijo",
+      "minSubtotal": "Pedido mínimo",
+      "maxUses": "Usos máx. (vacío = ilimitado)",
+      "firstOrderOnly": "Solo primer pedido",
+      "create": "Crear código",
+      "empty": "Aún no hay códigos.",
+      "used": "{{used}} / {{max}} usos"
     }
   },
   "payouts": {

@@ -172,7 +172,13 @@
     "newAddressPlaceholder": "New address (street, number, city)",
     "saveAddress": "Save",
     "removeAddress": "Remove this address",
-    "addressSaveError": "Address could not be saved. Try again."
+    "addressSaveError": "Address could not be saved. Try again.",
+    "promoPlaceholder": "Promo code",
+    "promoApply": "Apply",
+    "promoApplied": "Code {{code}} applied: −{{amount}}",
+    "promoRemove": "Remove",
+    "discount": "Discount",
+    "promoInvalid": "Invalid promo code."
   },
   "restaurant": {
     "popular": "Popular",
@@ -2095,6 +2101,21 @@
       "backupDone": "I saved my codes",
       "wrongCode": "Incorrect password or code.",
       "enable": "Enable two-factor authentication"
+    },
+    "promo": {
+      "navTitle": "Promo codes",
+      "navText": "Create and track launch discounts",
+      "title": "Promo codes",
+      "intro": "The discount is funded by the platform: it never reduces the restaurant's or courier's share and is capped at 80% of your margin on the order.",
+      "code": "CODE (e.g. WELCOME10)",
+      "percent": "Percentage",
+      "fixed": "Fixed amount",
+      "minSubtotal": "Minimum order",
+      "maxUses": "Max uses (empty = unlimited)",
+      "firstOrderOnly": "First order only",
+      "create": "Create code",
+      "empty": "No codes yet.",
+      "used": "{{used}} / {{max}} uses"
     }
   },
   "payouts": {
