@@ -9,6 +9,7 @@ import {
   StatusBar,
   RefreshControl,
   ScrollView,
+  Platform,
 } from 'react-native';
 import { router, Redirect, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -491,7 +492,7 @@ export default function OrdersScreen() {
   };
 
   return (
-    <FadeInView style={styles.container}>
+    <FadeInView style={[styles.container, WEB_COLUMN]}>
       <StatusBar barStyle="dark-content" backgroundColor="#FBF6EC" />
 
       <FlatList
@@ -679,6 +680,8 @@ export default function OrdersScreen() {
  * STYLES
  * =========================================================
  */
+
+const WEB_COLUMN = Platform.OS === 'web' ? { width: '100%', maxWidth: 760, alignSelf: 'center' } : null;
 
 const styles = StyleSheet.create({
   container: {
