@@ -59,7 +59,7 @@ export const getNearbyPlaces = async (params) => {
     groceries: list(groceries?.groceries).length
       ? list(groceries.groceries)
       : list(places?.groceries),
-    businesses: list(places?.businesses),
+    businesses: [...list(places?.businesses), ...list(groceries?.businesses)],
     total: Number(places?.total || 0) + Number(groceries?.total || 0),
     hasMore: Boolean(places?.hasMore || groceries?.hasMore),
   };
