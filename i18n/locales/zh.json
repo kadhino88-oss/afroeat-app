@@ -172,7 +172,13 @@
     "newAddressPlaceholder": "新地址（街道、门牌号、城市）",
     "saveAddress": "保存",
     "removeAddress": "删除此地址",
-    "addressSaveError": "无法保存地址，请重试。"
+    "addressSaveError": "无法保存地址，请重试。",
+    "promoPlaceholder": "优惠码",
+    "promoApply": "使用",
+    "promoApplied": "已使用优惠码 {{code}}：−{{amount}}",
+    "promoRemove": "移除",
+    "discount": "优惠",
+    "promoInvalid": "优惠码无效。"
   },
   "restaurant": {
     "popular": "热门",
@@ -2095,6 +2101,21 @@
       "backupDone": "我已记下备用码",
       "wrongCode": "密码或验证码错误。",
       "enable": "启用两步验证"
+    },
+    "promo": {
+      "navTitle": "优惠码",
+      "navText": "创建并跟踪上线优惠",
+      "title": "优惠码",
+      "intro": "优惠由平台承担：绝不减少餐厅或骑手的收入，并以该订单平台利润的80%为上限。",
+      "code": "优惠码（例如 WELCOME10）",
+      "percent": "百分比",
+      "fixed": "固定金额",
+      "minSubtotal": "最低订单金额",
+      "maxUses": "最多使用次数（留空=不限）",
+      "firstOrderOnly": "仅限首单",
+      "create": "创建优惠码",
+      "empty": "暂无优惠码。",
+      "used": "已用 {{used}} / {{max}} 次"
     }
   },
   "payouts": {

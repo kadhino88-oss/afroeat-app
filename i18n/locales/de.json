@@ -172,7 +172,13 @@
     "newAddressPlaceholder": "Neue Adresse (Straße, Nummer, Ort)",
     "saveAddress": "Speichern",
     "removeAddress": "Diese Adresse entfernen",
-    "addressSaveError": "Adresse konnte nicht gespeichert werden."
+    "addressSaveError": "Adresse konnte nicht gespeichert werden.",
+    "promoPlaceholder": "Promo-Code",
+    "promoApply": "Anwenden",
+    "promoApplied": "Code {{code}} angewendet: −{{amount}}",
+    "promoRemove": "Entfernen",
+    "discount": "Rabatt",
+    "promoInvalid": "Ungültiger Promo-Code."
   },
   "restaurant": {
     "popular": "Beliebt",
@@ -2095,6 +2101,21 @@
       "backupDone": "Codes notiert",
       "wrongCode": "Passwort oder Code falsch.",
       "enable": "Zwei-Faktor-Authentifizierung aktivieren"
+    },
+    "promo": {
+      "navTitle": "Promo-Codes",
+      "navText": "Einführungsrabatte erstellen und verfolgen",
+      "title": "Promo-Codes",
+      "intro": "Der Rabatt wird von der Plattform getragen: Er mindert nie den Anteil von Restaurant oder Kurier und ist auf 80 % Ihrer Marge begrenzt.",
+      "code": "CODE (z. B. WILLKOMMEN10)",
+      "percent": "Prozent",
+      "fixed": "Fester Betrag",
+      "minSubtotal": "Mindestbestellwert",
+      "maxUses": "Max. Nutzungen (leer = unbegrenzt)",
+      "firstOrderOnly": "Nur erste Bestellung",
+      "create": "Code erstellen",
+      "empty": "Noch keine Codes.",
+      "used": "{{used}} / {{max}} Nutzungen"
     }
   },
   "payouts": {

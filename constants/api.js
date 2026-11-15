@@ -232,6 +232,7 @@ export const API_ENDPOINTS = {
   // ─── Admin ──────────────────────────────────────────────
   admin: {
     dashboard:        '/admin/dashboard',
+    promoCodes:       '/admin/promo-codes',
     twoFactorStatus:  '/admin/2fa/status',
     twoFactorSetup:   '/admin/2fa/setup',
     twoFactorEnable:  '/admin/2fa/enable',

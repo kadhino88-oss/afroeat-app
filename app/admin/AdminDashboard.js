@@ -335,6 +335,13 @@ const buildNavigationItems = (t) => [
     route: '/admin/audit-logs',
   },
   {
+    key: 'promo-codes',
+    title: t('admin.promo.navTitle'),
+    text: t('admin.promo.navText'),
+    icon: <Ionicons name="pricetag-outline" size={22} color="#084424" />,
+    route: '/admin/promo-codes',
+  },
+  {
     key: 'security',
     title: t('admin.security.navTitle'),
     text: t('admin.security.navText'),

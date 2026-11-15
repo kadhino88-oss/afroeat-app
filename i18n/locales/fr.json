@@ -172,7 +172,13 @@
     "newAddressPlaceholder": "Nouvelle adresse (rue, numéro, ville)",
     "saveAddress": "Enregistrer",
     "removeAddress": "Retirer cette adresse",
-    "addressSaveError": "Adresse non enregistrée. Réessaie."
+    "addressSaveError": "Adresse non enregistrée. Réessaie.",
+    "promoPlaceholder": "Code promo",
+    "promoApply": "Appliquer",
+    "promoApplied": "Code {{code}} appliqué : −{{amount}}",
+    "promoRemove": "Retirer",
+    "discount": "Remise",
+    "promoInvalid": "Code promo invalide."
   },
   "restaurant": {
     "popular": "Populaire",
@@ -2095,6 +2101,21 @@
       "backupDone": "J'ai noté mes codes",
       "wrongCode": "Code ou mot de passe incorrect.",
       "enable": "Activer la double authentification"
+    },
+    "promo": {
+      "navTitle": "Codes promo",
+      "navText": "Créer et suivre les remises de lancement",
+      "title": "Codes promo",
+      "intro": "La remise est financée par la plateforme : elle ne réduit jamais la part du restaurant ni du livreur, et reste plafonnée à 80 % de votre marge sur la commande.",
+      "code": "CODE (ex. BIENVENUE10)",
+      "percent": "Pourcentage",
+      "fixed": "Montant fixe",
+      "minSubtotal": "Minimum de commande",
+      "maxUses": "Utilisations max (vide = illimité)",
+      "firstOrderOnly": "Première commande uniquement",
+      "create": "Créer le code",
+      "empty": "Aucun code pour l'instant.",
+      "used": "{{used}} / {{max}} utilisations"
     }
   },
   "payouts": {

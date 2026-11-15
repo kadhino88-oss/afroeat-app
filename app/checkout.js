@@ -158,6 +158,9 @@ export default function CheckoutScreen() {
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState('');
   const [quoteRetryVersion, setQuoteRetryVersion] = useState(0);
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState('');
+  const [promoError, setPromoError] = useState('');
 
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
   const isClient = role === 'client';
@@ -339,6 +342,7 @@ export default function CheckoutScreen() {
             menuItem,
             quantity,
           })),
+          ...(appliedPromo ? { promoCode: appliedPromo } : {}),
         },
         token
       )
@@ -350,9 +354,14 @@ export default function CheckoutScreen() {
           if (isActive) setQuote(result.quote);
         })
         .catch((error) => {
-          if (isActive) {
-            setQuoteError(error?.message || t('checkout.quoteUnavailable'));
+          if (!isActive) return;
+          // Code promo refusé : on l'affiche sous le champ et on retombe sur le devis sans remise.
+          if (String(error?.data?.code || '').startsWith('PROMO_') && appliedPromo) {
+            setPromoError(error?.message || t('checkout.promoInvalid'));
+            setAppliedPromo('');
+            return;
           }
+          setQuoteError(error?.message || t('checkout.quoteUnavailable'));
         })
         .finally(() => {
           if (isActive) setQuoteLoading(false);
@@ -368,6 +377,7 @@ export default function CheckoutScreen() {
     isLoggedIn,
     normalizedItems,
     quoteRetryVersion,
+    appliedPromo,
     restaurantId,
     t,
     token,
@@ -489,6 +499,7 @@ export default function CheckoutScreen() {
         items: normalizedItems,
         quotedTotal: quote.totalPrice,
         quotedCurrency: quote.currency,
+        ...(quote.promoCode ? { promoCode: quote.promoCode } : {}),
         deliveryAddress: normalizeText(deliveryAddress),
         deliveryAddressDetails: {
           address: normalizeText(deliveryAddress),
@@ -936,6 +947,49 @@ export default function CheckoutScreen() {
       />
 
       <View style={styles.footer}>
+        {isLoggedIn && isClient ? (
+          <View style={styles.promoBox}>
+            {Number(quote?.discountAmount) > 0 ? (
+              <View style={styles.promoApplied}>
+                <Text style={styles.promoAppliedText}>
+                  {t('checkout.promoApplied', { code: quote.promoCode, amount: formatPrice(quote.discountAmount, quoteCurrency) })}
+                </Text>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={t('checkout.promoRemove')}
+                  onPress={() => { setAppliedPromo(''); setPromoInput(''); setPromoError(''); }}
+                >
+                  <Text style={styles.promoRemove}>{t('checkout.promoRemove')}</Text>
+                </Pressable>
+              </View>
+            ) : (
+              <View style={styles.promoRow}>
+                <TextInput
+                  style={styles.promoInput}
+                  value={promoInput}
+                  onChangeText={(v) => { setPromoInput(v.toUpperCase()); setPromoError(''); }}
+                  placeholder={t('checkout.promoPlaceholder')}
+                  placeholderTextColor="#9AA597"
+                  autoCapitalize="characters"
+                  autoCorrect={false}
+                  maxLength={24}
+                  onSubmitEditing={() => promoInput.trim() && setAppliedPromo(promoInput.trim())}
+                  accessibilityLabel={t('checkout.promoPlaceholder')}
+                />
+                <Pressable
+                  accessibilityRole="button"
+                  disabled={!promoInput.trim()}
+                  onPress={() => { setPromoError(''); setAppliedPromo(promoInput.trim()); }}
+                  style={[styles.promoBtn, !promoInput.trim() && { opacity: 0.4 }]}
+                >
+                  <Text style={styles.promoBtnText}>{t('checkout.promoApply')}</Text>
+                </Pressable>
+              </View>
+            )}
+            {promoError ? <Text style={styles.promoError}>{promoError}</Text> : null}
+          </View>
+        ) : null}
+
         <View style={styles.summaryRow}>
           <Text style={styles.summaryLabel}>
             {t('checkout.items')}
@@ -967,6 +1021,15 @@ export default function CheckoutScreen() {
                 : formatPrice(delivery, quoteCurrency)}
           </Text>
         </View>
+
+        {Number(quote?.discountAmount) > 0 ? (
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>{t('checkout.discount')}</Text>
+            <Text style={[styles.summaryValue, { color: '#007E4B' }]}>
+              −{formatPrice(quote.discountAmount, quoteCurrency)}
+            </Text>
+          </View>
+        ) : null}
 
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>
@@ -1341,6 +1404,15 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
 
+  promoBox: { marginBottom: 10, gap: 6 },
+  promoRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  promoInput: { flex: 1, borderWidth: 1, borderColor: '#E3DECF', borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, color: '#0D1C11', fontSize: 14, letterSpacing: 1 },
+  promoBtn: { backgroundColor: '#084424', borderRadius: 12, paddingVertical: 11, paddingHorizontal: 16 },
+  promoBtnText: { color: '#FFFFFF', fontWeight: '900', fontSize: 13 },
+  promoApplied: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#E3F0E8', borderRadius: 12, paddingVertical: 10, paddingHorizontal: 12 },
+  promoAppliedText: { color: '#084424', fontWeight: '800', flex: 1 },
+  promoRemove: { color: '#C8331A', fontWeight: '800' },
+  promoError: { color: '#C8331A', fontSize: 13 },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
