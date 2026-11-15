@@ -21,7 +21,9 @@
     "menu": "Menu",
     "missions": "Deliveries",
     "history": "History",
-    "partners": "Partners"
+    "partners": "Partners",
+    "viewSite": "View site",
+    "administration": "Administration"
   },
   "moods": {
     "title": "Craving something?",
@@ -2142,5 +2144,10 @@
     "requestNew": "Request a new link",
     "success": "Your password has been changed. You can now log in.",
     "goLogin": "Log in"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page does not exist or has been moved.",
+    "action": "Back to home"
   }
 }

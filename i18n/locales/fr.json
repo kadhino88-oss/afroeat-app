@@ -21,7 +21,9 @@
     "menu": "Menu",
     "missions": "Missions",
     "history": "Historique",
-    "partners": "Partenaires"
+    "partners": "Partenaires",
+    "viewSite": "Voir le site",
+    "administration": "Administration"
   },
   "moods": {
     "title": "Envie du moment ?",
@@ -2142,5 +2144,10 @@
     "requestNew": "Demander un nouveau lien",
     "success": "Ton mot de passe a été modifié. Tu peux maintenant te connecter.",
     "goLogin": "Me connecter"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "Cette page n’existe pas ou a été déplacée.",
+    "action": "Retour à l’accueil"
   }
 }

@@ -70,7 +70,6 @@ const getStaffRedirect = (role, user) => {
   const currentRole = displayRole(role || user?.role);
   if (['restaurant', 'resto', 'partner_restaurant'].includes(currentRole)) return '/restaurant/RestaurantDashboard';
   if (['livreur', 'driver', 'courier', 'delivery'].includes(currentRole)) return '/livraison';
-  if (['admin', 'administrator', 'superadmin', 'super-admin', 'ops'].includes(currentRole)) return '/admin';
   return null;
 };
 
@@ -206,6 +205,9 @@ export default function WebDiscoveryHome() {
   if (staffRedirect) return <Redirect href={staffRedirect} />;
 
   const userName = normalizeText(auth.user?.firstName || auth.user?.name);
+  const isAdminUser = ['admin', 'administrator', 'superadmin', 'super-admin', 'ops'].includes(
+    displayRole(auth.role || auth.user?.role)
+  );
 
   return (
     <View style={styles.page}>
@@ -236,10 +238,17 @@ export default function WebDiscoveryHome() {
               {cartCount > 0 ? <View style={styles.cartBadge}><Text style={styles.cartBadgeText}>{cartCount > 99 ? '99+' : cartCount}</Text></View> : null}
             </Pressable>
             {auth.isAuthenticated ? (
+              isAdminUser ? (
+                <Pressable style={styles.accountButton} onPress={() => router.push('/admin')} accessibilityRole="link">
+                  <Ionicons name="shield-checkmark-outline" size={18} color={COLORS.ink} />
+                  {!compact ? <Text style={styles.accountButtonText}>{t('nav.administration')}</Text> : null}
+                </Pressable>
+              ) : (
               <Pressable style={styles.accountButton} onPress={() => router.push('/profile')}>
                 <Ionicons name="person-circle-outline" size={18} color={COLORS.ink} />
                 {!compact ? <Text style={styles.accountButtonText}>{userName || 'Mon compte'}</Text> : null}
               </Pressable>
+              )
             ) : (
               <>
                 {!compact ? <Pressable style={styles.loginButton} onPress={() => router.push({ pathname: '/auth/login', params: { role: 'client' } })}><Text style={styles.loginButtonText}>Connexion</Text></Pressable> : null}

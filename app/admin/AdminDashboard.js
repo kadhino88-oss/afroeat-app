@@ -345,14 +345,7 @@ const buildNavigationItems = (t) => [
         color="#084424"
       />
     ),
-    route: '/admin/live-ops',
-  },
-  {
-    key: 'analytics',
-    title: t('admin.dashboard.navAnalyticsTitle'),
-    text: t('admin.dashboard.navAnalyticsText'),
-    icon: <Ionicons name="stats-chart-outline" size={22} color="#084424" />,
-    route: '/admin/analytics',
+    route: '/admin/ops',
   },
 ];
 

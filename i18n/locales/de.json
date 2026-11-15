@@ -21,7 +21,9 @@
     "menu": "Speisekarte",
     "missions": "Lieferungen",
     "history": "Verlauf",
-    "partners": "Partner"
+    "partners": "Partner",
+    "viewSite": "Website ansehen",
+    "administration": "Verwaltung"
   },
   "moods": {
     "title": "Worauf hast du Lust?",
@@ -2142,5 +2144,10 @@
     "requestNew": "Neuen Link anfordern",
     "success": "Dein Passwort wurde geändert. Du kannst dich jetzt anmelden.",
     "goLogin": "Anmelden"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "body": "Diese Seite existiert nicht oder wurde verschoben.",
+    "action": "Zur Startseite"
   }
 }

@@ -122,8 +122,9 @@ const getRoleRedirect = (role, accountStatus) => {
       : '/auth/pending-approval';
   }
 
+  // Sur le web, l'administrateur peut parcourir le site public (son espace reste /admin).
   if (normalizedRole === 'admin') {
-    return '/admin';
+    return Platform.OS === 'web' ? null : '/admin';
   }
 
   return null;
@@ -185,7 +186,7 @@ export default function TabsLayout() {
       return <Redirect href={redirectPath} />;
     }
 
-    if (!isClientRole(safeRole)) {
+    if (!isClientRole(safeRole) && !(Platform.OS === 'web' && safeRole === 'admin')) {
       return <Redirect href="/auth/role" />;
     }
   }
