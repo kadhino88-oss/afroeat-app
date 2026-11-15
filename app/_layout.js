@@ -1,12 +1,13 @@
 import '../services/webAlert';
 import '../services/webChunkRecovery';
 import React, { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { Fraunces_600SemiBold, Fraunces_700Bold } from '@expo-google-fonts/fraunces';
 import { Platform, StyleSheet, StatusBar, View } from 'react-native';
 import AppStripeProvider from '../components/AppStripeProvider';
 import WebNavBar from '../components/WebNavBar';
+import WebScrollAssist from '../components/WebScrollAssist';
 import { MAX_CONTENT_WIDTH } from '../hooks/use-grid-columns';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
@@ -26,6 +27,7 @@ import '../i18n';
 
 function AppStack() {
   const { isAuthenticated, token } = useAuth();
+  const pathname = usePathname() || '/';
 
   // Polices de marque : chargées sans bloquer le rendu (repli sur la police système).
   useFonts({ Fraunces_600SemiBold, Fraunces_700Bold });
@@ -63,8 +65,10 @@ function AppStack() {
 
       {/* Site web : barre de navigation (accueil, explorer, commandes, profil, panier, retour). */}
       <WebNavBar />
+      <WebScrollAssist />
 
-      <View style={styles.webContent}>
+      {/* La page d'accueil occupe toute la largeur ; les autres pages sont centrées. */}
+      <View style={[styles.webContent, pathname === '/' && styles.webContentFull]}>
       <Stack
         initialRouteName="index"
         screenOptions={{
@@ -159,6 +163,7 @@ const styles = StyleSheet.create({
     maxWidth: Platform.OS === 'web' ? MAX_CONTENT_WIDTH : undefined,
     alignSelf: 'center',
   },
+  webContentFull: { maxWidth: undefined },
   scene: {
     flex: 1,
     backgroundColor: '#FBF6EC',
