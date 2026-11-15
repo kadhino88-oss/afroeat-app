@@ -11,7 +11,7 @@ import {
   RefreshControl,
   Platform,
 } from 'react-native';
-import { router, useFocusEffect, Redirect } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
@@ -83,15 +83,20 @@ export default function MenuScreen() {
   const token = auth.token;
   const isAuthenticated = Boolean(auth.isAuthenticated);
 
+  // L'administrateur peut gérer le menu d'un restaurant précis (?restaurantId=...).
+  const params = useLocalSearchParams();
+  const managedId = String(Array.isArray(params?.restaurantId) ? params.restaurantId[0] : params?.restaurantId || '');
+  const isAdminManaging = role === 'admin' && Boolean(managedId);
+
   const [restaurant, setRestaurant] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const canAccess = isAuthenticated && role === 'restaurant';
+  const canAccess = isAuthenticated && (role === 'restaurant' || isAdminManaging);
 
   const load = useCallback(async (manual = false) => {
-    if (!token || role !== 'restaurant') {
+    if (!token || (role !== 'restaurant' && !isAdminManaging)) {
       setRestaurant(null);
       setItems([]);
       setLoading(false);
@@ -102,7 +107,10 @@ export default function MenuScreen() {
     try {
       manual ? setRefreshing(true) : setLoading(true);
 
-      const restaurantResponse = await apiGet(API_ENDPOINTS.restaurants.my, token);
+      const restaurantResponse = await apiGet(
+        isAdminManaging ? API_ENDPOINTS.restaurants.byId(managedId) : API_ENDPOINTS.restaurants.my,
+        token
+      );
       const safeRestaurant = extractRestaurantPayload(restaurantResponse);
 
       if (!safeRestaurant?._id && !safeRestaurant?.id) {
@@ -138,7 +146,7 @@ export default function MenuScreen() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [role, token, t]);
+  }, [role, token, t, isAdminManaging, managedId]);
 
   useFocusEffect(
     useCallback(() => {
@@ -200,6 +208,7 @@ export default function MenuScreen() {
         available: String(item?.available !== false),
         isPopular: String(!!item?.isPopular),
         isRecommended: String(!!item?.isRecommended),
+        image: item?.image || '',
       },
     });
   }, []);
@@ -240,7 +249,7 @@ export default function MenuScreen() {
 
               <Pressable
                 style={styles.topButton}
-                onPress={() => router.push('/restaurant/AddMenuItem')}
+                onPress={() => router.push({ pathname: '/restaurant/AddMenuItem', params: { restaurantId: restaurant?._id || '' } })}
               >
                 <Ionicons name="add" size={22} color="#0D1C11" />
               </Pressable>
@@ -354,7 +363,7 @@ export default function MenuScreen() {
             </Text>
             <Pressable
               style={styles.primaryButton}
-              onPress={() => router.push('/restaurant/AddMenuItem')}
+              onPress={() => router.push({ pathname: '/restaurant/AddMenuItem', params: { restaurantId: restaurant?._id || '' } })}
             >
               <Text style={styles.primaryButtonText}>{t('restaurant.menuScreen.addDishButton')}</Text>
             </Pressable>

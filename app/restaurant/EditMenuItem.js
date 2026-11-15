@@ -84,7 +84,7 @@ export default function EditMenuItem() {
   );
   const [submitting, setSubmitting] = useState(false);
 
-  const canAccess = isAuthenticated && role === 'restaurant';
+  const canAccess = isAuthenticated && (role === 'restaurant' || role === 'admin');
 
   const resolvedPrice = useMemo(() => {
     const parsed = Number(price);
@@ -131,7 +131,8 @@ export default function EditMenuItem() {
       await apiPut(API_ENDPOINTS.menu.update(itemId), payload, token);
 
       Alert.alert(t('restaurant.settings.successTitle'), t('restaurant.editMenuItem.successBody'));
-      router.replace('/restaurant/MenuScreen');
+      if (role === 'admin') router.back();
+      else router.replace('/restaurant/MenuScreen');
     } catch (error) {
       console.log('Erreur modification plat :', error);
       Alert.alert(

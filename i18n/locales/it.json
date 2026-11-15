@@ -1866,7 +1866,8 @@
       "ownerUpdateErrorFallback": "Impossibile modificare lo stato del proprietario.",
       "ownerNameFallback": "Proprietario non specificato",
       "menuItemNameFallback": "Articolo",
-      "menuItemCategoryFallback": "Categoria"
+      "menuItemCategoryFallback": "Categoria",
+      "manageMenu": "Gestisci menu e foto"
     },
     "driverDetails": {
       "invalidDriverAlert": "Fattorino non valido.",

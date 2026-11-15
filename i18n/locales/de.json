@@ -1866,7 +1866,8 @@
       "ownerUpdateErrorFallback": "Der Inhaberstatus konnte nicht geändert werden.",
       "ownerNameFallback": "Inhaber nicht angegeben",
       "menuItemNameFallback": "Artikel",
-      "menuItemCategoryFallback": "Kategorie"
+      "menuItemCategoryFallback": "Kategorie",
+      "manageMenu": "Speisekarte und Fotos verwalten"
     },
     "driverDetails": {
       "invalidDriverAlert": "Ungültiger Fahrer.",

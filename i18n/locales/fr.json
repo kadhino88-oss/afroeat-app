@@ -1866,7 +1866,8 @@
       "ownerUpdateErrorFallback": "Impossible de modifier le statut du propriétaire.",
       "ownerNameFallback": "Propriétaire non renseigné",
       "menuItemNameFallback": "Article",
-      "menuItemCategoryFallback": "Catégorie"
+      "menuItemCategoryFallback": "Catégorie",
+      "manageMenu": "Gérer le menu et les photos"
     },
     "driverDetails": {
       "invalidDriverAlert": "Livreur invalide.",
