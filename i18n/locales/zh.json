@@ -21,7 +21,9 @@
     "menu": "菜单",
     "missions": "配送任务",
     "history": "历史记录",
-    "partners": "合作伙伴"
+    "partners": "合作伙伴",
+    "viewSite": "查看网站",
+    "administration": "管理后台"
   },
   "moods": {
     "title": "此刻想吃点什么？",
@@ -2142,5 +2144,10 @@
     "requestNew": "重新申请链接",
     "success": "您的密码已修改，现在可以登录。",
     "goLogin": "登录"
+  },
+  "notFound": {
+    "title": "页面未找到",
+    "body": "此页面不存在或已被移动。",
+    "action": "返回首页"
   }
 }

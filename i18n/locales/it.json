@@ -21,7 +21,9 @@
     "menu": "Menu",
     "missions": "Consegne",
     "history": "Cronologia",
-    "partners": "Partner"
+    "partners": "Partner",
+    "viewSite": "Vedi il sito",
+    "administration": "Amministrazione"
   },
   "moods": {
     "title": "Cosa ti va oggi?",
@@ -2142,5 +2144,10 @@
     "requestNew": "Richiedi un nuovo link",
     "success": "La tua password è stata modificata. Ora puoi accedere.",
     "goLogin": "Accedi"
+  },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "body": "Questa pagina non esiste o è stata spostata.",
+    "action": "Torna alla home"
   }
 }

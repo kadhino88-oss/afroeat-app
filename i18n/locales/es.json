@@ -21,7 +21,9 @@
     "menu": "Menú",
     "missions": "Entregas",
     "history": "Historial",
-    "partners": "Socios"
+    "partners": "Socios",
+    "viewSite": "Ver el sitio",
+    "administration": "Administración"
   },
   "moods": {
     "title": "¿Qué se te antoja?",
@@ -2142,5 +2144,10 @@
     "requestNew": "Solicitar un nuevo enlace",
     "success": "Tu contraseña ha sido cambiada. Ya puedes iniciar sesión.",
     "goLogin": "Iniciar sesión"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "body": "Esta página no existe o se ha movido.",
+    "action": "Volver al inicio"
   }
 }

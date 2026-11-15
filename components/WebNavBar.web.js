@@ -62,7 +62,12 @@ export default function WebNavBar() {
   const pathname = usePathname() || '/';
   const { width } = useWindowDimensions();
   const { isAuthenticated, role, user } = useAuth() || {};
-  const partner = isAuthenticated ? LINKS_BY_ROLE[norm(role || user?.role)] : null;
+  const currentRole = norm(role || user?.role);
+  const isAdmin = Boolean(isAuthenticated) && currentRole === 'admin';
+  // L'administrateur a deux espaces distincts : le site public et l'administration (/admin).
+  const onAdminArea = pathname === '/admin' || pathname.startsWith('/admin/');
+  const partner =
+    isAuthenticated && !(isAdmin && !onAdminArea) ? LINKS_BY_ROLE[currentRole] : null;
   const links = partner ? partner.links : LINKS;
   const homeHref = partner ? partner.home : '/(tabs)';
   const cart = useCart() || {};
@@ -128,6 +133,21 @@ export default function WebNavBar() {
         </View>
 
         <View style={styles.right}>
+          {isAdmin ? (
+            <Pressable
+              accessibilityRole="link"
+              onPress={() => router.push(onAdminArea ? '/' : '/admin')}
+              style={styles.signIn}
+            >
+              {tiny ? (
+                <Ionicons name={onAdminArea ? 'globe-outline' : 'shield-checkmark-outline'} size={18} color="#084424" />
+              ) : (
+                <Text style={styles.signInText}>
+                  {t(onAdminArea ? 'nav.viewSite' : 'nav.administration')}
+                </Text>
+              )}
+            </Pressable>
+          ) : null}
           {!isAuthenticated ? (
             <Pressable
               accessibilityRole="button"
