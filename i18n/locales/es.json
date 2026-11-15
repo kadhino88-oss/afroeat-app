@@ -2024,7 +2024,10 @@
       "status_approved": "Aprobada",
       "status_rejected": "Rechazada",
       "inviteEmailed": "El enlace también se envió por correo a {{email}}.",
-      "inviteNotEmailed": "El correo aún no está configurado: envía este enlace tú mismo al socio."
+      "inviteNotEmailed": "El correo aún no está configurado: envía este enlace tú mismo al socio.",
+      "accountUpgradedTitle": "Solicitud aprobada, cuenta activada",
+      "accountUpgradedCourier": "{{email}} ya tenía una cuenta: ahora es una cuenta de repartidor. Inicia sesión con su contraseña habitual. Después verifica su identidad en «Repartidores».",
+      "accountUpgradedBusiness": "{{email}} ya tenía una cuenta: ahora es una cuenta de comercio. Inicia sesión con su contraseña habitual."
     }
   },
   "payouts": {

@@ -2024,7 +2024,10 @@
       "status_approved": "Approuvée",
       "status_rejected": "Refusée",
       "inviteEmailed": "Le lien a aussi été envoyé par e-mail à {{email}}.",
-      "inviteNotEmailed": "L'e-mail n'est pas encore configuré : transmets ce lien toi-même au partenaire."
+      "inviteNotEmailed": "L'e-mail n'est pas encore configuré : transmets ce lien toi-même au partenaire.",
+      "accountUpgradedTitle": "Candidature approuvée, compte activé",
+      "accountUpgradedCourier": "{{email}} avait déjà un compte : il est devenu un compte livreur. Il se connecte avec son mot de passe habituel. Vérifie ensuite son identité dans « Livreurs ».",
+      "accountUpgradedBusiness": "{{email}} avait déjà un compte : il est devenu un compte commerçant. Il se connecte avec son mot de passe habituel."
     }
   },
   "payouts": {

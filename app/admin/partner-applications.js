@@ -42,6 +42,7 @@ export default function AdminPartnerApplicationsScreen() {
   const auth = useAuth() || {};
   const [filter, setFilter] = useState('new');
   const [emailed, setEmailed] = useState({});
+  const [upgraded, setUpgraded] = useState({});
   const [items, setItems] = useState([]);
   const [notes, setNotes] = useState({});
   const [loading, setLoading] = useState(true);
@@ -119,9 +120,14 @@ export default function AdminPartnerApplicationsScreen() {
     try {
       setBusyId(application._id);
       const result = await createPartnerInvite(application._id, auth.token);
-      if (!result?.inviteUrl) throw new Error(t('admin.partnerApplications.updateError'));
-      setInvites((previous) => ({ ...previous, [application._id]: result.inviteUrl }));
-      setEmailed((previous) => ({ ...previous, [application._id]: Boolean(result.emailSent) }));
+      if (result?.accountUpgraded) {
+        // Le candidat avait déjà un compte : il est devenu partenaire, aucun lien à transmettre.
+        setUpgraded((previous) => ({ ...previous, [application._id]: result.role || 'partner' }));
+      } else {
+        if (!result?.inviteUrl) throw new Error(t('admin.partnerApplications.updateError'));
+        setInvites((previous) => ({ ...previous, [application._id]: result.inviteUrl }));
+        setEmailed((previous) => ({ ...previous, [application._id]: Boolean(result.emailSent) }));
+      }
       setItems((previous) =>
         previous.map((item) => (item._id === application._id ? { ...item, status: 'approved' } : item))
       );
@@ -235,6 +241,22 @@ export default function AdminPartnerApplicationsScreen() {
                 style={styles.note}
                 accessibilityLabel={t('admin.partnerApplications.notePlaceholder')}
               />
+
+              {upgraded[application._id] ? (
+                <View style={styles.inviteBox}>
+                  <Text style={styles.inviteTitle}>
+                    {t('admin.partnerApplications.accountUpgradedTitle')}
+                  </Text>
+                  <Text style={styles.inviteUrl}>
+                    {t(
+                      upgraded[application._id] === 'livreur'
+                        ? 'admin.partnerApplications.accountUpgradedCourier'
+                        : 'admin.partnerApplications.accountUpgradedBusiness',
+                      { email: application.email }
+                    )}
+                  </Text>
+                </View>
+              ) : null}
 
               {invites[application._id] ? (
                 <View style={styles.inviteBox}>
