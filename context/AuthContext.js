@@ -8,6 +8,8 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { setUnauthorizedHandler } from '../services/apiClient';
+
 const AuthContext = createContext(null);
 
 /**
@@ -405,6 +407,15 @@ export function AuthProvider({ children }) {
       return false;
     }
   }, [resetLocalState]);
+
+  // Session refusée par le serveur (jeton expiré ou invalide) : déconnexion automatique,
+  // les écrans protégés renvoient alors d'eux-mêmes vers la connexion.
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      logout();
+    });
+    return () => setUnauthorizedHandler(null);
+  }, [logout]);
 
   /**
    * Reset total demandé :

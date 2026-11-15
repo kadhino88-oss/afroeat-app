@@ -241,6 +241,24 @@ const handleResponse = async (response) => {
   return normalizeSuccessResponse(data, response);
 };
 
+/**
+ * Session refusée par le serveur (jeton expiré, invalide, ou compte supprimé).
+ * L'écran appelant ne peut rien y faire : on prévient l'application, qui déconnecte
+ * l'utilisateur et le renvoie vers la connexion au lieu d'afficher une erreur sur chaque page.
+ */
+let unauthorizedHandler = null;
+
+export const setUnauthorizedHandler = (handler) => {
+  unauthorizedHandler = typeof handler === 'function' ? handler : null;
+};
+
+const SESSION_REJECTED_PATTERN = /token|jeton|utilisateur introuvable/i;
+
+export const isSessionRejectedError = (error, token) =>
+  Boolean(token) &&
+  Number(error?.status) === 401 &&
+  SESSION_REJECTED_PATTERN.test(String(error?.data?.message || ''));
+
 const request = async (
   method,
   endpoint,
@@ -301,6 +319,14 @@ const request = async (
         throw new Error(
           'Impossible de contacter le serveur. Vérifie ta connexion.'
         );
+      }
+
+      if (unauthorizedHandler && isSessionRejectedError(error, token)) {
+        try {
+          unauthorizedHandler();
+        } catch (handlerError) {
+          console.log('Erreur unauthorizedHandler:', handlerError);
+        }
       }
 
       throw error;
