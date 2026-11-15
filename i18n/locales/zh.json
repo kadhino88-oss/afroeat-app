@@ -168,7 +168,11 @@
     "retryQuote": "重新计算",
     "quoteChangedTitle": "报价已更新",
     "quoteChangedBody": "价格或货币已变化，请在下单前检查新的总金额。",
-    "editAddress": "编辑地址"
+    "editAddress": "编辑地址",
+    "newAddressPlaceholder": "新地址（街道、门牌号、城市）",
+    "saveAddress": "保存",
+    "removeAddress": "删除此地址",
+    "addressSaveError": "无法保存地址，请重试。"
   },
   "restaurant": {
     "popular": "热门",

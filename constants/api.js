@@ -149,6 +149,7 @@ export const API_ENDPOINTS = {
   auth: {
     login:          '/users/login',
     loginTwoFactor: '/users/login/2fa',
+    addresses:      '/users/me/addresses',
     register:       '/users/register',
     me:             '/users/me',
     refreshToken:   '/users/refresh-token',

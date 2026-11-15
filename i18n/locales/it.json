@@ -168,7 +168,11 @@
     "retryQuote": "Riprova il calcolo",
     "quoteChangedTitle": "Preventivo aggiornato",
     "quoteChangedBody": "Il prezzo o la valuta è cambiato. Controlla il nuovo totale prima di confermare.",
-    "editAddress": "Modifica indirizzo"
+    "editAddress": "Modifica indirizzo",
+    "newAddressPlaceholder": "Nuovo indirizzo (via, numero, città)",
+    "saveAddress": "Salva",
+    "removeAddress": "Rimuovi questo indirizzo",
+    "addressSaveError": "Impossibile salvare l'indirizzo."
   },
   "restaurant": {
     "popular": "Popolare",
