@@ -1490,7 +1490,12 @@
       "restaurantFallback": "AFROEAT Restaurant"
     },
     "startDelivery": "Lieferung starten",
-    "markDelivered": "Als geliefert markieren"
+    "markDelivered": "Als geliefert markieren",
+    "dashboard": {
+      "revenue": "Einnahmen",
+      "active": "Aktive Aufträge",
+      "empty": "Kein Auftrag aktiv. Gehen Sie online, um Aufträge zu erhalten."
+    }
   },
   "admin": {
     "common": {
