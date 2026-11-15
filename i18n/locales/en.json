@@ -1490,7 +1490,12 @@
       "restaurantFallback": "AFROEAT Restaurant"
     },
     "startDelivery": "Start delivery",
-    "markDelivered": "Mark as delivered"
+    "markDelivered": "Mark as delivered",
+    "dashboard": {
+      "revenue": "Earnings",
+      "active": "Active missions",
+      "empty": "No mission in progress. Go online to receive some."
+    }
   },
   "admin": {
     "common": {
