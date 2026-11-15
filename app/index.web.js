@@ -14,6 +14,7 @@ import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { Redirect, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { isAdminHost } from '../services/adminHost';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { getNearbyPlaces } from '../services/placeService';
@@ -202,6 +203,8 @@ export default function WebDiscoveryHome() {
     );
   }
 
+  // Adresse dédiée à l'administration : elle ouvre toujours l'espace admin.
+  if (isAdminHost()) return <Redirect href="/admin" />;
   if (staffRedirect) return <Redirect href={staffRedirect} />;
 
   const userName = normalizeText(auth.user?.firstName || auth.user?.name);
