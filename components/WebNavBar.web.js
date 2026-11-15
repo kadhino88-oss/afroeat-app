@@ -6,6 +6,7 @@ import { router, usePathname } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { isAdminHost, openPublicSite } from '../services/adminHost';
 
 /**
  * Barre du haut du site web.
@@ -101,7 +102,7 @@ export default function WebNavBar() {
 
   const signOut = async () => {
     if (typeof logout === 'function') await logout();
-    router.replace('/');
+    router.replace(isAdminHost() ? '/admin' : '/');
   };
 
   const goBack = () => {
@@ -172,7 +173,12 @@ export default function WebNavBar() {
             <Pressable
               accessibilityRole="link"
               accessibilityLabel={t(onAdminArea ? 'nav.viewSite' : 'nav.administration')}
-              onPress={() => router.push(onAdminArea ? '/' : '/admin')}
+              onPress={() => {
+                // Sur l'adresse dédiée à l'administration, le site s'ouvre dans un autre onglet :
+                // les deux connexions restent indépendantes.
+                if (onAdminArea && isAdminHost()) openPublicSite();
+                else router.push(onAdminArea ? '/' : '/admin');
+              }}
               style={[styles.outline, dark && styles.outlineDark]}
             >
               <Ionicons
