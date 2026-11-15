@@ -230,6 +230,11 @@ export const loginUser = async ({ email, password, role = 'client' }) => {
 
   const response = await apiPost(API_ENDPOINTS.auth.login, payload);
 
+  // Double authentification : pas encore de session, un code est demandé.
+  if (response?.requires2FA && response?.challengeToken) {
+    return { requires2FA: true, challengeToken: response.challengeToken };
+  }
+
   const rawUser = extractUser(response);
   const user = normalizeUserShape(rawUser);
   const token = extractToken(response);
@@ -253,6 +258,20 @@ export const loginUser = async ({ email, password, role = 'client' }) => {
     user,
     token,
   };
+};
+
+/** Second facteur de connexion d'un administrateur : code à 6 chiffres ou code de secours. */
+export const completeTwoFactorLogin = async ({ challengeToken, code }) => {
+  const response = await apiPost(API_ENDPOINTS.auth.loginTwoFactor, {
+    challengeToken,
+    code: String(code || '').trim(),
+  });
+  const user = normalizeUserShape(extractUser(response));
+  const token = extractToken(response);
+  if (!user?._id || !token || normalizeRole(user?.role) !== 'admin') {
+    throw new Error('Réponse de connexion invalide.');
+  }
+  return { ...normalizeObject(response), user, token };
 };
 
 export const registerClient = async (payload = {}) => {

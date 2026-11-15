@@ -1372,6 +1372,14 @@
       "infoText2": "Dès validation, la redirection vers l'espace métier correspondant sera possible.",
       "changeSpace": "Changer d'espace",
       "resetAccounts": "Réinitialiser les comptes locaux"
+    },
+    "twoFactor": {
+      "title": "Vérification en deux étapes",
+      "hint": "Saisissez le code à 6 chiffres de votre application d'authentification, ou un code de secours.",
+      "submit": "Valider",
+      "cancel": "Annuler",
+      "invalid": "Code incorrect.",
+      "expired": "Connexion expirée, recommencez."
     }
   },
   "livraison": {
@@ -2062,6 +2070,27 @@
       "loadError": "Chargement impossible.",
       "navTitle": "Vérification d’identité",
       "navText": "Valider les pièces des livreurs et des commerçants."
+    },
+    "security": {
+      "navTitle": "Sécurité du compte",
+      "navText": "Double authentification, codes de secours",
+      "title": "Double authentification",
+      "intro": "Ajoutez une seconde protection : un code à 6 chiffres généré par une application (Google Authenticator, Microsoft Authenticator, 1Password…) est demandé à chaque connexion.",
+      "enabled": "Activée",
+      "password": "Mot de passe",
+      "codePlaceholder": "Code ou code de secours",
+      "disable": "Désactiver",
+      "unavailable": "Cette fonction n'est pas disponible (clé de chiffrement manquante).",
+      "step1": "1. Ajoutez le compte dans votre application",
+      "openApp": "Ouvrir dans l'application",
+      "manualKey": "Ou saisissez cette clé manuellement :",
+      "step2": "2. Saisissez le code affiché",
+      "confirm": "Confirmer et activer",
+      "backupTitle": "Codes de secours",
+      "backupText": "Conservez ces 8 codes en lieu sûr : chacun ne sert qu'une fois si vous perdez votre téléphone. Ils ne seront plus affichés.",
+      "backupDone": "J'ai noté mes codes",
+      "wrongCode": "Code ou mot de passe incorrect.",
+      "enable": "Activer la double authentification"
     }
   },
   "payouts": {

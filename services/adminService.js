@@ -1,4 +1,4 @@
-import { apiGet, apiPut } from './apiClient';
+import { apiGet, apiPost, apiPut } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
 const DEFAULT_PAGE = 1;
@@ -554,3 +554,10 @@ export const getAdminAuditLogById = async (logId, token) => {
 
   return log;
 };
+
+// Double authentification de l'administrateur connecté.
+export const getTwoFactorStatus = async (token) => apiGet(API_ENDPOINTS.admin.twoFactorStatus, token);
+export const startTwoFactorSetup = async (token) => apiPost(API_ENDPOINTS.admin.twoFactorSetup, {}, token);
+export const confirmTwoFactor = async (code, token) => apiPost(API_ENDPOINTS.admin.twoFactorEnable, { code }, token);
+export const disableTwoFactor = async ({ password, code }, token) =>
+  apiPost(API_ENDPOINTS.admin.twoFactorDisable, { password, code }, token);

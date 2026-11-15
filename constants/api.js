@@ -148,6 +148,7 @@ export const API_ENDPOINTS = {
   // ─── Auth ───────────────────────────────────────────────
   auth: {
     login:          '/users/login',
+    loginTwoFactor: '/users/login/2fa',
     register:       '/users/register',
     me:             '/users/me',
     refreshToken:   '/users/refresh-token',
@@ -230,6 +231,10 @@ export const API_ENDPOINTS = {
   // ─── Admin ──────────────────────────────────────────────
   admin: {
     dashboard:        '/admin/dashboard',
+    twoFactorStatus:  '/admin/2fa/status',
+    twoFactorSetup:   '/admin/2fa/setup',
+    twoFactorEnable:  '/admin/2fa/enable',
+    twoFactorDisable: '/admin/2fa/disable',
     ops:              '/admin/ops',
     users:            '/admin/users',
     userById:         (id) => `/admin/users/${safePathParam(id)}`,
