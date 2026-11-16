@@ -1988,7 +1988,18 @@
       "qtyLabel": "Menge: {{qty}}",
       "unitPriceFragment": " • Einzelpreis: {{price}}",
       "noteFragment": "Notiz: {{note}}",
-      "noItemsAvailable": "Keine Artikel verfügbar."
+      "noItemsAvailable": "Keine Artikel verfügbar.",
+      "actions": {
+        "title": "Aktionen zur Bestellung",
+        "confirm": "Bestellung bestätigen",
+        "prepare": "Zubereitung starten",
+        "cancel": "Bestellung stornieren",
+        "cancelConfirmTitle": "Diese Bestellung stornieren?",
+        "cancelConfirmPaid": "Die Bestellung ist per Karte bezahlt: Der Kunde wird automatisch erstattet.",
+        "cancelConfirmUnpaid": "Die Bestellung ist unbezahlt: keine Erstattung nötig.",
+        "keep": "Bestellung behalten",
+        "error": "Aktion fehlgeschlagen. Erneut versuchen."
+      }
     },
     "auditLogDetails": {
       "loaderText": "Admin-Protokoll wird geladen...",

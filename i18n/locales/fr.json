@@ -1988,7 +1988,18 @@
       "qtyLabel": "Qté : {{qty}}",
       "unitPriceFragment": " • PU : {{price}}",
       "noteFragment": "Note : {{note}}",
-      "noItemsAvailable": "Aucun article disponible."
+      "noItemsAvailable": "Aucun article disponible.",
+      "actions": {
+        "title": "Actions sur la commande",
+        "confirm": "Confirmer la commande",
+        "prepare": "Passer en préparation",
+        "cancel": "Annuler la commande",
+        "cancelConfirmTitle": "Annuler cette commande ?",
+        "cancelConfirmPaid": "La commande est payée par carte : le client sera remboursé automatiquement.",
+        "cancelConfirmUnpaid": "La commande n'est pas payée : aucun remboursement n'est nécessaire.",
+        "keep": "Garder la commande",
+        "error": "Action impossible. Réessayez."
+      }
     },
     "auditLogDetails": {
       "loaderText": "Chargement du journal admin...",

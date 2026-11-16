@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../../components/FadeInView';
 import { useAuth } from '../../../context/AuthContext';
 import { getAdminOrderById } from '../../../services/adminService';
+import { updateOrderStatus } from '../../../services/orderService';
 import i18n from '../../../i18n';
 
 const LIVE_REFRESH_MS = 15000;
@@ -458,6 +459,41 @@ export default function AdminOrderDetailsScreen() {
     return () => clearInterval(interval);
   }, [canAccess, orderId, fetchOrder]);
 
+  // Actions de l'administrateur : confirmer, préparer, annuler (une commande payée par carte est remboursée automatiquement).
+  const [acting, setActing] = useState(false);
+  const changeStatus = useCallback(
+    (next) => {
+      const cancelling = next === 'Annulée';
+      const paid = order?.paymentStatus === 'Payé';
+      const run = async () => {
+        try {
+          setActing(true);
+          await updateOrderStatus(orderId, next, token);
+          await fetchOrder(false, true);
+        } catch (error) {
+          Alert.alert(t('common.error'), error?.message || t('admin.orderDetails.actions.error'));
+        } finally {
+          setActing(false);
+        }
+      };
+      if (!cancelling) {
+        run();
+        return;
+      }
+      Alert.alert(
+        t('admin.orderDetails.actions.cancelConfirmTitle'),
+        paid ? t('admin.orderDetails.actions.cancelConfirmPaid') : t('admin.orderDetails.actions.cancelConfirmUnpaid'),
+        [
+          { text: t('admin.orderDetails.actions.keep'), style: 'cancel' },
+          { text: t('admin.orderDetails.actions.cancel'), style: 'destructive', onPress: run },
+        ]
+      );
+    },
+    [order, orderId, token, fetchOrder, t]
+  );
+  const nextAdminAction = { 'En attente': 'Confirmée', Confirmée: 'En préparation' }[order?.status] || null;
+  const canCancel = ['En attente', 'Confirmée', 'En préparation'].includes(order?.status);
+
   const statusStyle = useMemo(() => getStatusStyle(order?.status, t), [order, t]);
   const paymentStyle = useMemo(() => getPaymentStyle(order?.paymentStatus, t), [order, t]);
   const riskStyle = useMemo(() => getRiskStyle(order, t), [order, t]);
@@ -743,6 +779,35 @@ export default function AdminOrderDetailsScreen() {
           </View>
         </View>
 
+        {nextAdminAction || canCancel ? (
+          <InfoCard title={t('admin.orderDetails.actions.title')}>
+            <View style={styles.adminActions}>
+              {nextAdminAction ? (
+                <Pressable
+                  accessibilityRole="button"
+                  disabled={acting}
+                  style={[styles.adminActionPrimary, acting && { opacity: 0.6 }]}
+                  onPress={() => changeStatus(nextAdminAction)}
+                >
+                  <Text style={styles.adminActionPrimaryText}>
+                    {nextAdminAction === 'Confirmée' ? t('admin.orderDetails.actions.confirm') : t('admin.orderDetails.actions.prepare')}
+                  </Text>
+                </Pressable>
+              ) : null}
+              {canCancel ? (
+                <Pressable
+                  accessibilityRole="button"
+                  disabled={acting}
+                  style={[styles.adminActionDanger, acting && { opacity: 0.6 }]}
+                  onPress={() => changeStatus('Annulée')}
+                >
+                  <Text style={styles.adminActionDangerText}>{t('admin.orderDetails.actions.cancel')}</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          </InfoCard>
+        ) : null}
+
         <InfoCard title={t('admin.restaurantDetails.adminIndicatorsTitle')}>
           <View style={styles.flagGrid}>
             {quickFlags.map((flag) => (
@@ -942,6 +1007,11 @@ export default function AdminOrderDetailsScreen() {
 }
 
 const styles = StyleSheet.create({
+  adminActions: { gap: 10 },
+  adminActionPrimary: { backgroundColor: '#084424', borderRadius: 14, paddingVertical: 14, alignItems: 'center' },
+  adminActionPrimaryText: { color: '#FFFFFF', fontWeight: '900', fontSize: 15 },
+  adminActionDanger: { backgroundColor: '#FDECEA', borderWidth: 1, borderColor: '#C8331A', borderRadius: 14, paddingVertical: 14, alignItems: 'center' },
+  adminActionDangerText: { color: '#C8331A', fontWeight: '900', fontSize: 15 },
   screen: {
     flex: 1,
     backgroundColor: '#FBF6EC',

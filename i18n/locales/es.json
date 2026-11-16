@@ -1988,7 +1988,18 @@
       "qtyLabel": "Cant.: {{qty}}",
       "unitPriceFragment": " • Precio unit.: {{price}}",
       "noteFragment": "Nota: {{note}}",
-      "noItemsAvailable": "No hay artículos disponibles."
+      "noItemsAvailable": "No hay artículos disponibles.",
+      "actions": {
+        "title": "Acciones del pedido",
+        "confirm": "Confirmar pedido",
+        "prepare": "Pasar a preparación",
+        "cancel": "Cancelar pedido",
+        "cancelConfirmTitle": "¿Cancelar este pedido?",
+        "cancelConfirmPaid": "El pedido está pagado con tarjeta: el cliente será reembolsado automáticamente.",
+        "cancelConfirmUnpaid": "El pedido no está pagado: no hace falta reembolso.",
+        "keep": "Mantener pedido",
+        "error": "Acción fallida. Inténtalo de nuevo."
+      }
     },
     "auditLogDetails": {
       "loaderText": "Cargando registro admin...",
