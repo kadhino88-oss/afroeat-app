@@ -1988,7 +1988,18 @@
       "qtyLabel": "数量：{{qty}}",
       "unitPriceFragment": " • 单价：{{price}}",
       "noteFragment": "备注：{{note}}",
-      "noItemsAvailable": "暂无商品。"
+      "noItemsAvailable": "暂无商品。",
+      "actions": {
+        "title": "订单操作",
+        "confirm": "确认订单",
+        "prepare": "开始备餐",
+        "cancel": "取消订单",
+        "cancelConfirmTitle": "取消此订单？",
+        "cancelConfirmPaid": "该订单已用银行卡付款：将自动向客户退款。",
+        "cancelConfirmUnpaid": "该订单未付款：无需退款。",
+        "keep": "保留订单",
+        "error": "操作失败，请重试。"
+      }
     },
     "auditLogDetails": {
       "loaderText": "正在加载管理员日志...",

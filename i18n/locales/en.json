@@ -1988,7 +1988,18 @@
       "qtyLabel": "Qty: {{qty}}",
       "unitPriceFragment": " • Unit price: {{price}}",
       "noteFragment": "Note: {{note}}",
-      "noItemsAvailable": "No items available."
+      "noItemsAvailable": "No items available.",
+      "actions": {
+        "title": "Order actions",
+        "confirm": "Confirm order",
+        "prepare": "Start preparing",
+        "cancel": "Cancel order",
+        "cancelConfirmTitle": "Cancel this order?",
+        "cancelConfirmPaid": "The order is paid by card: the customer will be refunded automatically.",
+        "cancelConfirmUnpaid": "The order is unpaid: no refund is needed.",
+        "keep": "Keep order",
+        "error": "Action failed. Try again."
+      }
     },
     "auditLogDetails": {
       "loaderText": "Loading admin log...",
