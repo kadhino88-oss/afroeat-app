@@ -1404,7 +1404,8 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
       const isOpen = !isPublicPlace && item?.isOpen !== false;
       const hasRating = normalizeNumber(item?.ratingCount, 0) > 0;
       const rating = clampRating(item?.rating).toFixed(1);
-      const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes, t('home.timeUnavailable'));
+      // Pas de délai connu : on n'affiche rien plutôt qu'un « indisponible » sur chaque carte.
+      const deliveryTime = formatDeliveryTime(item?.deliveryTimeMinutes, '');
       const imageUri = getRestaurantImageUri(item);
       // Pas de photo propre au commerce : fond neutre + son logo ou l'icône de sa catégorie.
       const showPlaceholder = !imageUri;
@@ -1518,7 +1519,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
                 </Text>
               </View>
 
-              <Text style={styles.deliveryTime}>{deliveryTime}</Text>
+              {deliveryTime ? <Text style={styles.deliveryTime}>{deliveryTime}</Text> : null}
             </View>}
           </View>
         </Pressable>

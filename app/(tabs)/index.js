@@ -852,7 +852,7 @@ export default function HomeScreen() {
       const cuisineLabel = normalizeText(item?.cuisine, publicCategoryLabel);
       const deliveryTime = isPublicListing
         ? ''
-        : normalizeText(item?.deliveryTime, t('home.timeUnavailable'));
+        : normalizeText(item?.deliveryTime, '');
       const deliveryFee = isPublicListing
         ? ''
         : formatDeliveryFee(item?.deliveryFee, item?.currency, t('home.deliveryFree'));
@@ -934,7 +934,7 @@ export default function HomeScreen() {
               <Text style={styles.restaurantName} numberOfLines={1}>
                 {item?.name}
               </Text>
-              <Text style={styles.deliveryTime}>{deliveryTime}</Text>
+              {deliveryTime ? <Text style={styles.deliveryTime}>{deliveryTime}</Text> : null}
             </View>
 
             <Text style={styles.restaurantCuisine} numberOfLines={1}>
