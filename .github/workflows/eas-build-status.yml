@@ -50,7 +50,7 @@ jobs:
               telechargement: b.artifacts?.buildUrl || b.artifacts?.applicationArchiveUrl || "",
               journaux: b.logFiles?.length ? `${b.logFiles.length} fichier(s) de journal` : "" };
             for (const [k, v] of Object.entries(pick)) if (v) console.log(`${k}: ${v}`);
-            require("fs").writeFileSync("logs.txt", (b.logFiles || []).join("\n"));
+            require("fs").writeFileSync("logs.txt", (b.logFiles || []).map((u) => u + "\n").join(""));
           '
           # En cas d'échec : extraits utiles du journal de construction (erreurs Gradle / Xcode).
           if grep -q '"status": *"ERRORED"' build.json; then
