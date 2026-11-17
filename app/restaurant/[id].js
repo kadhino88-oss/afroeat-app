@@ -14,6 +14,7 @@ import {
   Platform,
 } from 'react-native';
 import { Image } from 'expo-image';
+import RestaurantReviews from '../../components/RestaurantReviews';
 import { useLocalSearchParams, useFocusEffect, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { apiGet } from '../../services/apiClient';
@@ -1088,6 +1089,8 @@ export default function RestaurantScreen() {
                 </Text>
               )}
             </View>
+
+            <RestaurantReviews restaurantId={restaurant._id} />
 
             <Text style={styles.menuSectionTitle}>{t('restaurant.menu')}</Text>
 

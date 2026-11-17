@@ -2366,5 +2366,17 @@
   },
   "menu": {
     "illustrationPhoto": "示意图片"
+  },
+  "review": {
+    "title": "您的评价很重要",
+    "restaurant": "餐厅",
+    "courier": "配送",
+    "commentPlaceholder": "说说这顿饭（可选）",
+    "submit": "提交评价",
+    "thanks": "感谢您的评价！",
+    "pickRating": "请为餐厅打分。",
+    "error": "评价发送失败，请重试。",
+    "publicTitle": "顾客评价（{{count}}）",
+    "customer": "顾客"
   }
 }

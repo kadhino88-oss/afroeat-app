@@ -2366,5 +2366,17 @@
   },
   "menu": {
     "illustrationPhoto": "Illustrative photo"
+  },
+  "review": {
+    "title": "Your review matters",
+    "restaurant": "The restaurant",
+    "courier": "The delivery",
+    "commentPlaceholder": "A word about your meal (optional)",
+    "submit": "Send my review",
+    "thanks": "Thank you for your review!",
+    "pickRating": "Pick a rating for the restaurant.",
+    "error": "Could not send the review. Try again.",
+    "publicTitle": "Customer reviews ({{count}})",
+    "customer": "Customer"
   }
 }
