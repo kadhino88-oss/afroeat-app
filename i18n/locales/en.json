@@ -183,7 +183,11 @@
     "tipTitle": "Tip for the delivery",
     "tipHint": "100% goes to the person delivering to you, AFROEAT takes nothing.",
     "tipNone": "None",
-    "tip": "Tip"
+    "tip": "Tip",
+    "modeDelivery": "Delivery",
+    "modePickup": "Pickup",
+    "pickupTitle": "Pickup",
+    "pickupHint": "Collect your order at the restaurant counter: no delivery fee. You are notified when it is ready."
   },
   "restaurant": {
     "popular": "Popular",
@@ -469,7 +473,9 @@
       "assignError": "Could not assign this courier.",
       "selfDeliveryInfo": "Delivered by your business.",
       "startDelivery": "Out for delivery",
-      "markDelivered": "Order handed to the customer"
+      "markDelivered": "Order handed to the customer",
+      "pickupInfo": "Pickup: the customer collects the order at the counter.",
+      "handOver": "Handed to customer"
     },
     "dashboard": {
       "dishFallbackName": "African dish",
@@ -518,7 +524,10 @@
       "locationDenied": "Allow location access to use your current position.",
       "selfDelivery": "I deliver my own orders",
       "selfDeliveryOn": "You deliver to your customers yourself and keep the full delivery fee. No AFROEAT courier is sent.",
-      "selfDeliveryOff": "Deliveries are handled by AFROEAT couriers."
+      "selfDeliveryOff": "Deliveries are handled by AFROEAT couriers.",
+      "pickup": "Pickup",
+      "pickupHelp": "Customers can order and collect at your counter, with no delivery fee.",
+      "feeFloor": "With an AFROEAT courier, the delivery fee is at least {{amount}} (courier minimum)."
     },
     "openingHours": {
       "title": "Opening hours",

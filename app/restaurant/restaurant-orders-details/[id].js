@@ -468,8 +468,11 @@ export default function RestaurantOrderDetailsScreen() {
   const canCancel = ['En attente', 'Confirmée', 'En préparation'].includes(rawStatus);
   const selfDelivery = order?.selfDelivery === true;
   const canAssign = !selfDelivery && ['Confirmée', 'En préparation'].includes(rawStatus);
-  const canStartDelivery = selfDelivery && ['Confirmée', 'En préparation'].includes(rawStatus);
-  const canMarkDelivered = selfDelivery && rawStatus === 'En livraison';
+  const isPickup = order?.fulfillment === 'pickup';
+  const canStartDelivery = selfDelivery && !isPickup && ['Confirmée', 'En préparation'].includes(rawStatus);
+  const canMarkDelivered = selfDelivery && !isPickup && rawStatus === 'En livraison';
+  // À emporter : le client vient chercher sa commande, le commerce confirme la remise au comptoir.
+  const canHandOver = isPickup && ['Confirmée', 'En préparation'].includes(rawStatus);
 
   const runStatusChange = async (nextStatus) => {
     if (!order?._id || actionBusy) return;
@@ -658,9 +661,26 @@ export default function RestaurantOrderDetailsScreen() {
 
             {selfDelivery && (
               <View style={styles.infoRow}>
-                <Ionicons name="storefront-outline" size={18} color="#084424" />
-                <Text style={styles.infoText}>{t('restaurant.orderDetails.selfDeliveryInfo')}</Text>
+                <Ionicons name={isPickup ? 'bag-handle-outline' : 'storefront-outline'} size={18} color="#084424" />
+                <Text style={styles.infoText}>
+                  {t(isPickup ? 'restaurant.orderDetails.pickupInfo' : 'restaurant.orderDetails.selfDeliveryInfo')}
+                </Text>
               </View>
+            )}
+
+            {canHandOver && (
+              <Pressable
+                style={styles.actionPrimary}
+                accessibilityRole="button"
+                disabled={!!actionBusy}
+                onPress={() => runStatusChange('Livrée')}
+              >
+                {actionBusy === 'Livrée' ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.actionPrimaryText}>{t('restaurant.orderDetails.handOver')}</Text>
+                )}
+              </Pressable>
             )}
 
             {canStartDelivery && (

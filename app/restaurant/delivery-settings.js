@@ -31,6 +31,7 @@ export default function RestaurantDeliverySettingsScreen() {
   const [fee, setFee] = useState('');
   const [minimum, setMinimum] = useState('');
   const [selfDelivery, setSelfDelivery] = useState(false);
+  const [pickupEnabled, setPickupEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [locating, setLocating] = useState(false);
@@ -46,6 +47,7 @@ export default function RestaurantDeliverySettingsScreen() {
           setFee(String(data?.deliveryFee ?? 0));
           setMinimum(String(data?.minimumOrderAmount ?? 0));
           setSelfDelivery(data?.selfDelivery === true);
+          setPickupEnabled(data?.pickupEnabled !== false);
         } catch (error) {
           if (active) Alert.alert(t('common.error'), error?.message || '');
         } finally {
@@ -67,7 +69,7 @@ export default function RestaurantDeliverySettingsScreen() {
     }
     try {
       setSaving(true);
-      const updated = await updateMyRestaurant(restaurant._id, { deliveryFee, minimumOrderAmount, selfDelivery }, token);
+      const updated = await updateMyRestaurant(restaurant._id, { deliveryFee, minimumOrderAmount, selfDelivery, pickupEnabled }, token);
       setRestaurant(updated);
       Alert.alert(t('restaurant.deliverySettings.title'), t('restaurant.deliverySettings.saved'));
     } catch (error) {
@@ -142,6 +144,21 @@ export default function RestaurantDeliverySettingsScreen() {
             </View>
             <Ionicons name={selfDelivery ? 'toggle' : 'toggle-outline'} size={36} color={selfDelivery ? Brand.primary : '#9AA39A'} />
           </Pressable>
+          <Pressable
+            accessibilityRole="switch"
+            accessibilityState={{ checked: pickupEnabled }}
+            onPress={() => setPickupEnabled((value) => !value)}
+            style={styles.selfRow}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={styles.selfTitle}>{t('restaurant.deliverySettings.pickup')}</Text>
+              <Text style={styles.selfHelp}>{t('restaurant.deliverySettings.pickupHelp')}</Text>
+            </View>
+            <Ionicons name={pickupEnabled ? 'toggle' : 'toggle-outline'} size={36} color={pickupEnabled ? Brand.primary : '#9AA39A'} />
+          </Pressable>
+          {!selfDelivery ? (
+            <Text style={styles.selfHelp}>{t('restaurant.deliverySettings.feeFloor', { amount: currency === 'CHF' ? '4 CHF' : '3,50 €' })}</Text>
+          ) : null}
           <Pressable
             accessibilityRole="button"
             disabled={saving || !restaurant?._id}
