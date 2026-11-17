@@ -1890,7 +1890,13 @@
       "ownerNameFallback": "未提供所有者信息",
       "menuItemNameFallback": "商品",
       "menuItemCategoryFallback": "分类",
-      "manageMenu": "管理菜单和照片"
+      "manageMenu": "管理菜单和照片",
+      "hiddenTitle": "对顾客隐藏",
+      "hiddenText": "请先与商家核对菜单和价格，再将店铺设为可见。",
+      "visibleTitle": "顾客可见",
+      "visibleText": "顾客可以看到该店铺并下单。",
+      "showAction": "设为可见",
+      "hideAction": "隐藏"
     },
     "driverDetails": {
       "invalidDriverAlert": "无效的骑手。",

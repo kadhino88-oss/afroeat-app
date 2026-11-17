@@ -25,3 +25,8 @@ test('livreur, restaurant et admin voient le rappel de contrôle d’identité',
   }
   assert.match(read('components/AlcoholIdNotice.js'), /if \(!order\?\.containsAlcohol\) return null;/);
 });
+
+test('l’admin peut rendre visible ou masquer une fiche commerce', () => {
+  assert.match(read('services/adminService.js'), /setRestaurantVisibility[\s\S]*isActive: Boolean\(isActive\)/);
+  assert.match(read('app/admin/restaurants-details/[id].js'), /setRestaurantVisibility\(restaurantId, next, token\)/);
+});

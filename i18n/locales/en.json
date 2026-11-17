@@ -1890,7 +1890,13 @@
       "ownerNameFallback": "Owner not provided",
       "menuItemNameFallback": "Item",
       "menuItemCategoryFallback": "Category",
-      "manageMenu": "Manage menu and photos"
+      "manageMenu": "Manage menu and photos",
+      "hiddenTitle": "Hidden from customers",
+      "hiddenText": "Check the menu and prices with the business, then make the listing visible.",
+      "visibleTitle": "Visible to customers",
+      "visibleText": "Customers can see this business and order.",
+      "showAction": "Make visible",
+      "hideAction": "Hide"
     },
     "driverDetails": {
       "invalidDriverAlert": "Invalid driver.",
