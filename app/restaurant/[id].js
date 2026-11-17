@@ -212,6 +212,7 @@ const normalizeRestaurant = (data) => {
     ),
     currency: normalizeText(data?.currency, 'EUR'),
     description: normalizeText(data?.description),
+    logo: normalizeText(data?.logo),
   };
 };
 
@@ -976,7 +977,19 @@ export default function RestaurantScreen() {
             </View>
           ) : null}
 
-          <Text style={styles.heroTitle}>{restaurant.name}</Text>
+          <View style={styles.heroTitleRow}>
+            {restaurant.logo ? (
+              <View style={styles.heroLogo}>
+                <Image
+                  source={{ uri: restaurant.logo }}
+                  style={styles.heroLogoImage}
+                  contentFit="contain"
+                  accessibilityLabel={restaurant.name}
+                />
+              </View>
+            ) : null}
+            <Text style={[styles.heroTitle, styles.heroTitleFlex]}>{restaurant.name}</Text>
+          </View>
 
           <Text style={styles.heroMeta}>
             {restaurant.ratingCount > 0
@@ -1256,6 +1269,21 @@ const styles = StyleSheet.create({
   favoriteIconBtn: {
     marginRight: 10,
   },
+
+  heroTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  heroTitleFlex: { flexShrink: 1 },
+  heroLogo: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.9)',
+  },
+  heroLogoImage: { width: 60, height: 60 },
 
   logoBubble: {
     width: 42,

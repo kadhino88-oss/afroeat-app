@@ -237,6 +237,7 @@ const normalizeRestaurant = (item = {}) => {
     ),
     image: normalizeText(item?.image || item?.imageUrl),
     coverImage: normalizeText(item?.coverImage || item?.image || item?.imageUrl),
+    logo: isPublicListing ? '' : normalizeText(item?.logo),
     isOpen:
       isPublicListing && item?.isOpen == null
         ? null
@@ -885,6 +886,12 @@ export default function HomeScreen() {
                 iconSize={40}
               />
             )}
+
+            {!isPublicListing && item?.logo ? (
+              <View style={styles.cardLogo}>
+                <Image source={{ uri: item.logo }} style={styles.cardLogoImage} contentFit="contain" />
+              </View>
+            ) : null}
 
             {hasRating && (
               <View style={styles.badge}>
@@ -1707,6 +1714,21 @@ const styles = StyleSheet.create({
   restaurantImageWrapper: {
     position: 'relative',
   },
+  cardLogo: {
+    position: 'absolute',
+    left: 12,
+    top: 12,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  cardLogoImage: { width: 48, height: 48 },
 
   restaurantImage: {
     width: '100%',
