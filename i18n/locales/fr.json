@@ -178,7 +178,8 @@
     "promoApplied": "Code {{code}} appliqué : −{{amount}}",
     "promoRemove": "Retirer",
     "discount": "Remise",
-    "promoInvalid": "Code promo invalide."
+    "promoInvalid": "Code promo invalide.",
+    "ageConfirm": "Je confirme avoir 18 ans ou plus. Une pièce d’identité pourra m’être demandée à la livraison."
   },
   "restaurant": {
     "popular": "Populaire",
@@ -529,6 +530,10 @@
       "day_fri": "Vendredi",
       "day_sat": "Samedi",
       "day_sun": "Dimanche"
+    },
+    "alcohol": {
+      "toggle": "Contient de l’alcool (18+)",
+      "badge": "Alcool 18+"
     }
   },
   "profile": {
@@ -2310,5 +2315,10 @@
     "permissionError": "Autorisez l’accès aux photos pour envoyer un document.",
     "cta": "Envoyer mes documents",
     "restaurantRow": "Pièce d’identité et registre du commerce"
+  },
+  "alcohol": {
+    "badge": "18+",
+    "noticeTitle": "Contient de l’alcool : pièce d’identité à vérifier",
+    "noticeBody": "Contrôlez la pièce d’identité du client à la remise. Pas de remise d’alcool à une personne mineure ou en état d’ivresse."
   }
 }

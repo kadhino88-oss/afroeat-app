@@ -178,7 +178,8 @@
     "promoApplied": "已使用优惠码 {{code}}：−{{amount}}",
     "promoRemove": "移除",
     "discount": "优惠",
-    "promoInvalid": "优惠码无效。"
+    "promoInvalid": "优惠码无效。",
+    "ageConfirm": "我确认已年满 18 岁。送达时可能需要出示身份证件。"
   },
   "restaurant": {
     "popular": "热门",
@@ -529,6 +530,10 @@
       "day_fri": "星期五",
       "day_sat": "星期六",
       "day_sun": "星期日"
+    },
+    "alcohol": {
+      "toggle": "含酒精（18+）",
+      "badge": "酒精 18+"
     }
   },
   "profile": {
@@ -2310,5 +2315,10 @@
     "permissionError": "请允许访问照片以发送文件。",
     "cta": "上传我的文件",
     "restaurantRow": "身份证件与商业登记"
+  },
+  "alcohol": {
+    "badge": "18+",
+    "noticeTitle": "含酒精：请核验证件",
+    "noticeBody": "交付时请核验顾客的身份证件。不得向未成年人或醉酒者交付酒精饮品。"
   }
 }

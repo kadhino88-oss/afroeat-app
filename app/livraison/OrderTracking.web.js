@@ -4,6 +4,7 @@ import { router, useLocalSearchParams, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import DeliveryMap from '../../components/DeliveryMap';
+import AlcoholIdNotice from '../../components/AlcoholIdNotice';
 import { useAuth } from '../../context/AuthContext';
 import {
   getDeliveryOrderById,
@@ -170,6 +171,7 @@ export default function OrderTrackingWeb() {
       ) : (
         <View style={styles.layout}>
           <ScrollView style={styles.panel} contentContainerStyle={{ gap: 14 }}>
+            <AlcoholIdNotice order={order} />
             <View style={styles.card}>
               <Text style={styles.kicker}>{t('livraison.tracking.restaurantLabel')}</Text>
               <Text style={styles.big}>{order.restaurantName || order.restaurant?.name || t('livraison.tracking.restaurantFallback')}</Text>

@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../../components/FadeInView';
+import AlcoholIdNotice from '../../../components/AlcoholIdNotice';
 import { useAuth } from '../../../context/AuthContext';
 import { apiGet } from '../../../services/apiClient';
 import { API_ENDPOINTS } from '../../../constants/api';
@@ -571,6 +572,7 @@ export default function RestaurantOrderDetailsScreen() {
         }
         showsVerticalScrollIndicator={false}
       >
+        <AlcoholIdNotice order={order} style={{ marginBottom: 12 }} />
         {!!loadError && (
           <View style={styles.refreshNotice}>
             <Ionicons name="cloud-offline-outline" size={18} color="#C8331A" />

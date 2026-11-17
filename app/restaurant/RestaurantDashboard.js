@@ -131,6 +131,7 @@ const normalizeMenuItem = (item = {}) => {
     available: normalizeBoolean(item?.available, true),
     isPopular: normalizeBoolean(item?.isPopular, false),
     isRecommended: normalizeBoolean(item?.isRecommended, false),
+    containsAlcohol: normalizeBoolean(item?.containsAlcohol, false),
     image: normalizeText(item?.image),
   };
 };
@@ -405,6 +406,7 @@ export default function RestaurantDashboard() {
         available: String(item?.available !== false),
         isPopular: String(!!item?.isPopular),
         isRecommended: String(!!item?.isRecommended),
+        containsAlcohol: String(!!item?.containsAlcohol),
       },
     });
   }, []);

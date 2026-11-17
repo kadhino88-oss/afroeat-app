@@ -82,6 +82,9 @@ export default function EditMenuItem() {
   const [isRecommended, setIsRecommended] = useState(
     normalizeBooleanFromParam(params?.isRecommended, false)
   );
+  const [containsAlcohol, setContainsAlcohol] = useState(
+    normalizeBooleanFromParam(params?.containsAlcohol, false)
+  );
   const [submitting, setSubmitting] = useState(false);
 
   const canAccess = isAuthenticated && (role === 'restaurant' || role === 'admin');
@@ -126,6 +129,7 @@ export default function EditMenuItem() {
         available,
         isPopular,
         isRecommended,
+        containsAlcohol,
       };
 
       await apiPut(API_ENDPOINTS.menu.update(itemId), payload, token);
@@ -154,6 +158,7 @@ export default function EditMenuItem() {
     available,
     isPopular,
     isRecommended,
+    containsAlcohol,
     t,
   ]);
 
@@ -276,6 +281,20 @@ export default function EditMenuItem() {
               name={isRecommended ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
               color={isRecommended ? '#084424' : '#999'}
+            />
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: containsAlcohol }}
+            style={styles.toggleRow}
+            onPress={() => setContainsAlcohol((prev) => !prev)}
+          >
+            <Text style={styles.toggleLabel}>{t('restaurant.alcohol.toggle')}</Text>
+            <Ionicons
+              name={containsAlcohol ? 'checkmark-circle' : 'ellipse-outline'}
+              size={22}
+              color={containsAlcohol ? '#C8331A' : '#999'}
             />
           </Pressable>
 

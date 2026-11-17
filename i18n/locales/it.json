@@ -178,7 +178,8 @@
     "promoApplied": "Codice {{code}} applicato: −{{amount}}",
     "promoRemove": "Rimuovi",
     "discount": "Sconto",
-    "promoInvalid": "Codice promo non valido."
+    "promoInvalid": "Codice promo non valido.",
+    "ageConfirm": "Confermo di avere almeno 18 anni. Alla consegna potrà essere richiesto un documento d’identità."
   },
   "restaurant": {
     "popular": "Popolare",
@@ -529,6 +530,10 @@
       "day_fri": "Venerdì",
       "day_sat": "Sabato",
       "day_sun": "Domenica"
+    },
+    "alcohol": {
+      "toggle": "Contiene alcol (18+)",
+      "badge": "Alcol 18+"
     }
   },
   "profile": {
@@ -2310,5 +2315,10 @@
     "permissionError": "Consenti l’accesso alle foto per inviare un documento.",
     "cta": "Invia i miei documenti",
     "restaurantRow": "Documento d’identità e registro imprese"
+  },
+  "alcohol": {
+    "badge": "18+",
+    "noticeTitle": "Contiene alcol: verificare il documento",
+    "noticeBody": "Verificate il documento d’identità del cliente alla consegna. Non consegnate alcol a minorenni o a persone in stato di ebbrezza."
   }
 }

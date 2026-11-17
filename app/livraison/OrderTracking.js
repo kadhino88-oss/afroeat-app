@@ -20,6 +20,7 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../components/FadeInView';
+import AlcoholIdNotice from '../../components/AlcoholIdNotice';
 import { useAuth } from '../../context/AuthContext';
 import {
   getDeliveryOrderById,
@@ -692,6 +693,7 @@ export default function OrderTrackingScreen() {
       </View>
 
       <View style={styles.bottomPanel}>
+        <AlcoholIdNotice order={safeOrder} style={{ marginBottom: 12 }} />
         <View style={styles.headerRow}>
           <View style={styles.headerTextBlock}>
             <Text style={styles.panelTitle}>{t('livraison.tracking.panelTitle')}</Text>

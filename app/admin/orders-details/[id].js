@@ -14,6 +14,7 @@ import {
 import { useLocalSearchParams, router, useFocusEffect, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../../components/FadeInView';
+import AlcoholIdNotice from '../../../components/AlcoholIdNotice';
 import { useAuth } from '../../../context/AuthContext';
 import { getAdminOrderById } from '../../../services/adminService';
 import { updateOrderStatus } from '../../../services/orderService';
@@ -685,6 +686,7 @@ export default function AdminOrderDetailsScreen() {
           />
         }
       >
+        <AlcoholIdNotice order={order} style={{ marginBottom: 12 }} />
         <View style={styles.topRow}>
           <Pressable style={styles.topButton} onPress={handleGoBack}>
             <Ionicons name="arrow-back" size={20} color="#0D1C11" />
