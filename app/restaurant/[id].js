@@ -765,7 +765,10 @@ export default function RestaurantScreen() {
             />
 
             <View style={styles.textContent}>
-              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemName}>
+                {item.name}
+                {item.containsAlcohol ? <Text style={styles.alcoholBadge}>{`  ${t('alcohol.badge')}`}</Text> : null}
+              </Text>
 
               <Text style={styles.desc} numberOfLines={2}>
                 {item.description}
@@ -1170,6 +1173,7 @@ export default function RestaurantScreen() {
 const IS_WEB = Platform.OS === 'web';
 
 const styles = StyleSheet.create({
+  alcoholBadge: { color: '#9B1C1C', fontWeight: '900', fontSize: 12 },
   webContainer: { width: '100%', maxWidth: 1040, alignSelf: 'center' },
   webHero: { borderRadius: 20, overflow: 'hidden', marginTop: 16, marginHorizontal: 16 },
   webTopBar: { top: 16 },

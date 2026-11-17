@@ -69,6 +69,7 @@ export default function AddMenuItem() {
   const [cuisine, setCuisine] = useState('Africaine');
   const [image, setImage] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [containsAlcohol, setContainsAlcohol] = useState(false);
 
   const resolvedPrice = useMemo(() => {
     const parsed = Number(price);
@@ -131,6 +132,7 @@ export default function AddMenuItem() {
         available: true,
         isPopular: false,
         isRecommended: false,
+        containsAlcohol,
       };
 
       await apiPost(API_ENDPOINTS.menu.create, payload, token);
@@ -149,6 +151,7 @@ export default function AddMenuItem() {
     }
   }, [
     token,
+    containsAlcohol,
     ensureRestaurantId,
     name,
     description,
@@ -248,6 +251,20 @@ export default function AddMenuItem() {
               );
             })}
           </View>
+
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: containsAlcohol }}
+            style={styles.toggleRow}
+            onPress={() => setContainsAlcohol((prev) => !prev)}
+          >
+            <Text style={styles.toggleLabel}>{t('restaurant.alcohol.toggle')}</Text>
+            <Ionicons
+              name={containsAlcohol ? 'checkmark-circle' : 'ellipse-outline'}
+              size={22}
+              color={containsAlcohol ? '#C8331A' : '#999'}
+            />
+          </Pressable>
 
           <Pressable
             style={[styles.primaryButton, submitting && styles.buttonDisabled]}
@@ -357,6 +374,25 @@ const styles = StyleSheet.create({
   },
   chipTextActive: {
     color: '#FFFFFF',
+  },
+
+  toggleRow: {
+    minHeight: 50,
+    borderRadius: 14,
+    backgroundColor: '#F2ECE0',
+    paddingHorizontal: 14,
+    marginBottom: 10,
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  toggleLabel: {
+    color: '#111',
+    fontWeight: '700',
+    fontSize: 14,
+    flex: 1,
+    marginRight: 8,
   },
 
   primaryButton: {

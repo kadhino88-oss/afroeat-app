@@ -178,7 +178,8 @@
     "promoApplied": "Code {{code}} applied: −{{amount}}",
     "promoRemove": "Remove",
     "discount": "Discount",
-    "promoInvalid": "Invalid promo code."
+    "promoInvalid": "Invalid promo code.",
+    "ageConfirm": "I confirm I am 18 or older. ID may be requested on delivery."
   },
   "restaurant": {
     "popular": "Popular",
@@ -529,6 +530,10 @@
       "day_fri": "Friday",
       "day_sat": "Saturday",
       "day_sun": "Sunday"
+    },
+    "alcohol": {
+      "toggle": "Contains alcohol (18+)",
+      "badge": "Alcohol 18+"
     }
   },
   "profile": {
@@ -2310,5 +2315,10 @@
     "permissionError": "Allow photo access to send a document.",
     "cta": "Send my documents",
     "restaurantRow": "ID document and business registration"
+  },
+  "alcohol": {
+    "badge": "18+",
+    "noticeTitle": "Contains alcohol: check ID",
+    "noticeBody": "Check the customer’s ID on delivery. Do not hand over alcohol to anyone underage or intoxicated."
   }
 }

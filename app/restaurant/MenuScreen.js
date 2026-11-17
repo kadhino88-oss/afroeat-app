@@ -73,6 +73,7 @@ const normalizeMenuItem = (item = {}) => ({
   available: item?.available !== false,
   isPopular: Boolean(item?.isPopular),
   isRecommended: Boolean(item?.isRecommended),
+  containsAlcohol: Boolean(item?.containsAlcohol),
 });
 
 export default function MenuScreen() {
@@ -208,6 +209,7 @@ export default function MenuScreen() {
         available: String(item?.available !== false),
         isPopular: String(!!item?.isPopular),
         isRecommended: String(!!item?.isRecommended),
+        containsAlcohol: String(!!item?.containsAlcohol),
         image: item?.image || '',
       },
     });
@@ -324,6 +326,13 @@ export default function MenuScreen() {
                 <View style={styles.metaBadge}>
                   <Ionicons name="flame-outline" size={14} color="#C8331A" />
                   <Text style={styles.metaBadgeText}>{t('restaurant.menuScreen.popularBadge')}</Text>
+                </View>
+              )}
+
+              {!!item?.containsAlcohol && (
+                <View style={styles.metaBadge}>
+                  <Ionicons name="wine-outline" size={14} color="#C8331A" />
+                  <Text style={styles.metaBadgeText}>{t('restaurant.alcohol.badge')}</Text>
                 </View>
               )}
 

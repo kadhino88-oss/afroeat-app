@@ -155,6 +155,8 @@ export default function CheckoutScreen() {
   const [loading, setLoading] = useState(false);
   const orderInProgressRef = useRef(false);
   const [quote, setQuote] = useState(null);
+  const [ageConfirmed, setAgeConfirmed] = useState(false);
+  const ageBlocked = Boolean(quote?.containsAlcohol) && !ageConfirmed;
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quoteError, setQuoteError] = useState('');
   const [quoteRetryVersion, setQuoteRetryVersion] = useState(0);
@@ -500,6 +502,7 @@ export default function CheckoutScreen() {
         quotedTotal: quote.totalPrice,
         quotedCurrency: quote.currency,
         ...(quote.promoCode ? { promoCode: quote.promoCode } : {}),
+        ...(quote.containsAlcohol ? { ageConfirmed: ageConfirmed === true } : {}),
         deliveryAddress: normalizeText(deliveryAddress),
         deliveryAddressDetails: {
           address: normalizeText(deliveryAddress),
@@ -604,6 +607,7 @@ export default function CheckoutScreen() {
       setLoading(false);
     }
   }, [
+    ageConfirmed,
     deliveryAddress,
     hasValidAddress,
     isClient,
@@ -1067,6 +1071,22 @@ export default function CheckoutScreen() {
           </Pressable>
         )}
 
+        {quote?.containsAlcohol ? (
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: ageConfirmed }}
+            onPress={() => setAgeConfirmed((value) => !value)}
+            style={styles.ageRow}
+          >
+            <Ionicons
+              name={ageConfirmed ? 'checkbox' : 'square-outline'}
+              size={22}
+              color={ageConfirmed ? '#084424' : '#606D5D'}
+            />
+            <Text style={styles.ageText}>{t('checkout.ageConfirm')}</Text>
+          </Pressable>
+        ) : null}
+
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={t('checkout.placeOrder')}
@@ -1077,7 +1097,8 @@ export default function CheckoutScreen() {
               quoteLoading ||
               !quote ||
               safeCartItems.length === 0 ||
-              !hasValidAddress
+              !hasValidAddress ||
+              ageBlocked
             ) && styles.buttonDisabled,
             pressed &&
               !loading &&
@@ -1085,6 +1106,7 @@ export default function CheckoutScreen() {
               Boolean(quote) &&
               safeCartItems.length > 0 &&
               hasValidAddress &&
+              !ageBlocked &&
               styles.buttonPressed,
           ]}
           onPress={handleOrder}
@@ -1093,7 +1115,8 @@ export default function CheckoutScreen() {
             quoteLoading ||
             !quote ||
             safeCartItems.length === 0 ||
-            !hasValidAddress
+            !hasValidAddress ||
+            ageBlocked
           }
         >
           {loading ? (
@@ -1118,6 +1141,19 @@ export default function CheckoutScreen() {
 const WEB_COLUMN = Platform.OS === 'web' ? { width: '100%', maxWidth: 760, alignSelf: 'center' } : null;
 
 const styles = StyleSheet.create({
+  ageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+  },
+  ageText: {
+    flex: 1,
+    color: '#0D1C11',
+    fontWeight: '700',
+    lineHeight: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: '#FBF6EC',

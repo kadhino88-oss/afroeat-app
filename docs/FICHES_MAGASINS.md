@@ -73,9 +73,18 @@ Launching in Geneva, Annemasse and Annecy, then across Switzerland and Auvergne-
 
 ## Classification d'âge
 
-- Apple : 4+ ; Google (questionnaire IARC) : « Tout public ».
-- **À revoir** si des commerces vendent de l'alcool via l'appli : l'âge minimum et les règles
-  de vente d'alcool changent (Apple 17+, déclaration spécifique chez Google).
+Des commerces vendent de l'alcool via l'appli :
+
+- **Apple** : questionnaire d'âge → « Alcool, tabac ou drogues » : *fréquent / vente* → classification **18+**
+  (ex-17+). Mentionner dans les notes pour les relecteurs que la vente d'alcool exige la confirmation
+  de majorité au paiement et un contrôle d'identité à la livraison.
+- **Google** (questionnaire IARC) : répondre **oui** à « l'appli facilite la vente d'alcool ». La
+  classification sera « 18 ans et plus » / « Adultes uniquement » selon les pays.
+- Dans l'appli : chaque produit alcoolisé est marqué « Alcool 18+ » par le commerce ; le client doit
+  cocher « J'ai 18 ans ou plus » pour commander (refus côté serveur sinon) ; le livreur voit
+  « pièce d'identité à vérifier » sur la course.
+- Rappel légal : France — vente interdite aux moins de 18 ans ; Suisse — 16 ans pour la bière et le vin,
+  18 ans pour les spiritueux (l'appli applique 18 ans partout, le plus strict).
 
 ## Déclaration des données (Apple « Confidentialité de l'app » / Google « Sécurité des données »)
 
@@ -101,7 +110,8 @@ Données liées à l'identité de l'utilisateur, jamais vendues ni utilisées po
 
 > Afroeat est une plateforme de livraison pour commerces africains (Suisse et France).
 > Un compte client de démonstration est fourni ci-dessous. Une commande payée par carte puis annulée
-> avant sa préparation est remboursée automatiquement.
+> avant sa préparation est remboursée automatiquement. Les produits alcoolisés sont signalés « 18+ » :
+> le client doit confirmer sa majorité au paiement et le livreur contrôle une pièce d'identité à la remise.
 
 Avant l'envoi : créer un compte client de démonstration dédié (adresse e-mail réelle, mot de passe fort),
 vérifier qu'au moins un commerce actif avec un menu est visible, et saisir ces identifiants **uniquement**

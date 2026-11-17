@@ -178,7 +178,8 @@
     "promoApplied": "Code {{code}} angewendet: −{{amount}}",
     "promoRemove": "Entfernen",
     "discount": "Rabatt",
-    "promoInvalid": "Ungültiger Promo-Code."
+    "promoInvalid": "Ungültiger Promo-Code.",
+    "ageConfirm": "Ich bestätige, dass ich mindestens 18 Jahre alt bin. Bei der Lieferung kann ein Ausweis verlangt werden."
   },
   "restaurant": {
     "popular": "Beliebt",
@@ -529,6 +530,10 @@
       "day_fri": "Freitag",
       "day_sat": "Samstag",
       "day_sun": "Sonntag"
+    },
+    "alcohol": {
+      "toggle": "Enthält Alkohol (18+)",
+      "badge": "Alkohol 18+"
     }
   },
   "profile": {
@@ -2310,5 +2315,10 @@
     "permissionError": "Erlaube den Fotozugriff, um ein Dokument zu senden.",
     "cta": "Meine Dokumente senden",
     "restaurantRow": "Ausweis und Handelsregister"
+  },
+  "alcohol": {
+    "badge": "18+",
+    "noticeTitle": "Enthält Alkohol: Ausweis prüfen",
+    "noticeBody": "Prüfen Sie bei der Übergabe den Ausweis der Kundin bzw. des Kunden. Keine Abgabe von Alkohol an Minderjährige oder Betrunkene."
   }
 }
