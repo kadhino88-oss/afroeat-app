@@ -18,6 +18,9 @@
         "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "true",
         "EXPO_PUBLIC_ENABLE_APPLE_PAY": "true",
         "EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER": "merchant.com.afroeat"
+      },
+      "android": {
+        "gradleCommand": ":app:assembleRelease -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease"
       }
     },
     "production": {
@@ -29,6 +32,9 @@
         "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "true",
         "EXPO_PUBLIC_ENABLE_APPLE_PAY": "true",
         "EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER": "merchant.com.afroeat"
+      },
+      "android": {
+        "gradleCommand": ":app:bundleRelease -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease"
       }
     }
   },

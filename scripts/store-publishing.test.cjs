@@ -31,3 +31,9 @@ test('les fiches magasins donnent les adresses obligatoires', () => {
   assert.match(doc, /legal\/privacy/);
   assert.match(doc, /account-deletion/);
 });
+
+test('les constructions Android sautent l’analyse lint de publication (dépendance Stripe introuvable)', () => {
+  const eas = JSON.parse(read('eas.json'));
+  assert.match(eas.build.preview.android.gradleCommand, /^:app:assembleRelease .*-x lintVitalAnalyzeRelease/);
+  assert.match(eas.build.production.android.gradleCommand, /^:app:bundleRelease .*-x lintVitalAnalyzeRelease/);
+});
