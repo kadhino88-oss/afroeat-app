@@ -96,6 +96,12 @@ export default function CourierApplyScreen() {
               Livrez les plats des restaurants et épiceries africains près de chez vous. Remplissez ce formulaire : nous
               vérifions votre candidature puis nous vous envoyons votre lien d’inscription.
             </Text>
+            <View style={styles.offer}>
+              <Text style={styles.offerLine}>💶 80 % des frais de livraison, minimum garanti 3,50 € / 4 CHF par course</Text>
+              <Text style={styles.offerLine}>🙏 100 % des pourboires, sans commission</Text>
+              <Text style={styles.offerLine}>📍 Courses proposées près de vous : vous acceptez celles qui vous conviennent</Text>
+              <Text style={styles.offerLine}>⚡ Paiement à chaque course livrée</Text>
+            </View>
 
             <Text style={styles.label}>Nom et prénom</Text>
             <TextInput value={form.name} onChangeText={setField('name')} autoComplete="name" style={styles.input} />
@@ -183,6 +189,8 @@ export default function CourierApplyScreen() {
 }
 
 const styles = StyleSheet.create({
+  offer: { marginTop: 14, padding: 14, borderRadius: 14, backgroundColor: '#F2ECE0', gap: 6 },
+  offerLine: { color: '#0D1C11', fontWeight: '700', lineHeight: 20 },
   page: { flex: 1, backgroundColor: Brand.background },
   content: { padding: 20, paddingBottom: 60, maxWidth: 560, width: '100%', alignSelf: 'center' },
   back: { width: 42, height: 42, borderRadius: 14, backgroundColor: Brand.card, justifyContent: 'center', alignItems: 'center', marginBottom: 16, borderWidth: 1, borderColor: Brand.border },
