@@ -1451,7 +1451,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
                 <Text style={styles.publicBadgeText}>{t('publicPlace.publicListing')}</Text>
               </View>
             ) : null}
-            {isPublicPlace && !showPlaceholder && Boolean(item?.logoUrl || item?.website) ? (
+            {isPublicPlace && !showPlaceholder && Boolean(item?.logoUrl) ? (
               <View style={styles.placeBrandBadge}>
                 <PlaceBrandMark
                   logoUrl={item.logoUrl}
