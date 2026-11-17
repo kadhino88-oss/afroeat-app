@@ -189,6 +189,7 @@ export const API_ENDPOINTS = {
   // ─── Inscription des commerces ─────────────────────────
   partnerApplications: {
     create: () => '/partner-applications',
+    terms: () => '/partner-applications/terms',
     invite: (token) => `/partner-applications/invite/${safePathParam(token)}`,
     inviteRegister: (token) => `/partner-applications/invite/${safePathParam(token)}/register`,
   },

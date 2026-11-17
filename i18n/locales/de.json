@@ -2208,7 +2208,12 @@
     "joinTitle": "Ist das dein Geschäft?",
     "joinText": "Füge dein Logo und deine Gerichte hinzu und erhalte Bestellungen mit einer erschwinglicheren Lieferung.",
     "joinButton": "AFROEAT beitreten",
-    "type_courier": "Kurier"
+    "type_courier": "Kurier",
+    "offerTitle": "Unsere Konditionen",
+    "commission": "{{rate}} % Provision pro gelieferter Bestellung",
+    "commissionByCurrency": "Provision pro gelieferter Bestellung: {{rates}}",
+    "payout": "Ihre Einnahmen werden für jede gelieferte Bestellung automatisch auf Ihr Stripe-Konto ausgezahlt.",
+    "offerNote": "Die vollständigen Bedingungen stehen in den AGB und werden Ihnen vor der Aktivierung Ihres Geschäfts bestätigt."
   },
   "paymentCards": {
     "noCardTitle": "Keine gespeicherte Karte",

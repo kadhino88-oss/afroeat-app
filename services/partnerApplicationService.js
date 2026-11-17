@@ -7,6 +7,12 @@ export const submitPartnerApplication = (application) =>
     retries: 0,
   });
 
+// Conditions commerciales publiques (commission par commande), issues de la configuration de l'API.
+export const getPartnerTerms = async () => {
+  const response = await apiGet(API_ENDPOINTS.partnerApplications.terms());
+  return response?.terms || null;
+};
+
 // Espace administrateur : liste et suivi des demandes de commerces partenaires.
 export const getAdminPartnerApplications = (token, status = '') =>
   apiGet(
