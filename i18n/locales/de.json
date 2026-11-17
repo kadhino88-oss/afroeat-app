@@ -2127,6 +2127,23 @@
       "create": "Code erstellen",
       "empty": "Noch keine Codes.",
       "used": "{{used}} / {{max}} Nutzungen"
+    },
+    "errors": {
+      "navTitle": "Fehler",
+      "navText": "API- und Website-Fehler, gruppiert",
+      "title": "Fehlerüberwachung",
+      "intro": "Jeder Serverfehler (5xx) und jeder JavaScript-Fehler der Website wird hier erfasst, nach Problem gruppiert mit Anzahl der Vorkommen.",
+      "open": "offen",
+      "last24h": "in 24 h gesehen",
+      "showResolved": "Auch behobene Fehler anzeigen",
+      "hideResolved": "Behobene Fehler ausblenden",
+      "empty": "Keine offenen Fehler. Alles funktioniert.",
+      "web": "Website",
+      "api": "API",
+      "resolved": "Behoben",
+      "markResolved": "Als behoben markieren",
+      "lastSeen": "Zuletzt: {{date}}",
+      "role": "Benutzerrolle: {{role}}"
     }
   },
   "payouts": {

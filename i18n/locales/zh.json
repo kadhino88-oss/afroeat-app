@@ -2127,6 +2127,23 @@
       "create": "创建优惠码",
       "empty": "暂无优惠码。",
       "used": "已用 {{used}} / {{max}} 次"
+    },
+    "errors": {
+      "navTitle": "错误",
+      "navText": "API 和网站错误（已分组）",
+      "title": "错误监控",
+      "intro": "每个服务器错误（5xx）和网站 JavaScript 错误都会记录在此，按问题分组并显示发生次数。",
+      "open": "待处理",
+      "last24h": "24 小时内出现",
+      "showResolved": "同时显示已解决的错误",
+      "hideResolved": "隐藏已解决的错误",
+      "empty": "没有待处理的错误，一切正常。",
+      "web": "网站",
+      "api": "API",
+      "resolved": "已解决",
+      "markResolved": "标记为已解决",
+      "lastSeen": "最近一次：{{date}}",
+      "role": "用户角色：{{role}}"
     }
   },
   "payouts": {

@@ -570,3 +570,11 @@ export const listPromoCodes = async (token) => {
 export const createPromoCode = async (payload, token) => apiPost(API_ENDPOINTS.admin.promoCodes, payload, token);
 export const setPromoCodeActive = async (id, active, token) =>
   apiPatch(`${API_ENDPOINTS.admin.promoCodes}/${encodeURIComponent(id)}`, { active }, token);
+
+// Surveillance des erreurs (API et site).
+export const listErrorEvents = async (token, { resolved = false } = {}) => {
+  const r = await apiGet(`${API_ENDPOINTS.admin.errors}${resolved ? '?resolved=true' : ''}`, token);
+  return { errors: Array.isArray(r?.errors) ? r.errors : [], stats: r?.stats || { open: 0, last24h: 0 } };
+};
+export const resolveErrorEvent = async (id, token) =>
+  apiPatch(`${API_ENDPOINTS.admin.errors}/${encodeURIComponent(id)}/resolve`, {}, token);
