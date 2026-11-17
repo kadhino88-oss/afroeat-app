@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -14,7 +14,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { submitPartnerApplication } from '../services/partnerApplicationService';
+import { getPartnerTerms, submitPartnerApplication } from '../services/partnerApplicationService';
 
 const firstParam = (value) => (Array.isArray(value) ? value[0] : value);
 const text = (value) => String(firstParam(value) || '').trim();
@@ -30,6 +30,25 @@ const typeFromCategory = (category) => {
 export default function PartnerApplyScreen() {
   const params = useLocalSearchParams();
   const { t } = useTranslation();
+  const [terms, setTerms] = useState(null);
+
+  // La commission affichée vient de la configuration de l'API : jamais de taux codé en dur.
+  useEffect(() => {
+    let active = true;
+    getPartnerTerms()
+      .then((value) => active && setTerms(value))
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const commissionLine = (() => {
+    if (!terms) return '';
+    if (terms.commissionPercent != null) return t('partnerApply.commission', { rate: terms.commissionPercent });
+    const parts = Object.entries(terms.commissionByCurrency || {}).map(([currency, rate]) => `${rate} % (${currency})`);
+    return parts.length ? t('partnerApply.commissionByCurrency', { rates: parts.join(' · ') }) : '';
+  })();
 
   const initial = useMemo(
     () => ({
@@ -117,6 +136,21 @@ export default function PartnerApplyScreen() {
           ))}
         </View>
 
+        {commissionLine ? (
+          <View style={styles.offer}>
+            <Text style={styles.offerTitle}>{t('partnerApply.offerTitle')}</Text>
+            <View style={styles.benefitRow}>
+              <Ionicons name="pricetag-outline" size={18} color="#084424" />
+              <Text style={styles.benefitText}>{commissionLine}</Text>
+            </View>
+            <View style={styles.benefitRow}>
+              <Ionicons name="card-outline" size={18} color="#084424" />
+              <Text style={styles.benefitText}>{t('partnerApply.payout')}</Text>
+            </View>
+            <Text style={styles.offerNote}>{t('partnerApply.offerNote')}</Text>
+          </View>
+        ) : null}
+
         <View style={styles.card}>
           <Field label={t('partnerApply.businessName')} value={form.businessName} onChangeText={setField('businessName')} />
 
@@ -201,6 +235,9 @@ const styles = StyleSheet.create({
   back: { position: 'absolute', top: 46, left: 18, width: 42, height: 42, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.14)' },
   title: { marginTop: 34, color: '#FFFFFF', fontSize: 27, fontWeight: '900' },
   intro: { marginTop: 10, color: '#E3F0E8', fontSize: 14, lineHeight: 21 },
+  offer: { marginHorizontal: 16, marginBottom: 16, padding: 16, borderRadius: 18, backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#E3DECF', gap: 8 },
+  offerTitle: { color: '#0D1C11', fontSize: 16, fontWeight: '900' },
+  offerNote: { color: '#606D5D', fontSize: 12, lineHeight: 18 },
   benefits: { margin: 16, padding: 16, borderRadius: 18, backgroundColor: '#F2ECE0', borderWidth: 1, borderColor: '#E3F0E8' },
   benefitRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 5 },
   benefitText: { marginLeft: 9, flex: 1, color: '#084424', fontSize: 14, fontWeight: '700' },

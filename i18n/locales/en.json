@@ -2208,7 +2208,12 @@
     "joinTitle": "Is this your business?",
     "joinText": "Add your logo and dishes, and receive orders with a delivery designed to be more affordable.",
     "joinButton": "Join AFROEAT",
-    "type_courier": "Courier"
+    "type_courier": "Courier",
+    "offerTitle": "Our terms",
+    "commission": "{{rate}}% commission per delivered order",
+    "commissionByCurrency": "Commission per delivered order: {{rates}}",
+    "payout": "Your earnings are paid automatically to your Stripe account for every delivered order.",
+    "offerNote": "The full terms are set out in the terms and conditions and confirmed to you before your business is activated."
   },
   "paymentCards": {
     "noCardTitle": "No saved card",

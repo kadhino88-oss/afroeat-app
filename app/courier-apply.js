@@ -61,7 +61,7 @@ export default function CourierApplyScreen() {
       });
       setSent(true);
     } catch (error) {
-      Alert.alert('Envoi impossible', error?.message || 'Réessaie dans un instant.');
+      Alert.alert('Envoi impossible', error?.message || 'Réessayez dans un instant.');
     } finally {
       setSending(false);
     }
@@ -82,8 +82,8 @@ export default function CourierApplyScreen() {
           <View style={styles.card}>
             <Text style={styles.title}>Candidature envoyée</Text>
             <Text style={styles.text}>
-              Merci ! L’équipe AFROEAT te contacte rapidement. Si ta candidature est acceptée, tu recevras un lien
-              pour créer ton compte livreur et choisir ton mot de passe.
+              Merci ! L’équipe AFROEAT vous contacte rapidement. Si votre candidature est acceptée, vous recevrez un lien
+              pour créer votre compte livreur et choisir votre mot de passe.
             </Text>
             <Pressable accessibilityRole="button" onPress={() => router.replace('/')} style={styles.button}>
               <Text style={styles.buttonText}>Retour à l’accueil</Text>
@@ -93,8 +93,8 @@ export default function CourierApplyScreen() {
           <View style={styles.card}>
             <Text style={styles.title}>Devenir livreur</Text>
             <Text style={styles.text}>
-              Livre les plats des restaurants et épiceries africains près de chez toi. Remplis ce formulaire : nous
-              vérifions ta candidature puis nous t’envoyons ton lien d’inscription.
+              Livrez les plats des restaurants et épiceries africains près de chez vous. Remplissez ce formulaire : nous
+              vérifions votre candidature puis nous vous envoyons votre lien d’inscription.
             </Text>
 
             <Text style={styles.label}>Nom et prénom</Text>
@@ -122,7 +122,7 @@ export default function CourierApplyScreen() {
             <Text style={styles.label}>Ville</Text>
             <TextInput value={form.city} onChangeText={setField('city')} placeholder="Genève, Annemasse, Annecy…" placeholderTextColor={Brand.mutedForeground} style={styles.input} />
 
-            <Text style={styles.label}>Quartiers où tu veux livrer</Text>
+            <Text style={styles.label}>Quartiers où vous voulez livrer</Text>
             <TextInput value={form.zone} onChangeText={setField('zone')} style={styles.input} />
 
             <Text style={styles.label}>Pays</Text>

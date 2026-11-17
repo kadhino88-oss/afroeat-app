@@ -2208,7 +2208,12 @@
     "joinTitle": "这是你的商家吗？",
     "joinText": "添加你的标志和菜品，通过力求更实惠的配送接收订单。",
     "joinButton": "加入 AFROEAT",
-    "type_courier": "配送员"
+    "type_courier": "配送员",
+    "offerTitle": "合作条件",
+    "commission": "每笔已送达订单收取 {{rate}}% 佣金",
+    "commissionByCurrency": "每笔已送达订单佣金：{{rates}}",
+    "payout": "每笔订单送达后，您的收入会自动转入您的 Stripe 账户。",
+    "offerNote": "完整条款见服务条款，并会在您的店铺激活前向您确认。"
   },
   "paymentCards": {
     "noCardTitle": "尚未保存银行卡",

@@ -19,3 +19,18 @@ test('l’écran des erreurs est réservé à l’administrateur et lié au tabl
   assert.match(read('constants/api.js'), /errors:\s+'\/admin\/errors'/);
   assert.match(read('services/adminService.js'), /\/resolve`/);
 });
+
+test('la page partenaire affiche la commission issue de l’API, sans taux codé en dur', () => {
+  const src = read('app/partner-apply.js');
+  assert.match(src, /getPartnerTerms\(\)/);
+  assert.match(src, /partnerApply\.commission/);
+  assert.doesNotMatch(src, /15 ?%/);
+  assert.match(read('constants/api.js'), /terms: \(\) => '\/partner-applications\/terms'/);
+});
+
+test('les espaces partenaires vouvoient', () => {
+  const fr = JSON.parse(read('i18n/locales/fr.json'));
+  assert.match(fr.restaurant.dashboard.subtitle, /^Gérez votre menu/);
+  assert.match(fr.partnerApply.joinTitle, /votre commerce/);
+  assert.doesNotMatch(read('app/courier-apply.js'), /\b(tu|ton|ta|tes)\b /);
+});
