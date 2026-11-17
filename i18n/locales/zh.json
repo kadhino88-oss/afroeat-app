@@ -2378,5 +2378,13 @@
     "error": "评价发送失败，请重试。",
     "publicTitle": "顾客评价（{{count}}）",
     "customer": "顾客"
+  },
+  "schedule": {
+    "title": "何时？",
+    "asap": "尽快",
+    "later": "预约",
+    "today": "今天",
+    "tomorrow": "明天",
+    "scheduledFor": "预约时间：{{when}}"
   }
 }

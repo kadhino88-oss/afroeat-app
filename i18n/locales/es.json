@@ -2378,5 +2378,13 @@
     "error": "No se pudo enviar la opinión. Inténtelo de nuevo.",
     "publicTitle": "Opiniones de clientes ({{count}})",
     "customer": "Cliente"
+  },
+  "schedule": {
+    "title": "¿Cuándo?",
+    "asap": "Lo antes posible",
+    "later": "Programar",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "scheduledFor": "Programado para {{when}}"
   }
 }

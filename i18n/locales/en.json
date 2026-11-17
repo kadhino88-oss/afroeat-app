@@ -2378,5 +2378,13 @@
     "error": "Could not send the review. Try again.",
     "publicTitle": "Customer reviews ({{count}})",
     "customer": "Customer"
+  },
+  "schedule": {
+    "title": "When?",
+    "asap": "As soon as possible",
+    "later": "Schedule",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "scheduledFor": "Scheduled for {{when}}"
   }
 }

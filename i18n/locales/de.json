@@ -2378,5 +2378,13 @@
     "error": "Bewertung konnte nicht gesendet werden. Bitte erneut versuchen.",
     "publicTitle": "Kundenbewertungen ({{count}})",
     "customer": "Kunde"
+  },
+  "schedule": {
+    "title": "Wann?",
+    "asap": "So bald wie möglich",
+    "later": "Planen",
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "scheduledFor": "Geplant für {{when}}"
   }
 }

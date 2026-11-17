@@ -15,6 +15,7 @@ import {
 import OwnImage from '../components/OwnImage';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import SchedulePicker from '../components/SchedulePicker';
 import FadeInView from '../components/FadeInView';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -164,6 +165,7 @@ export default function CheckoutScreen() {
   const [appliedPromo, setAppliedPromo] = useState('');
   const [tipAmount, setTipAmount] = useState(0);
   const [fulfillment, setFulfillment] = useState('delivery');
+  const [scheduledFor, setScheduledFor] = useState(null);
   const isPickup = fulfillment === 'pickup';
   const [promoError, setPromoError] = useState('');
 
@@ -351,6 +353,7 @@ export default function CheckoutScreen() {
           ...(appliedPromo ? { promoCode: appliedPromo } : {}),
           ...(tipAmount > 0 ? { tipAmount } : {}),
           ...(isPickup ? { fulfillment: 'pickup' } : {}),
+          ...(scheduledFor ? { scheduledFor } : {}),
         },
         token
       )
@@ -388,6 +391,7 @@ export default function CheckoutScreen() {
     appliedPromo,
     tipAmount,
     isPickup,
+    scheduledFor,
     restaurantId,
     t,
     token,
@@ -512,6 +516,7 @@ export default function CheckoutScreen() {
         ...(quote.promoCode ? { promoCode: quote.promoCode } : {}),
         ...(Number(quote.tipAmount) > 0 ? { tipAmount: Number(quote.tipAmount) } : {}),
         ...(quote.containsAlcohol ? { ageConfirmed: ageConfirmed === true } : {}),
+        ...(scheduledFor ? { scheduledFor } : {}),
         ...(isPickup
           ? { fulfillment: 'pickup' }
           : {
@@ -577,6 +582,7 @@ export default function CheckoutScreen() {
               ...(appliedPromo ? { promoCode: appliedPromo } : {}),
               ...(tipAmount > 0 ? { tipAmount } : {}),
               ...(isPickup ? { fulfillment: 'pickup' } : {}),
+              ...(scheduledFor ? { scheduledFor } : {}),
             },
             token
           );
@@ -627,6 +633,7 @@ export default function CheckoutScreen() {
     appliedPromo,
     tipAmount,
     isPickup,
+    scheduledFor,
     deliveryAddress,
     hasValidAddress,
     isClient,
@@ -831,6 +838,8 @@ export default function CheckoutScreen() {
                 );
               })}
             </View>
+
+            <SchedulePicker value={scheduledFor} onChange={setScheduledFor} disabled={quoteLoading} />
 
             {isPickup ? (
               <View style={styles.addressCard}>

@@ -2378,5 +2378,13 @@
     "error": "Impossibile inviare la recensione. Riprovate.",
     "publicTitle": "Recensioni dei clienti ({{count}})",
     "customer": "Cliente"
+  },
+  "schedule": {
+    "title": "Quando?",
+    "asap": "Il prima possibile",
+    "later": "Programma",
+    "today": "Oggi",
+    "tomorrow": "Domani",
+    "scheduledFor": "Programmato per {{when}}"
   }
 }
