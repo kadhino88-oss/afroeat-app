@@ -77,6 +77,14 @@
           "resizeMode": "contain",
           "backgroundColor": "#0B0B0F"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "extraProguardRules": "# Stripe React Native : le « push provisioning » (cartes dans Google Wallet) n'est pas utilisé.\n-dontwarn com.stripe.android.pushProvisioning.**\n-dontwarn com.reactnativestripesdk.pushprovisioning.**"
+          }
+        }
       ]
     ],
     "extra": {

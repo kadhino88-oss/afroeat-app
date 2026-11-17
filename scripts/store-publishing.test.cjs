@@ -37,3 +37,10 @@ test('les constructions Android sautent l’analyse lint de publication (dépend
   assert.match(eas.build.preview.android.gradleCommand, /^:app:assembleRelease .*-x lintVitalAnalyzeRelease/);
   assert.match(eas.build.production.android.gradleCommand, /^:app:bundleRelease .*-x lintVitalAnalyzeRelease/);
 });
+
+test('Android : la règle R8 ignore le « push provisioning » Stripe inutilisé', () => {
+  const app = JSON.parse(read('app.json')).expo;
+  const props = app.plugins.find((p) => Array.isArray(p) && p[0] === 'expo-build-properties');
+  assert.ok(props, 'expo-build-properties absent');
+  assert.match(props[1].android.extraProguardRules, /-dontwarn com\.stripe\.android\.pushProvisioning\.\*\*/);
+});
