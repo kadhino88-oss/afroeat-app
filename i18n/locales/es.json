@@ -2399,5 +2399,17 @@
     "rewardLine": "-{{percent}} % en un pedido · válido hasta el {{date}}",
     "shareMessage": "Pide tus platos africanos favoritos en AFROEAT con mi código {{code}}: ¡-{{percent}} % en tu primer pedido!",
     "error": "No se pudo cargar su programa."
+  },
+  "chat": {
+    "title": "Mensajes del pedido",
+    "empty": "Aún no hay mensajes.",
+    "placeholder": "Escribir un mensaje…",
+    "send": "Enviar",
+    "closed": "La conversación de este pedido ha terminado.",
+    "error": "Mensaje no enviado. Inténtelo de nuevo.",
+    "role_client": "cliente",
+    "role_livreur": "repartidor",
+    "role_restaurant": "restaurante",
+    "role_admin": "AFROEAT"
   }
 }

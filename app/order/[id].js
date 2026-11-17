@@ -18,6 +18,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
 import OrderReviewCard from '../../components/OrderReviewCard';
+import OrderChat from '../../components/OrderChat';
 import { useAuth } from '../../context/AuthContext';
 import { getOrderById, getOrderTracking, updateOrderStatus } from '../../services/orderService';
 import { useTranslation } from 'react-i18next';
@@ -836,6 +837,8 @@ export default function OrderDetailScreen() {
             hasCourier={Boolean(order?.deliveryPerson) && order?.selfDelivery !== true}
           />
         ) : null}
+
+        {order?._id && token ? <OrderChat orderId={order._id} token={token} /> : null}
 
         <View style={styles.itemsCard}>
           <Text style={styles.itemsTitle}>{t('checkout.items')}</Text>

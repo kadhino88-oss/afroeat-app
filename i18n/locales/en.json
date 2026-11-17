@@ -2399,5 +2399,17 @@
     "rewardLine": "{{percent}}% off one order · valid until {{date}}",
     "shareMessage": "Order your favourite African dishes on AFROEAT with my code {{code}}: {{percent}}% off your first order!",
     "error": "Could not load your referral."
+  },
+  "chat": {
+    "title": "Order messages",
+    "empty": "No messages yet.",
+    "placeholder": "Write a message…",
+    "send": "Send",
+    "closed": "The conversation for this order has ended.",
+    "error": "Message not sent. Try again.",
+    "role_client": "customer",
+    "role_livreur": "courier",
+    "role_restaurant": "restaurant",
+    "role_admin": "AFROEAT"
   }
 }
