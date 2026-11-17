@@ -18,6 +18,7 @@ import * as Location from 'expo-location';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
 import PlaceBrandMark from '../../components/PlaceBrandMark';
+import PlaceCover from '../../components/PlaceCover';
 import OwnImage from '../../components/OwnImage';
 import { getAllMenuItems } from '../../services/menuService';
 import { getNearbyPlacesAdaptive } from '../../services/placeService';
@@ -1424,14 +1425,9 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           onPress={() => handleOpenDirectoryItem(item)}
         >
           <View style={[styles.cardImageWrap, IS_WEB && styles.webImageWrap]}>
-            {showPlaceholder ? (
-              <View style={[styles.cardImage, styles.cardImagePlaceholder, IS_WEB && styles.webImage]}>
-                <PlaceBrandMark
-                  logoUrl={item?.logoUrl}
-                  website={item?.website}
-                  category={item?.category}
-                  size={72}
-                />
+            {showPlaceholder || isPublicPlace ? (
+              <View style={[styles.cardImage, IS_WEB && styles.webImage]}>
+                <PlaceCover place={item} markSize={IS_WEB ? 92 : 80} />
               </View>
             ) : (
               <Image

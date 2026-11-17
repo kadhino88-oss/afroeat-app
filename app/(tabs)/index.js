@@ -32,7 +32,7 @@ import {
 import { getAllMenuItems } from '../../services/menuService';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
-import PlaceBrandMark from '../../components/PlaceBrandMark';
+import PlaceCover from '../../components/PlaceCover';
 import OwnImage from '../../components/OwnImage';
 import useGridColumns, { MAX_CONTENT_WIDTH } from '../../hooks/use-grid-columns';
 
@@ -875,15 +875,7 @@ export default function HomeScreen() {
           <View style={styles.restaurantImageWrapper}>
             {isPublicListing ? (
               <View style={styles.publicBrandPanel}>
-                <PlaceBrandMark
-                  logoUrl={item?.logoUrl}
-                  website={item?.website}
-                  category={item?.category}
-                  size={78}
-                />
-                <Text style={styles.publicListingLabel}>
-                  {t('publicPlace.publicListing')}
-                </Text>
+                <PlaceCover place={item} markSize={78} />
               </View>
             ) : (
               <OwnImage
