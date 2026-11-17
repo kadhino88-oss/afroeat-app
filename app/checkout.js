@@ -163,6 +163,8 @@ export default function CheckoutScreen() {
   const [promoInput, setPromoInput] = useState('');
   const [appliedPromo, setAppliedPromo] = useState('');
   const [tipAmount, setTipAmount] = useState(0);
+  const [fulfillment, setFulfillment] = useState('delivery');
+  const isPickup = fulfillment === 'pickup';
   const [promoError, setPromoError] = useState('');
 
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
@@ -308,9 +310,10 @@ export default function CheckoutScreen() {
     }, 0);
   }, [safeCartItems]);
 
+  // À emporter : aucune adresse de livraison n'est nécessaire.
   const hasValidAddress = useMemo(() => {
-    return normalizeText(deliveryAddress).length >= 5;
-  }, [deliveryAddress]);
+    return isPickup || normalizeText(deliveryAddress).length >= 5;
+  }, [deliveryAddress, isPickup]);
 
   const handleRetryQuote = useCallback(() => {
     if (quoteLoading) return;
@@ -347,6 +350,7 @@ export default function CheckoutScreen() {
           })),
           ...(appliedPromo ? { promoCode: appliedPromo } : {}),
           ...(tipAmount > 0 ? { tipAmount } : {}),
+          ...(isPickup ? { fulfillment: 'pickup' } : {}),
         },
         token
       )
@@ -383,6 +387,7 @@ export default function CheckoutScreen() {
     quoteRetryVersion,
     appliedPromo,
     tipAmount,
+    isPickup,
     restaurantId,
     t,
     token,
@@ -507,11 +512,15 @@ export default function CheckoutScreen() {
         ...(quote.promoCode ? { promoCode: quote.promoCode } : {}),
         ...(Number(quote.tipAmount) > 0 ? { tipAmount: Number(quote.tipAmount) } : {}),
         ...(quote.containsAlcohol ? { ageConfirmed: ageConfirmed === true } : {}),
-        deliveryAddress: normalizeText(deliveryAddress),
-        deliveryAddressDetails: {
-          address: normalizeText(deliveryAddress),
-          fullAddress: normalizeText(deliveryAddress),
-        },
+        ...(isPickup
+          ? { fulfillment: 'pickup' }
+          : {
+              deliveryAddress: normalizeText(deliveryAddress),
+              deliveryAddressDetails: {
+                address: normalizeText(deliveryAddress),
+                fullAddress: normalizeText(deliveryAddress),
+              },
+            }),
         notes: '',
       };
 
@@ -567,6 +576,7 @@ export default function CheckoutScreen() {
               })),
               ...(appliedPromo ? { promoCode: appliedPromo } : {}),
               ...(tipAmount > 0 ? { tipAmount } : {}),
+              ...(isPickup ? { fulfillment: 'pickup' } : {}),
             },
             token
           );
@@ -616,6 +626,7 @@ export default function CheckoutScreen() {
     ageConfirmed,
     appliedPromo,
     tipAmount,
+    isPickup,
     deliveryAddress,
     hasValidAddress,
     isClient,
@@ -796,6 +807,40 @@ export default function CheckoutScreen() {
               </View>
             )}
 
+            <View style={styles.modeRow}>
+              {['delivery', 'pickup'].map((mode) => {
+                const selected = fulfillment === mode;
+                return (
+                  <Pressable
+                    key={mode}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected }}
+                    disabled={quoteLoading}
+                    onPress={() => setFulfillment(mode)}
+                    style={[styles.modeChip, selected && styles.modeChipSelected]}
+                  >
+                    <Ionicons
+                      name={mode === 'pickup' ? 'bag-handle-outline' : 'bicycle-outline'}
+                      size={17}
+                      color={selected ? '#FFFFFF' : '#084424'}
+                    />
+                    <Text style={[styles.modeChipText, selected && styles.modeChipTextSelected]}>
+                      {t(mode === 'pickup' ? 'checkout.modePickup' : 'checkout.modeDelivery')}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            {isPickup ? (
+              <View style={styles.addressCard}>
+                <View style={styles.addressHeader}>
+                  <Ionicons name="bag-handle-outline" size={18} color="#084424" />
+                  <Text style={styles.addressTitle}>{t('checkout.pickupTitle')}</Text>
+                </View>
+                <Text style={styles.addressText}>{t('checkout.pickupHint')}</Text>
+              </View>
+            ) : (
             <View style={styles.addressCard}>
               <View style={styles.addressHeader}>
                 <Ionicons
@@ -881,6 +926,7 @@ export default function CheckoutScreen() {
                 />
               </Pressable>
             </View>
+            )}
 
             <View style={styles.paymentPreviewCard}>
               <View style={styles.paymentPreviewHeader}>
@@ -1481,6 +1527,11 @@ const styles = StyleSheet.create({
 
   promoBox: { marginBottom: 10, gap: 6 },
   tipBox: { marginVertical: 10, gap: 6 },
+  modeRow: { flexDirection: 'row', gap: 10, marginBottom: 12 },
+  modeChip: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 12, borderRadius: 14, borderWidth: 1, borderColor: '#084424', backgroundColor: '#FFFFFF' },
+  modeChipSelected: { backgroundColor: '#084424' },
+  modeChipText: { color: '#084424', fontWeight: '800' },
+  modeChipTextSelected: { color: '#FFFFFF' },
   tipHint: { color: '#606D5D', fontSize: 12, lineHeight: 17 },
   tipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   tipChip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: 1, borderColor: '#D8CDB8', backgroundColor: '#FFFFFF' },

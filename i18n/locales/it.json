@@ -183,7 +183,11 @@
     "tipTitle": "Mancia per la consegna",
     "tipHint": "Il 100% va a chi consegna, AFROEAT non trattiene nulla.",
     "tipNone": "Nessuna",
-    "tip": "Mancia"
+    "tip": "Mancia",
+    "modeDelivery": "Consegna",
+    "modePickup": "Da asporto",
+    "pickupTitle": "Da asporto",
+    "pickupHint": "Ritirate l’ordine al banco del ristorante: nessuna spesa di consegna. Riceverete un avviso quando è pronto."
   },
   "restaurant": {
     "popular": "Popolare",
@@ -469,7 +473,9 @@
       "assignError": "Impossibile assegnare questo rider.",
       "selfDeliveryInfo": "Consegna a cura della vostra attività.",
       "startDelivery": "Parti per la consegna",
-      "markDelivered": "Ordine consegnato al cliente"
+      "markDelivered": "Ordine consegnato al cliente",
+      "pickupInfo": "Da asporto: il cliente ritira l’ordine al banco.",
+      "handOver": "Consegnato al cliente"
     },
     "dashboard": {
       "dishFallbackName": "Piatto africano",
@@ -518,7 +524,10 @@
       "locationDenied": "Consenti la localizzazione per usare la tua posizione attuale.",
       "selfDelivery": "Consegno io i miei ordini",
       "selfDeliveryOn": "Consegnate voi ai clienti e tenete l’intera tariffa di consegna. Nessun rider AFROEAT viene inviato.",
-      "selfDeliveryOff": "Le consegne sono effettuate dai rider AFROEAT."
+      "selfDeliveryOff": "Le consegne sono effettuate dai rider AFROEAT.",
+      "pickup": "Da asporto",
+      "pickupHelp": "I clienti possono ordinare e ritirare al banco, senza spese di consegna.",
+      "feeFloor": "Con un corriere AFROEAT, le spese di consegna sono di almeno {{amount}} (minimo garantito al corriere)."
     },
     "openingHours": {
       "title": "Orari di apertura",

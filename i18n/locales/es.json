@@ -183,7 +183,11 @@
     "tipTitle": "Propina para la entrega",
     "tipHint": "El 100 % es para quien le entrega, AFROEAT no se queda nada.",
     "tipNone": "Ninguna",
-    "tip": "Propina"
+    "tip": "Propina",
+    "modeDelivery": "Entrega",
+    "modePickup": "Para llevar",
+    "pickupTitle": "Para llevar",
+    "pickupHint": "Recoja su pedido en el mostrador del restaurante: sin gastos de envío. Le avisaremos cuando esté listo."
   },
   "restaurant": {
     "popular": "Popular",
@@ -469,7 +473,9 @@
       "assignError": "No se pudo asignar este repartidor.",
       "selfDeliveryInfo": "Entrega a cargo de su comercio.",
       "startDelivery": "Salir a entregar",
-      "markDelivered": "Pedido entregado al cliente"
+      "markDelivered": "Pedido entregado al cliente",
+      "pickupInfo": "Para llevar: el cliente recoge el pedido en el mostrador.",
+      "handOver": "Entregado al cliente"
     },
     "dashboard": {
       "dishFallbackName": "Plato africano",
@@ -518,7 +524,10 @@
       "locationDenied": "Permite la ubicación para usar tu posición actual.",
       "selfDelivery": "Entrego yo mismo mis pedidos",
       "selfDeliveryOn": "Usted entrega a sus clientes y se queda con toda la tarifa de envío. No se envía ningún repartidor de AFROEAT.",
-      "selfDeliveryOff": "Las entregas las realizan los repartidores de AFROEAT."
+      "selfDeliveryOff": "Las entregas las realizan los repartidores de AFROEAT.",
+      "pickup": "Para llevar",
+      "pickupHelp": "Los clientes pueden pedir y recoger en su mostrador, sin gastos de envío.",
+      "feeFloor": "Con un repartidor AFROEAT, los gastos de envío son de al menos {{amount}} (mínimo garantizado al repartidor)."
     },
     "openingHours": {
       "title": "Horario de apertura",

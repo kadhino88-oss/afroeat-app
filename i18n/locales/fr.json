@@ -183,7 +183,11 @@
     "tipTitle": "Pourboire pour la livraison",
     "tipHint": "100 % pour la personne qui vous livre, AFROEAT ne prend rien dessus.",
     "tipNone": "Aucun",
-    "tip": "Pourboire"
+    "tip": "Pourboire",
+    "modeDelivery": "Livraison",
+    "modePickup": "À emporter",
+    "pickupTitle": "À emporter",
+    "pickupHint": "Vous récupérez votre commande au comptoir du restaurant : pas de frais de livraison. Vous êtes prévenu quand elle est prête."
   },
   "restaurant": {
     "popular": "Populaire",
@@ -469,7 +473,9 @@
       "assignError": "Impossible d'assigner ce livreur.",
       "selfDeliveryInfo": "Livraison assurée par votre commerce.",
       "startDelivery": "Partir en livraison",
-      "markDelivered": "Commande remise au client"
+      "markDelivered": "Commande remise au client",
+      "pickupInfo": "À emporter : le client vient chercher sa commande au comptoir.",
+      "handOver": "Remise au client"
     },
     "dashboard": {
       "dishFallbackName": "Plat africain",
@@ -518,7 +524,10 @@
       "locationDenied": "Autorisez la localisation pour utiliser votre position actuelle.",
       "selfDelivery": "Je livre moi-même mes commandes",
       "selfDeliveryOn": "Vous livrez vos clients vous-même et gardez la totalité des frais de livraison. Aucun livreur AFROEAT n’est envoyé.",
-      "selfDeliveryOff": "Les livraisons sont assurées par les livreurs AFROEAT."
+      "selfDeliveryOff": "Les livraisons sont assurées par les livreurs AFROEAT.",
+      "pickup": "Vente à emporter",
+      "pickupHelp": "Les clients peuvent commander puis venir chercher leur commande, sans frais de livraison.",
+      "feeFloor": "Avec un livreur AFROEAT, les frais de livraison sont d’au moins {{amount}} (minimum garanti au livreur)."
     },
     "openingHours": {
       "title": "Horaires d'ouverture",

@@ -183,7 +183,11 @@
     "tipTitle": "Trinkgeld für die Lieferung",
     "tipHint": "100 % für die Person, die liefert – AFROEAT behält nichts.",
     "tipNone": "Keins",
-    "tip": "Trinkgeld"
+    "tip": "Trinkgeld",
+    "modeDelivery": "Lieferung",
+    "modePickup": "Abholung",
+    "pickupTitle": "Abholung",
+    "pickupHint": "Sie holen Ihre Bestellung im Restaurant ab: keine Liefergebühr. Sie werden benachrichtigt, sobald sie bereit ist."
   },
   "restaurant": {
     "popular": "Beliebt",
@@ -469,7 +473,9 @@
       "assignError": "Dieser Kurier konnte nicht zugewiesen werden.",
       "selfDeliveryInfo": "Lieferung durch Ihr Geschäft.",
       "startDelivery": "Lieferung starten",
-      "markDelivered": "Bestellung übergeben"
+      "markDelivered": "Bestellung übergeben",
+      "pickupInfo": "Abholung: Der Kunde holt die Bestellung an der Theke ab.",
+      "handOver": "An Kunden übergeben"
     },
     "dashboard": {
       "dishFallbackName": "Afrikanisches Gericht",
@@ -518,7 +524,10 @@
       "locationDenied": "Erlaube den Standortzugriff, um deine aktuelle Position zu nutzen.",
       "selfDelivery": "Ich liefere meine Bestellungen selbst",
       "selfDeliveryOn": "Sie beliefern Ihre Kunden selbst und behalten die gesamte Liefergebühr. Es wird kein AFROEAT-Kurier geschickt.",
-      "selfDeliveryOff": "Die Lieferungen übernehmen AFROEAT-Kuriere."
+      "selfDeliveryOff": "Die Lieferungen übernehmen AFROEAT-Kuriere.",
+      "pickup": "Abholung",
+      "pickupHelp": "Kunden können bestellen und an Ihrer Theke abholen, ohne Liefergebühr.",
+      "feeFloor": "Mit einem AFROEAT-Kurier beträgt die Liefergebühr mindestens {{amount}} (Mindestbetrag für den Kurier)."
     },
     "openingHours": {
       "title": "Öffnungszeiten",

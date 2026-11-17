@@ -183,7 +183,11 @@
     "tipTitle": "配送小费",
     "tipHint": "100% 归配送人员，AFROEAT 不抽成。",
     "tipNone": "不给",
-    "tip": "小费"
+    "tip": "小费",
+    "modeDelivery": "外送",
+    "modePickup": "自取",
+    "pickupTitle": "自取",
+    "pickupHint": "到餐厅柜台取餐：免配送费。餐品准备好时会通知您。"
   },
   "restaurant": {
     "popular": "热门",
@@ -469,7 +473,9 @@
       "assignError": "无法指派该骑手。",
       "selfDeliveryInfo": "由您的店铺负责配送。",
       "startDelivery": "开始配送",
-      "markDelivered": "订单已交给顾客"
+      "markDelivered": "订单已交给顾客",
+      "pickupInfo": "自取：顾客到柜台取餐。",
+      "handOver": "已交给顾客"
     },
     "dashboard": {
       "dishFallbackName": "非洲菜品",
@@ -518,7 +524,10 @@
       "locationDenied": "请允许定位以使用当前位置。",
       "selfDelivery": "我自己配送订单",
       "selfDeliveryOn": "由您自行配送并保留全部配送费，不会派出 AFROEAT 骑手。",
-      "selfDeliveryOff": "配送由 AFROEAT 骑手负责。"
+      "selfDeliveryOff": "配送由 AFROEAT 骑手负责。",
+      "pickup": "自取",
+      "pickupHelp": "顾客可下单后到柜台取餐，免配送费。",
+      "feeFloor": "由 AFROEAT 骑手配送时，配送费至少为 {{amount}}（骑手保底）。"
     },
     "openingHours": {
       "title": "营业时间",
