@@ -110,6 +110,7 @@ export default function ProfileLayout() {
       <Stack.Screen name="address" />
       <Stack.Screen name="payment" />
       <Stack.Screen name="help" />
+      <Stack.Screen name="referral" />
     </Stack>
   );
 }

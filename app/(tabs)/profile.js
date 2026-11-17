@@ -488,6 +488,15 @@ export default function ProfileScreen() {
         <View style={styles.menuSection}>
           <Text style={styles.sectionTitle}>{t('profile.menu.preferencesSectionTitle')}</Text>
 
+          {String(user?.role || '').toLowerCase() === 'client' ? (
+            <MenuRow
+              icon="gift-outline"
+              label={t('referral.title')}
+              subtitle={t('referral.menuSubtitle')}
+              onPress={() => router.push('/profile/referral')}
+            />
+          ) : null}
+
           <MenuRow
             icon="language-outline"
             label={t('profile.language')}
