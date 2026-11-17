@@ -50,5 +50,17 @@ jobs:
               telechargement: b.artifacts?.buildUrl || b.artifacts?.applicationArchiveUrl || "",
               journaux: b.logFiles?.length ? `${b.logFiles.length} fichier(s) de journal` : "" };
             for (const [k, v] of Object.entries(pick)) if (v) console.log(`${k}: ${v}`);
-            if (b.status === "ERRORED") process.exitCode = 1;
+            require("fs").writeFileSync("logs.txt", (b.logFiles || []).join("\n"));
           '
+          # En cas d'échec : extraits utiles du journal de construction (erreurs Gradle / Xcode).
+          if grep -q '"status": *"ERRORED"' build.json; then
+            i=0
+            while read -r url; do
+              [ -z "$url" ] && continue
+              i=$((i+1))
+              curl -sL "$url" -o "log$i.txt" || continue
+              echo "----- Extraits du journal $i -----"
+              grep -aE "What went wrong|FAILURE|error:|Error:|\[stderr\].*(error|Error)|Could not|> Task .*FAILED|Execution failed" "log$i.txt" | grep -v "^\s*$" | tail -60
+            done < logs.txt
+            exit 1
+          fi
