@@ -2332,5 +2332,8 @@
     "badge": "18+",
     "noticeTitle": "Contains alcohol: check ID",
     "noticeBody": "Check the customer’s ID on delivery. Do not hand over alcohol to anyone underage or intoxicated."
+  },
+  "menu": {
+    "illustrationPhoto": "Illustrative photo"
   }
 }
