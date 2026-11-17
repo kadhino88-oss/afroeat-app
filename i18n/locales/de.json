@@ -1890,7 +1890,13 @@
       "ownerNameFallback": "Inhaber nicht angegeben",
       "menuItemNameFallback": "Artikel",
       "menuItemCategoryFallback": "Kategorie",
-      "manageMenu": "Speisekarte und Fotos verwalten"
+      "manageMenu": "Speisekarte und Fotos verwalten",
+      "hiddenTitle": "Für Kunden ausgeblendet",
+      "hiddenText": "Prüfen Sie Menü und Preise mit dem Geschäft und schalten Sie den Eintrag dann sichtbar.",
+      "visibleTitle": "Für Kunden sichtbar",
+      "visibleText": "Kunden sehen dieses Geschäft und können bestellen.",
+      "showAction": "Sichtbar machen",
+      "hideAction": "Ausblenden"
     },
     "driverDetails": {
       "invalidDriverAlert": "Ungültiger Fahrer.",

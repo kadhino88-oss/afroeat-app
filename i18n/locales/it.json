@@ -1890,7 +1890,13 @@
       "ownerNameFallback": "Proprietario non specificato",
       "menuItemNameFallback": "Articolo",
       "menuItemCategoryFallback": "Categoria",
-      "manageMenu": "Gestisci menu e foto"
+      "manageMenu": "Gestisci menu e foto",
+      "hiddenTitle": "Nascosto ai clienti",
+      "hiddenText": "Verificate menu e prezzi con l'attività, poi rendete visibile la scheda.",
+      "visibleTitle": "Visibile ai clienti",
+      "visibleText": "I clienti possono vedere questa attività e ordinare.",
+      "showAction": "Rendi visibile",
+      "hideAction": "Nascondi"
     },
     "driverDetails": {
       "invalidDriverAlert": "Fattorino non valido.",

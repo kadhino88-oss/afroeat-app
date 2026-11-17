@@ -1890,7 +1890,13 @@
       "ownerNameFallback": "Propriétaire non renseigné",
       "menuItemNameFallback": "Article",
       "menuItemCategoryFallback": "Catégorie",
-      "manageMenu": "Gérer le menu et les photos"
+      "manageMenu": "Gérer le menu et les photos",
+      "hiddenTitle": "Fiche masquée aux clients",
+      "hiddenText": "Vérifiez le menu et les prix avec le commerce, puis rendez la fiche visible.",
+      "visibleTitle": "Fiche visible par les clients",
+      "visibleText": "Les clients peuvent voir ce commerce et commander.",
+      "showAction": "Rendre visible",
+      "hideAction": "Masquer"
     },
     "driverDetails": {
       "invalidDriverAlert": "Livreur invalide.",

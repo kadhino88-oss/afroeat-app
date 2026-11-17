@@ -578,3 +578,7 @@ export const listErrorEvents = async (token, { resolved = false } = {}) => {
 };
 export const resolveErrorEvent = async (id, token) =>
   apiPatch(`${API_ENDPOINTS.admin.errors}/${encodeURIComponent(id)}/resolve`, {}, token);
+
+// Rendre une fiche commerce visible (ou la masquer) pour les clients.
+export const setRestaurantVisibility = async (restaurantId, isActive, token) =>
+  apiPut(API_ENDPOINTS.restaurants.byId(restaurantId), { isActive: Boolean(isActive) }, token);

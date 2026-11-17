@@ -20,6 +20,7 @@ import FadeInView from '../../../components/FadeInView';
 import { useAuth } from '../../../context/AuthContext';
 import {
   getAdminRestaurantById,
+  setRestaurantVisibility,
   updateAdminUserStatus,
 } from '../../../services/adminService';
 import i18n from '../../../i18n';
@@ -425,6 +426,7 @@ export default function AdminRestaurantDetailsScreen() {
   const currentStatus = useMemo(() => getAuthStatus(auth), [auth]);
 
   const [restaurant, setRestaurant] = useState(null);
+  const [visibilityBusy, setVisibilityBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [initialLoaded, setInitialLoaded] = useState(false);
@@ -1106,6 +1108,44 @@ export default function AdminRestaurantDetailsScreen() {
           />
         </InfoCard>
 
+        <View style={styles.visibilityCard}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.visibilityTitle}>
+              {restaurant?.isActive === false
+                ? t('admin.restaurantDetails.hiddenTitle')
+                : t('admin.restaurantDetails.visibleTitle')}
+            </Text>
+            <Text style={styles.visibilityText}>
+              {restaurant?.isActive === false
+                ? t('admin.restaurantDetails.hiddenText')
+                : t('admin.restaurantDetails.visibleText')}
+            </Text>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            disabled={visibilityBusy}
+            style={[styles.visibilityButton, visibilityBusy && { opacity: 0.6 }]}
+            onPress={async () => {
+              const next = restaurant?.isActive === false;
+              try {
+                setVisibilityBusy(true);
+                await setRestaurantVisibility(restaurantId, next, token);
+                setRestaurant((current) => (current ? { ...current, isActive: next } : current));
+              } catch (error) {
+                Alert.alert(t('common.error'), error?.message || t('common.error'));
+              } finally {
+                setVisibilityBusy(false);
+              }
+            }}
+          >
+            <Text style={styles.visibilityButtonText}>
+              {restaurant?.isActive === false
+                ? t('admin.restaurantDetails.showAction')
+                : t('admin.restaurantDetails.hideAction')}
+            </Text>
+          </Pressable>
+        </View>
+
         <Pressable
           accessibilityRole="button"
           style={styles.manageMenuButton}
@@ -1209,6 +1249,19 @@ export default function AdminRestaurantDetailsScreen() {
 }
 
 const styles = StyleSheet.create({
+  visibilityCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 12,
+  },
+  visibilityTitle: { color: '#0D1C11', fontWeight: '900', fontSize: 15 },
+  visibilityText: { color: '#606D5D', marginTop: 4, lineHeight: 19 },
+  visibilityButton: { backgroundColor: '#084424', borderRadius: 12, paddingVertical: 10, paddingHorizontal: 14 },
+  visibilityButtonText: { color: '#FFFFFF', fontWeight: '900' },
   manageMenuButton: {
     flexDirection: 'row',
     alignItems: 'center',

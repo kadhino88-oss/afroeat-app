@@ -1890,7 +1890,13 @@
       "ownerNameFallback": "Propietario no especificado",
       "menuItemNameFallback": "Artículo",
       "menuItemCategoryFallback": "Categoría",
-      "manageMenu": "Gestionar menú y fotos"
+      "manageMenu": "Gestionar menú y fotos",
+      "hiddenTitle": "Oculto para los clientes",
+      "hiddenText": "Verifique el menú y los precios con el comercio y luego haga visible la ficha.",
+      "visibleTitle": "Visible para los clientes",
+      "visibleText": "Los clientes pueden ver este comercio y pedir.",
+      "showAction": "Hacer visible",
+      "hideAction": "Ocultar"
     },
     "driverDetails": {
       "invalidDriverAlert": "Repartidor no válido.",
