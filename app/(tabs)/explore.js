@@ -17,7 +17,6 @@ import { router, Redirect, useLocalSearchParams } from 'expo-router';
 import * as Location from 'expo-location';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
-import PlaceBrandMark from '../../components/PlaceBrandMark';
 import PlaceCover from '../../components/PlaceCover';
 import OwnImage from '../../components/OwnImage';
 import { getAllMenuItems } from '../../services/menuService';
@@ -1451,16 +1450,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
                 <Text style={styles.publicBadgeText}>{t('publicPlace.publicListing')}</Text>
               </View>
             ) : null}
-            {isPublicPlace && !showPlaceholder && Boolean(item?.logoUrl) ? (
-              <View style={styles.placeBrandBadge}>
-                <PlaceBrandMark
-                  logoUrl={item.logoUrl}
-                  website={item.website}
-                  category={item.category}
-                  size={48}
-                />
-              </View>
-            ) : null}
+            {/* Le visuel (PlaceCover) porte déjà le logo : pas de second badge. */}
           </View>
 
           <View style={[styles.cardBody, IS_WEB && styles.webCardBody]}>

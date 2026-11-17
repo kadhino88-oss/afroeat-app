@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -18,6 +18,7 @@ export default function PlaceBrandMark({
   website,
   category,
   size = 56,
+  fallbackText = '',
 }) {
   const sources = useMemo(
     () => [...new Set([String(logoUrl || '').trim(), getSiteIconUrl(website)].filter(Boolean))],
@@ -65,6 +66,8 @@ export default function PlaceBrandMark({
           transition={120}
           onError={handleImageError}
         />
+      ) : fallbackText ? (
+        <Text style={[styles.fallbackText, { fontSize: size * 0.38 }]}>{fallbackText}</Text>
       ) : (
         <Ionicons name={iconName} size={size * 0.48} color="#084424" />
       )}
@@ -73,6 +76,7 @@ export default function PlaceBrandMark({
 }
 
 const styles = StyleSheet.create({
+  fallbackText: { color: '#084424', fontFamily: 'Fraunces_700Bold', fontWeight: '700', letterSpacing: 1 },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
