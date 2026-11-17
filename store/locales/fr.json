@@ -1,0 +1,5 @@
+{
+  "CFBundleDisplayName": "Afroeat",
+  "NSLocationWhenInUseUsageDescription": "Afroeat utilise votre position pendant l’utilisation de l’application pour trouver les commerces africains proches et suivre la livraison de votre commande.",
+  "NSPhotoLibraryUsageDescription": "Afroeat accède aux photos que vous choisissez pour votre profil, votre logo ou vos plats."
+}

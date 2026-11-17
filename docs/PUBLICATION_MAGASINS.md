@@ -44,9 +44,29 @@ magasins.
 - suppression de compte accessible depuis l'appli (exigence des deux magasins) ;
 - compte de démonstration pour les relecteurs d'Apple/Google, **sur l'environnement de test**.
 
-## 5. Avant d'envoyer
+Les textes des fiches (descriptions FR/EN, mots-clés, adresses, déclaration des données, notes pour
+les relecteurs) sont prêts dans [FICHES_MAGASINS.md](FICHES_MAGASINS.md).
 
-- la prise de commande en production est verrouillée (voir l'environnement de test) : le dire aux
-  relecteurs ou fournir l'environnement de test, sinon l'appli peut être refusée pour « fonction non
-  utilisable » ;
-- tester sur de vrais appareils iOS et Android.
+## 5. Réglages propres au mobile (une seule fois)
+
+- **Variables EAS « production »** : en plus de `EXPO_PUBLIC_API_URL` et `EXPO_PUBLIC_STRIPE_KEY`
+  (clé `pk_live_…`, sinon la construction s'arrête), définir `ANDROID_GOOGLE_MAPS_API_KEY`
+  (clé Google Maps limitée à l'appli Android `com.bkentreprise.afroeat`) : obligatoire pour la carte Android.
+- **Notifications Android** : créer un projet Firebase, puis déposer la clé de compte de service FCM V1
+  sur expo.dev → projet → Credentials → Android. Sans elle, l'appli fonctionne mais n'envoie pas de
+  notifications sur Android. Sur iOS, EAS crée la clé de notifications lors de la première construction.
+- **Apple Pay** (activé dans `eas.json`) : enregistrer l'identifiant marchand `merchant.com.afroeat`
+  dans le compte Apple Developer et le certificat associé dans Stripe. Sinon, passer
+  `EXPO_PUBLIC_ENABLE_APPLE_PAY` à `false` dans `eas.json` avant la construction iOS.
+- **Envoi automatique** : pour Google, déposer la clé de compte de service Play Console sur expo.dev
+  (Credentials → Android → Google Service Account) ; pour Apple, se connecter une fois avec
+  `npx eas-cli submit --platform ios` depuis un ordinateur. Ensuite, cocher « Envoyer automatiquement »
+  dans le bouton GitHub (profil production). Google reçoit la version en brouillon sur la piste de
+  test interne : rien n'est publié sans validation dans la Play Console.
+
+## 6. Avant d'envoyer
+
+- au moins un commerce actif avec un menu doit être visible, sinon l'appli peut être refusée pour
+  « fonction non utilisable » ;
+- fournir un compte client de démonstration aux relecteurs (voir FICHES_MAGASINS.md) ;
+- tester sur de vrais appareils iOS et Android (installer d'abord une construction « preview »).
