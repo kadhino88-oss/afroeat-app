@@ -30,3 +30,11 @@ test('l’admin peut rendre visible ou masquer une fiche commerce', () => {
   assert.match(read('services/adminService.js'), /setRestaurantVisibility[\s\S]*isActive: Boolean\(isActive\)/);
   assert.match(read('app/admin/restaurants-details/[id].js'), /setRestaurantVisibility\(restaurantId, next, token\)/);
 });
+
+test('livraison par le restaurant : réglage et boutons « Partir en livraison » / « Remise au client »', () => {
+  assert.match(read('app/restaurant/delivery-settings.js'), /minimumOrderAmount, selfDelivery \}/);
+  const src = read('app/restaurant/restaurant-orders-details/[id].js');
+  assert.match(src, /const canAssign = !selfDelivery &&/);
+  assert.match(src, /runStatusChange\('En livraison'\)/);
+  assert.match(src, /runStatusChange\('Livrée'\)/);
+});

@@ -462,7 +462,10 @@
       "confirmCancel": "确认取消",
       "actionError": "操作失败，请重试。",
       "driversError": "无法加载骑手列表。",
-      "assignError": "无法指派该骑手。"
+      "assignError": "无法指派该骑手。",
+      "selfDeliveryInfo": "由您的店铺负责配送。",
+      "startDelivery": "开始配送",
+      "markDelivered": "订单已交给顾客"
     },
     "dashboard": {
       "dishFallbackName": "非洲菜品",
@@ -508,7 +511,10 @@
       "useAddress": "按餐厅地址定位",
       "useDevice": "使用我当前的位置（我在餐厅）",
       "positionSaved": "位置已保存。",
-      "locationDenied": "请允许定位以使用当前位置。"
+      "locationDenied": "请允许定位以使用当前位置。",
+      "selfDelivery": "我自己配送订单",
+      "selfDeliveryOn": "由您自行配送并保留全部配送费，不会派出 AFROEAT 骑手。",
+      "selfDeliveryOff": "配送由 AFROEAT 骑手负责。"
     },
     "openingHours": {
       "title": "营业时间",

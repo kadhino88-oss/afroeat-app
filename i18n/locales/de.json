@@ -462,7 +462,10 @@
       "confirmCancel": "Stornierung bestätigen",
       "actionError": "Aktion fehlgeschlagen. Bitte erneut versuchen.",
       "driversError": "Kuriere konnten nicht geladen werden.",
-      "assignError": "Dieser Kurier konnte nicht zugewiesen werden."
+      "assignError": "Dieser Kurier konnte nicht zugewiesen werden.",
+      "selfDeliveryInfo": "Lieferung durch Ihr Geschäft.",
+      "startDelivery": "Lieferung starten",
+      "markDelivered": "Bestellung übergeben"
     },
     "dashboard": {
       "dishFallbackName": "Afrikanisches Gericht",
@@ -508,7 +511,10 @@
       "useAddress": "An der Restaurantadresse platzieren",
       "useDevice": "Meinen aktuellen Standort verwenden (ich bin im Restaurant)",
       "positionSaved": "Position gespeichert.",
-      "locationDenied": "Erlaube den Standortzugriff, um deine aktuelle Position zu nutzen."
+      "locationDenied": "Erlaube den Standortzugriff, um deine aktuelle Position zu nutzen.",
+      "selfDelivery": "Ich liefere meine Bestellungen selbst",
+      "selfDeliveryOn": "Sie beliefern Ihre Kunden selbst und behalten die gesamte Liefergebühr. Es wird kein AFROEAT-Kurier geschickt.",
+      "selfDeliveryOff": "Die Lieferungen übernehmen AFROEAT-Kuriere."
     },
     "openingHours": {
       "title": "Öffnungszeiten",

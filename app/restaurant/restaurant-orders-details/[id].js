@@ -466,7 +466,10 @@ export default function RestaurantOrderDetailsScreen() {
   const canConfirm = rawStatus === 'En attente';
   const canPrepare = rawStatus === 'Confirmée';
   const canCancel = ['En attente', 'Confirmée', 'En préparation'].includes(rawStatus);
-  const canAssign = ['Confirmée', 'En préparation'].includes(rawStatus);
+  const selfDelivery = order?.selfDelivery === true;
+  const canAssign = !selfDelivery && ['Confirmée', 'En préparation'].includes(rawStatus);
+  const canStartDelivery = selfDelivery && ['Confirmée', 'En préparation'].includes(rawStatus);
+  const canMarkDelivered = selfDelivery && rawStatus === 'En livraison';
 
   const runStatusChange = async (nextStatus) => {
     if (!order?._id || actionBusy) return;
@@ -619,7 +622,7 @@ export default function RestaurantOrderDetailsScreen() {
         </View>
 
         {/* ACTIONS */}
-        {(canConfirm || canPrepare || canCancel || canAssign || hasDriver) && (
+        {(canConfirm || canPrepare || canCancel || canAssign || hasDriver || canStartDelivery || canMarkDelivered) && (
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>{t('restaurant.orderDetails.actionsTitle')}</Text>
 
@@ -649,6 +652,43 @@ export default function RestaurantOrderDetailsScreen() {
                   <ActivityIndicator color="#FFFFFF" />
                 ) : (
                   <Text style={styles.actionPrimaryText}>{t('restaurant.orderDetails.startPreparing')}</Text>
+                )}
+              </Pressable>
+            )}
+
+            {selfDelivery && (
+              <View style={styles.infoRow}>
+                <Ionicons name="storefront-outline" size={18} color="#084424" />
+                <Text style={styles.infoText}>{t('restaurant.orderDetails.selfDeliveryInfo')}</Text>
+              </View>
+            )}
+
+            {canStartDelivery && (
+              <Pressable
+                style={styles.actionPrimary}
+                accessibilityRole="button"
+                disabled={!!actionBusy}
+                onPress={() => runStatusChange('En livraison')}
+              >
+                {actionBusy === 'En livraison' ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.actionPrimaryText}>{t('restaurant.orderDetails.startDelivery')}</Text>
+                )}
+              </Pressable>
+            )}
+
+            {canMarkDelivered && (
+              <Pressable
+                style={styles.actionPrimary}
+                accessibilityRole="button"
+                disabled={!!actionBusy}
+                onPress={() => runStatusChange('Livrée')}
+              >
+                {actionBusy === 'Livrée' ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.actionPrimaryText}>{t('restaurant.orderDetails.markDelivered')}</Text>
                 )}
               </Pressable>
             )}
