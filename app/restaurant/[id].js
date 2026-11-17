@@ -251,7 +251,7 @@ const normalizeMenuItem = (item, restaurant, index = 0) => {
     name: normalizeText(item?.name || item?.title || item?.label, i18n.t('restaurant.menuScreen.dishFallback')),
     description: normalizeText(
       item?.description || item?.details || item?.summary,
-      i18n.t('restaurant.descriptionUnavailable')
+      ''
     ),
     story: normalizeText(item?.story, ''),
     category: normalizeText(
@@ -697,7 +697,10 @@ export default function RestaurantScreen() {
   }, [categoryFilter, i18n.language, menu, menuSearch]);
 
   const menuByCategory = useMemo(() => {
-    return filteredMenu.reduce((acc, item) => {
+    // Ordre de la carte du commerce (ordre de création) : les entrées avant les desserts, pas l'inverse.
+    const orderKey = (item) => String(item?.createdAt || item?._id || '');
+    const ordered = [...filteredMenu].sort((a, b) => orderKey(a).localeCompare(orderKey(b)));
+    return ordered.reduce((acc, item) => {
       const category = normalizeText(item?.category, 'Autres');
 
       if (!acc[category]) {
@@ -777,9 +780,11 @@ export default function RestaurantScreen() {
                 {item.containsAlcohol ? <Text style={styles.alcoholBadge}>{`  ${t('alcohol.badge')}`}</Text> : null}
               </Text>
 
-              <Text style={styles.desc} numberOfLines={2}>
-                {item.description}
-              </Text>
+              {item.description ? (
+                <Text style={styles.desc} numberOfLines={2}>
+                  {item.description}
+                </Text>
+              ) : null}
 
               {!!item.story && (
                 <Text style={styles.storyText} numberOfLines={3}>
