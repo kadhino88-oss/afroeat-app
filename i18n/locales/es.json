@@ -540,6 +540,11 @@
     "alcohol": {
       "toggle": "Contiene alcohol (18+)",
       "badge": "Alcohol 18+"
+    },
+    "alerts": {
+      "newOrder": "Nuevo pedido",
+      "open": "Ver",
+      "enableSound": "Activar las alertas sonoras de pedidos"
     }
   },
   "profile": {
@@ -1524,6 +1529,16 @@
       "revenue": "Ganancias",
       "active": "Misiones activas",
       "empty": "Ninguna misión en curso. Conéctese para recibir pedidos."
+    },
+    "dispatch": {
+      "title": "Entregas disponibles",
+      "empty": "No hay entregas por ahora. Permanezca en línea: recibirá un aviso en cuanto un pedido esté listo cerca de usted.",
+      "accept": "Aceptar",
+      "accepted": "Entrega aceptada: aparece en sus misiones.",
+      "taken": "Demasiado tarde: otro repartidor aceptó esta entrega.",
+      "busy": "Termine su entrega en curso antes de aceptar otra.",
+      "distance": "A {{km}} km del restaurante",
+      "newOffer": "Nueva entrega disponible"
     }
   },
   "admin": {

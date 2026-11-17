@@ -540,6 +540,11 @@
     "alcohol": {
       "toggle": "Enthält Alkohol (18+)",
       "badge": "Alkohol 18+"
+    },
+    "alerts": {
+      "newOrder": "Neue Bestellung",
+      "open": "Öffnen",
+      "enableSound": "Tonsignal für Bestellungen aktivieren"
     }
   },
   "profile": {
@@ -1524,6 +1529,16 @@
       "revenue": "Einnahmen",
       "active": "Aktive Aufträge",
       "empty": "Kein Auftrag aktiv. Gehen Sie online, um Aufträge zu erhalten."
+    },
+    "dispatch": {
+      "title": "Verfügbare Lieferungen",
+      "empty": "Gerade keine Lieferung. Bleiben Sie online: Sie werden benachrichtigt, sobald eine Bestellung in Ihrer Nähe bereit ist.",
+      "accept": "Annehmen",
+      "accepted": "Lieferung angenommen: Sie erscheint in Ihren Aufträgen.",
+      "taken": "Zu spät: Ein anderer Kurier hat diese Lieferung angenommen.",
+      "busy": "Schliessen Sie Ihre laufende Lieferung ab, bevor Sie eine neue annehmen.",
+      "distance": "{{km}} km vom Restaurant",
+      "newOffer": "Neue Lieferung verfügbar"
     }
   },
   "admin": {

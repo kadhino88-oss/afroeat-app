@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Stack, Redirect, useSegments } from 'expo-router';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import RestaurantOrderAlerts from '../../components/RestaurantOrderAlerts';
 
 /**
  * =========================================================
@@ -165,6 +166,7 @@ export default function RestaurantLayout() {
   }
 
   return (
+    <View style={styles.shell}>
     <Stack
       screenOptions={{
         headerShown: false,
@@ -188,10 +190,13 @@ export default function RestaurantLayout() {
       <Stack.Screen name="restaurant-orders-details/[id]" />
       <Stack.Screen name="[id]" />
     </Stack>
+    <RestaurantOrderAlerts token={token} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  shell: { flex: 1 },
   loader: {
     flex: 1,
     backgroundColor: '#FBF6EC',
