@@ -12,7 +12,16 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.bkentreprise.afroeat",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleLocalizations": [
+          "fr",
+          "en",
+          "de",
+          "es",
+          "it",
+          "zh"
+        ]
       }
     },
     "android": {
@@ -35,7 +44,7 @@
         {
           "locationAlwaysAndWhenInUsePermission": false,
           "locationAlwaysPermission": false,
-          "locationWhenInUsePermission": "Allow Afroeat to use your location while you use the app to find nearby restaurants and deliver your order.",
+          "locationWhenInUsePermission": "Afroeat utilise votre position pendant l’utilisation de l’application pour trouver les commerces africains proches et suivre la livraison de votre commande.",
           "isIosBackgroundLocationEnabled": false,
           "isAndroidBackgroundLocationEnabled": false,
           "isAndroidForegroundServiceEnabled": false
@@ -48,7 +57,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow Afroeat to access selected photos for your profile or restaurant.",
+          "photosPermission": "Afroeat accède aux photos que vous choisissez pour votre profil, votre logo ou vos plats.",
           "cameraPermission": false,
           "microphonePermission": false
         }
@@ -74,6 +83,10 @@
       "eas": {
         "projectId": "e2648096-d74c-4732-96e0-ce31af47e9f8"
       }
+    },
+    "locales": {
+      "fr": "./store/locales/fr.json",
+      "en": "./store/locales/en.json"
     }
   }
 }

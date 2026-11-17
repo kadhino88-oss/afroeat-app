@@ -19,6 +19,10 @@ on:
         type: choice
         options: [preview, production]
         default: preview
+      submit:
+        description: "Envoyer automatiquement au magasin après la construction (profil production uniquement)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -53,4 +57,13 @@ jobs:
       - name: Lancer la construction
         env:
           NPM_CONFIG_LEGACY_PEER_DEPS: "true"
-        run: eas build --platform ${{ inputs.platform }} --profile ${{ inputs.profile }} --non-interactive --no-wait
+        run: |
+          SUBMIT=""
+          if [ "${{ inputs.submit }}" = "true" ]; then
+            if [ "${{ inputs.profile }}" != "production" ]; then
+              echo "::error::L'envoi au magasin n'est possible qu'avec le profil production."
+              exit 1
+            fi
+            SUBMIT="--auto-submit"
+          fi
+          eas build --platform ${{ inputs.platform }} --profile ${{ inputs.profile }} --non-interactive --no-wait $SUBMIT

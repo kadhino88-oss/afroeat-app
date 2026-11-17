@@ -31,5 +31,14 @@
         "EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER": "merchant.com.afroeat"
       }
     }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "track": "internal",
+        "releaseStatus": "draft"
+      },
+      "ios": {}
+    }
   }
 }
