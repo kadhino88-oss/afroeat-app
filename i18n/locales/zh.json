@@ -2386,5 +2386,18 @@
     "today": "今天",
     "tomorrow": "明天",
     "scheduledFor": "预约时间：{{when}}"
+  },
+  "referral": {
+    "title": "邀请好友",
+    "menuSubtitle": "送好友 15% 折扣，自己也得 15%",
+    "explain": "好友使用您的邀请码首单可享 {{friend}}% 折扣。订单送达后，您将获得一张 {{reward}}% 折扣码。",
+    "yourCode": "您的邀请码",
+    "share": "分享邀请码",
+    "copied": "已复制！",
+    "friends": "已邀请好友：{{count}}",
+    "rewardsTitle": "您的奖励",
+    "rewardLine": "单笔订单 -{{percent}}% · 有效期至 {{date}}",
+    "shareMessage": "用我的邀请码 {{code}} 在 AFROEAT 点非洲美食，首单立减 {{percent}}%！",
+    "error": "无法加载邀请信息。"
   }
 }

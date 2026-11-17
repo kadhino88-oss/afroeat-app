@@ -2386,5 +2386,18 @@
     "today": "Aujourd’hui",
     "tomorrow": "Demain",
     "scheduledFor": "Programmée pour {{when}}"
+  },
+  "referral": {
+    "title": "Parrainer un ami",
+    "menuSubtitle": "Offrez -15 % et gagnez -15 %",
+    "explain": "Votre ami profite de {{friend}} % de réduction sur sa première commande avec votre code. Dès qu’elle est livrée, vous recevez un code de {{reward}} % pour votre prochaine commande.",
+    "yourCode": "Votre code",
+    "share": "Partager mon code",
+    "copied": "Message copié !",
+    "friends": "Amis parrainés : {{count}}",
+    "rewardsTitle": "Vos récompenses",
+    "rewardLine": "-{{percent}} % sur une commande · valable jusqu’au {{date}}",
+    "shareMessage": "Commande tes plats africains préférés sur AFROEAT avec mon code {{code}} : -{{percent}} % sur ta première commande !",
+    "error": "Impossible de charger votre parrainage."
   }
 }

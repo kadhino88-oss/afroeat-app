@@ -2386,5 +2386,18 @@
     "today": "Hoy",
     "tomorrow": "Mañana",
     "scheduledFor": "Programado para {{when}}"
+  },
+  "referral": {
+    "title": "Invitar a un amigo",
+    "menuSubtitle": "Regale un 15 %, gane un 15 %",
+    "explain": "Su amigo obtiene un {{friend}} % de descuento en su primer pedido con su código. En cuanto se entregue, recibirá un código del {{reward}} % para su próximo pedido.",
+    "yourCode": "Su código",
+    "share": "Compartir mi código",
+    "copied": "¡Mensaje copiado!",
+    "friends": "Amigos invitados: {{count}}",
+    "rewardsTitle": "Sus recompensas",
+    "rewardLine": "-{{percent}} % en un pedido · válido hasta el {{date}}",
+    "shareMessage": "Pide tus platos africanos favoritos en AFROEAT con mi código {{code}}: ¡-{{percent}} % en tu primer pedido!",
+    "error": "No se pudo cargar su programa."
   }
 }

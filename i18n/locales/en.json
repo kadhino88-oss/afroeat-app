@@ -2386,5 +2386,18 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "scheduledFor": "Scheduled for {{when}}"
+  },
+  "referral": {
+    "title": "Refer a friend",
+    "menuSubtitle": "Give 15% off, get 15% off",
+    "explain": "Your friend gets {{friend}}% off their first order with your code. Once it is delivered, you receive a {{reward}}% code for your next order.",
+    "yourCode": "Your code",
+    "share": "Share my code",
+    "copied": "Message copied!",
+    "friends": "Friends referred: {{count}}",
+    "rewardsTitle": "Your rewards",
+    "rewardLine": "{{percent}}% off one order · valid until {{date}}",
+    "shareMessage": "Order your favourite African dishes on AFROEAT with my code {{code}}: {{percent}}% off your first order!",
+    "error": "Could not load your referral."
   }
 }
