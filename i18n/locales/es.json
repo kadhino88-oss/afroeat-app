@@ -179,7 +179,11 @@
     "promoRemove": "Quitar",
     "discount": "Descuento",
     "promoInvalid": "Código promocional no válido.",
-    "ageConfirm": "Confirmo que tengo 18 años o más. Se me podrá pedir un documento de identidad en la entrega."
+    "ageConfirm": "Confirmo que tengo 18 años o más. Se me podrá pedir un documento de identidad en la entrega.",
+    "tipTitle": "Propina para la entrega",
+    "tipHint": "El 100 % es para quien le entrega, AFROEAT no se queda nada.",
+    "tipNone": "Ninguna",
+    "tip": "Propina"
   },
   "restaurant": {
     "popular": "Popular",

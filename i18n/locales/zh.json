@@ -179,7 +179,11 @@
     "promoRemove": "移除",
     "discount": "优惠",
     "promoInvalid": "优惠码无效。",
-    "ageConfirm": "我确认已年满 18 岁。送达时可能需要出示身份证件。"
+    "ageConfirm": "我确认已年满 18 岁。送达时可能需要出示身份证件。",
+    "tipTitle": "配送小费",
+    "tipHint": "100% 归配送人员，AFROEAT 不抽成。",
+    "tipNone": "不给",
+    "tip": "小费"
   },
   "restaurant": {
     "popular": "热门",

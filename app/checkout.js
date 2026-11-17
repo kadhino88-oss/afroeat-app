@@ -162,6 +162,7 @@ export default function CheckoutScreen() {
   const [quoteRetryVersion, setQuoteRetryVersion] = useState(0);
   const [promoInput, setPromoInput] = useState('');
   const [appliedPromo, setAppliedPromo] = useState('');
+  const [tipAmount, setTipAmount] = useState(0);
   const [promoError, setPromoError] = useState('');
 
   const isLoggedIn = Boolean(isAuthenticated && token && user?._id);
@@ -345,6 +346,7 @@ export default function CheckoutScreen() {
             quantity,
           })),
           ...(appliedPromo ? { promoCode: appliedPromo } : {}),
+          ...(tipAmount > 0 ? { tipAmount } : {}),
         },
         token
       )
@@ -380,6 +382,7 @@ export default function CheckoutScreen() {
     normalizedItems,
     quoteRetryVersion,
     appliedPromo,
+    tipAmount,
     restaurantId,
     t,
     token,
@@ -502,6 +505,7 @@ export default function CheckoutScreen() {
         quotedTotal: quote.totalPrice,
         quotedCurrency: quote.currency,
         ...(quote.promoCode ? { promoCode: quote.promoCode } : {}),
+        ...(Number(quote.tipAmount) > 0 ? { tipAmount: Number(quote.tipAmount) } : {}),
         ...(quote.containsAlcohol ? { ageConfirmed: ageConfirmed === true } : {}),
         deliveryAddress: normalizeText(deliveryAddress),
         deliveryAddressDetails: {
@@ -561,6 +565,8 @@ export default function CheckoutScreen() {
                 menuItem,
                 quantity,
               })),
+              ...(appliedPromo ? { promoCode: appliedPromo } : {}),
+              ...(tipAmount > 0 ? { tipAmount } : {}),
             },
             token
           );
@@ -608,6 +614,8 @@ export default function CheckoutScreen() {
     }
   }, [
     ageConfirmed,
+    appliedPromo,
+    tipAmount,
     deliveryAddress,
     hasValidAddress,
     isClient,
@@ -953,7 +961,38 @@ export default function CheckoutScreen() {
       <View style={styles.footer}>
         {isLoggedIn && isClient ? (
           <View style={styles.promoBox}>
-            {Number(quote?.discountAmount) > 0 ? (
+            <View style={styles.tipBox}>
+          <Text style={styles.summaryLabel}>{t('checkout.tipTitle')}</Text>
+          <Text style={styles.tipHint}>{t('checkout.tipHint')}</Text>
+          <View style={styles.tipRow}>
+            {[0, 1, 2, 3, 5].map((value) => {
+              const selected = tipAmount === value;
+              return (
+                <Pressable
+                  key={value}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected }}
+                  disabled={quoteLoading}
+                  onPress={() => setTipAmount(value)}
+                  style={[styles.tipChip, selected && styles.tipChipSelected]}
+                >
+                  <Text style={[styles.tipChipText, selected && styles.tipChipTextSelected]}>
+                    {value === 0 ? t('checkout.tipNone') : formatPrice(value, quoteCurrency)}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+
+        {Number(quote?.tipAmount) > 0 ? (
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>{t('checkout.tip')}</Text>
+            <Text style={styles.summaryValue}>{formatPrice(quote.tipAmount, quoteCurrency)}</Text>
+          </View>
+        ) : null}
+
+        {Number(quote?.discountAmount) > 0 ? (
               <View style={styles.promoApplied}>
                 <Text style={styles.promoAppliedText}>
                   {t('checkout.promoApplied', { code: quote.promoCode, amount: formatPrice(quote.discountAmount, quoteCurrency) })}
@@ -1441,6 +1480,13 @@ const styles = StyleSheet.create({
   },
 
   promoBox: { marginBottom: 10, gap: 6 },
+  tipBox: { marginVertical: 10, gap: 6 },
+  tipHint: { color: '#606D5D', fontSize: 12, lineHeight: 17 },
+  tipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  tipChip: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999, borderWidth: 1, borderColor: '#D8CDB8', backgroundColor: '#FFFFFF' },
+  tipChipSelected: { backgroundColor: '#084424', borderColor: '#084424' },
+  tipChipText: { color: '#0D1C11', fontWeight: '800' },
+  tipChipTextSelected: { color: '#FFFFFF' },
   promoRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
   promoInput: { flex: 1, borderWidth: 1, borderColor: '#E3DECF', borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, color: '#0D1C11', fontSize: 14, letterSpacing: 1 },
   promoBtn: { backgroundColor: '#084424', borderRadius: 12, paddingVertical: 11, paddingHorizontal: 16 },
