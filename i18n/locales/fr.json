@@ -462,7 +462,10 @@
       "confirmCancel": "Confirmer l'annulation",
       "actionError": "Action impossible. Réessayez.",
       "driversError": "Impossible de charger les livreurs.",
-      "assignError": "Impossible d'assigner ce livreur."
+      "assignError": "Impossible d'assigner ce livreur.",
+      "selfDeliveryInfo": "Livraison assurée par votre commerce.",
+      "startDelivery": "Partir en livraison",
+      "markDelivered": "Commande remise au client"
     },
     "dashboard": {
       "dishFallbackName": "Plat africain",
@@ -508,7 +511,10 @@
       "useAddress": "Placer à l’adresse du restaurant",
       "useDevice": "Utiliser ma position actuelle (je suis au restaurant)",
       "positionSaved": "Position enregistrée.",
-      "locationDenied": "Autorisez la localisation pour utiliser votre position actuelle."
+      "locationDenied": "Autorisez la localisation pour utiliser votre position actuelle.",
+      "selfDelivery": "Je livre moi-même mes commandes",
+      "selfDeliveryOn": "Vous livrez vos clients vous-même et gardez la totalité des frais de livraison. Aucun livreur AFROEAT n’est envoyé.",
+      "selfDeliveryOff": "Les livraisons sont assurées par les livreurs AFROEAT."
     },
     "openingHours": {
       "title": "Horaires d'ouverture",

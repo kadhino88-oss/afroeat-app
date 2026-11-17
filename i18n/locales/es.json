@@ -462,7 +462,10 @@
       "confirmCancel": "Confirmar la cancelación",
       "actionError": "No se pudo realizar la acción. Inténtalo de nuevo.",
       "driversError": "No se pudieron cargar los repartidores.",
-      "assignError": "No se pudo asignar este repartidor."
+      "assignError": "No se pudo asignar este repartidor.",
+      "selfDeliveryInfo": "Entrega a cargo de su comercio.",
+      "startDelivery": "Salir a entregar",
+      "markDelivered": "Pedido entregado al cliente"
     },
     "dashboard": {
       "dishFallbackName": "Plato africano",
@@ -508,7 +511,10 @@
       "useAddress": "Ubicar en la dirección del restaurante",
       "useDevice": "Usar mi ubicación actual (estoy en el restaurante)",
       "positionSaved": "Posición guardada.",
-      "locationDenied": "Permite la ubicación para usar tu posición actual."
+      "locationDenied": "Permite la ubicación para usar tu posición actual.",
+      "selfDelivery": "Entrego yo mismo mis pedidos",
+      "selfDeliveryOn": "Usted entrega a sus clientes y se queda con toda la tarifa de envío. No se envía ningún repartidor de AFROEAT.",
+      "selfDeliveryOff": "Las entregas las realizan los repartidores de AFROEAT."
     },
     "openingHours": {
       "title": "Horario de apertura",

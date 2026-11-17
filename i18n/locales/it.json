@@ -462,7 +462,10 @@
       "confirmCancel": "Conferma l'annullamento",
       "actionError": "Azione non riuscita. Riprova.",
       "driversError": "Impossibile caricare i rider.",
-      "assignError": "Impossibile assegnare questo rider."
+      "assignError": "Impossibile assegnare questo rider.",
+      "selfDeliveryInfo": "Consegna a cura della vostra attività.",
+      "startDelivery": "Parti per la consegna",
+      "markDelivered": "Ordine consegnato al cliente"
     },
     "dashboard": {
       "dishFallbackName": "Piatto africano",
@@ -508,7 +511,10 @@
       "useAddress": "Posiziona all’indirizzo del ristorante",
       "useDevice": "Usa la mia posizione attuale (sono al ristorante)",
       "positionSaved": "Posizione salvata.",
-      "locationDenied": "Consenti la localizzazione per usare la tua posizione attuale."
+      "locationDenied": "Consenti la localizzazione per usare la tua posizione attuale.",
+      "selfDelivery": "Consegno io i miei ordini",
+      "selfDeliveryOn": "Consegnate voi ai clienti e tenete l’intera tariffa di consegna. Nessun rider AFROEAT viene inviato.",
+      "selfDeliveryOff": "Le consegne sono effettuate dai rider AFROEAT."
     },
     "openingHours": {
       "title": "Orari di apertura",

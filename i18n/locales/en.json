@@ -462,7 +462,10 @@
       "confirmCancel": "Confirm cancellation",
       "actionError": "Action failed. Please try again.",
       "driversError": "Could not load couriers.",
-      "assignError": "Could not assign this courier."
+      "assignError": "Could not assign this courier.",
+      "selfDeliveryInfo": "Delivered by your business.",
+      "startDelivery": "Out for delivery",
+      "markDelivered": "Order handed to the customer"
     },
     "dashboard": {
       "dishFallbackName": "African dish",
@@ -508,7 +511,10 @@
       "useAddress": "Place at the restaurant address",
       "useDevice": "Use my current location (I am at the restaurant)",
       "positionSaved": "Position saved.",
-      "locationDenied": "Allow location access to use your current position."
+      "locationDenied": "Allow location access to use your current position.",
+      "selfDelivery": "I deliver my own orders",
+      "selfDeliveryOn": "You deliver to your customers yourself and keep the full delivery fee. No AFROEAT courier is sent.",
+      "selfDeliveryOff": "Deliveries are handled by AFROEAT couriers."
     },
     "openingHours": {
       "title": "Opening hours",

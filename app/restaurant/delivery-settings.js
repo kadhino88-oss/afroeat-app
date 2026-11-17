@@ -30,6 +30,7 @@ export default function RestaurantDeliverySettingsScreen() {
   const [restaurant, setRestaurant] = useState(null);
   const [fee, setFee] = useState('');
   const [minimum, setMinimum] = useState('');
+  const [selfDelivery, setSelfDelivery] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [locating, setLocating] = useState(false);
@@ -44,6 +45,7 @@ export default function RestaurantDeliverySettingsScreen() {
           setRestaurant(data);
           setFee(String(data?.deliveryFee ?? 0));
           setMinimum(String(data?.minimumOrderAmount ?? 0));
+          setSelfDelivery(data?.selfDelivery === true);
         } catch (error) {
           if (active) Alert.alert(t('common.error'), error?.message || '');
         } finally {
@@ -65,7 +67,7 @@ export default function RestaurantDeliverySettingsScreen() {
     }
     try {
       setSaving(true);
-      const updated = await updateMyRestaurant(restaurant._id, { deliveryFee, minimumOrderAmount }, token);
+      const updated = await updateMyRestaurant(restaurant._id, { deliveryFee, minimumOrderAmount, selfDelivery }, token);
       setRestaurant(updated);
       Alert.alert(t('restaurant.deliverySettings.title'), t('restaurant.deliverySettings.saved'));
     } catch (error) {
@@ -127,6 +129,20 @@ export default function RestaurantDeliverySettingsScreen() {
           </Text>
           <TextInput value={minimum} onChangeText={setMinimum} keyboardType="decimal-pad" style={styles.input} />
           <Pressable
+            accessibilityRole="switch"
+            accessibilityState={{ checked: selfDelivery }}
+            onPress={() => setSelfDelivery((value) => !value)}
+            style={styles.selfRow}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={styles.selfTitle}>{t('restaurant.deliverySettings.selfDelivery')}</Text>
+              <Text style={styles.selfHelp}>
+                {selfDelivery ? t('restaurant.deliverySettings.selfDeliveryOn') : t('restaurant.deliverySettings.selfDeliveryOff')}
+              </Text>
+            </View>
+            <Ionicons name={selfDelivery ? 'toggle' : 'toggle-outline'} size={36} color={selfDelivery ? Brand.primary : '#9AA39A'} />
+          </Pressable>
+          <Pressable
             accessibilityRole="button"
             disabled={saving || !restaurant?._id}
             onPress={save}
@@ -176,6 +192,9 @@ export default function RestaurantDeliverySettingsScreen() {
 }
 
 const styles = StyleSheet.create({
+  selfRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 16, padding: 14, borderRadius: 14, backgroundColor: '#F2ECE0' },
+  selfTitle: { color: '#0D1C11', fontWeight: '800', fontSize: 15 },
+  selfHelp: { color: '#606D5D', marginTop: 4, lineHeight: 19 },
   page: { flex: 1, backgroundColor: Brand.background },
   content: { padding: 20, paddingBottom: 60, maxWidth: 560, width: '100%', alignSelf: 'center' },
   back: { width: 42, height: 42, borderRadius: 14, backgroundColor: Brand.card, justifyContent: 'center', alignItems: 'center', marginBottom: 16, borderWidth: 1, borderColor: Brand.border },

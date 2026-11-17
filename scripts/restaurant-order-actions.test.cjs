@@ -22,5 +22,5 @@ test('cancellation needs a second tap', () => {
 test('restaurant can assign a verified online courier', () => {
   assert.match(src, /getActiveDrivers\(token/);
   assert.match(src, /assignDriverToOrder\(order\._id, driverId, token\)/);
-  assert.match(src, /canAssign = \['Confirmée', 'En préparation'\]\.includes\(rawStatus\)/);
+  assert.match(src, /canAssign = !selfDelivery && \['Confirmée', 'En préparation'\]\.includes\(rawStatus\)/);
 });
