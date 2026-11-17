@@ -408,7 +408,7 @@ export default function AdminRestaurantsScreen() {
     }
 
     router.push({
-      pathname: '/admin/restaurant-details/[id]',
+      pathname: '/admin/restaurants-details/[id]',
       params: { id: item._id },
     });
   }, [t]);
