@@ -18,3 +18,13 @@ test('les cartes des commerces n’affichent plus de bloc noir : image du site o
     assert.match(read(f), /<PlaceCover place=/, f);
   }
 });
+
+test('sans logo ni site, la carte affiche les initiales du commerce', () => {
+  const src = read('components/PlaceCover.js');
+  assert.match(src, /initialsOf\(place\?\.name\)/);
+  const fn = new Function(`${src.match(/const SKIP[\s\S]*?\n\};/)[0].replace('export const', 'const')}; return initialsOf;`)();
+  assert.equal(fn('Afri K Food'), 'AK');
+  assert.equal(fn("O'Saveurs d'Afrique"), 'SA');
+  assert.equal(fn('Chez Fatou'), 'F');
+  assert.equal(fn(''), '•');
+});
