@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import * as WebBrowser from 'expo-web-browser';
 import PlaceBrandMark from '../../components/PlaceBrandMark';
+import { Image } from 'expo-image';
 
 const firstParam = (value) => (Array.isArray(value) ? value[0] : value);
 const normalizeText = (value) => String(firstParam(value) || '').trim();
@@ -87,6 +88,12 @@ export default function PublicPlaceScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#084424" />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.hero}>
+          {place.imageUrl ? (
+            <>
+              <Image source={{ uri: place.imageUrl }} style={StyleSheet.absoluteFill} contentFit="cover" />
+              <View style={[StyleSheet.absoluteFill, styles.heroShade]} />
+            </>
+          ) : null}
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={t('publicPlace.back')}
@@ -235,7 +242,8 @@ function ActionButton({ icon, label, onPress }) {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#FBF6EC' },
   content: { paddingBottom: 36 },
-  hero: { minHeight: 260, paddingTop: 68, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#084424', alignItems: 'center', justifyContent: 'center' },
+  heroShade: { backgroundColor: 'rgba(8, 68, 36, 0.72)' },
+  hero: { minHeight: 260, overflow: 'hidden', paddingTop: 68, paddingHorizontal: 24, paddingBottom: 26, backgroundColor: '#084424', alignItems: 'center', justifyContent: 'center' },
   backButton: { position: 'absolute', top: 48, left: 18, width: 42, height: 42, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.14)' },
   heroIcon: { width: 62, height: 62, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.12)', marginBottom: 13 },
   category: { color: '#EAB02F', fontSize: 12, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1 },

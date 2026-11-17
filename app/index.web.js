@@ -19,7 +19,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { getNearbyPlaces } from '../services/placeService';
 import { NEARBY_RADIUS_OPTIONS } from '../services/nearbySearchSettings';
-import PlaceBrandMark from '../components/PlaceBrandMark';
+import PlaceCover from '../components/PlaceCover';
 import DishMarquee from '../components/DishMarquee';
 import { BrandFonts } from '../constants/brand';
 
@@ -67,12 +67,6 @@ const normalizeText = (value, fallback = '') => {
 
 const displayRole = (value) => normalizeText(value).toLowerCase();
 
-const getStaffRedirect = (role, user) => {
-  const currentRole = displayRole(role || user?.role);
-  if (['restaurant', 'resto', 'partner_restaurant'].includes(currentRole)) return '/restaurant/RestaurantDashboard';
-  if (['livreur', 'driver', 'courier', 'delivery'].includes(currentRole)) return '/livraison';
-  return null;
-};
 
 const getCategoryLabel = (place) => {
   if (place?.category === 'african-grocery') return 'Épicerie africaine';
@@ -99,10 +93,6 @@ export default function WebDiscoveryHome() {
   const [nearbySearched, setNearbySearched] = useState(false);
   const [notice, setNotice] = useState('');
 
-  const staffRedirect = useMemo(
-    () => auth.isAuthenticated ? getStaffRedirect(auth.role, auth.user) : null,
-    [auth.isAuthenticated, auth.role, auth.user]
-  );
 
   const cartCount = typeof cart.getTotalItems === 'function'
     ? Number(cart.getTotalItems()) || 0
@@ -205,7 +195,6 @@ export default function WebDiscoveryHome() {
 
   // Adresse dédiée à l'administration : elle ouvre toujours l'espace admin.
   if (isAdminHost()) return <Redirect href="/admin" />;
-  if (staffRedirect) return <Redirect href={staffRedirect} />;
 
   const userName = normalizeText(auth.user?.firstName || auth.user?.name);
   const isAdminUser = ['admin', 'administrator', 'superadmin', 'super-admin', 'ops'].includes(
@@ -383,11 +372,7 @@ export default function WebDiscoveryHome() {
                 {nearby.slice(0, 6).map((place) => (
                   <Pressable key={`${place.source}-${place.id || place.osmId}`} style={({ pressed }) => [styles.placeCard, { width: compact ? '100%' : tablet ? '48.5%' : '31.8%', minWidth: compact ? 0 : 235 }, pressed && styles.offerCardPressed]} onPress={() => openPlace(place)} accessibilityRole="button">
                     <View style={styles.placeImageWrap}>
-                      {place.imageUrl || place.logoUrl ? (
-                        <Image source={{ uri: place.imageUrl || place.logoUrl }} style={styles.placeImage} contentFit="cover" />
-                      ) : (
-                          <View style={styles.placeFallback}><PlaceBrandMark category={place.category} website={place.website} logoUrl={place.logoUrl} size={60} /></View>
-                      )}
+                      <PlaceCover place={place} markSize={72} />
                       <View style={styles.placeType}><Text style={styles.placeTypeText}>{getCategoryLabel(place)}</Text></View>
                     </View>
                     <View style={styles.placeBody}>

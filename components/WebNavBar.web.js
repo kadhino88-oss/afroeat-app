@@ -27,6 +27,7 @@ const EXPLORE = '/(tabs)/explore';
 
 /** Liens du site public : les mêmes que sur la page d'accueil. */
 const SITE_LINKS = [
+  { key: 'home', labelKey: 'nav.home', href: '/', match: (p) => p === '/', icon: 'home-outline' },
   { key: 'explore', labelKey: 'nav.explore', href: EXPLORE, match: (p) => p.startsWith('/explore'), icon: 'compass-outline' },
   { key: 'restaurants', label: 'Restaurants', href: { pathname: EXPLORE, params: { category: 'Africaine' } }, match: () => false, icon: 'restaurant-outline', wideOnly: true },
   { key: 'groceries', label: 'Épiceries', href: { pathname: EXPLORE, params: { category: 'Épicerie' } }, match: () => false, icon: 'basket-outline', wideOnly: true },
@@ -45,6 +46,7 @@ const LINKS_BY_ROLE = {
       { key: 'orders', labelKey: 'nav.orders', href: '/restaurant/restaurant-orders', match: (p) => p.startsWith('/restaurant/restaurant-orders'), icon: 'receipt-outline' },
       { key: 'menu', labelKey: 'nav.menu', href: '/restaurant/MenuScreen', match: (p) => p.startsWith('/restaurant/MenuScreen') || p.includes('MenuItem'), icon: 'restaurant-outline' },
       { key: 'profile', labelKey: 'nav.profile', href: '/restaurant/restaurant-profile', match: (p) => p.startsWith('/restaurant/restaurant-profile') || p.startsWith('/restaurant/restaurant-settings'), icon: 'person-outline' },
+      { key: 'site', labelKey: 'nav.viewSite', href: '/', match: (p) => p === '/', icon: 'globe-outline', wideOnly: true },
     ],
   },
   livreur: {
@@ -53,6 +55,7 @@ const LINKS_BY_ROLE = {
       { key: 'missions', labelKey: 'nav.missions', href: '/livraison', match: (p) => p === '/livraison' || p.startsWith('/livraison/orders'), icon: 'bicycle-outline' },
       { key: 'history', labelKey: 'nav.history', href: '/livraison/history', match: (p) => p.startsWith('/livraison/history'), icon: 'time-outline' },
       { key: 'profile', labelKey: 'nav.profile', href: '/livraison/profile', match: (p) => p.startsWith('/livraison/profile'), icon: 'person-outline' },
+      { key: 'site', labelKey: 'nav.viewSite', href: '/', match: (p) => p === '/', icon: 'globe-outline', wideOnly: true },
     ],
   },
   admin: {
