@@ -659,6 +659,23 @@ export default function RestaurantOrderDetailsScreen() {
               </Pressable>
             )}
 
+            {order?.scheduledFor ? (
+              <View style={styles.infoRow}>
+                <Ionicons name="time-outline" size={18} color="#C8331A" />
+                <Text style={styles.infoText}>
+                  {t('schedule.scheduledFor', {
+                    when: new Date(order.scheduledFor).toLocaleString(undefined, {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    }),
+                  })}
+                </Text>
+              </View>
+            ) : null}
+
             {selfDelivery && (
               <View style={styles.infoRow}>
                 <Ionicons name={isPickup ? 'bag-handle-outline' : 'storefront-outline'} size={18} color="#084424" />

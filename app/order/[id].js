@@ -649,6 +649,23 @@ export default function OrderDetailScreen() {
             {order?.restaurantName || t('order.restaurantFallback')}
           </Text>
 
+          {order?.scheduledFor ? (
+            <View style={styles.addressRow}>
+              <Ionicons name="time-outline" size={15} color="#606D5D" />
+              <Text style={styles.addressText}>
+                {t('schedule.scheduledFor', {
+                  when: new Date(order.scheduledFor).toLocaleString(undefined, {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  }),
+                })}
+              </Text>
+            </View>
+          ) : null}
+
           {!!order?.deliveryAddress && (
             <View style={styles.addressRow}>
               <Ionicons name="location-outline" size={15} color="#606D5D" />

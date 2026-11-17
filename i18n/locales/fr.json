@@ -2378,5 +2378,13 @@
     "error": "Impossible d’envoyer l’avis. Réessayez.",
     "publicTitle": "Avis des clients ({{count}})",
     "customer": "Client"
+  },
+  "schedule": {
+    "title": "Quand ?",
+    "asap": "Dès que possible",
+    "later": "Programmer",
+    "today": "Aujourd’hui",
+    "tomorrow": "Demain",
+    "scheduledFor": "Programmée pour {{when}}"
   }
 }
