@@ -1,0 +1,47 @@
+name: État d'une construction mobile (EAS)
+
+# Bouton manuel : affiche l'état d'une construction Expo (statut, erreur, lien de téléchargement)
+# à partir de son identifiant (la fin de l'adresse expo.dev/.../builds/<identifiant>).
+# Secret requis : EXPO_TOKEN.
+on:
+  workflow_dispatch:
+    inputs:
+      build_id:
+        description: "Identifiant de la construction (fin de l'adresse expo.dev …/builds/<identifiant>)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup EAS
+        uses: expo/expo-github-action@v9
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Afficher l'état
+        env:
+          BUILD_ID: ${{ inputs.build_id }}
+        run: |
+          if ! [[ "$BUILD_ID" =~ ^[0-9a-f-]{36}$ ]]; then
+            echo "::error::Identifiant de construction invalide."
+            exit 1
+          fi
+          eas build:view "$BUILD_ID" --json > build.json
+          node -e '
+            const b = require("./build.json");
+            const pick = { statut: b.status, plateforme: b.platform, profil: b.buildProfile, version: b.appVersion,
+              build: b.appBuildVersion, creation: b.createdAt, fin: b.completedAt,
+              erreur: b.error ? `${b.error.errorCode || ""} ${b.error.message || ""}`.trim() : "",
+              telechargement: b.artifacts?.buildUrl || b.artifacts?.applicationArchiveUrl || "",
+              journaux: b.logFiles?.length ? `${b.logFiles.length} fichier(s) de journal` : "" };
+            for (const [k, v] of Object.entries(pick)) if (v) console.log(`${k}: ${v}`);
+            if (b.status === "ERRORED") process.exitCode = 1;
+          '
