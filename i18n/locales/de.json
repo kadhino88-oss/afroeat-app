@@ -2366,5 +2366,17 @@
   },
   "menu": {
     "illustrationPhoto": "Beispielfoto"
+  },
+  "review": {
+    "title": "Ihre Meinung zählt",
+    "restaurant": "Das Restaurant",
+    "courier": "Die Lieferung",
+    "commentPlaceholder": "Ein Wort zu Ihrem Essen (optional)",
+    "submit": "Bewertung senden",
+    "thanks": "Danke für Ihre Bewertung!",
+    "pickRating": "Wählen Sie eine Bewertung für das Restaurant.",
+    "error": "Bewertung konnte nicht gesendet werden. Bitte erneut versuchen.",
+    "publicTitle": "Kundenbewertungen ({{count}})",
+    "customer": "Kunde"
   }
 }

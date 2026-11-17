@@ -2366,5 +2366,17 @@
   },
   "menu": {
     "illustrationPhoto": "Foto illustrativa"
+  },
+  "review": {
+    "title": "La vostra opinione conta",
+    "restaurant": "Il ristorante",
+    "courier": "La consegna",
+    "commentPlaceholder": "Una parola sul pasto (facoltativo)",
+    "submit": "Invia la recensione",
+    "thanks": "Grazie per la recensione!",
+    "pickRating": "Scegliete un voto per il ristorante.",
+    "error": "Impossibile inviare la recensione. Riprovate.",
+    "publicTitle": "Recensioni dei clienti ({{count}})",
+    "customer": "Cliente"
   }
 }

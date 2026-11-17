@@ -17,6 +17,7 @@ import {
 } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
+import OrderReviewCard from '../../components/OrderReviewCard';
 import { useAuth } from '../../context/AuthContext';
 import { getOrderById, getOrderTracking, updateOrderStatus } from '../../services/orderService';
 import { useTranslation } from 'react-i18next';
@@ -810,6 +811,14 @@ export default function OrderDetailScreen() {
             </View>
           )}
         </View>
+
+        {normalizeStatus(order?.status) === 'delivered' && role === 'client' && order?._id ? (
+          <OrderReviewCard
+            orderId={order._id}
+            token={token}
+            hasCourier={Boolean(order?.deliveryPerson) && order?.selfDelivery !== true}
+          />
+        ) : null}
 
         <View style={styles.itemsCard}>
           <Text style={styles.itemsTitle}>{t('checkout.items')}</Text>
