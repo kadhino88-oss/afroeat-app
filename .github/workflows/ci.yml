@@ -22,7 +22,7 @@ jobs:
       - name: Validate Expo SDK dependency compatibility
         run: npx expo install --check
       - name: Audit production dependencies for high and critical vulnerabilities
-        run: npm audit --omit=dev --audit-level=high
+        run: node scripts/audit-gate.cjs
       - name: Check Stripe wallet configuration safeguards
         run: npm run check:wallet-config
       - name: Test API URL environment safeguards
