@@ -2249,7 +2249,10 @@
     "commission": "{{rate}} % Provision pro gelieferter Bestellung",
     "commissionByCurrency": "Provision pro gelieferter Bestellung: {{rates}}",
     "payout": "Ihre Einnahmen werden für jede gelieferte Bestellung automatisch auf Ihr Stripe-Konto ausgezahlt.",
-    "offerNote": "Die vollständigen Bedingungen stehen in den AGB und werden Ihnen vor der Aktivierung Ihres Geschäfts bestätigt."
+    "offerNote": "Die vollständigen Bedingungen stehen in den AGB und werden Ihnen vor der Aktivierung Ihres Geschäfts bestätigt.",
+    "selfDeliveryRate": "Sie liefern selbst? Nur {{rate}} % Kommission, und die Liefergebühr gehört zu 100 % Ihnen.",
+    "firstMonth": "Erste {{days}} Tage: 0 % AFROEAT-Kommission (nur {{fee}} % Zahlungsgebühren).",
+    "courierOffer": "Kuriere: mindestens {{eur}} € / {{chf}} CHF pro Lieferung und 100 % der Trinkgelder."
   },
   "paymentCards": {
     "noCardTitle": "Keine gespeicherte Karte",

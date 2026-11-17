@@ -143,6 +143,34 @@ export default function PartnerApplyScreen() {
               <Ionicons name="pricetag-outline" size={18} color="#084424" />
               <Text style={styles.benefitText}>{commissionLine}</Text>
             </View>
+            {terms?.offer ? (
+              <>
+                <View style={styles.benefitRow}>
+                  <Ionicons name="bicycle-outline" size={18} color="#084424" />
+                  <Text style={styles.benefitText}>
+                    {t('partnerApply.selfDeliveryRate', { rate: terms.offer.selfDeliveryCommissionPercent })}
+                  </Text>
+                </View>
+                <View style={styles.benefitRow}>
+                  <Ionicons name="gift-outline" size={18} color="#084424" />
+                  <Text style={styles.benefitText}>
+                    {t('partnerApply.firstMonth', {
+                      days: terms.offer.firstMonth?.days,
+                      fee: terms.offer.firstMonth?.paymentFeePercent,
+                    })}
+                  </Text>
+                </View>
+                <View style={styles.benefitRow}>
+                  <Ionicons name="cash-outline" size={18} color="#084424" />
+                  <Text style={styles.benefitText}>
+                    {t('partnerApply.courierOffer', {
+                      eur: terms.offer.courierMinimumPerDelivery?.EUR,
+                      chf: terms.offer.courierMinimumPerDelivery?.CHF,
+                    })}
+                  </Text>
+                </View>
+              </>
+            ) : null}
             <View style={styles.benefitRow}>
               <Ionicons name="card-outline" size={18} color="#084424" />
               <Text style={styles.benefitText}>{t('partnerApply.payout')}</Text>

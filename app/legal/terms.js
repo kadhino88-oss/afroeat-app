@@ -49,6 +49,15 @@ const SECTIONS = [
     heading: 'Commerces partenaires',
     body: [
       "L'accès est réservé aux commerces africains. Chaque candidature est vérifiée avant activation. Les conditions commerciales (commission, versements) sont communiquées au commerce avant son activation.",
+      "Commission AFROEAT sur le montant des plats : 15 % lorsque la livraison est assurée par un livreur AFROEAT, 8 % lorsque le commerce livre lui-même (il conserve alors 100 % des frais de livraison). Pendant les 30 premiers jours suivant l'ouverture de la fiche, aucune commission n'est prélevée : seuls 2,5 % de frais de paiement sont retenus.",
+      "Les revenus du commerce sont versés sur son compte Stripe à chaque commande livrée.",
+    ],
+  },
+  {
+    heading: 'Livreurs partenaires',
+    body: [
+      "Le livreur perçoit 80 % des frais de livraison de chaque course, avec un minimum garanti de 3,50 € (ou 4 CHF) par course livrée. Les pourboires des clients lui reviennent à 100 %, sans aucune commission.",
+      "Les courses sont proposées aux livreurs vérifiés et disponibles à proximité ; le livreur reste libre d'accepter ou non une course.",
     ],
   },
   {

@@ -2249,7 +2249,10 @@
     "commission": "{{rate}}% commission per delivered order",
     "commissionByCurrency": "Commission per delivered order: {{rates}}",
     "payout": "Your earnings are paid automatically to your Stripe account for every delivered order.",
-    "offerNote": "The full terms are set out in the terms and conditions and confirmed to you before your business is activated."
+    "offerNote": "The full terms are set out in the terms and conditions and confirmed to you before your business is activated.",
+    "selfDeliveryRate": "Do your own deliveries? Only {{rate}}% commission, and you keep 100% of the delivery fee.",
+    "firstMonth": "First {{days}} days: 0% AFROEAT commission (only {{fee}}% payment fees).",
+    "courierOffer": "Couriers: minimum €{{eur}} / CHF {{chf}} per delivery and 100% of tips."
   },
   "paymentCards": {
     "noCardTitle": "No saved card",

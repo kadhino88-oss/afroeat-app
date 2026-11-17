@@ -2249,7 +2249,10 @@
     "commission": "{{rate}} % de commission par commande livrée",
     "commissionByCurrency": "Commission par commande livrée : {{rates}}",
     "payout": "Vos revenus sont versés automatiquement sur votre compte Stripe à chaque commande livrée.",
-    "offerNote": "Les conditions complètes figurent dans les conditions générales et vous sont confirmées avant l’activation de votre commerce."
+    "offerNote": "Les conditions complètes figurent dans les conditions générales et vous sont confirmées avant l’activation de votre commerce.",
+    "selfDeliveryRate": "Vous livrez vous-même ? Seulement {{rate}} % de commission, et vous gardez 100 % des frais de livraison.",
+    "firstMonth": "{{days}} premiers jours : 0 % de commission AFROEAT (seuls {{fee}} % de frais de paiement).",
+    "courierOffer": "Livreurs : minimum {{eur}} € / {{chf}} CHF par course et 100 % des pourboires."
   },
   "paymentCards": {
     "noCardTitle": "Aucune carte enregistrée",
