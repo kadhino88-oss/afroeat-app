@@ -62,6 +62,7 @@ export default function PlaceCover({ place, style, markSize = 84 }) {
             website={place?.website}
             category={place?.category}
             size={markSize}
+            fallbackText={initialsOf(place?.name)}
           />
         ) : (
           <View style={[styles.monogram, { width: markSize, height: markSize, borderRadius: markSize * 0.28 }]}>
