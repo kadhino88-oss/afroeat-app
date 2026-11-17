@@ -179,7 +179,11 @@
     "promoRemove": "Remove",
     "discount": "Discount",
     "promoInvalid": "Invalid promo code.",
-    "ageConfirm": "I confirm I am 18 or older. ID may be requested on delivery."
+    "ageConfirm": "I confirm I am 18 or older. ID may be requested on delivery.",
+    "tipTitle": "Tip for the delivery",
+    "tipHint": "100% goes to the person delivering to you, AFROEAT takes nothing.",
+    "tipNone": "None",
+    "tip": "Tip"
   },
   "restaurant": {
     "popular": "Popular",

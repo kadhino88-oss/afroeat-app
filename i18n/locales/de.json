@@ -179,7 +179,11 @@
     "promoRemove": "Entfernen",
     "discount": "Rabatt",
     "promoInvalid": "Ungültiger Promo-Code.",
-    "ageConfirm": "Ich bestätige, dass ich mindestens 18 Jahre alt bin. Bei der Lieferung kann ein Ausweis verlangt werden."
+    "ageConfirm": "Ich bestätige, dass ich mindestens 18 Jahre alt bin. Bei der Lieferung kann ein Ausweis verlangt werden.",
+    "tipTitle": "Trinkgeld für die Lieferung",
+    "tipHint": "100 % für die Person, die liefert – AFROEAT behält nichts.",
+    "tipNone": "Keins",
+    "tip": "Trinkgeld"
   },
   "restaurant": {
     "popular": "Beliebt",

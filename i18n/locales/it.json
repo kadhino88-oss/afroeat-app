@@ -179,7 +179,11 @@
     "promoRemove": "Rimuovi",
     "discount": "Sconto",
     "promoInvalid": "Codice promo non valido.",
-    "ageConfirm": "Confermo di avere almeno 18 anni. Alla consegna potrà essere richiesto un documento d’identità."
+    "ageConfirm": "Confermo di avere almeno 18 anni. Alla consegna potrà essere richiesto un documento d’identità.",
+    "tipTitle": "Mancia per la consegna",
+    "tipHint": "Il 100% va a chi consegna, AFROEAT non trattiene nulla.",
+    "tipNone": "Nessuna",
+    "tip": "Mancia"
   },
   "restaurant": {
     "popular": "Popolare",

@@ -179,7 +179,11 @@
     "promoRemove": "Retirer",
     "discount": "Remise",
     "promoInvalid": "Code promo invalide.",
-    "ageConfirm": "Je confirme avoir 18 ans ou plus. Une pièce d’identité pourra m’être demandée à la livraison."
+    "ageConfirm": "Je confirme avoir 18 ans ou plus. Une pièce d’identité pourra m’être demandée à la livraison.",
+    "tipTitle": "Pourboire pour la livraison",
+    "tipHint": "100 % pour la personne qui vous livre, AFROEAT ne prend rien dessus.",
+    "tipNone": "Aucun",
+    "tip": "Pourboire"
   },
   "restaurant": {
     "popular": "Populaire",
