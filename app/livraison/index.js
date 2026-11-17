@@ -23,7 +23,11 @@ import {
   getNextDeliveryStatus,
   canDriverUpdateStatus,
   updateDriverLocation,
+  getAvailableOrders,
+  acceptAvailableOrder,
+  updateMyPosition,
 } from '../../services/deliveryService';
+import { createNewIdsTracker, playAlertSound } from '../../services/orderAlerts';
 
 /**
  * CONSTANTS
@@ -115,6 +119,10 @@ export default function LivreurDashboardScreen() {
   const [updatingId, setUpdatingId] = useState(null);
   const [loadError, setLoadError] = useState('');
   const [locationPermissionNeeded, setLocationPermissionNeeded] = useState(false);
+  const [offers, setOffers] = useState([]);
+  const [offerMessage, setOfferMessage] = useState('');
+  const [acceptingId, setAcceptingId] = useState(null);
+  const trackOffers = useRef(createNewIdsTracker()).current;
 
   const liveTimer = useRef(null);
   const gpsTimer = useRef(null);
@@ -148,9 +156,16 @@ export default function LivreurDashboardScreen() {
       else setLoading(true);
       setLoadError('');
 
-      const data = await getAssignedOrders(token);
+      const [data, available] = await Promise.all([
+        getAssignedOrders(token),
+        getAvailableOrders(token).catch(() => null),
+      ]);
       if (requestId === requestIdRef.current) {
         setOrders(Array.isArray(data) ? data : []);
+        if (Array.isArray(available)) {
+          setOffers(available);
+          if (trackOffers(available.map((o) => o._id)).length) playAlertSound();
+        }
       }
     } catch (e) {
       console.log(e);
@@ -164,7 +179,7 @@ export default function LivreurDashboardScreen() {
         hasLoadedOrdersRef.current = true;
       }
     }
-  }, [token, currentRole, isAuthenticated, t]);
+  }, [token, currentRole, isAuthenticated, t, trackOffers]);
 
   useFocusEffect(
     useCallback(() => {
@@ -187,7 +202,6 @@ export default function LivreurDashboardScreen() {
 
   const syncLocation = useCallback(async () => {
     if (
-      !activeOrder?._id ||
       !token ||
       locationUpdateInFlightRef.current
     ) {
@@ -219,7 +233,9 @@ export default function LivreurDashboardScreen() {
         lng: loc.coords.longitude,
       };
 
-      await updateDriverLocation(activeOrder._id, coords, token);
+      // Avec une course : suivi de la livraison. Sans course : position pour recevoir les courses proches.
+      if (activeOrder?._id) await updateDriverLocation(activeOrder._id, coords, token);
+      else await updateMyPosition(coords, token);
     } catch (e) {
       console.log(e);
     } finally {
@@ -229,12 +245,10 @@ export default function LivreurDashboardScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      if (!activeOrder?._id) return;
-
       syncLocation();
 
       if (!gpsTimer.current) {
-        gpsTimer.current = setInterval(syncLocation, LOCATION_PUSH_MS);
+        gpsTimer.current = setInterval(syncLocation, activeOrder?._id ? LOCATION_PUSH_MS : 60000);
       }
 
       return () => {
@@ -243,6 +257,20 @@ export default function LivreurDashboardScreen() {
       };
     }, [syncLocation, activeOrder])
   );
+
+  const acceptOffer = async (offer) => {
+    setAcceptingId(offer._id);
+    setOfferMessage('');
+    try {
+      await acceptAvailableOrder(offer._id, token);
+      setOfferMessage(t('livraison.dispatch.accepted'));
+    } catch (error) {
+      setOfferMessage(error?.data?.code === 'COURIER_BUSY' ? t('livraison.dispatch.busy') : t('livraison.dispatch.taken'));
+    } finally {
+      setAcceptingId(null);
+      fetchOrders(true);
+    }
+  };
 
   /**
    * UPDATE STATUS
@@ -337,6 +365,44 @@ export default function LivreurDashboardScreen() {
                 </Pressable>
               </View>
             )}
+
+            {offers.length > 0 || offerMessage ? (
+              <View style={styles.offersBox}>
+                <Text style={styles.offersTitle}>
+                  {t('livraison.dispatch.title')} · {offers.length}
+                </Text>
+                {offerMessage ? <Text style={styles.offerMessage}>{offerMessage}</Text> : null}
+                {offers.map((offer) => (
+                  <View key={offer._id} style={styles.offerRow}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.offerName}>{offer.restaurantName || 'AFROEAT'}</Text>
+                      <Text style={styles.offerMeta} numberOfLines={2}>
+                        {offer.restaurantAddress}
+                        {offer.deliveryCity ? ` → ${offer.deliveryCity}` : ''}
+                      </Text>
+                      {offer.distanceToPickupKm !== null && offer.distanceToPickupKm !== undefined ? (
+                        <Text style={styles.offerMeta}>
+                          {t('livraison.dispatch.distance', { km: offer.distanceToPickupKm })}
+                        </Text>
+                      ) : null}
+                    </View>
+                    <View style={{ alignItems: 'flex-end', gap: 6 }}>
+                      <Text style={styles.offerEarning}>
+                        {Number(offer.driverEarning || 0).toFixed(2)} {offer.currency || ''}
+                      </Text>
+                      <Pressable
+                        accessibilityRole="button"
+                        disabled={acceptingId === offer._id}
+                        style={[styles.offerButton, acceptingId === offer._id && { opacity: 0.6 }]}
+                        onPress={() => acceptOffer(offer)}
+                      >
+                        <Text style={styles.offerButtonText}>{t('livraison.dispatch.accept')}</Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            ) : null}
 
             {activeOrder && locationPermissionNeeded && (
               <View style={styles.locationNotice}>
@@ -517,6 +583,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
 
+  offersBox: { margin: 16, marginBottom: 4, padding: 16, borderRadius: 18, backgroundColor: '#0D1C11', gap: 10 },
+  offersTitle: { color: '#EAB02F', fontWeight: '900', fontSize: 13, letterSpacing: 1, textTransform: 'uppercase' },
+  offerMessage: { color: '#FFD58A', fontWeight: '700' },
+  offerRow: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingTop: 10, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.1)' },
+  offerName: { color: '#FFFFFF', fontWeight: '900', fontSize: 16 },
+  offerMeta: { color: '#B9C4B6', fontSize: 13, marginTop: 2 },
+  offerEarning: { color: '#2CFFB0', fontWeight: '900', fontSize: 18 },
+  offerButton: { backgroundColor: '#EAB02F', borderRadius: 12, paddingHorizontal: 16, paddingVertical: 9 },
+  offerButtonText: { color: '#0D1C11', fontWeight: '900' },
   emptyState: {
     alignItems: 'center',
     paddingHorizontal: 28,

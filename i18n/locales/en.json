@@ -540,6 +540,11 @@
     "alcohol": {
       "toggle": "Contains alcohol (18+)",
       "badge": "Alcohol 18+"
+    },
+    "alerts": {
+      "newOrder": "New order",
+      "open": "Open",
+      "enableSound": "Turn on order sound alerts"
     }
   },
   "profile": {
@@ -1524,6 +1529,16 @@
       "revenue": "Earnings",
       "active": "Active missions",
       "empty": "No mission in progress. Go online to receive some."
+    },
+    "dispatch": {
+      "title": "Available deliveries",
+      "empty": "No delivery right now. Stay online: you will be alerted as soon as an order is ready near you.",
+      "accept": "Accept",
+      "accepted": "Delivery accepted: it now appears in your missions.",
+      "taken": "Too late: another courier accepted this delivery.",
+      "busy": "Finish your current delivery before accepting another one.",
+      "distance": "{{km}} km from the restaurant",
+      "newOffer": "New delivery available"
     }
   },
   "admin": {

@@ -310,6 +310,8 @@ export const API_ENDPOINTS = {
     availability:   '/delivery/availability',
     currentOrder:   '/delivery/current-order',
     assignedOrders: '/delivery/orders',
+    availableOrders: '/delivery/available-orders',
+    acceptOrder:    (id) => `/delivery/orders/${safePathParam(id)}/accept`,
     byOrderId:      (id) => `/delivery/orders/${safePathParam(id)}`,
     orderStatus:    (id) => `/delivery/orders/${safePathParam(id)}/status`,
     updateLocation: '/delivery/location',

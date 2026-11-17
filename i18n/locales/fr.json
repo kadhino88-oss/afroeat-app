@@ -540,6 +540,11 @@
     "alcohol": {
       "toggle": "Contient de l’alcool (18+)",
       "badge": "Alcool 18+"
+    },
+    "alerts": {
+      "newOrder": "Nouvelle commande",
+      "open": "Voir",
+      "enableSound": "Activer les alertes sonores des commandes"
     }
   },
   "profile": {
@@ -1524,6 +1529,16 @@
       "revenue": "Gains",
       "active": "Missions actives",
       "empty": "Aucune mission en cours. Passez en ligne pour en recevoir."
+    },
+    "dispatch": {
+      "title": "Courses disponibles",
+      "empty": "Aucune course pour le moment. Restez en ligne : vous serez alerté dès qu’une commande est prête près de vous.",
+      "accept": "Accepter",
+      "accepted": "Course acceptée : elle apparaît dans vos missions.",
+      "taken": "Trop tard : un autre livreur a accepté cette course.",
+      "busy": "Terminez votre course en cours avant d’en accepter une autre.",
+      "distance": "À {{km}} km du restaurant",
+      "newOffer": "Nouvelle course disponible"
     }
   },
   "admin": {

@@ -540,6 +540,11 @@
     "alcohol": {
       "toggle": "含酒精（18+）",
       "badge": "酒精 18+"
+    },
+    "alerts": {
+      "newOrder": "新订单",
+      "open": "查看",
+      "enableSound": "开启订单提示音"
     }
   },
   "profile": {
@@ -1524,6 +1529,16 @@
       "revenue": "收入",
       "active": "进行中的任务",
       "empty": "暂无进行中的任务。上线后即可接单。"
+    },
+    "dispatch": {
+      "title": "可接订单",
+      "empty": "暂无订单。请保持在线：附近有订单准备好时会通知您。",
+      "accept": "接单",
+      "accepted": "已接单：已出现在您的任务中。",
+      "taken": "太晚了：其他骑手已接此单。",
+      "busy": "请先完成当前配送再接新单。",
+      "distance": "距餐厅 {{km}} 公里",
+      "newOffer": "有新的配送订单"
     }
   },
   "admin": {

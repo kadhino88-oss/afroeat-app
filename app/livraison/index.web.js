@@ -14,7 +14,19 @@ import {
   updateDriverLocation,
   getNextDeliveryStatus,
   getDeliveryStats,
+  getAvailableOrders,
+  acceptAvailableOrder,
+  updateMyPosition,
 } from '../../services/deliveryService';
+import {
+  playAlertSound,
+  unlockAlertSound,
+  requestBrowserNotifications,
+  showBrowserNotification,
+  flashTabTitle,
+  stopTabTitle,
+  createNewIdsTracker,
+} from '../../services/orderAlerts';
 
 /**
  * Accueil livreur (web) — centre de contrôle : indicateurs, disponibilité, mission en cours
@@ -22,6 +34,7 @@ import {
  */
 const REFRESH_MS = 12000;
 const GPS_PUSH_MS = 15000;
+const IDLE_POSITION_MS = 60000; // position envoyée chaque minute quand le livreur est disponible
 const STATUS_KEY = {
   'En attente': 'order.status.pending',
   'Confirmée': 'livraison.status.confirmed',
@@ -59,6 +72,9 @@ export default function CourierDashboardWeb() {
   const [busyId, setBusyId] = useState(null);
   const [myPosition, setMyPosition] = useState(null);
   const lastPush = React.useRef(0);
+  const [offers, setOffers] = useState([]);
+  const [offerMessage, setOfferMessage] = useState('');
+  const trackOffers = React.useRef(createNewIdsTracker()).current;
 
   const load = useCallback(async () => {
     if (!token || !isDriver) return;
@@ -73,8 +89,22 @@ export default function CourierDashboardWeb() {
       setVerified(Boolean(profile.isIdentityVerified) && profile.isWorkAuthorized !== false);
     }
     if (gains) setEarnings(gains);
+    if (profile?.isAvailable) {
+      const available = await getAvailableOrders(token).catch(() => null);
+      if (Array.isArray(available)) {
+        setOffers(available);
+        const fresh = trackOffers(available.map((o) => o._id));
+        if (fresh.length) {
+          playAlertSound();
+          flashTabTitle(`🔔 ${t('livraison.dispatch.newOffer')}`);
+          showBrowserNotification(t('livraison.dispatch.newOffer'), available.find((o) => String(o._id) === fresh[0])?.restaurantName || 'AFROEAT');
+        }
+      }
+    } else {
+      setOffers([]);
+    }
     setLoading(false);
-  }, [token, isDriver]);
+  }, [token, isDriver, t, trackOffers]);
 
   useEffect(() => {
     const first = setTimeout(load, 0);
@@ -105,8 +135,50 @@ export default function CourierDashboardWeb() {
     return () => navigator.geolocation.clearWatch(watch);
   }, [active?._id, token]);
 
+  // Disponible sans course : position envoyée régulièrement pour recevoir les courses proches.
+  useEffect(() => {
+    if (!online || active?._id || typeof navigator === 'undefined' || !navigator.geolocation) return undefined;
+    const send = () =>
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const p = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          setMyPosition(p);
+          updateMyPosition(p, token).catch(() => {});
+        },
+        () => {},
+        { enableHighAccuracy: false, maximumAge: 30000, timeout: 20000 }
+      );
+    send();
+    const timer = setInterval(send, IDLE_POSITION_MS);
+    return () => clearInterval(timer);
+  }, [online, active?._id, token]);
+
+  const accept = useCallback(
+    async (offer) => {
+      unlockAlertSound();
+      stopTabTitle();
+      setBusyId(offer._id);
+      setOfferMessage('');
+      try {
+        await acceptAvailableOrder(offer._id, token);
+        setOfferMessage(t('livraison.dispatch.accepted'));
+      } catch (error) {
+        const code = error?.data?.code || error?.response?.data?.code || error?.code;
+        setOfferMessage(
+          code === 'COURIER_BUSY' ? t('livraison.dispatch.busy') : t('livraison.dispatch.taken')
+        );
+      } finally {
+        setBusyId(null);
+        await load();
+      }
+    },
+    [token, load, t]
+  );
+
   const toggle = useCallback(
     async (value) => {
+      unlockAlertSound();
+      if (value) requestBrowserNotifications();
       setOnline(value);
       try {
         setOnline(await setMyAvailability(value, token));
@@ -187,6 +259,43 @@ export default function CourierDashboardWeb() {
             />
           </View>
           <ScrollView style={styles.list} contentContainerStyle={{ gap: 12 }}>
+            {online ? (
+              <View style={[styles.card, styles.offersCard]}>
+                <Text style={styles.kicker}>{t('livraison.dispatch.title')} · {offers.length}</Text>
+                {offerMessage ? <Text style={styles.offerMessage}>{offerMessage}</Text> : null}
+                {offers.length === 0 ? (
+                  <Text style={styles.muted}>{t('livraison.dispatch.empty')}</Text>
+                ) : (
+                  offers.map((offer) => (
+                    <View key={offer._id} style={styles.offer}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.cardTitle}>{offer.restaurantName || 'AFROEAT'}</Text>
+                        <Text style={styles.muted} numberOfLines={2}>
+                          {offer.restaurantAddress}
+                          {offer.deliveryCity ? ` → ${offer.deliveryCity}` : ''}
+                        </Text>
+                        <Text style={styles.muted}>
+                          {offer.distanceToPickupKm !== null && offer.distanceToPickupKm !== undefined
+                            ? t('livraison.dispatch.distance', { km: offer.distanceToPickupKm })
+                            : ''}
+                        </Text>
+                      </View>
+                      <View style={{ alignItems: 'flex-end', gap: 8 }}>
+                        <Text style={styles.offerEarning}>{money(offer.driverEarning, offer.currency || 'EUR')}</Text>
+                        <Pressable
+                          accessibilityRole="button"
+                          disabled={busyId === offer._id}
+                          style={[styles.cta, styles.acceptBtn, busyId === offer._id && { opacity: 0.6 }]}
+                          onPress={() => accept(offer)}
+                        >
+                          <Text style={styles.ctaText}>{t('livraison.dispatch.accept')}</Text>
+                        </Pressable>
+                      </View>
+                    </View>
+                  ))
+                )}
+              </View>
+            ) : null}
             {open.length === 0 ? (
               <View style={styles.card}><Text style={styles.muted}>{t('livraison.dashboard.empty')}</Text></View>
             ) : (
@@ -241,4 +350,9 @@ const styles = StyleSheet.create({
   price: { color: '#E8FFF3', fontWeight: '900' },
   cta: { backgroundColor: '#2CFFB0', borderRadius: 12, paddingVertical: 11, alignItems: 'center' },
   ctaText: { color: '#06120C', fontWeight: '900' },
+  offersCard: { borderColor: '#2CFFB0' },
+  offer: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingTop: 10, borderTopWidth: 1, borderTopColor: 'rgba(120,255,190,.15)' },
+  offerEarning: { color: '#2CFFB0', fontSize: 20, fontWeight: '900' },
+  offerMessage: { color: '#FFD58A', fontWeight: '700' },
+  acceptBtn: { paddingHorizontal: 18 },
 });

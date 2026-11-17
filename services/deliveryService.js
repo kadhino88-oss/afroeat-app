@@ -1,4 +1,4 @@
-import { apiGet, apiPut } from './apiClient';
+import { apiGet, apiPost, apiPut } from './apiClient';
 import { API_ENDPOINTS } from '../constants/api';
 
 const DELIVERY_VISIBLE_STATUSES = [
@@ -520,4 +520,28 @@ export const getMyDeliveryEarnings = async (token) => {
     total: Number(response?.totalEarnings) || 0,
     currency: String(response?.currency || 'EUR').toUpperCase(),
   };
+};
+
+
+/** Courses disponibles à proximité (dispatch) : aperçu sans données personnelles du client. */
+export const getAvailableOrders = async (token) => {
+  ensureToken(token);
+  const data = await apiGet(API_ENDPOINTS.delivery.availableOrders, token);
+  return Array.isArray(data?.orders) ? data.orders : [];
+};
+
+/** Accepte une course : renvoie une erreur 409 si un autre livreur l'a prise avant. */
+export const acceptAvailableOrder = async (orderId, token) => {
+  ensureToken(token);
+  ensureOrderId(orderId);
+  const data = await apiPost(API_ENDPOINTS.delivery.acceptOrder(orderId), {}, token);
+  return data?.order || null;
+};
+
+/** Position du livreur disponible (sans course) : sert à lui proposer les courses proches. */
+export const updateMyPosition = async (coords, token) => {
+  ensureToken(token);
+  const safe = toLatLng(coords);
+  if (!safe) return null;
+  return apiPut(API_ENDPOINTS.delivery.updateLocation, { latitude: safe.lat, longitude: safe.lng }, token);
 };
