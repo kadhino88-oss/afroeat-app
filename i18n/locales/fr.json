@@ -2332,5 +2332,8 @@
     "badge": "18+",
     "noticeTitle": "Contient de l’alcool : pièce d’identité à vérifier",
     "noticeBody": "Contrôlez la pièce d’identité du client à la remise. Pas de remise d’alcool à une personne mineure ou en état d’ivresse."
+  },
+  "menu": {
+    "illustrationPhoto": "Photo d'illustration"
   }
 }

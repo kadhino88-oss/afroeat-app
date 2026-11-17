@@ -251,7 +251,7 @@ const normalizeMenuItem = (item, restaurant, index = 0) => {
     name: normalizeText(item?.name || item?.title || item?.label, i18n.t('restaurant.menuScreen.dishFallback')),
     description: normalizeText(
       item?.description || item?.details || item?.summary,
-      i18n.t('restaurant.descriptionUnavailable')
+      ''
     ),
     story: normalizeText(item?.story, ''),
     category: normalizeText(
@@ -697,7 +697,10 @@ export default function RestaurantScreen() {
   }, [categoryFilter, i18n.language, menu, menuSearch]);
 
   const menuByCategory = useMemo(() => {
-    return filteredMenu.reduce((acc, item) => {
+    // Ordre de la carte du commerce (ordre de création) : les entrées avant les desserts, pas l'inverse.
+    const orderKey = (item) => String(item?.createdAt || item?._id || '');
+    const ordered = [...filteredMenu].sort((a, b) => orderKey(a).localeCompare(orderKey(b)));
+    return ordered.reduce((acc, item) => {
       const category = normalizeText(item?.category, 'Autres');
 
       if (!acc[category]) {
@@ -756,13 +759,20 @@ export default function RestaurantScreen() {
       return (
         <View style={[styles.card, IS_WEB && styles.webCard]}>
           <View style={styles.cardContent}>
-            <Image
-              source={itemImageSource}
-              style={[styles.itemImage, IS_WEB && styles.webItemImage]}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              transition={160}
-            />
+            <View style={[styles.itemImageWrap, IS_WEB && styles.webItemImageWrap]}>
+              <Image
+                source={itemImageSource}
+                style={[styles.itemImage, IS_WEB && styles.webItemImage, styles.itemImageInWrap]}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={160}
+              />
+              {item.imageIsIllustration ? (
+                <Text style={styles.illustrationLabel} numberOfLines={1}>
+                  {t('menu.illustrationPhoto')}
+                </Text>
+              ) : null}
+            </View>
 
             <View style={styles.textContent}>
               <Text style={styles.itemName}>
@@ -770,9 +780,11 @@ export default function RestaurantScreen() {
                 {item.containsAlcohol ? <Text style={styles.alcoholBadge}>{`  ${t('alcohol.badge')}`}</Text> : null}
               </Text>
 
-              <Text style={styles.desc} numberOfLines={2}>
-                {item.description}
-              </Text>
+              {item.description ? (
+                <Text style={styles.desc} numberOfLines={2}>
+                  {item.description}
+                </Text>
+              ) : null}
 
               {!!item.story && (
                 <Text style={styles.storyText} numberOfLines={3}>
@@ -1538,6 +1550,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  itemImageWrap: { position: 'relative', alignSelf: 'flex-start', marginRight: 12 },
+  webItemImageWrap: { marginRight: 16 },
+  itemImageInWrap: { marginRight: 0 },
+  illustrationLabel: {
+    position: 'absolute',
+    left: 4,
+    right: 4,
+    bottom: 4,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 6,
+    backgroundColor: 'rgba(13, 28, 17, 0.62)',
+    color: '#FFFFFF',
+    fontSize: 9,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
   itemImage: {
     width: 78,
     height: 78,

@@ -2332,5 +2332,8 @@
     "badge": "18+",
     "noticeTitle": "Contiene alcohol: verificar documento",
     "noticeBody": "Verifique el documento de identidad del cliente en la entrega. No entregue alcohol a menores ni a personas ebrias."
+  },
+  "menu": {
+    "illustrationPhoto": "Foto ilustrativa"
   }
 }

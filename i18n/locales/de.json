@@ -2332,5 +2332,8 @@
     "badge": "18+",
     "noticeTitle": "Enthält Alkohol: Ausweis prüfen",
     "noticeBody": "Prüfen Sie bei der Übergabe den Ausweis der Kundin bzw. des Kunden. Keine Abgabe von Alkohol an Minderjährige oder Betrunkene."
+  },
+  "menu": {
+    "illustrationPhoto": "Beispielfoto"
   }
 }

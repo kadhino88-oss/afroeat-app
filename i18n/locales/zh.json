@@ -2332,5 +2332,8 @@
     "badge": "18+",
     "noticeTitle": "含酒精：请核验证件",
     "noticeBody": "交付时请核验顾客的身份证件。不得向未成年人或醉酒者交付酒精饮品。"
+  },
+  "menu": {
+    "illustrationPhoto": "示意图片"
   }
 }
