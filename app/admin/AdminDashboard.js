@@ -342,6 +342,13 @@ const buildNavigationItems = (t) => [
     route: '/admin/promo-codes',
   },
   {
+    key: 'errors',
+    title: t('admin.errors.navTitle'),
+    text: t('admin.errors.navText'),
+    icon: <Ionicons name="pulse-outline" size={22} color="#084424" />,
+    route: '/admin/errors',
+  },
+  {
     key: 'security',
     title: t('admin.security.navTitle'),
     text: t('admin.security.navText'),

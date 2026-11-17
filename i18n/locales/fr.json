@@ -2127,6 +2127,23 @@
       "create": "Créer le code",
       "empty": "Aucun code pour l'instant.",
       "used": "{{used}} / {{max}} utilisations"
+    },
+    "errors": {
+      "navTitle": "Erreurs",
+      "navText": "Erreurs de l'API et du site, regroupées",
+      "title": "Surveillance des erreurs",
+      "intro": "Chaque erreur serveur (5xx) et chaque erreur JavaScript du site est enregistrée ici, regroupée par problème avec son nombre d'occurrences.",
+      "open": "à traiter",
+      "last24h": "vues sur 24 h",
+      "showResolved": "Afficher aussi les erreurs résolues",
+      "hideResolved": "Masquer les erreurs résolues",
+      "empty": "Aucune erreur à traiter. Tout fonctionne.",
+      "web": "Site",
+      "api": "API",
+      "resolved": "Résolue",
+      "markResolved": "Marquer comme résolue",
+      "lastSeen": "Dernière occurrence : {{date}}",
+      "role": "Rôle de l'utilisateur : {{role}}"
     }
   },
   "payouts": {

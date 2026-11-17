@@ -1,5 +1,6 @@
 import '../services/webAlert';
 import '../services/webChunkRecovery';
+import '../services/webErrorReporter';
 import React, { useEffect } from 'react';
 import { Stack, usePathname } from 'expo-router';
 import { useFonts } from 'expo-font';

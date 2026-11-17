@@ -2127,6 +2127,23 @@
       "create": "Create code",
       "empty": "No codes yet.",
       "used": "{{used}} / {{max}} uses"
+    },
+    "errors": {
+      "navTitle": "Errors",
+      "navText": "API and website errors, grouped",
+      "title": "Error monitoring",
+      "intro": "Every server error (5xx) and every website JavaScript error is recorded here, grouped by issue with its number of occurrences.",
+      "open": "open",
+      "last24h": "seen in 24 h",
+      "showResolved": "Also show resolved errors",
+      "hideResolved": "Hide resolved errors",
+      "empty": "No errors to handle. Everything works.",
+      "web": "Website",
+      "api": "API",
+      "resolved": "Resolved",
+      "markResolved": "Mark as resolved",
+      "lastSeen": "Last seen: {{date}}",
+      "role": "User role: {{role}}"
     }
   },
   "payouts": {
