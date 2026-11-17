@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 import FadeInView from '../../../components/FadeInView';
 import AlcoholIdNotice from '../../../components/AlcoholIdNotice';
+import OrderChat from '../../../components/OrderChat';
 import { useAuth } from '../../../context/AuthContext';
 import { apiGet } from '../../../services/apiClient';
 import { API_ENDPOINTS } from '../../../constants/api';
@@ -658,6 +659,8 @@ export default function RestaurantOrderDetailsScreen() {
                 )}
               </Pressable>
             )}
+
+            {orderId && token ? <OrderChat orderId={orderId} token={token} /> : null}
 
             {order?.scheduledFor ? (
               <View style={styles.infoRow}>

@@ -2399,5 +2399,17 @@
     "rewardLine": "-{{percent}} % auf eine Bestellung · gültig bis {{date}}",
     "shareMessage": "Bestelle deine afrikanischen Lieblingsgerichte auf AFROEAT mit meinem Code {{code}}: -{{percent}} % auf deine erste Bestellung!",
     "error": "Empfehlung konnte nicht geladen werden."
+  },
+  "chat": {
+    "title": "Nachrichten zur Bestellung",
+    "empty": "Noch keine Nachrichten.",
+    "placeholder": "Nachricht schreiben…",
+    "send": "Senden",
+    "closed": "Die Unterhaltung zu dieser Bestellung ist beendet.",
+    "error": "Nachricht nicht gesendet. Bitte erneut versuchen.",
+    "role_client": "Kunde",
+    "role_livreur": "Kurier",
+    "role_restaurant": "Restaurant",
+    "role_admin": "AFROEAT"
   }
 }

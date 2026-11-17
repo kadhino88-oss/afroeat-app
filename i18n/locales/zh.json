@@ -2399,5 +2399,17 @@
     "rewardLine": "单笔订单 -{{percent}}% · 有效期至 {{date}}",
     "shareMessage": "用我的邀请码 {{code}} 在 AFROEAT 点非洲美食，首单立减 {{percent}}%！",
     "error": "无法加载邀请信息。"
+  },
+  "chat": {
+    "title": "订单消息",
+    "empty": "暂无消息。",
+    "placeholder": "输入消息…",
+    "send": "发送",
+    "closed": "本订单的对话已结束。",
+    "error": "消息未发送，请重试。",
+    "role_client": "顾客",
+    "role_livreur": "骑手",
+    "role_restaurant": "餐厅",
+    "role_admin": "AFROEAT"
   }
 }

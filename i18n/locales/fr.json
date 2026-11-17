@@ -2399,5 +2399,17 @@
     "rewardLine": "-{{percent}} % sur une commande · valable jusqu’au {{date}}",
     "shareMessage": "Commande tes plats africains préférés sur AFROEAT avec mon code {{code}} : -{{percent}} % sur ta première commande !",
     "error": "Impossible de charger votre parrainage."
+  },
+  "chat": {
+    "title": "Messages de la commande",
+    "empty": "Aucun message pour l’instant.",
+    "placeholder": "Écrire un message…",
+    "send": "Envoyer",
+    "closed": "La discussion de cette commande est terminée.",
+    "error": "Message non envoyé. Réessayez.",
+    "role_client": "client",
+    "role_livreur": "livreur",
+    "role_restaurant": "restaurant",
+    "role_admin": "AFROEAT"
   }
 }
