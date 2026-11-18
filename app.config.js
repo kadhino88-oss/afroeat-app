@@ -129,9 +129,7 @@ module.exports = ({ config }) => {
   // Notifications Android (Firebase Cloud Messaging) : le fichier google-services.json est fourni par une
   // variable d'environnement EAS de type « fichier » (GOOGLE_SERVICES_JSON), jamais commité dans le dépôt.
   const googleServicesFile = String(process.env.GOOGLE_SERVICES_JSON || '').trim();
-  if (googleServicesFile) {
-    nextConfig.android = { ...(nextConfig.android || config.android), googleServicesFile };
-  }
+  void googleServicesFile; // contrôle : désactivé
 
   const plugins = [...(config.plugins || [])];
   const requiredPlugins = ['expo-font', 'expo-router', 'expo-web-browser'];
