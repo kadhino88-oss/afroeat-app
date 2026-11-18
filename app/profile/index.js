@@ -162,6 +162,15 @@ export default function ProfileHomeScreen() {
     router.push('/profile/help');
   }, []);
 
+  const handleLogout = useCallback(async () => {
+    try {
+      if (typeof auth.logout === 'function') await auth.logout();
+    } catch (error) {
+      console.log('Erreur logout profil :', error);
+    }
+    router.replace('/');
+  }, [auth]);
+
   /**
    * =========================================================
    * LOADING
@@ -354,6 +363,16 @@ export default function ProfileHomeScreen() {
             <Text style={styles.primaryButtonText}>{t('profile.home.ctaButton')}</Text>
           </Pressable>
         </View>
+
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('profile.menu.logoutLabel')}
+          style={({ pressed }) => [styles.logoutButton, pressed && styles.buttonPressed]}
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={18} color="#C8331A" />
+          <Text style={styles.logoutText}>{t('profile.menu.logoutLabel')}</Text>
+        </Pressable>
       </ScrollView>
     </FadeInView>
   );
@@ -366,6 +385,19 @@ export default function ProfileHomeScreen() {
  */
 
 const styles = StyleSheet.create({
+  logoutButton: {
+    marginTop: 14,
+    minHeight: 50,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#F0D2CB',
+    backgroundColor: '#FFF6F3',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  logoutText: { color: '#C8331A', fontWeight: '800', fontSize: 15 },
   container: {
     flex: 1,
     backgroundColor: '#FBF6EC',
