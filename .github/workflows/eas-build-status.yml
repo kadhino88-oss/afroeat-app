@@ -67,7 +67,8 @@ jobs:
                 const real = msgs.filter((m) => !m.startsWith("[ON_BUILD_ERROR_HOOK]"));
                 const hits = real.filter((m) => /What went wrong|FAILURE|error:|Error:|ERROR|Missing class|R8|Could not|FAILED|Execution failed|Caused by|Cannot|not found|invalid/i.test(m));
                 console.log(`----- Journal ${process.argv[2]} : ${msgs.length} lignes, ${hits.length} lignes d’erreur -----`);
-                (hits.length ? hits.slice(-60) : real.slice(-40)).forEach((m) => console.log(m.slice(0, 400)));
+                const phase = real.filter((m) => m.startsWith("[READ_APP_CONFIG]") || m.startsWith("[FAIL_BUILD]"));
+                (phase.length ? phase.slice(-40) : hits.length ? hits.slice(-60) : real.slice(-40)).forEach((m) => console.log(m.slice(0, 600)));
               ' "log$i.jsonl" "$i"
             done < logs.txt
             exit 1
