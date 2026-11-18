@@ -64,9 +64,10 @@ jobs:
               node -e '
                 const lines = require("fs").readFileSync(process.argv[1], "utf8").split("\n");
                 const msgs = lines.map((l) => { try { const j = JSON.parse(l); return (j.phase ? `[${j.phase}] ` : "") + (j.msg || ""); } catch { return l; } }).filter(Boolean);
-                const hits = msgs.filter((m) => /What went wrong|FAILURE|error:|Error:|ERROR|Missing class|R8|Could not|FAILED|Execution failed|Caused by/.test(m));
+                const real = msgs.filter((m) => !m.startsWith("[ON_BUILD_ERROR_HOOK]"));
+      const hits = real.filter((m) => /What went wrong|FAILURE|error:|Error:|ERROR|Missing class|R8|Could not|FAILED|Execution failed|Caused by|Cannot|not found|invalid/i.test(m));
                 console.log(`----- Journal ${process.argv[2]} : ${msgs.length} lignes, ${hits.length} lignes d’erreur -----`);
-                (hits.length ? hits.slice(-60) : msgs.slice(-80)).forEach((m) => console.log(m.slice(0, 400)));
+                (hits.length ? hits.slice(-60) : real.slice(-40)).forEach((m) => console.log(m.slice(0, 400)));
               ' "log$i.jsonl" "$i"
             done < logs.txt
             exit 1
