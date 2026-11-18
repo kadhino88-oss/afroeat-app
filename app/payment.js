@@ -205,7 +205,7 @@ export default function PaymentScreen() {
 
       setMethodsLoading(true);
 
-      apiGet(API_ENDPOINTS.payments.methods, token)
+      apiGet(`${API_ENDPOINTS.payments.methods}${orderId ? `?orderId=${encodeURIComponent(orderId)}` : ''}`, token)
         .then((result) => {
           if (!isActive) return;
 
@@ -237,7 +237,7 @@ export default function PaymentScreen() {
       isActive = false;
       clearTimeout(timer);
     };
-  }, [token]);
+  }, [token, orderId]);
 
   /**
    * Vérification de la commande.

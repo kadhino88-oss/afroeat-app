@@ -47,7 +47,7 @@ export default function RestaurantOrderAlerts({ token }) {
       const response = await apiGet(API_ENDPOINTS.orders.restaurantOrders(restaurantIdRef.current), token);
       const waiting = listOf(response).filter(
         // Seules les commandes payées sont à préparer : une commande carte non finalisée ne sonne pas.
-        (order) => NEW_STATUSES.includes(order?.status) && order?.paymentStatus === 'Payé'
+        (order) => NEW_STATUSES.includes(order?.status) && (order?.paymentStatus === 'Payé' || order?.paymentMethod === 'cash')
       );
       const fresh = trackRef.current(waiting.map((o) => o._id));
       setPending(waiting);
