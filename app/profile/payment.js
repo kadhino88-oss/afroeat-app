@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Redirect, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as WebBrowser from 'expo-web-browser';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { API_ENDPOINTS } from '../../constants/api';
@@ -107,6 +108,21 @@ export default function ProfilePaymentScreen() {
     loadCards({ showLoader: false });
   }, [loadCards]);
 
+  // Mobile : si le formulaire Stripe natif échoue (ex. Expo Go), on utilise la même page
+  // sécurisée hébergée par Stripe que sur le web, ouverte dans le navigateur intégré.
+  const addCardWithHostedPage = useCallback(async () => {
+    const session = await apiPost(
+      API_ENDPOINTS.payments.createCardSetupSession,
+      { consentAccepted: true },
+      token
+    );
+    if (!session?.url) {
+      throw new Error(session?.message || t('profile.payment.setupError'));
+    }
+    await WebBrowser.openBrowserAsync(session.url);
+    await loadCards({ showLoader: false });
+  }, [token, t, loadCards]);
+
   const handleAddCard = useCallback(async () => {
     if (!token || savingCard || !consentAccepted) return;
 
@@ -136,16 +152,20 @@ export default function ProfilePaymentScreen() {
       return;
     }
 
-    if (!stripeAvailable) {
-      setErrorMessage(t('profile.payment.mobileOnlyError'));
-      return;
-    }
-
     if (
+      !stripeAvailable ||
       typeof initPaymentSheet !== 'function' ||
       typeof presentPaymentSheet !== 'function'
     ) {
-      setErrorMessage(t('profile.payment.stripeUnavailable'));
+      setSavingCard(true);
+      setErrorMessage('');
+      try {
+        await addCardWithHostedPage();
+      } catch (error) {
+        setErrorMessage(error?.message || t('profile.payment.saveErrorFallback'));
+      } finally {
+        setSavingCard(false);
+      }
       return;
     }
 
@@ -200,13 +220,19 @@ export default function ProfilePaymentScreen() {
       setSuccessMessage(t('profile.payment.cardSaved'));
       await loadCards({ showLoader: false });
     } catch (error) {
-      setErrorMessage(
-        error?.message || t('profile.payment.saveErrorFallback')
-      );
+      // Le formulaire natif a échoué : repli sur la page sécurisée Stripe du navigateur.
+      try {
+        await addCardWithHostedPage();
+      } catch (fallbackError) {
+        setErrorMessage(
+          fallbackError?.message || error?.message || t('profile.payment.saveErrorFallback')
+        );
+      }
     } finally {
       setSavingCard(false);
     }
   }, [
+    addCardWithHostedPage,
     token,
     savingCard,
     consentAccepted,
