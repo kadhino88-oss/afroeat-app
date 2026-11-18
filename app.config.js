@@ -59,7 +59,10 @@ module.exports = ({ config }) => {
   const buildPlatform = String(process.env.EAS_BUILD_PLATFORM || '').trim().toLowerCase();
   const apiUrl = String(process.env.EXPO_PUBLIC_API_URL || '').trim();
   const stripeKey = String(process.env.EXPO_PUBLIC_STRIPE_KEY || '').trim();
-  const androidMapsKey = String(process.env.ANDROID_GOOGLE_MAPS_API_KEY || '').trim();
+  // Clé Google Maps : nom officiel, ou le nom « Api_google_maps » déjà utilisé dans les variables Expo.
+  const androidMapsKey = String(
+    process.env.ANDROID_GOOGLE_MAPS_API_KEY || process.env.Api_google_maps || process.env.API_GOOGLE_MAPS || ''
+  ).trim();
   const enableApplePay =
     String(process.env.EXPO_PUBLIC_ENABLE_APPLE_PAY || '').trim().toLowerCase() === 'true';
   const enableGooglePay =
