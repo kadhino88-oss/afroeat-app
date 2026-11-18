@@ -250,7 +250,7 @@ export default function WebNavBar() {
             </Pressable>
           ) : null}
 
-          {isAuthenticated && (partner || isAdmin) ? (
+          {isAuthenticated ? (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={t('profile.menu.logoutLabel')}
