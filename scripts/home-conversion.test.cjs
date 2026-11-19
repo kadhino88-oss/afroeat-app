@@ -7,7 +7,8 @@ const homepage = fs.readFileSync(path.join(__dirname, '..', 'app', 'index.web.js
 
 test('accueil web : un accès direct permet de découvrir les restaurants pour commander', () => {
   assert.match(homepage, /Voir les restaurants pour commander/);
-  assert.match(homepage, /onPress=\{\(\) => openExplorer\('Africaine'\)\}/);
+  assert.match(homepage, /onPress=\{\(\) => openExplorer\('Africaine', '', true\)\}/);
+  assert.match(homepage, /if \(partnersOnly\) params\.partners = '1'/);
   assert.match(homepage, /La commande en ligne est proposée uniquement par les partenaires/);
 });
 

@@ -47,7 +47,7 @@ const CATEGORIES = [
     id: '1',
     titleKey: 'explore.restaurants',
     icon: 'silverware-fork-knife',
-    route: '/(tabs)/explore?category=restaurants',
+    route: '/(tabs)/explore?category=restaurants&partners=1',
   },
   {
     id: '2',
