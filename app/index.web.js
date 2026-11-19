@@ -253,6 +253,7 @@ export default function WebDiscoveryHome() {
         {compact ? (
           <View style={styles.mobileNav}>
             <Pressable onPress={() => openExplorer()}><Text style={styles.navText}>Explorer</Text></Pressable>
+            <Pressable onPress={() => openExplorer('Africaine')}><Text style={styles.navText}>Commander</Text></Pressable>
             <Pressable onPress={() => openExplorer('Épicerie')}><Text style={styles.navText}>Épiceries</Text></Pressable>
             <Pressable onPress={() => openExplorer('Boutique')}><Text style={styles.navText}>Boutiques</Text></Pressable>
           </View>
@@ -264,13 +265,13 @@ export default function WebDiscoveryHome() {
           <View style={[styles.heroCopy, compact && styles.heroCopyCompact]}>
             <View style={styles.eyebrowRow}>
               <View style={styles.eyebrowDot} />
-              <Text style={styles.eyebrow}>LES SAVEURS DE CHEZ NOUS, À VOTRE PORTE</Text>
+              <Text style={styles.eyebrow}>LES SAVEURS DE CHEZ NOUS, EN UN CLIC</Text>
             </View>
             <Text style={[styles.heroTitle, compact && styles.heroTitleCompact]}>
-              L’Afrique dans votre assiette, <Text style={styles.heroTitleAccent}>près de chez vous.</Text>
+              Les saveurs d’Afrique, <Text style={styles.heroTitleAccent}>à portée de clic.</Text>
             </Text>
             <Text style={styles.heroDescription}>
-              Découvrez les restaurants, épiceries et commerces africains de votre région — et les cuisines qui nous rassemblent.
+              Commandez auprès des restaurants partenaires disponibles, ou découvrez les épiceries et commerces africains près de chez vous.
             </Text>
 
             <View style={[styles.searchForm, compact && styles.searchFormCompact]}>
@@ -293,6 +294,29 @@ export default function WebDiscoveryHome() {
                 <Ionicons name="arrow-forward" size={17} color={COLORS.ink} />
               </Pressable>
             </View>
+
+            <View style={[styles.heroCtas, compact && styles.heroCtasCompact]}>
+              <Pressable
+                style={styles.heroOrderButton}
+                onPress={() => openExplorer('Africaine')}
+                accessibilityRole="button"
+                accessibilityLabel="Découvrir les restaurants partenaires pour commander"
+              >
+                <Ionicons name="restaurant-outline" size={18} color={COLORS.ink} />
+                <Text style={styles.heroOrderButtonText}>Voir les restaurants pour commander</Text>
+                <Ionicons name="arrow-forward" size={16} color={COLORS.ink} />
+              </Pressable>
+              <Pressable
+                style={styles.heroPartnerLink}
+                onPress={() => router.push('/partner-apply')}
+                accessibilityRole="link"
+              >
+                <Text style={styles.heroPartnerLinkText}>Vous êtes commerçant ? Rejoignez-nous</Text>
+              </Pressable>
+            </View>
+            <Text style={styles.heroAvailabilityNote}>
+              La commande en ligne est proposée uniquement par les partenaires qui l’ont activée.
+            </Text>
 
             <Pressable style={styles.locationAction} onPress={findNearby} accessibilityRole="button">
               <Ionicons name="navigate-outline" size={16} color="#EAB02F" />
@@ -319,8 +343,8 @@ export default function WebDiscoveryHome() {
 
           <View style={styles.sectionHeading}>
             <Text style={styles.sectionEyebrow}>DÉCOUVREZ AFROEAT</Text>
-            <Text style={styles.sectionTitle}>Tout ce qui nous rapproche, <Text style={styles.sectionTitleAccent}>livré.</Text></Text>
-            <Text style={styles.sectionSubtitle}>Une seule adresse pour retrouver les saveurs, les produits et les commerces de la communauté africaine.</Text>
+            <Text style={styles.sectionTitle}>Découvrez. Choisissez. <Text style={styles.sectionTitleAccent}>Commandez.</Text></Text>
+            <Text style={styles.sectionSubtitle}>Commandez chez les restaurants partenaires proposant ce service et explorez l’annuaire des commerces africains de votre région.</Text>
           </View>
 
           <View style={[styles.offerGrid, compact && styles.offerGridCompact, tablet && styles.offerGridTablet]}>
@@ -350,7 +374,7 @@ export default function WebDiscoveryHome() {
               <View style={styles.nearbyHeadingCopy}>
                 <Text style={styles.sectionEyebrow}>AUTOUR DE VOUS</Text>
                 <Text style={styles.nearbyTitle}>Les adresses africaines à découvrir</Text>
-                <Text style={styles.nearbySubtitle}>Les lieux affichés viennent de l’annuaire public et de la position que vous choisissez.</Text>
+                <Text style={styles.nearbySubtitle}>Les lieux affichés viennent de l’annuaire public selon votre position. Leur présence ici ne signifie pas qu’ils acceptent des commandes sur AFROEAT.</Text>
               </View>
               <Pressable style={styles.nearbyButton} onPress={findNearby} disabled={nearbyLoading}>
                 {nearbyLoading ? <ActivityIndicator size="small" color={COLORS.ink} /> : <Ionicons name="locate-outline" size={17} color={COLORS.ink} />}
@@ -417,11 +441,11 @@ export default function WebDiscoveryHome() {
             <View style={styles.partnerBannerIcon}><Ionicons name="storefront-outline" size={26} color={COLORS.gold} /></View>
             <View style={styles.partnerBannerCopy}>
               <Text style={styles.partnerBannerEyebrow}>VOUS ÊTES COMMERÇANT ?</Text>
-              <Text style={styles.partnerBannerTitle}>Faites découvrir votre adresse à la communauté.</Text>
-              <Text style={styles.partnerBannerText}>Restaurants, épiceries, salons et boutiques africaines peuvent rejoindre AFROEAT.</Text>
+              <Text style={styles.partnerBannerTitle}>Développez votre activité avec AFROEAT.</Text>
+              <Text style={styles.partnerBannerText}>Restaurant, épicerie, salon ou boutique afro ? Déposez votre candidature pour rejoindre notre plateforme. Notre équipe étudie chaque demande.</Text>
             </View>
-            <Pressable style={styles.partnerBannerButton} onPress={() => router.push({ pathname: '/auth/role', params: { role: 'restaurant' } })}>
-              <Text style={styles.partnerBannerButtonText}>Rejoindre AFROEAT</Text>
+            <Pressable style={styles.partnerBannerButton} onPress={() => router.push('/partner-apply')} accessibilityRole="link">
+              <Text style={styles.partnerBannerButtonText}>Déposer ma candidature</Text>
               <Ionicons name="arrow-forward" size={17} color={COLORS.ink} />
             </Pressable>
           </View>
@@ -433,7 +457,7 @@ export default function WebDiscoveryHome() {
             <Pressable onPress={() => openExplorer()}><Text style={styles.footerLink}>Restaurants</Text></Pressable>
             <Pressable onPress={() => openExplorer('Épicerie')}><Text style={styles.footerLink}>Épiceries</Text></Pressable>
             <Pressable onPress={() => openExplorer('Boutique')}><Text style={styles.footerLink}>Commerces africains</Text></Pressable>
-            <Pressable onPress={() => router.push('/auth/role')}><Text style={styles.footerLink}>Devenir partenaire</Text></Pressable>
+            <Pressable onPress={() => router.push('/partner-apply')}><Text style={styles.footerLink}>Devenir partenaire</Text></Pressable>
             <Pressable onPress={() => router.push('/legal/privacy')}><Text style={styles.footerLink}>Confidentialité</Text></Pressable>
             <Pressable onPress={() => router.push('/legal/terms')}><Text style={styles.footerLink}>Conditions</Text></Pressable>
           </View>
@@ -508,6 +532,13 @@ const styles = StyleSheet.create({
   searchInput: { flex: 1, minWidth: 0, color: COLORS.ink, fontSize: 13, outlineStyle: 'none' },
   searchButton: { height: 50, paddingHorizontal: 19, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, borderRadius: 7, backgroundColor: COLORS.goldLight },
   searchButtonText: { color: COLORS.ink, fontSize: 12, fontWeight: '800' },
+  heroCtas: { marginTop: 16, flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 12 },
+  heroCtasCompact: { alignItems: 'stretch', flexDirection: 'column' },
+  heroOrderButton: { minHeight: 47, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 9, borderRadius: 8, backgroundColor: COLORS.goldLight },
+  heroOrderButtonText: { flexShrink: 1, color: COLORS.ink, fontSize: 12, fontWeight: '800' },
+  heroPartnerLink: { minHeight: 42, justifyContent: 'center', paddingHorizontal: 5 },
+  heroPartnerLinkText: { color: COLORS.cream, fontSize: 12, fontWeight: '700', textDecorationLine: 'underline' },
+  heroAvailabilityNote: { marginTop: 12, maxWidth: 520, color: '#F3E7CA', fontSize: 11, lineHeight: 17 },
   locationAction: { alignSelf: 'flex-start', marginTop: 17, paddingVertical: 7, flexDirection: 'row', alignItems: 'center', gap: 8 },
   locationActionText: { color: COLORS.cream, fontSize: 12, fontWeight: '700', textDecorationLine: 'underline' },
   heroImageCaption: { position: 'absolute', bottom: 29, right: 45, flexDirection: 'row', alignItems: 'center', gap: 8, zIndex: 2 },
