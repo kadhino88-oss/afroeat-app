@@ -98,10 +98,11 @@ export default function WebDiscoveryHome() {
     ? Number(cart.getTotalItems()) || 0
     : 0;
 
-  const openExplorer = useCallback((category = '', query = '') => {
+  const openExplorer = useCallback((category = '', query = '', partnersOnly = false) => {
     const params = {};
     if (category) params.category = category;
     if (query) params.q = query;
+    if (partnersOnly) params.partners = '1';
     router.push(Object.keys(params).length
       ? { pathname: '/(tabs)/explore', params }
       : '/(tabs)/explore');
@@ -298,7 +299,7 @@ export default function WebDiscoveryHome() {
             <View style={[styles.heroCtas, compact && styles.heroCtasCompact]}>
               <Pressable
                 style={styles.heroOrderButton}
-                onPress={() => openExplorer('Africaine')}
+                onPress={() => openExplorer('Africaine', '', true)}
                 accessibilityRole="button"
                 accessibilityLabel="Découvrir les restaurants partenaires pour commander"
               >
