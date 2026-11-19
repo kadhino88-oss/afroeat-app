@@ -578,16 +578,20 @@ export default function ExploreScreen() {
   const routeCategory = Array.isArray(routeParams.category)
     ? routeParams.category[0]
     : routeParams.category;
+  const routePartners = Array.isArray(routeParams.partners)
+    ? routeParams.partners[0]
+    : routeParams.partners;
   return (
     <ExploreScreenContent
-      key={`${routeCategory || ''}:${routeQuery || ''}`}
+      key={`${routeCategory || ''}:${routeQuery || ''}:${routePartners || ''}`}
       routeQuery={routeQuery}
       routeCategory={routeCategory}
+      routePartners={routePartners}
     />
   );
 }
 
-function ExploreScreenContent({ routeQuery, routeCategory }) {
+function ExploreScreenContent({ routeQuery, routeCategory, routePartners }) {
   const { t } = useTranslation();
   const auth = useAuth() || {};
   const user = auth.user ?? null;
@@ -599,6 +603,8 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
   const [query, setQuery] = useState(() => normalizeText(routeQuery));
   const [activeFilter, setActiveFilter] = useState(() => resolveExploreFilter(routeCategory));
   const [openOnly, setOpenOnly] = useState(false);
+  // Option volontaire : les visites de l'accueil orientées « commander » masquent l'annuaire.
+  const [partnersOnly, setPartnersOnly] = useState(() => String(routePartners || '') === '1');
   const [restaurants, setRestaurants] = useState([]);
   const [publicPlaces, setPublicPlaces] = useState([]);
   const [expandedRadius, setExpandedRadius] = useState(null);
@@ -862,13 +868,16 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
         const cuisine = normalizeSearch(item?.cuisine);
         const matchesQuery = matchesAfricanPlaceSearch(item, query, t);
 
+        const businessType = normalizeSearch(item?.businessType);
+        const isRestaurantCategory = isPublicDirectoryPlace(item)
+          ? ['restaurant', 'african-fast-food'].includes(item?.category)
+          : businessType === '' || businessType === 'restaurant';
         const matchesFilter =
           normalizedFilter === 'tous' ||
-          cuisine.includes(normalizedFilter) ||
-          (normalizedFilter === 'africaine' && (
+          (cuisine.includes(normalizedFilter) && (normalizedFilter !== 'africaine' || isRestaurantCategory)) ||
+          (normalizedFilter === 'africaine' && isRestaurantCategory && (
             cuisine.includes('afric') ||
             AFRICAN_CUISINE_FILTERS.some((label) => cuisine.includes(normalizeSearch(label))) ||
-            ['restaurant', 'african-fast-food'].includes(item?.category) ||
             !isPublicDirectoryPlace(item)
           )) ||
           (normalizedFilter === 'epicerie' && item?.category === 'african-grocery') ||
@@ -878,10 +887,16 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
           matchesExtendedFilter(normalizedFilter, item);
         const matchesAvailability =
           !openOnly || (!isPublicDirectoryPlace(item) && item?.isOpen === true);
+        const matchesPartner = !partnersOnly || !isPublicDirectoryPlace(item);
 
-        return matchesQuery && matchesFilter && matchesAvailability;
+        return matchesQuery && matchesFilter && matchesAvailability && matchesPartner;
       })
       .sort((a, b) => {
+        // Toujours afficher les véritables partenaires avant l'annuaire public.
+        const aDirectory = Number(isPublicDirectoryPlace(a));
+        const bDirectory = Number(isPublicDirectoryPlace(b));
+        if (aDirectory !== bDirectory) return aDirectory - bDirectory;
+
         const aOpen = isPublicDirectoryPlace(a) ? 0 : Number(Boolean(a?.isOpen));
         const bOpen = isPublicDirectoryPlace(b) ? 0 : Number(Boolean(b?.isOpen));
 
@@ -901,7 +916,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
         const bDistance = Number.isFinite(b?.distanceKm) ? b.distanceKm : Infinity;
         return aDistance - bDistance;
       });
-  }, [directoryItems, query, activeFilter, openOnly, t]);
+  }, [directoryItems, query, activeFilter, openOnly, partnersOnly, t]);
 
   const matchingDishes = useMemo(() => {
     const normalizedQuery = normalizeSearch(query);
@@ -1008,7 +1023,8 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
     filteredRestaurants.length === 0 &&
     (normalizeSearch(query).length > 0 ||
       normalizeSearch(activeFilter) !== 'tous' ||
-      openOnly);
+      openOnly ||
+      partnersOnly);
 
   /**
    * =========================================================
@@ -1077,6 +1093,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
     setQuery('');
     setActiveFilter('Tous');
     setOpenOnly(false);
+    setPartnersOnly(false);
   }, []);
 
   const handleRetry = useCallback(() => {
@@ -1318,6 +1335,28 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
             {t('explore.openNow')}
           </Text>
         </Pressable>
+
+        <Pressable
+          accessibilityRole="switch"
+          accessibilityState={{ checked: partnersOnly }}
+          accessibilityLabel={t('explore.partnersOnly')}
+          style={({ pressed }) => [
+            styles.openOnlyChip,
+            partnersOnly && styles.openOnlyChipActive,
+            IS_WEB && styles.webOpenOnly,
+            pressed && styles.filterChipPressed,
+          ]}
+          onPress={() => setPartnersOnly((current) => !current)}
+        >
+          <Ionicons
+            name={partnersOnly ? 'checkmark-circle' : 'storefront-outline'}
+            size={17}
+            color={partnersOnly ? '#FFFFFF' : '#084424'}
+          />
+          <Text style={[styles.openOnlyText, partnersOnly && styles.openOnlyTextActive]}>
+            {t('explore.partnersOnly')}
+          </Text>
+        </Pressable>
         </View>
 
         {(needsLocationPermission || usingDefaultArea) && (
@@ -1347,6 +1386,9 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
               {t('explore.resultsSubtitle', { count: directoryItems.length })}
               {publicPlacesLoading ? ` · ${t('explore.publicSearchLoading')}` : ''}
             </Text>
+            {partnersOnly ? (
+              <Text style={styles.resultsSubtitle}>{t('explore.partnersOnlyHint')}</Text>
+            ) : null}
             {expandedRadius ? (
               <Text style={styles.resultsSubtitle}>
                 {t('explore.zoneExpanded', { km: expandedRadius })}
@@ -1384,6 +1426,7 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
     needsLocationPermission,
     usingDefaultArea,
     openOnly,
+    partnersOnly,
     publicPlacesLoading,
     query,
     resultCount,
@@ -1470,6 +1513,13 @@ function ExploreScreenContent({ routeQuery, routeCategory }) {
             <Text style={styles.cardCuisine} numberOfLines={1}>
               {item?.cuisine || publicPlaceType}
             </Text>
+
+            {!isPublicPlace ? (
+              <View style={styles.partnerLabelRow}>
+                <Ionicons name="checkmark-circle" size={14} color="#084424" />
+                <Text style={styles.partnerLabelText}>{t('explore.partnerBadge')}</Text>
+              </View>
+            ) : null}
 
             <View style={styles.cardMetaRow}>
               <Ionicons name="location-outline" size={14} color="#606D5D" />
@@ -2131,6 +2181,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
+
+  partnerLabelRow: { marginTop: 7, flexDirection: 'row', alignItems: 'center', gap: 5 },
+  partnerLabelText: { fontSize: 11, fontWeight: '700', color: '#084424' },
 
   cardMetaRow: {
     flexDirection: 'row',
