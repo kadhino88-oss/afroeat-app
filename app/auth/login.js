@@ -251,6 +251,10 @@ export default function LoginScreen() {
     router.replace('/');
   }, []);
 
+  const handleChooseSpace = useCallback(() => {
+    router.replace('/auth/role');
+  }, []);
+
   const handleSubmit = useCallback(async () => {
     if (submitting) return;
 
@@ -327,7 +331,7 @@ export default function LoginScreen() {
     } finally {
       setSubmitting(false);
     }
-  }, [email, password, currentRole, login, setSelectedRole, submitting]);
+  }, [email, password, currentRole, login, setSelectedRole, submitting, t]);
 
   const handleGoToRegister = useCallback(async () => {
     try {
@@ -416,6 +420,15 @@ export default function LoginScreen() {
                 {t(`auth.roles.${currentRole}.label`, roleConfig.label)}
               </Text>
             </View>
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel={t('auth.role.chooseSpace')}
+              onPress={handleChooseSpace}
+              style={styles.changeSpaceButton}
+            >
+              <Ionicons name="swap-horizontal-outline" size={14} color="#084424" />
+              <Text style={styles.changeSpaceText}>{t('auth.role.chooseSpace')}</Text>
+            </Pressable>
           </View>
 
           <View style={styles.card}>
@@ -691,6 +704,23 @@ const styles = StyleSheet.create({
   roleBadgeText: {
     fontSize: 12,
     fontWeight: '900',
+  },
+
+  changeSpaceButton: {
+    minHeight: 34,
+    marginTop: 8,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+
+  changeSpaceText: {
+    color: '#084424',
+    fontSize: 12,
+    fontWeight: '800',
+    textDecorationLine: 'underline',
   },
 
   card: {
