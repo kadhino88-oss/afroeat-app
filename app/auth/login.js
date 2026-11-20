@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -233,6 +233,8 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const passwordInputRef = useRef(null);
+  const LoginFormContainer = Platform.OS === 'web' ? 'form' : View;
 
   const redirectHref = useMemo(() => {
     if (!loading && isAuthenticated && user?._id) {
@@ -431,7 +433,17 @@ export default function LoginScreen() {
             </Pressable>
           </View>
 
-          <View style={styles.card}>
+          <LoginFormContainer
+            style={styles.card}
+            {...(Platform.OS === 'web'
+              ? {
+                  onSubmit: (event) => {
+                    event.preventDefault();
+                    handleSubmit();
+                  },
+                }
+              : {})}
+          >
             <Text style={styles.label}>{t('auth.login.emailLabel')}</Text>
             <View style={styles.inputWrap}>
               <Ionicons
@@ -449,6 +461,10 @@ export default function LoginScreen() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
+                autoComplete="email"
+                textContentType="emailAddress"
+                returnKeyType="next"
+                onSubmitEditing={() => passwordInputRef.current?.focus()}
                 editable={!submitting}
               />
             </View>
@@ -470,6 +486,11 @@ export default function LoginScreen() {
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 autoCorrect={false}
+                ref={passwordInputRef}
+                autoComplete="current-password"
+                textContentType="password"
+                returnKeyType="done"
+                onSubmitEditing={handleSubmit}
                 editable={!submitting}
               />
 
@@ -527,7 +548,7 @@ export default function LoginScreen() {
                 <Text style={styles.secondaryButtonText}>{t('auth.login.createAccount')}</Text>
               </Pressable>
             )}
-          </View>
+          </LoginFormContainer>
 
         </ScrollView>
       </KeyboardAvoidingView>

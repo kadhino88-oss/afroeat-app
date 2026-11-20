@@ -8,6 +8,8 @@ Expo Router client for Afroeat. The shared API and project-wide setup guide are 
 2. Set `EXPO_PUBLIC_STRIPE_KEY` to a Stripe test publishable key to exercise card checkout.
 3. Run `npm ci`, then `npx expo start`.
 
+For the local web app, start the backend on port 5000 first, then run `npm run web -- --port 8083` (or the explicit alias `npm run web:local -- --port 8083`). These commands point the browser app to `http://localhost:5000/api`. Use `npm run web:staging` only when the staging API is configured to allow your local origin.
+
 For an Android emulator, the fallback is `10.0.2.2`; for a physical device, the app attempts to use the Expo/Metro host. Every preview or production build requires `EXPO_PUBLIC_API_URL`; set it in the EAS environment to the real HTTPS API before building.
 
 ## EAS
