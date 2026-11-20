@@ -70,6 +70,31 @@ test('production only accepts public HTTPS API domains', () => {
   }
 });
 
+test('production refuses API hosts marked as development, preview, test or staging', () => {
+  for (const configuredApiUrl of [
+    'https://afroeat-api-staging.vercel.app/api',
+    'https://afroeat-api-test.vercel.app/api',
+    'https://preview.api.afroeat.com/api',
+    'https://dev-api.afroeat.com/api',
+    'https://api-testing.afroeat.com/api',
+  ]) {
+    assert.throws(
+      () => resolveApiConfig({ appEnv: 'production', configuredApiUrl }),
+      /jamais une API dev, test, preview ou staging/,
+      `Expected production URL to reject non-production host: ${configuredApiUrl}`
+    );
+  }
+});
+
+test('preview can deliberately use the staging API', () => {
+  const config = resolveApiConfig({
+    appEnv: 'preview',
+    configuredApiUrl: 'https://afroeat-api-staging.vercel.app/api',
+  });
+  assert.equal(config.baseUrl, 'https://afroeat-api-staging.vercel.app/api');
+  assert.equal(config.isProduction, false);
+});
+
 test('production accepts a public HTTPS API URL ending exactly in /api', () => {
   const config = resolveApiConfig({
     appEnv: 'production',

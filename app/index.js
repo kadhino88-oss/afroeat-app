@@ -158,7 +158,7 @@ export default function IndexEntry() {
         <View style={styles.loaderCard}>
           <View style={styles.logoWrap}>
             <Image
-              source={require('./assets/images/icon.png')}
+              source={require('../assets/images/icon.png')}
               style={styles.logo}
               resizeMode="cover"
             />

@@ -66,6 +66,8 @@ const getAccountStatus = (user, auth) => {
 };
 
 const DATE_LOCALE_MAP = { fr: 'fr-FR', en: 'en-US', de: 'de-DE', es: 'es-ES', it: 'it-IT', zh: 'zh-CN' };
+const EMPTY_OBJECT = Object.freeze({});
+const EMPTY_ARRAY = Object.freeze([]);
 
 const formatDateTime = (value) => {
   if (!value) return '—';
@@ -169,6 +171,8 @@ const normalizeDashboardPayload = (payload) => {
       users: {},
       restaurants: {},
       orders: {},
+      finance: { byCurrency: [] },
+      support: {},
     };
   }
 
@@ -178,6 +182,8 @@ const normalizeDashboardPayload = (payload) => {
     users: data?.users || {},
     restaurants: data?.restaurants || {},
     orders: data?.orders || {},
+    finance: data?.finance || { byCurrency: [] },
+    support: data?.support || {},
   };
 };
 
@@ -201,7 +207,7 @@ const normalizeOpsPayload = (payload) => {
   };
 };
 
-const buildQuickStats = ({ users = {}, restaurants = {}, orders = {}, ops = {} }, t) => [
+const buildQuickStats = ({ users = {}, restaurants = {}, orders = {}, ops = {}, support = {} }, t) => [
   {
     key: 'users-total',
     label: t('admin.common.usersTitle'),
@@ -244,7 +250,30 @@ const buildQuickStats = ({ users = {}, restaurants = {}, orders = {}, ops = {} }
     icon: 'alert-circle-outline',
     tint: '#C8331A',
   },
+  {
+    key: 'support-open',
+    label: t('admin.dashboard.activeSupportTicketsLabel'),
+    value: normalizeNumber(support.openTickets),
+    icon: 'chatbubble-ellipses-outline',
+    tint: '#C8331A',
+  },
 ];
+
+const formatCurrencyAmount = (amount, currency) => {
+  const value = Number(amount);
+  const code = normalizeText(currency).toUpperCase();
+  if (!Number.isFinite(value) || !/^[A-Z]{3}$/.test(code)) return '—';
+
+  try {
+    return new Intl.NumberFormat(DATE_LOCALE_MAP[i18n.language] || 'fr-FR', {
+      style: 'currency',
+      currency: code,
+      maximumFractionDigits: 2,
+    }).format(value);
+  } catch {
+    return `${value.toFixed(2)} ${code}`;
+  }
+};
 
 const buildUserStats = (users = {}, t) => [
   { key: 'users-active', label: t('admin.dashboard.activeLabel'), value: normalizeNumber(users.active) },
@@ -427,7 +456,7 @@ const HighlightCard = ({ label, value, iconName }) => (
 
 export default function AdminDashboardScreen() {
   const { t } = useTranslation();
-  const auth = useAuth() || {};
+  const auth = useAuth() || EMPTY_OBJECT;
 
   const token = auth.token;
   const isAuthenticated = Boolean(auth.isAuthenticated);
@@ -441,13 +470,8 @@ export default function AdminDashboardScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const currentRole = useMemo(() => {
-    return normalizeRole(role || user?.role);
-  }, [role, user]);
-
-  const currentStatus = useMemo(() => {
-    return getAccountStatus(user, auth);
-  }, [user, auth]);
+  const currentRole = normalizeRole(role || user?.role);
+  const currentStatus = getAccountStatus(user, auth);
 
   const hasValidSession = Boolean(isAuthenticated && token);
 
@@ -505,10 +529,14 @@ export default function AdminDashboardScreen() {
     }, [fetchDashboard])
   );
 
-  const users = dashboard?.users || {};
-  const restaurants = dashboard?.restaurants || {};
-  const orders = dashboard?.orders || {};
-  const system = ops?.system || {};
+  const users = dashboard?.users || EMPTY_OBJECT;
+  const restaurants = dashboard?.restaurants || EMPTY_OBJECT;
+  const orders = dashboard?.orders || EMPTY_OBJECT;
+  const support = dashboard?.support || EMPTY_OBJECT;
+  const financeByCurrency = Array.isArray(dashboard?.finance?.byCurrency)
+    ? dashboard.finance.byCurrency
+    : EMPTY_ARRAY;
+  const system = ops?.system || EMPTY_OBJECT;
 
   const healthStyle = useMemo(
     () => getHealthStyle(system?.healthStatus, t),
@@ -516,8 +544,8 @@ export default function AdminDashboardScreen() {
   );
 
   const quickStats = useMemo(
-    () => buildQuickStats({ users, restaurants, orders, ops }, t),
-    [users, restaurants, orders, ops, t]
+    () => buildQuickStats({ users, restaurants, orders, ops, support }, t),
+    [users, restaurants, orders, ops, support, t]
   );
 
   const userStats = useMemo(() => buildUserStats(users, t), [users, t]);
@@ -811,6 +839,58 @@ export default function AdminDashboardScreen() {
             />
           ))}
         </View>
+
+        <Text style={styles.sectionTitle}>{t('admin.dashboard.financeTitle')}</Text>
+        {financeByCurrency.length > 0 ? (
+          <View style={styles.financeList}>
+            {financeByCurrency.map((entry) => {
+              const financialLines = [
+                ['grossCollected', t('admin.dashboard.grossCollectedLabel')],
+                ['platformCommission', t('admin.dashboard.platformCommissionLabel')],
+                ['merchantShare', t('admin.dashboard.merchantShareLabel')],
+                ['courierShare', t('admin.dashboard.courierShareLabel')],
+              ];
+
+              return (
+                <View key={entry.currency} style={styles.financeCard}>
+                  <View style={styles.financeCardHeading}>
+                    <Text style={styles.financeCurrency}>{entry.currency}</Text>
+                    <Text style={styles.financeCount}>
+                      {t('admin.dashboard.capturedOrdersLabel', {
+                        count: normalizeNumber(entry.capturedOrders),
+                      })}
+                    </Text>
+                  </View>
+                  {financialLines.map(([field, label]) => (
+                    <View key={field} style={styles.financeLine}>
+                      <Text style={styles.financeLabel}>{label}</Text>
+                      <Text style={styles.financeValue}>
+                        {formatCurrencyAmount(entry[field], entry.currency)}
+                      </Text>
+                    </View>
+                  ))}
+                  {normalizeNumber(entry.ordersNeedingReconciliation) > 0 ? (
+                    <View style={styles.financeWarning}>
+                      <Ionicons name="warning-outline" size={15} color="#9A5A00" />
+                      <Text style={styles.financeWarningText}>
+                        {t('admin.dashboard.reconciliationOrdersLabel', {
+                          count: normalizeNumber(entry.ordersNeedingReconciliation),
+                        })}
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
+              );
+            })}
+          </View>
+        ) : (
+          <View style={styles.cleanStateCard}>
+            <Ionicons name="receipt-outline" size={20} color="#606D5D" />
+            <Text style={styles.cleanStateText}>
+              {t('admin.dashboard.financeEmptyLabel')}
+            </Text>
+          </View>
+        )}
 
         <Text style={styles.sectionTitle}>{t('admin.dashboard.opsHighlightsTitle')}</Text>
         <View style={styles.highlightGrid}>
@@ -1119,6 +1199,84 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginHorizontal: -4,
     marginBottom: 18,
+  },
+
+  financeList: {
+    marginBottom: 18,
+  },
+
+  financeCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#E8E2D5',
+    padding: 16,
+    marginBottom: 10,
+    elevation: 2,
+    shadowColor: '#000000',
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+  },
+
+  financeCardHeading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+
+  financeCurrency: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: '#084424',
+  },
+
+  financeCount: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#606D5D',
+  },
+
+  financeLine: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    paddingVertical: 7,
+    borderTopWidth: 1,
+    borderTopColor: '#F1EDE4',
+  },
+
+  financeLabel: {
+    flex: 1,
+    fontSize: 13,
+    color: '#606D5D',
+    fontWeight: '600',
+    marginRight: 12,
+  },
+
+  financeValue: {
+    fontSize: 13,
+    color: '#0D1C11',
+    fontWeight: '800',
+    textAlign: 'right',
+  },
+
+  financeWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF4DC',
+    borderRadius: 10,
+    padding: 9,
+    marginTop: 8,
+  },
+
+  financeWarningText: {
+    flex: 1,
+    marginLeft: 7,
+    color: '#754500',
+    fontSize: 12,
+    fontWeight: '700',
   },
 
   compactStatCard: {

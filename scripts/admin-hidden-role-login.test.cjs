@@ -11,9 +11,12 @@ test('sur le site public, l’administration se comporte comme une page inexista
   assert.match(read('app', 'auth', 'login.js'), /currentRole === 'admin' && !isAdminAreaAllowed\(\)/);
 });
 
-test('« Connexion » mène au choix client, restaurant ou livreur', () => {
-  assert.match(read('components', 'WebNavBar.web.js'), /router\.push\('\/auth\/role'\)/);
-  assert.match(read('app', 'index.web.js'), /router\.push\('\/auth\/role'\)\}><Text style=\{styles\.loginButtonText\}>Connexion/);
+test('la connexion client est directe et les autres espaces restent accessibles', () => {
+  assert.match(read('components', 'WebNavBar.web.js'), /router\.push\('\/auth\/login\?role=client'\)/);
+  assert.match(read('app', 'index.web.js'), /router\.push\('\/auth\/login\?role=client'\)/);
+  const login = read('app', 'auth', 'login.js');
+  assert.match(login, /auth\.role\.chooseSpace/);
+  assert.match(login, /router\.replace\('\/auth\/role'\)/);
   const role = read('app', 'auth', 'role.js');
   assert.doesNotMatch(role, /id: 'admin'/);
   assert.doesNotMatch(role, /resetLocalAccounts|heroStatsRow\}>/);

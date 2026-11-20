@@ -204,7 +204,7 @@ const getRedirectRouteByUser = (user) => {
     return '/admin';
   }
 
-  return '/(tabs)';
+  return '/explore';
 };
 
 /**
@@ -248,6 +248,10 @@ export default function LoginScreen() {
       return;
     }
 
+    router.replace('/');
+  }, []);
+
+  const handleChooseSpace = useCallback(() => {
     router.replace('/auth/role');
   }, []);
 
@@ -327,7 +331,7 @@ export default function LoginScreen() {
     } finally {
       setSubmitting(false);
     }
-  }, [email, password, currentRole, login, setSelectedRole, submitting]);
+  }, [email, password, currentRole, login, setSelectedRole, submitting, t]);
 
   const handleGoToRegister = useCallback(async () => {
     try {
@@ -416,6 +420,15 @@ export default function LoginScreen() {
                 {t(`auth.roles.${currentRole}.label`, roleConfig.label)}
               </Text>
             </View>
+            <Pressable
+              accessibilityRole="link"
+              accessibilityLabel={t('auth.role.chooseSpace')}
+              onPress={handleChooseSpace}
+              style={styles.changeSpaceButton}
+            >
+              <Ionicons name="swap-horizontal-outline" size={14} color="#084424" />
+              <Text style={styles.changeSpaceText}>{t('auth.role.chooseSpace')}</Text>
+            </Pressable>
           </View>
 
           <View style={styles.card}>
@@ -541,9 +554,11 @@ const styles = StyleSheet.create({
   },
 
   content: {
+    width: '100%',
     paddingHorizontal: 18,
     paddingTop: 28,
     paddingBottom: 60,
+    alignItems: 'center',
   },
 
   loader: {
@@ -598,6 +613,8 @@ const styles = StyleSheet.create({
   },
 
   topRow: {
+    width: '100%',
+    maxWidth: 680,
     marginBottom: 18,
   },
 
@@ -616,6 +633,8 @@ const styles = StyleSheet.create({
   },
 
   headerCard: {
+    width: '100%',
+    maxWidth: 680,
     backgroundColor: '#FFFFFF',
     borderRadius: 28,
     paddingHorizontal: 18,
@@ -687,7 +706,26 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
 
+  changeSpaceButton: {
+    minHeight: 34,
+    marginTop: 8,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+
+  changeSpaceText: {
+    color: '#084424',
+    fontSize: 12,
+    fontWeight: '800',
+    textDecorationLine: 'underline',
+  },
+
   card: {
+    width: '100%',
+    maxWidth: 520,
     backgroundColor: '#FFFFFF',
     borderRadius: 24,
     padding: 18,
@@ -772,6 +810,8 @@ const styles = StyleSheet.create({
   },
 
   infoBox: {
+    width: '100%',
+    maxWidth: 520,
     backgroundColor: '#F3E7CA',
     borderRadius: 20,
     padding: 18,

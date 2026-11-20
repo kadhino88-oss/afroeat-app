@@ -31,6 +31,21 @@ const ALL_APP_STORAGE_KEYS = [
   '@afroeat_cart_v2',
 ];
 
+const AUTH_STORAGE_TIMEOUT_MS = 5000;
+
+const withTimeout = (promise, timeoutMs) => {
+  let timeoutId;
+  return Promise.race([
+    Promise.resolve(promise),
+    new Promise((_, reject) => {
+      timeoutId = setTimeout(
+        () => reject(new Error('Le stockage de la session ne répond pas.')),
+        timeoutMs
+      );
+    }),
+  ]).finally(() => clearTimeout(timeoutId));
+};
+
 /**
  * =========================================================
  * HELPERS
@@ -207,7 +222,7 @@ const getDefaultRouteByRole = (role, accountStatus = 'active') => {
     return '/admin';
   }
 
-  return '/(tabs)';
+  return '/explore';
 };
 
 /**
@@ -256,11 +271,14 @@ export function AuthProvider({ children }) {
     try {
       setLoading(true);
 
-      const entries = await AsyncStorage.multiGet([
-        STORAGE_KEYS.user,
-        STORAGE_KEYS.token,
-        STORAGE_KEYS.selectedRole,
-      ]);
+      const entries = await withTimeout(
+        AsyncStorage.multiGet([
+          STORAGE_KEYS.user,
+          STORAGE_KEYS.token,
+          STORAGE_KEYS.selectedRole,
+        ]),
+        AUTH_STORAGE_TIMEOUT_MS
+      );
 
       const storedUser = entries[0]?.[1];
       const storedToken = entries[1]?.[1];
@@ -281,7 +299,7 @@ export function AuthProvider({ children }) {
         parsedUser = JSON.parse(storedUser);
       } catch (parseError) {
         console.log('Erreur parse storedUser:', parseError);
-        await clearStoredSession();
+        void clearStoredSession();
         resetLocalState();
         return;
       }
@@ -290,7 +308,7 @@ export function AuthProvider({ children }) {
       const safeToken = normalizeToken(storedToken);
 
       if (!safeUser?._id || !safeToken) {
-        await clearStoredSession();
+        void clearStoredSession();
         resetLocalState();
         return;
       }
@@ -300,7 +318,9 @@ export function AuthProvider({ children }) {
       setSelectedRoleState(normalizeRole(safeUser.role || safeSelectedRole));
     } catch (error) {
       console.log('Erreur hydrateAuth:', error);
-      await clearStoredSession();
+      // L'application doit rester utilisable même si le stockage du navigateur
+      // est bloqué ou ne répond plus (navigation privée, quota ou extension).
+      void clearStoredSession();
       resetLocalState();
     } finally {
       setLoading(false);
