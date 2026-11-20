@@ -86,6 +86,7 @@ export default function WebDiscoveryHome() {
   const { width } = useWindowDimensions();
   const compact = width < 720;
   const compactNav = width < 1360;
+  const compactActions = width < 1360;
   const tablet = width >= 720 && width < 1080;
   const [search, setSearch] = useState('');
   const [distance, setDistance] = useState(10);
@@ -235,18 +236,18 @@ export default function WebDiscoveryHome() {
               isAdminUser ? (
                 <Pressable style={styles.accountButton} onPress={() => router.push('/admin')} accessibilityRole="link">
                   <Ionicons name="shield-checkmark-outline" size={18} color={COLORS.ink} />
-                  {!compact ? <Text style={styles.accountButtonText}>{t('nav.administration')}</Text> : null}
+                {!compactActions ? <Text style={styles.accountButtonText}>{t('nav.administration')}</Text> : null}
                 </Pressable>
               ) : (
               <Pressable style={styles.accountButton} onPress={() => router.push('/profile')}>
                 <Ionicons name="person-circle-outline" size={18} color={COLORS.ink} />
-                {!compact ? <Text style={styles.accountButtonText}>{userName || 'Mon compte'}</Text> : null}
+                {!compactActions ? <Text style={styles.accountButtonText}>{userName || 'Mon compte'}</Text> : null}
               </Pressable>
               )
             ) : (
               <>
-                {!compact ? <Pressable style={styles.loginButton} onPress={() => router.push('/auth/login?role=client')}><Text style={styles.loginButtonText}>Connexion</Text></Pressable> : null}
-                <Pressable style={[styles.signupButton, compact && styles.signupButtonCompact]} onPress={() => router.push('/auth/register-client')}><Text style={styles.signupButtonText}>S’inscrire</Text></Pressable>
+                {!compactActions ? <Pressable style={styles.loginButton} onPress={() => router.push('/auth/login?role=client')}><Text style={styles.loginButtonText}>Connexion</Text></Pressable> : null}
+                <Pressable style={[styles.signupButton, compactActions && styles.signupButtonCompact]} onPress={() => router.push('/auth/register-client')}><Text style={styles.signupButtonText}>S’inscrire</Text></Pressable>
               </>
             )}
           </View>
