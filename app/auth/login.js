@@ -541,9 +541,11 @@ const styles = StyleSheet.create({
   },
 
   content: {
+    width: '100%',
     paddingHorizontal: 18,
     paddingTop: 28,
     paddingBottom: 60,
+    alignItems: 'center',
   },
 
   loader: {
@@ -598,6 +600,8 @@ const styles = StyleSheet.create({
   },
 
   topRow: {
+    width: '100%',
+    maxWidth: 680,
     marginBottom: 18,
   },
 
@@ -616,6 +620,8 @@ const styles = StyleSheet.create({
   },
 
   headerCard: {
+    width: '100%',
+    maxWidth: 680,
     backgroundColor: '#FFFFFF',
     borderRadius: 28,
     paddingHorizontal: 18,
@@ -688,6 +694,8 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    width: '100%',
+    maxWidth: 520,
     backgroundColor: '#FFFFFF',
     borderRadius: 24,
     padding: 18,
@@ -772,6 +780,8 @@ const styles = StyleSheet.create({
   },
 
   infoBox: {
+    width: '100%',
+    maxWidth: 520,
     backgroundColor: '#F3E7CA',
     borderRadius: 20,
     padding: 18,
