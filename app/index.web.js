@@ -85,7 +85,7 @@ export default function WebDiscoveryHome() {
   const cart = useCart() || {};
   const { width } = useWindowDimensions();
   const compact = width < 720;
-  const compactNav = width < 1120;
+  const compactNav = width < 1360;
   const tablet = width >= 720 && width < 1080;
   const [search, setSearch] = useState('');
   const [distance, setDistance] = useState(10);
