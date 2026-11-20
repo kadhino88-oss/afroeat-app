@@ -500,7 +500,7 @@ const COLORS = {
 
 const styles = StyleSheet.create({
   page: { flex: 1, backgroundColor: COLORS.paper },
-  scrollContent: { alignItems: 'center' },
+  scrollContent: { width: '100%', alignItems: 'center' },
   loading: { flex: 1, minHeight: 500, justifyContent: 'center', alignItems: 'center', gap: 12, backgroundColor: COLORS.paper },
   loadingText: { color: COLORS.muted, fontSize: 14 },
   header: { width: '100%', maxWidth: 1440, minHeight: 82, paddingHorizontal: 36, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLORS.border, backgroundColor: COLORS.paper, zIndex: 5 },
