@@ -316,6 +316,15 @@ const request = async (
       }
 
       if (isNetworkFailure) {
+        const apiHost = String(API_CONFIG?.host || '').trim().toLowerCase();
+        const isLocalApi = ['localhost', '127.0.0.1', '::1'].includes(apiHost);
+        if (isLocalApi) {
+          const apiPort = API_CONFIG?.port ? `:${API_CONFIG.port}` : '';
+          throw new Error(
+            `Le backend local est injoignable sur ${apiHost}${apiPort}. Démarre le backend puis réessaie.`
+          );
+        }
+
         throw new Error(
           'Impossible de contacter le serveur. Vérifie ta connexion.'
         );
