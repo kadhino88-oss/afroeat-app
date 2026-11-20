@@ -218,7 +218,7 @@ export default function WebNavBar() {
               {!compact ? (
                 <Pressable
                   accessibilityRole="link"
-                  onPress={() => router.push('/auth/role')}
+                  onPress={() => router.push('/auth/login?role=client')}
                   style={styles.loginButton}
                 >
                   <Text style={styles.loginButtonText}>{t('nav.signIn')}</Text>
@@ -226,7 +226,7 @@ export default function WebNavBar() {
               ) : null}
               <Pressable
                 accessibilityRole="link"
-                onPress={() => router.push(compact ? '/auth/role' : '/auth/register-client')}
+                onPress={() => router.push(compact ? '/auth/login?role=client' : '/auth/register-client')}
                 style={[styles.signupButton, compact && styles.signupButtonCompact]}
               >
                 <Text style={styles.signupButtonText}>

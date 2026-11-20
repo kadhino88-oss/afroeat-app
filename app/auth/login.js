@@ -204,7 +204,7 @@ const getRedirectRouteByUser = (user) => {
     return '/admin';
   }
 
-  return '/(tabs)';
+  return '/explore';
 };
 
 /**
@@ -248,7 +248,7 @@ export default function LoginScreen() {
       return;
     }
 
-    router.replace('/auth/role');
+    router.replace('/');
   }, []);
 
   const handleSubmit = useCallback(async () => {

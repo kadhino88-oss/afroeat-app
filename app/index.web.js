@@ -85,6 +85,7 @@ export default function WebDiscoveryHome() {
   const cart = useCart() || {};
   const { width } = useWindowDimensions();
   const compact = width < 720;
+  const compactNav = width < 1120;
   const tablet = width >= 720 && width < 1080;
   const [search, setSearch] = useState('');
   const [distance, setDistance] = useState(10);
@@ -215,7 +216,7 @@ export default function WebDiscoveryHome() {
             </View>
           </Pressable>
 
-          {!compact ? (
+          {!compactNav ? (
             <View style={styles.nav}>
               <Pressable onPress={() => openExplorer()}><Text style={styles.navText}>Explorer</Text></Pressable>
               <Pressable onPress={() => openExplorer('Africaine')}><Text style={styles.navText}>Restaurants</Text></Pressable>
@@ -244,20 +245,26 @@ export default function WebDiscoveryHome() {
               )
             ) : (
               <>
-                {!compact ? <Pressable style={styles.loginButton} onPress={() => router.push('/auth/role')}><Text style={styles.loginButtonText}>Connexion</Text></Pressable> : null}
+                {!compact ? <Pressable style={styles.loginButton} onPress={() => router.push('/auth/login?role=client')}><Text style={styles.loginButtonText}>Connexion</Text></Pressable> : null}
                 <Pressable style={[styles.signupButton, compact && styles.signupButtonCompact]} onPress={() => router.push('/auth/register-client')}><Text style={styles.signupButtonText}>S’inscrire</Text></Pressable>
               </>
             )}
           </View>
         </View>
 
-        {compact ? (
-          <View style={styles.mobileNav}>
+        {compactNav ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.mobileNavScroll}
+            contentContainerStyle={styles.mobileNav}
+          >
             <Pressable onPress={() => openExplorer()}><Text style={styles.navText}>Explorer</Text></Pressable>
-            <Pressable onPress={() => openExplorer('Africaine')}><Text style={styles.navText}>Commander</Text></Pressable>
+            <Pressable onPress={() => openExplorer('Africaine')}><Text style={styles.navText}>Restaurants</Text></Pressable>
             <Pressable onPress={() => openExplorer('Épicerie')}><Text style={styles.navText}>Épiceries</Text></Pressable>
-            <Pressable onPress={() => openExplorer('Boutique')}><Text style={styles.navText}>Boutiques</Text></Pressable>
-          </View>
+            <Pressable onPress={() => openExplorer('Boutique')}><Text style={styles.navText}>Boutiques afro</Text></Pressable>
+            <Pressable onPress={() => scrollToSection('origines')}><Text style={styles.navText}>Nos cuisines</Text></Pressable>
+          </ScrollView>
         ) : null}
 
         <View style={[styles.hero, compact && styles.heroCompact]}>
@@ -515,7 +522,8 @@ const styles = StyleSheet.create({
   signupButton: { minHeight: 42, paddingHorizontal: 18, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.gold },
   signupButtonCompact: { minHeight: 38, paddingHorizontal: 11 },
   signupButtonText: { color: COLORS.cream, fontSize: 12, fontWeight: '800' },
-  mobileNav: { width: '100%', paddingHorizontal: 20, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-around', borderBottomWidth: 1, borderBottomColor: COLORS.border, backgroundColor: COLORS.paper },
+  mobileNavScroll: { width: '100%', flexGrow: 0, borderBottomWidth: 1, borderBottomColor: COLORS.border, backgroundColor: COLORS.paper },
+  mobileNav: { minWidth: '100%', paddingHorizontal: 20, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 26 },
   hero: { width: '100%', maxWidth: 1440, minHeight: 530, paddingVertical: 68, paddingHorizontal: 70, justifyContent: 'center', backgroundColor: COLORS.cocoa, overflow: 'hidden', position: 'relative' },
   heroImage: { position: 'absolute', right: 0, top: 0, bottom: 0, width: '50%', height: '100%', opacity: 0.68 },
   heroImageCompact: { width: '100%', opacity: 0.34 },

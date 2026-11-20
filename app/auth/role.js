@@ -138,7 +138,7 @@ const getRedirectRouteBySession = (user, authRole, authHomeRoute) => {
     return '/admin';
   }
 
-  return authHomeRoute || '/(tabs)';
+  return authHomeRoute || '/explore';
 };
 
 const ROLE_CARDS = [
@@ -196,6 +196,7 @@ export default function RoleSelectionScreen() {
   const authRole = auth.role;
   const homeRoute = auth.homeRoute;
   const setSelectedRole = auth.setSelectedRole;
+  const logout = auth.logout;
 
   const headline = useMemo(
     () => ({
@@ -271,6 +272,12 @@ export default function RoleSelectionScreen() {
     [setSelectedRole]
   );
 
+  const handleSwitchAccount = useCallback(async () => {
+    if (typeof logout === 'function') {
+      await logout();
+    }
+  }, [logout]);
+
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -293,6 +300,13 @@ export default function RoleSelectionScreen() {
         </View>
         <ActivityIndicator size="large" color="#EAB02F" />
         <Text style={styles.loaderText}>{t('auth.role.openingSpace')}</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={handleSwitchAccount}
+          style={styles.switchAccountButton}
+        >
+          <Text style={styles.switchAccountText}>Utiliser un autre compte</Text>
+        </Pressable>
       </View>
     );
   }
@@ -391,6 +405,39 @@ export default function RoleSelectionScreen() {
   );
 }
 
+export function ErrorBoundary({ error, retry }) {
+  const message = __DEV__
+    ? String(error?.message || error || 'Erreur inconnue')
+    : 'Réessaie dans un instant ou retourne à l’accueil.';
+
+  return (
+    <View style={styles.errorScreen}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F2ECE0" />
+      <View style={styles.errorCard}>
+        <View style={styles.errorIconWrap}>
+          <Ionicons name="alert-circle-outline" size={28} color="#C8331A" />
+        </View>
+        <Text style={styles.errorTitle}>L’espace de connexion ne s’est pas chargé</Text>
+        <Text style={styles.errorMessage}>{message}</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={retry}
+          style={styles.errorRetryButton}
+        >
+          <Text style={styles.errorRetryText}>Réessayer</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="link"
+          onPress={() => router.replace('/')}
+          style={styles.errorHomeButton}
+        >
+          <Text style={styles.errorHomeText}>Retour à l’accueil</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
 /**
  * =========================================================
  * STYLES
@@ -398,6 +445,73 @@ export default function RoleSelectionScreen() {
  */
 
 const styles = StyleSheet.create({
+  errorScreen: {
+    flex: 1,
+    minHeight: '100%',
+    backgroundColor: '#F2ECE0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorCard: {
+    width: '100%',
+    maxWidth: 440,
+    padding: 28,
+    borderRadius: 24,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    shadowColor: '#0D1C11',
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 4,
+  },
+  errorIconWrap: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: '#F8E1DD',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 18,
+  },
+  errorTitle: {
+    color: '#0D1C11',
+    fontSize: 20,
+    lineHeight: 28,
+    fontWeight: '900',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  errorMessage: {
+    color: '#606D5D',
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  errorRetryButton: {
+    width: '100%',
+    minHeight: 48,
+    borderRadius: 14,
+    backgroundColor: '#084424',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorRetryText: { color: '#FFFFFF', fontWeight: '900', fontSize: 14 },
+  errorHomeButton: { paddingVertical: 14, paddingHorizontal: 12 },
+  errorHomeText: { color: '#084424', fontWeight: '800', fontSize: 14 },
+  switchAccountButton: {
+    marginTop: 20,
+    minHeight: 44,
+    paddingHorizontal: 18,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#D8D0BE',
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+  },
+  switchAccountText: { color: '#084424', fontWeight: '800', fontSize: 14 },
   screen: {
     flex: 1,
     backgroundColor: '#F2ECE0',

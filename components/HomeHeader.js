@@ -90,7 +90,7 @@ export default function HomeHeader({
         <View style={styles.brandLeft}>
           <View style={styles.logoWrap}>
             <Image
-              source={require('../app/assets/images/icon.png')}
+              source={require('../assets/images/icon.png')}
               style={styles.logo}
               resizeMode="cover"
             />
