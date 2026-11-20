@@ -56,6 +56,7 @@ test('production only accepts public HTTPS API domains', () => {
     'https://localhost/api',
     'https://192.168.1.25/api',
     'https://10.0.0.2/api',
+    'https://api.afroeat.com/api',
     'https://api.afroeat.example/api',
     'https://api.afroeat.com/v1',
     'https://user:pass@api.afroeat.com/api',
@@ -72,38 +73,48 @@ test('production only accepts public HTTPS API domains', () => {
 
 test('production refuses API hosts marked as development, preview, test or staging', () => {
   for (const configuredApiUrl of [
-    'https://afroeat-api-staging.vercel.app/api',
     'https://afroeat-api-test.vercel.app/api',
     'https://preview.api.afroeat.com/api',
     'https://dev-api.afroeat.com/api',
     'https://api-testing.afroeat.com/api',
+    'https://afroeat-api-staging-preview.vercel.app/api',
+    'https://other.afroeat-api-staging.vercel.app/api',
   ]) {
     assert.throws(
       () => resolveApiConfig({ appEnv: 'production', configuredApiUrl }),
-      /jamais une API dev, test, preview ou staging/,
+      /API AFROEAT autorisée/,
       `Expected production URL to reject non-production host: ${configuredApiUrl}`
     );
   }
 });
 
-test('preview can deliberately use the staging API', () => {
+test('production accepts only the exact canonical API host with the legacy staging slug', () => {
   const config = resolveApiConfig({
-    appEnv: 'preview',
+    appEnv: 'production',
     configuredApiUrl: 'https://afroeat-api-staging.vercel.app/api',
   });
   assert.equal(config.baseUrl, 'https://afroeat-api-staging.vercel.app/api');
+  assert.equal(config.isProduction, true);
+});
+
+test('preview can deliberately use the isolated test API', () => {
+  const config = resolveApiConfig({
+    appEnv: 'preview',
+    configuredApiUrl: 'https://afroeat-api-test.vercel.app/api',
+  });
+  assert.equal(config.baseUrl, 'https://afroeat-api-test.vercel.app/api');
   assert.equal(config.isProduction, false);
 });
 
 test('production accepts a public HTTPS API URL ending exactly in /api', () => {
   const config = resolveApiConfig({
     appEnv: 'production',
-    configuredApiUrl: 'https://api.afroeat.com/api',
+    configuredApiUrl: 'https://afroeat-api-staging.vercel.app/api',
   });
-  assert.equal(config.baseUrl, 'https://api.afroeat.com/api');
+  assert.equal(config.baseUrl, 'https://afroeat-api-staging.vercel.app/api');
   assert.equal(config.isProduction, true);
   assert.equal(config.protocol, 'https');
-  assert.equal(config.host, 'api.afroeat.com');
+  assert.equal(config.host, 'afroeat-api-staging.vercel.app');
   assert.equal(config.port, null);
 });
 

@@ -10,14 +10,11 @@ const PLACEHOLDER_PARTS = [
   'changeme',
   'replace',
 ];
-const NON_PRODUCTION_HOST_LABELS = new Set([
-  'dev',
-  'development',
-  'preview',
-  'stage',
-  'staging',
-  'test',
-  'testing',
+// The Vercel project keeps its original "staging" slug, but is the API
+// selected for AFROEAT production. Production builds must not silently accept
+// a similarly named test project or an arbitrary public API host.
+const CANONICAL_PRODUCTION_API_HOSTS = new Set([
+  'afroeat-api-staging.vercel.app',
 ]);
 
 const isIpv4 = (host) => /^\d{1,3}(?:\.\d{1,3}){3}$/.test(String(host || ''));
@@ -59,14 +56,6 @@ const isPlaceholderHost = (host) => {
   );
 };
 
-const isNonProductionHost = (host) =>
-  String(host || '')
-    .trim()
-    .toLowerCase()
-    .split('.')
-    .flatMap((label) => label.split(/[-_]/))
-    .some((label) => NON_PRODUCTION_HOST_LABELS.has(label));
-
 const parseApiUrl = (value) => {
   let url;
   try {
@@ -97,9 +86,9 @@ const validateProductionUrl = (url) => {
     isIpAddress(hostname) ||
     isLocalOrPrivateHost(hostname) ||
     isPlaceholderHost(hostname) ||
-    isNonProductionHost(hostname)
+    !CANONICAL_PRODUCTION_API_HOSTS.has(hostname)
   ) {
-    throw new Error('En production, EXPO_PUBLIC_API_URL doit cibler une API HTTPS publique de production se terminant par /api, jamais une API dev, test, preview ou staging.');
+    throw new Error(`En production, EXPO_PUBLIC_API_URL doit utiliser une API AFROEAT autorisée : ${Array.from(CANONICAL_PRODUCTION_API_HOSTS).join(', ')}.`);
   }
 };
 

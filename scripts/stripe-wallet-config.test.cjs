@@ -4,6 +4,7 @@ const path = require('node:path');
 
 const loadConfig = require(path.join(__dirname, '..', 'app.config.js'));
 const appJson = require(path.join(__dirname, '..', 'app.json'));
+const easJson = require(path.join(__dirname, '..', 'eas.json'));
 const walletEnvNames = [
   'EXPO_PUBLIC_ENABLE_APPLE_PAY',
   'EXPO_PUBLIC_ENABLE_GOOGLE_PAY',
@@ -12,6 +13,7 @@ const walletEnvNames = [
   'EXPO_PUBLIC_APP_ENV',
   'EAS_BUILD_PLATFORM',
   'EXPO_PUBLIC_API_URL',
+  'EXPO_PUBLIC_USE_LOCAL_API',
   'EXPO_PUBLIC_STRIPE_KEY',
   'ANDROID_GOOGLE_MAPS_API_KEY',
 ];
@@ -48,6 +50,13 @@ test('les wallets sont désactivés par défaut', () => {
     const options = getStripePluginOptions(structuredClone(appJson.expo));
     assert.equal(options.enableGooglePay, false);
     assert.equal(Object.hasOwn(options, 'merchantIdentifier'), false);
+  });
+});
+
+test('le développement sans URL explicite utilise le backend de test isolé', () => {
+  withEnv({}, () => {
+    loadConfig({ config: structuredClone(appJson.expo) });
+    assert.equal(process.env.EXPO_PUBLIC_API_URL, 'https://afroeat-api-test.vercel.app/api');
   });
 });
 
@@ -91,7 +100,7 @@ test('la production refuse une adresse IP privée même en HTTPS', () => {
   }, () => {
     assert.throws(
       () => loadConfig({ config: structuredClone(appJson.expo) }),
-      /domaine public HTTPS réel/
+      /API AFROEAT autorisée/
     );
   });
 });
@@ -116,9 +125,37 @@ test('la production accepte une URL API publique HTTPS correctement configurée'
     EAS_BUILD_PROFILE: 'production',
     EXPO_PUBLIC_APP_ENV: 'production',
     EAS_BUILD_PLATFORM: 'ios',
-    EXPO_PUBLIC_API_URL: 'https://api.afroeat.com/api',
+    EXPO_PUBLIC_API_URL: 'https://afroeat-api-staging.vercel.app/api',
     EXPO_PUBLIC_STRIPE_KEY: 'pk_live_012345678901234567890123',
   }, () => {
     assert.doesNotThrow(() => loadConfig({ config: structuredClone(appJson.expo) }));
   });
+});
+
+test('la production refuse le projet API de test homonyme', () => {
+  withEnv({
+    EAS_BUILD_PROFILE: 'production',
+    EXPO_PUBLIC_APP_ENV: 'production',
+    EAS_BUILD_PLATFORM: 'ios',
+    EXPO_PUBLIC_API_URL: 'https://afroeat-api.vercel.app/api',
+    EXPO_PUBLIC_STRIPE_KEY: 'pk_live_012345678901234567890123',
+  }, () => {
+    assert.throws(
+      () => loadConfig({ config: structuredClone(appJson.expo) }),
+      /API AFROEAT autorisée/
+    );
+  });
+});
+
+test('EAS preview uses the isolated test API and production uses the canonical API', () => {
+  assert.equal(easJson.build.preview.env.EXPO_PUBLIC_APP_ENV, 'preview');
+  assert.equal(easJson.build.preview.env.EXPO_PUBLIC_API_URL, 'https://afroeat-api-test.vercel.app/api');
+  assert.equal(easJson.build.production.env.EXPO_PUBLIC_APP_ENV, 'production');
+  assert.equal(easJson.build.production.env.EXPO_PUBLIC_API_URL, 'https://afroeat-api-staging.vercel.app/api');
+
+  for (const profile of [easJson.build.preview, easJson.build.production]) {
+    assert.equal(profile.env.EXPO_PUBLIC_ENABLE_APPLE_PAY, 'false');
+    assert.equal(profile.env.EXPO_PUBLIC_ENABLE_GOOGLE_PAY, 'false');
+    assert.equal(Object.hasOwn(profile.env, 'EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER'), false);
+  }
 });

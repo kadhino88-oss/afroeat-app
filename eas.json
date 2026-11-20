@@ -15,10 +15,10 @@
       "distribution": "internal",
       "env": {
         "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
-        "EXPO_PUBLIC_API_URL": "https://afroeat-api-staging.vercel.app/api",
-        "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "true",
-        "EXPO_PUBLIC_ENABLE_APPLE_PAY": "true",
-        "EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER": "merchant.com.afroeat"
+        "EXPO_PUBLIC_APP_ENV": "preview",
+        "EXPO_PUBLIC_API_URL": "https://afroeat-api-test.vercel.app/api",
+        "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "false",
+        "EXPO_PUBLIC_ENABLE_APPLE_PAY": "false"
       },
       "android": {
         "gradleCommand": ":app:assembleRelease -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease"
@@ -30,10 +30,10 @@
       "autoIncrement": true,
       "env": {
         "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
-        "EXPO_PUBLIC_API_URL": "https://afroeat-api.vercel.app/api",
-        "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "true",
-        "EXPO_PUBLIC_ENABLE_APPLE_PAY": "true",
-        "EXPO_PUBLIC_APPLE_MERCHANT_IDENTIFIER": "merchant.com.afroeat"
+        "EXPO_PUBLIC_APP_ENV": "production",
+        "EXPO_PUBLIC_API_URL": "https://afroeat-api-staging.vercel.app/api",
+        "EXPO_PUBLIC_ENABLE_GOOGLE_PAY": "false",
+        "EXPO_PUBLIC_ENABLE_APPLE_PAY": "false"
       },
       "android": {
         "gradleCommand": ":app:bundleRelease -x lintVitalAnalyzeRelease -x lintVitalReportRelease -x lintVitalRelease"

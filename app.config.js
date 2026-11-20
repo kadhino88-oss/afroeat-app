@@ -1,50 +1,10 @@
-const isIpAddress = (hostname) => {
-  const normalized = String(hostname || '').trim().toLowerCase().replace(/^\[|\]$/g, '');
-  return /^\d{1,3}(?:\.\d{1,3}){3}$/.test(normalized) || normalized.includes(':');
-};
+const { parseApiUrl, validateProductionUrl } = require('./constants/apiConfig');
 
-const isLocalOrPrivateHost = (hostname) => {
-  const normalized = String(hostname || '').trim().toLowerCase().replace(/^\[|\]$/g, '');
-  const parts = normalized.split('.');
-  const private172 =
-    parts.length === 4 &&
-    parts[0] === '172' &&
-    Number(parts[1]) >= 16 &&
-    Number(parts[1]) <= 31;
-
-  return (
-    normalized === 'localhost' ||
-    normalized.endsWith('.localhost') ||
-    normalized.endsWith('.local') ||
-    normalized.endsWith('.internal') ||
-    normalized.startsWith('10.') ||
-    normalized.startsWith('127.') ||
-    normalized.startsWith('169.254.') ||
-    normalized.startsWith('192.168.') ||
-    private172
-  );
-};
-
-const isPlaceholderHost = (hostname) => {
-  const normalized = String(hostname || '').trim().toLowerCase();
-  return (
-    !normalized.includes('.') ||
-    isIpAddress(normalized) ||
-    isLocalOrPrivateHost(normalized) ||
-    normalized.endsWith('.invalid') ||
-    normalized.endsWith('.example') ||
-    normalized.endsWith('.test') ||
-    ['example', 'placeholder', 'your-api', 'your-backend', 'your-domain', 'changeme', 'replace']
-      .some((marker) => normalized.includes(marker))
-  );
-};
-
-const DEFAULT_DEV_API_URL = 'https://afroeat-api-staging.vercel.app/api';
+const DEFAULT_DEV_API_URL = 'https://afroeat-api-test.vercel.app/api';
 
 module.exports = ({ config }) => {
-  // Développement local sans variable définie : on vise l'API de test en ligne.
-  // Sans ça, l'appli visait http://<IP de l'ordinateur>:5000 (serveur local inexistant)
-  // et la connexion restait figée. EXPO_PUBLIC_USE_LOCAL_API=true garde l'ancien comportement.
+  // Développement sans variable définie : on utilise le backend et la base de test,
+  // jamais le backend de production. EXPO_PUBLIC_USE_LOCAL_API=true réactive l'API locale.
   if (
     !String(process.env.EAS_BUILD_PROFILE || '').trim() &&
     !String(process.env.EXPO_PUBLIC_API_URL || '').trim() &&
@@ -82,27 +42,8 @@ module.exports = ({ config }) => {
   }
 
   if (apiUrl) {
-    let parsedApiUrl;
-    try {
-      parsedApiUrl = new URL(apiUrl);
-    } catch {
-      throw new Error('EXPO_PUBLIC_API_URL doit être une URL HTTP(S) valide terminant par /api.');
-    }
-
-    if (
-      !['http:', 'https:'].includes(parsedApiUrl.protocol) ||
-      parsedApiUrl.username ||
-      parsedApiUrl.password ||
-      parsedApiUrl.search ||
-      parsedApiUrl.hash ||
-      parsedApiUrl.pathname !== '/api'
-    ) {
-      throw new Error('EXPO_PUBLIC_API_URL doit être une URL HTTP(S) complète terminant exactement par /api.');
-    }
-
-    if (isProductionBuild && (parsedApiUrl.protocol !== 'https:' || isPlaceholderHost(parsedApiUrl.hostname))) {
-      throw new Error('EXPO_PUBLIC_API_URL doit cibler un domaine public HTTPS réel se terminant par /api.');
-    }
+    const parsedApiUrl = parseApiUrl(apiUrl);
+    if (isProductionBuild) validateProductionUrl(parsedApiUrl);
   }
 
   if (enableApplePay && !appleMerchantIdentifier) {
