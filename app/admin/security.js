@@ -5,6 +5,7 @@ import { Redirect, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { getTwoFactorStatus, startTwoFactorSetup, confirmTwoFactor, disableTwoFactor } from '../../services/adminService';
+import { isAllowedPaymentUrl } from '../../services/inputGuards';
 
 /** Sécurité du compte administrateur : double authentification par application. */
 export default function AdminSecurityScreen() {
@@ -82,7 +83,11 @@ export default function AdminSecurityScreen() {
         ) : setup ? (
           <View style={styles.box}>
             <Text style={styles.strong}>{t('admin.security.step1')}</Text>
-            <Pressable accessibilityRole="button" style={styles.ghost} onPress={() => Linking.openURL(setup.otpauthUrl).catch(() => {})}>
+            <Pressable accessibilityRole="button" style={styles.ghost} onPress={() => {
+              if (isAllowedPaymentUrl(setup.otpauthUrl, { allowOtpauth: true })) {
+                Linking.openURL(setup.otpauthUrl).catch(() => {});
+              }
+            }}>
               <Text style={styles.ghostText}>{t('admin.security.openApp')}</Text>
             </Pressable>
             <Text style={styles.text}>{t('admin.security.manualKey')}</Text>

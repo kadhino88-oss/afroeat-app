@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Redirect, router, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { isAllowedPaymentUrl } from '../../services/inputGuards';
 import * as WebBrowser from 'expo-web-browser';
 
 import { useAuth } from '../../context/AuthContext';
@@ -80,7 +81,7 @@ export default function PayoutsScreen() {
     try {
       setOpening(true);
       const result = await createStripeConnectOnboardingLink(normalizedCountry, auth.token);
-      if (!result?.url) throw new Error(t('payouts.statusError'));
+      if (!result?.url || !isAllowedPaymentUrl(result.url)) throw new Error(t('payouts.statusError'));
       await WebBrowser.openBrowserAsync(result.url);
       await loadStatus();
     } catch (error) {
@@ -94,7 +95,7 @@ export default function PayoutsScreen() {
     try {
       setOpening(true);
       const result = await createStripeConnectDashboardLink(auth.token);
-      if (!result?.url) throw new Error(t('payouts.statusError'));
+      if (!result?.url || !isAllowedPaymentUrl(result.url)) throw new Error(t('payouts.statusError'));
       await WebBrowser.openBrowserAsync(result.url);
       await loadStatus();
     } catch (error) {

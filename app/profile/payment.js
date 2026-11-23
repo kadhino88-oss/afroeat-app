@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { API_ENDPOINTS } from '../../constants/api';
 import { apiDelete, apiGet, apiPatch, apiPost } from '../../services/apiClient';
+import { isAllowedPaymentUrl } from '../../services/inputGuards';
 import { useSavedCardStripe } from '../../services/savedCardStripe';
 import { buildStripeWalletOptions } from '../../services/stripeWalletOptions';
 
@@ -116,7 +117,7 @@ export default function ProfilePaymentScreen() {
       { consentAccepted: true },
       token
     );
-    if (!session?.url) {
+    if (!session?.url || !isAllowedPaymentUrl(session.url)) {
       throw new Error(session?.message || t('profile.payment.setupError'));
     }
     await WebBrowser.openBrowserAsync(session.url);
@@ -141,7 +142,7 @@ export default function ProfilePaymentScreen() {
           },
           token
         );
-        if (!session?.url) {
+        if (!session?.url || !isAllowedPaymentUrl(session.url)) {
           throw new Error(session?.message || t('profile.payment.setupError'));
         }
         window.location.assign(session.url);
