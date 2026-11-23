@@ -345,7 +345,16 @@ export default function CartScreen() {
       return (
         <View style={styles.card}>
           <View style={styles.cardTopRow}>
-            <OwnImage uri={item?.image} style={styles.itemImage} />
+            <View style={styles.itemImageWrap}>
+              <OwnImage uri={item?.image} style={styles.itemImage} />
+              {item?.imageIsIllustration === true ? (
+                <View pointerEvents="none" style={styles.illustrationBadge}>
+                  <Text style={styles.illustrationBadgeText} numberOfLines={2}>
+                    {t('menu.illustrationPhoto')}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
 
             <View style={styles.itemInfo}>
               <Text style={styles.name} numberOfLines={1}>
@@ -412,7 +421,7 @@ export default function CartScreen() {
         </View>
       );
     },
-    [cartCurrency, handleDecrease, handleIncrease, handleRemove]
+    [cartCurrency, handleDecrease, handleIncrease, handleRemove, t]
   );
 
   /**
@@ -763,7 +772,35 @@ const styles = StyleSheet.create({
     height: 74,
     borderRadius: 16,
     backgroundColor: '#F2ECE0',
+  },
+
+  itemImageWrap: {
+    width: 74,
+    height: 74,
     marginRight: 12,
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: 16,
+    backgroundColor: '#F2ECE0',
+  },
+
+  illustrationBadge: {
+    position: 'absolute',
+    left: 3,
+    right: 3,
+    bottom: 3,
+    paddingHorizontal: 3,
+    paddingVertical: 2,
+    borderRadius: 5,
+    backgroundColor: 'rgba(13, 28, 17, 0.82)',
+  },
+
+  illustrationBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 8,
+    lineHeight: 9,
+    fontWeight: '700',
+    textAlign: 'center',
   },
 
   itemInfo: {
