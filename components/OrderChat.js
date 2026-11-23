@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { apiGet, apiPost } from '../services/apiClient';
+import { API_ENDPOINTS } from '../constants/api';
 
 const POLL_MS = 8000;
 const ROLE_ICON = { client: 'person-outline', livreur: 'bicycle-outline', restaurant: 'storefront-outline', admin: 'shield-outline' };
@@ -23,7 +24,7 @@ export default function OrderChat({ orderId, token }) {
   const load = useCallback(async () => {
     if (!orderId || !token) return;
     try {
-      const data = await apiGet(`/orders/${orderId}/messages`, token);
+      const data = await apiGet(API_ENDPOINTS.orders.messages(orderId), token);
       const list = Array.isArray(data?.messages) ? data.messages : [];
       setMessages(list);
       setOpen(data?.open !== false);
@@ -55,7 +56,7 @@ export default function OrderChat({ orderId, token }) {
     setSending(true);
     setError('');
     try {
-      await apiPost(`/orders/${orderId}/messages`, { text: value }, token);
+      await apiPost(API_ENDPOINTS.orders.messages(orderId), { text: value }, token);
       setText('');
       await load();
     } catch (e) {

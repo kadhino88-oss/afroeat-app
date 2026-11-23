@@ -3,6 +3,7 @@ import { Stack, Redirect, useSegments } from 'expo-router';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import RestaurantOrderAlerts from '../../components/RestaurantOrderAlerts';
+import { getRestaurantAreaRedirect } from '../../services/routeGuards';
 
 /**
  * =========================================================
@@ -85,6 +86,30 @@ export default function RestaurantLayout() {
         <ActivityIndicator size="large" color="#084424" />
       </View>
     );
+  }
+
+  // Seule la fiche publique restaurant/[id] est accessible sans compte restaurant :
+  // les écrans de gestion (delivery-settings, opening-hours, analytics…) sont protégés.
+  const guard = getRestaurantAreaRedirect({
+    hasSession: hasValidSession,
+    role: currentRole,
+    screen: segments[1],
+  });
+  if (guard === 'login') {
+    return (
+      <Redirect
+        href={{ pathname: '/auth/login', params: { role: 'restaurant' } }}
+      />
+    );
+  }
+  if (guard === 'home') {
+    return <Redirect href="/(tabs)" />;
+  }
+  if (guard === 'admin') {
+    return <Redirect href="/admin" />;
+  }
+  if (guard === 'livraison') {
+    return <Redirect href="/livraison" />;
   }
 
   // Les visiteurs non connectés peuvent voir la page restaurant/[id]

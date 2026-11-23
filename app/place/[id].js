@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import * as WebBrowser from 'expo-web-browser';
 import PlaceBrandMark from '../../components/PlaceBrandMark';
 import { Image } from 'expo-image';
+import { sanitizeEmail } from '../../services/inputGuards';
 
 const firstParam = (value) => (Array.isArray(value) ? value[0] : value);
 const normalizeText = (value) => String(firstParam(value) || '').trim();
@@ -77,6 +78,11 @@ export default function PublicPlaceScreen() {
     } catch (error) {
       console.log('Impossible d’ouvrir ce lien :', error);
     }
+  };
+
+  const openEmail = () => {
+    const email = sanitizeEmail(place.email);
+    if (email) openLink(`mailto:${email}`);
   };
 
   const openPhone = () => {
@@ -175,7 +181,7 @@ export default function PublicPlaceScreen() {
           <View style={styles.actionsCard}>
             <Text style={styles.sectionTitle}>{t('publicPlace.contact')}</Text>
             {!!place.phone && <ActionButton icon="call-outline" label={place.phone} onPress={openPhone} />}
-            {!!place.email && <ActionButton icon="mail-outline" label={place.email} onPress={() => openLink(`mailto:${place.email}`)} />}
+            {!!place.email && <ActionButton icon="mail-outline" label={place.email} onPress={() => openEmail()} />}
             {!!place.website && <ActionButton icon="globe-outline" label={t('publicPlace.visitWebsite')} onPress={() => openLink(place.website)} />}
           </View>
         )}

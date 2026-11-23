@@ -5,10 +5,17 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useRef,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { setUnauthorizedHandler } from '../services/apiClient';
+import { getMyProfile } from '../services/authService';
+import {
+  clearAppStorage,
+  classifyRevalidationError,
+  mergeServerProfile,
+} from '../services/sessionPolicy';
 
 const AuthContext = createContext(null);
 
@@ -23,13 +30,6 @@ const STORAGE_KEYS = {
   token: '@afroeat_token',
   selectedRole: '@afroeat_selected_role',
 };
-
-const ALL_APP_STORAGE_KEYS = [
-  STORAGE_KEYS.user,
-  STORAGE_KEYS.token,
-  STORAGE_KEYS.selectedRole,
-  '@afroeat_cart_v2',
-];
 
 const AUTH_STORAGE_TIMEOUT_MS = 5000;
 
@@ -236,6 +236,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [selectedRole, setSelectedRoleState] = useState('client');
   const [loading, setLoading] = useState(true);
+  const tokenRef = useRef(null);
 
   /**
    * =========================================================
@@ -244,6 +245,7 @@ export function AuthProvider({ children }) {
    */
 
   const resetLocalState = useCallback(() => {
+    tokenRef.current = null;
     setUser(null);
     setToken(null);
     setSelectedRoleState('client');
@@ -251,11 +253,7 @@ export function AuthProvider({ children }) {
 
   const clearStoredSession = useCallback(async () => {
     try {
-      await AsyncStorage.multiRemove([
-        STORAGE_KEYS.user,
-        STORAGE_KEYS.token,
-        STORAGE_KEYS.selectedRole,
-      ]);
+      await clearAppStorage(AsyncStorage);
     } catch (error) {
       console.log('Erreur clearStoredSession:', error);
     }
@@ -266,6 +264,38 @@ export function AuthProvider({ children }) {
    * INIT SESSION
    * =========================================================
    */
+
+  // Rafraîchit rôle et accountStatus via GET /users/me. 401 => déconnexion ;
+  // erreur réseau/serveur => on garde l'état local sans bloquer l'utilisateur.
+  const revalidateSession = useCallback(
+    async (sessionToken, localUser) => {
+      try {
+        const profile = await getMyProfile(sessionToken);
+        if (tokenRef.current !== sessionToken) return;
+
+        const merged = normalizeUser(mergeServerProfile(localUser, profile?.user));
+        if (!merged?._id) return;
+
+        await AsyncStorage.multiSet([
+          [STORAGE_KEYS.user, JSON.stringify(merged)],
+          [STORAGE_KEYS.selectedRole, normalizeRole(merged.role)],
+        ]);
+        if (tokenRef.current !== sessionToken) return;
+
+        setUser(merged);
+        setSelectedRoleState(normalizeRole(merged.role));
+      } catch (error) {
+        if (
+          tokenRef.current === sessionToken &&
+          classifyRevalidationError(error) === 'unauthorized'
+        ) {
+          await clearStoredSession();
+          resetLocalState();
+        }
+      }
+    },
+    [clearStoredSession, resetLocalState]
+  );
 
   const hydrateAuth = useCallback(async () => {
     try {
@@ -313,9 +343,13 @@ export function AuthProvider({ children }) {
         return;
       }
 
+      tokenRef.current = safeToken;
       setUser(safeUser);
       setToken(safeToken);
       setSelectedRoleState(normalizeRole(safeUser.role || safeSelectedRole));
+
+      // Revalidation en arrière-plan : rôle / statut du compte viennent du serveur.
+      void revalidateSession(safeToken, safeUser);
     } catch (error) {
       console.log('Erreur hydrateAuth:', error);
       // L'application doit rester utilisable même si le stockage du navigateur
@@ -325,7 +359,7 @@ export function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, [clearStoredSession, resetLocalState]);
+  }, [clearStoredSession, resetLocalState, revalidateSession]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -371,6 +405,7 @@ export function AuthProvider({ children }) {
         [STORAGE_KEYS.selectedRole, safeRole],
       ]);
 
+      tokenRef.current = safeToken;
       setUser(safeUser);
       setToken(safeToken);
       setSelectedRoleState(safeRole);
@@ -411,13 +446,11 @@ export function AuthProvider({ children }) {
     [user]
   );
 
+  // Pas d'appel serveur de déconnexion : /users/logout n'existe pas côté backend
+  // (jeton JWT sans état). Le nettoyage local complet est la déconnexion.
   const logout = useCallback(async () => {
     try {
-      await AsyncStorage.multiRemove([
-        STORAGE_KEYS.user,
-        STORAGE_KEYS.token,
-        STORAGE_KEYS.selectedRole,
-      ]);
+      await clearAppStorage(AsyncStorage);
 
       resetLocalState();
 
@@ -446,7 +479,7 @@ export function AuthProvider({ children }) {
    */
   const clearAllLocalAppData = useCallback(async () => {
     try {
-      await AsyncStorage.multiRemove(ALL_APP_STORAGE_KEYS);
+      await clearAppStorage(AsyncStorage);
       resetLocalState();
       return true;
     } catch (error) {

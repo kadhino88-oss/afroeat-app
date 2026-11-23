@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
 import AlcoholIdNotice from '../../components/AlcoholIdNotice';
 import OrderChat from '../../components/OrderChat';
+import { getRouteObjectId } from '../../services/inputGuards';
 import { useAuth } from '../../context/AuthContext';
 import {
   getDeliveryOrderById,
@@ -63,12 +64,6 @@ const normalizeStatus = (value) => String(value || '').trim();
 
 const isDriverRole = (role) =>
   role === 'livreur' || role === 'driver' || role === 'delivery';
-
-const getSafeParam = (value, fallback = '') => {
-  if (Array.isArray(value)) return value[0] ?? fallback;
-  if (value === undefined || value === null) return fallback;
-  return String(value);
-};
 
 const isValidCoordinate = (value) => typeof value === 'number' && Number.isFinite(value);
 
@@ -358,7 +353,7 @@ export default function OrderTrackingScreen() {
   }, [role, user]);
 
   const safeOrderId = useMemo(() => {
-    return getSafeParam(params?.orderId) || getSafeParam(params?.id) || null;
+    return getRouteObjectId(params?.orderId) || getRouteObjectId(params?.id) || null;
   }, [params]);
 
   const safeOrder = useMemo(() => {

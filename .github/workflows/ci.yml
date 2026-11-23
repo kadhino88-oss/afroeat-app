@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, "sync/**"]
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -49,6 +52,16 @@ jobs:
         run: node --test scripts/home-conversion.test.cjs
       - name: Test partner-first discovery and i18n
         run: node --test scripts/explorer-partners.test.cjs
+      - name: Test API path id encoding
+        run: node --test scripts/route-id-encoding.test.cjs
+      - name: Test session security policy
+        run: node --test scripts/session-security.test.cjs
+      - name: Test external link and payment URL guards
+        run: node --test scripts/external-links.test.cjs
+      - name: Test audit gate fails closed
+        run: node --test scripts/audit-gate.test.cjs
+      - name: Test expired session logout
+        run: node --test scripts/expired-session-logout.test.cjs
       - name: Lint payment and dynamic app configuration
         run: npx eslint app.config.js constants/apiConfig.js scripts/api-config.test.cjs app/payment.js app/checkout.js app/account/payouts.js app/admin/payouts.js app/admin/index.js app/admin/_layout.js app/livraison/profile.js app/restaurant/restaurant-profile.js services/stripeService.js services/stripeService.web.js services/stripeConnectService.js constants/api.js scripts/payment-route-sync.test.cjs app/map.js app/profile/payment.js 'app/(tabs)/explore.js' 'app/(tabs)/index.js' 'app/restaurant/[id].js'
       - name: Export web bundle
