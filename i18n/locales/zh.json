@@ -1277,7 +1277,7 @@
     "registerDriver": {
       "eyebrow": "AFROEAT DELIVERY",
       "title": "骑手注册",
-      "subtitle": "请完善您的专业资料。控制台的访问权限取决于身份、证件和账户激活的审核结果。",
+      "subtitle": "接单无需月度订阅。每完成一单即可获得报酬，100% 小费归您所有；资料审核通过后即可使用账户。",
       "documentTypeLabel": "证件类型",
       "documents": {
         "passeport": "护照",
@@ -1293,8 +1293,6 @@
       "selfieUploadPlaceholder": "自拍链接 / 上传",
       "payoutAccountLabel": "收款账户",
       "payoutPlaceholder": "IBAN / 银行账户 / 银行卡",
-      "membershipPaymentLabel": "会员费支付",
-      "membershipPaymentPlaceholder": "银行卡 / 支付方式",
       "validationRequiredTitle": "需要审核",
       "validationRequiredText": "您的申请将暂时待审核。激活前，我们会通过安全流程另行收集所需文件。",
       "submit": "提交我的骑手资料",
@@ -1309,8 +1307,6 @@
       "selfieInvalidBody": "请提供验证自拍。",
       "payoutInvalidTitle": "收款账户无效",
       "payoutInvalidBody": "请提供有效的收款方式。",
-      "membershipInvalidTitle": "会员费支付方式无效",
-      "membershipInvalidBody": "请提供有效的会员费支付方式。",
       "successTitle": "骑手账户已创建",
       "successBody": "您的资料已提交，现在进入审核阶段。",
       "failedFallback": "无法创建骑手账户。",
@@ -1391,7 +1387,7 @@
         },
         "livreur": {
           "title": "骑手申请待审核",
-          "subtitle": "您的骑手资料已收到。身份认证和会员资料需在激活前完成核实。",
+          "subtitle": "已收到您的骑手申请。账户启用前，我们需要核验您的身份和所需证件。",
           "primaryLabel": "返回骑手登录"
         },
         "admin": {
@@ -2239,7 +2235,7 @@
     "title": "加入 AFROEAT",
     "intro": "AFROEAT 帮助非洲餐厅、杂货店和商店拥有自己的配送服务，人人可用，并力求更低的成本。",
     "benefit1": "属于你自己的配送，人人可用",
-    "benefit2": "力求更实惠的费用",
+    "benefit2": "无需月度订阅：仅对已完成的订单收取佣金",
     "benefit3": "你的标志、你的菜品、你的顾客",
     "businessName": "商家名称",
     "businessType": "商家类型",

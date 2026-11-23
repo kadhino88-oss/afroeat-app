@@ -1277,7 +1277,7 @@
     "registerDriver": {
       "eyebrow": "AFROEAT DELIVERY",
       "title": "Registro de repartidor",
-      "subtitle": "Completa tu expediente profesional. El acceso al panel dependerá de la verificación de tu identidad, tus documentos y tu activación.",
+      "subtitle": "Sin suscripción mensual para recibir pedidos. Cobras por cada entrega completada y conservas el 100 % de las propinas. Tendrás acceso a tu cuenta tras verificar tu expediente.",
       "documentTypeLabel": "Tipo de documento",
       "documents": {
         "passeport": "Pasaporte",
@@ -1293,8 +1293,6 @@
       "selfieUploadPlaceholder": "Enlace de selfie / subir",
       "payoutAccountLabel": "Cuenta de pago",
       "payoutPlaceholder": "IBAN / cuenta bancaria / tarjeta",
-      "membershipPaymentLabel": "Pago de membresía",
-      "membershipPaymentPlaceholder": "Tarjeta / método de pago",
       "validationRequiredTitle": "Verificación obligatoria",
       "validationRequiredText": "Tu solicitud quedará pendiente. Antes de activarla, te pediremos la documentación mediante un proceso seguro.",
       "submit": "Enviar mi expediente de repartidor",
@@ -1309,8 +1307,6 @@
       "selfieInvalidBody": "Indica el selfie de verificación.",
       "payoutInvalidTitle": "Cuenta de pago no válida",
       "payoutInvalidBody": "Indica un método de pago válido.",
-      "membershipInvalidTitle": "Pago de membresía no válido",
-      "membershipInvalidBody": "Indica un método de pago de membresía válido.",
       "successTitle": "Cuenta de repartidor creada",
       "successBody": "Tu expediente se ha enviado. Ahora está pendiente de verificación.",
       "failedFallback": "No se pudo crear la cuenta de repartidor.",
@@ -1391,7 +1387,7 @@
         },
         "livreur": {
           "title": "Expediente de repartidor pendiente",
-          "subtitle": "Tu expediente de repartidor ha sido recibido. La verificación de identidad y de los elementos de afiliación debe completarse antes de la activación.",
+          "subtitle": "Hemos recibido tu solicitud de repartidor. Antes de activarla, verificaremos tu identidad y los documentos necesarios.",
           "primaryLabel": "Volver al inicio de sesión de repartidor"
         },
         "admin": {
@@ -2239,7 +2235,7 @@
     "title": "Unirse a AFROEAT",
     "intro": "AFROEAT ayuda a los restaurantes, tiendas de alimentación y comercios africanos a tener su propio reparto, accesible para todos y pensado para costar menos.",
     "benefit1": "Tu propio reparto, accesible para todos",
-    "benefit2": "Tarifas pensadas para ser más asequibles",
+    "benefit2": "Sin cuota mensual: solo se cobra comisión por los pedidos completados",
     "benefit3": "Tu logotipo, tus platos, tus clientes",
     "businessName": "Nombre del comercio",
     "businessType": "Tipo de comercio",

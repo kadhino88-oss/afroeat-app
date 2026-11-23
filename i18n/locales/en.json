@@ -1277,7 +1277,7 @@
     "registerDriver": {
       "eyebrow": "AFROEAT DELIVERY",
       "title": "Driver sign-up",
-      "subtitle": "Complete your professional file. Dashboard access will depend on verifying your identity, documents and activation.",
+      "subtitle": "No monthly subscription to receive delivery offers. Earn per completed delivery, keep 100% of tips, and access your account after your file is verified.",
       "documentTypeLabel": "Document type",
       "documents": {
         "passeport": "Passport",
@@ -1293,8 +1293,6 @@
       "selfieUploadPlaceholder": "Selfie link / upload",
       "payoutAccountLabel": "Payout account",
       "payoutPlaceholder": "IBAN / bank account / card",
-      "membershipPaymentLabel": "Membership payment",
-      "membershipPaymentPlaceholder": "Card / payment method",
       "validationRequiredTitle": "Verification required",
       "validationRequiredText": "Your application will remain pending. Supporting documents will be requested later through a secure flow before activation.",
       "submit": "Send my driver file",
@@ -1309,8 +1307,6 @@
       "selfieInvalidBody": "Please provide the verification selfie.",
       "payoutInvalidTitle": "Invalid payout account",
       "payoutInvalidBody": "Please provide a valid payout method.",
-      "membershipInvalidTitle": "Invalid membership payment",
-      "membershipInvalidBody": "Please provide a valid membership payment method.",
       "successTitle": "Driver account created",
       "successBody": "Your file has been submitted. It's now pending verification.",
       "failedFallback": "Could not create the driver account.",
@@ -1391,7 +1387,7 @@
         },
         "livreur": {
           "title": "Driver application pending",
-          "subtitle": "Your driver file has been received. Identity and membership verification must be completed before activation.",
+          "subtitle": "Your driver application has been received. Your identity and required documents must be verified before activation.",
           "primaryLabel": "Back to driver login"
         },
         "admin": {
@@ -2239,7 +2235,7 @@
     "title": "Join AFROEAT",
     "intro": "AFROEAT helps African restaurants, grocers and shops run their own delivery, open to everyone and designed to cost less.",
     "benefit1": "Your own delivery, open to everyone",
-    "benefit2": "Fees designed to be more affordable",
+    "benefit2": "No monthly subscription: commission applies only to completed orders",
     "benefit3": "Your logo, your dishes, your customers",
     "businessName": "Business name",
     "businessType": "Business type",

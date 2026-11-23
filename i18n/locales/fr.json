@@ -1277,7 +1277,7 @@
     "registerDriver": {
       "eyebrow": "AFROEAT DELIVERY",
       "title": "Inscription livreur",
-      "subtitle": "Complétez votre dossier professionnel. L'accès à votre espace dépendra de la vérification de votre identité, de vos documents et de votre activation.",
+      "subtitle": "Aucun abonnement mensuel pour recevoir des courses. Vous êtes rémunéré à la course et gardez 100 % des pourboires. Votre espace sera activé après vérification de votre dossier.",
       "documentTypeLabel": "Type de document",
       "documents": {
         "passeport": "Passeport",
@@ -1293,8 +1293,6 @@
       "selfieUploadPlaceholder": "Lien selfie / upload",
       "payoutAccountLabel": "Compte de versement",
       "payoutPlaceholder": "IBAN / compte bancaire / carte",
-      "membershipPaymentLabel": "Paiement adhésion",
-      "membershipPaymentPlaceholder": "Carte / moyen de paiement",
       "validationRequiredTitle": "Validation obligatoire",
       "validationRequiredText": "Ta demande restera en attente. Les justificatifs seront demandés plus tard par un parcours sécurisé avant l’activation.",
       "submit": "Envoyer mon dossier livreur",
@@ -1309,8 +1307,6 @@
       "selfieInvalidBody": "Merci de renseigner le selfie de vérification.",
       "payoutInvalidTitle": "Compte de versement invalide",
       "payoutInvalidBody": "Merci de renseigner un moyen de versement valide.",
-      "membershipInvalidTitle": "Paiement adhésion invalide",
-      "membershipInvalidBody": "Merci de renseigner un moyen de paiement d'adhésion valide.",
       "successTitle": "Compte livreur créé",
       "successBody": "Ton dossier a bien été envoyé. Il est maintenant en attente de validation.",
       "failedFallback": "Impossible de créer le compte livreur.",
@@ -1391,7 +1387,7 @@
         },
         "livreur": {
           "title": "Dossier livreur en attente",
-          "subtitle": "Ton dossier livreur a bien été reçu. La vérification d'identité et des éléments d'adhésion doit être validée avant activation.",
+          "subtitle": "Ton dossier livreur a bien été reçu. La vérification de ton identité et des documents requis doit être terminée avant l'activation.",
           "primaryLabel": "Retour à la connexion livreur"
         },
         "admin": {
@@ -2239,7 +2235,7 @@
     "title": "Rejoindre AFROEAT",
     "intro": "AFROEAT aide les restaurants, épiceries et boutiques africains à avoir leur propre livraison, accessible à tous et pensée pour coûter moins cher.",
     "benefit1": "Votre propre livraison, accessible à tous",
-    "benefit2": "Des frais pensés pour être plus abordables",
+    "benefit2": "Aucun abonnement mensuel : commission uniquement sur les commandes livrées",
     "benefit3": "Votre logo, vos plats, vos clients",
     "businessName": "Nom du commerce",
     "businessType": "Type de commerce",

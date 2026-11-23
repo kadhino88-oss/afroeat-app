@@ -1277,7 +1277,7 @@
     "registerDriver": {
       "eyebrow": "AFROEAT DELIVERY",
       "title": "Registrazione rider",
-      "subtitle": "Completa il tuo fascicolo professionale. L'accesso alla dashboard dipenderà dalla verifica della tua identità, dei tuoi documenti e della tua attivazione.",
+      "subtitle": "Nessun abbonamento mensile per ricevere consegne. Guadagni per ogni consegna completata e conservi il 100% delle mance. Accedi al tuo account dopo la verifica dei documenti.",
       "documentTypeLabel": "Tipo di documento",
       "documents": {
         "passeport": "Passaporto",
@@ -1293,8 +1293,6 @@
       "selfieUploadPlaceholder": "Link selfie / carica",
       "payoutAccountLabel": "Conto di pagamento",
       "payoutPlaceholder": "IBAN / conto bancario / carta",
-      "membershipPaymentLabel": "Pagamento iscrizione",
-      "membershipPaymentPlaceholder": "Carta / metodo di pagamento",
       "validationRequiredTitle": "Verifica obbligatoria",
       "validationRequiredText": "La tua richiesta resterà in sospeso. I documenti saranno richiesti in seguito tramite una procedura sicura prima dell’attivazione.",
       "submit": "Invia il mio fascicolo rider",
@@ -1309,8 +1307,6 @@
       "selfieInvalidBody": "Indica il selfie di verifica.",
       "payoutInvalidTitle": "Conto di pagamento non valido",
       "payoutInvalidBody": "Indica un metodo di pagamento valido.",
-      "membershipInvalidTitle": "Pagamento iscrizione non valido",
-      "membershipInvalidBody": "Indica un metodo di pagamento dell'iscrizione valido.",
       "successTitle": "Account rider creato",
       "successBody": "Il tuo fascicolo è stato inviato. È ora in attesa di verifica.",
       "failedFallback": "Impossibile creare l'account rider.",
@@ -1391,7 +1387,7 @@
         },
         "livreur": {
           "title": "Pratica fattorino in attesa",
-          "subtitle": "Il tuo fascicolo fattorino è stato ricevuto. La verifica dell'identità e degli elementi di adesione deve essere completata prima dell'attivazione.",
+          "subtitle": "Abbiamo ricevuto la tua candidatura come corriere. Prima dell'attivazione verificheremo la tua identità e i documenti richiesti.",
           "primaryLabel": "Torna all'accesso fattorino"
         },
         "admin": {
@@ -2239,7 +2235,7 @@
     "title": "Unisciti a AFROEAT",
     "intro": "AFROEAT aiuta ristoranti, alimentari e negozi africani ad avere la propria consegna, accessibile a tutti e pensata per costare meno.",
     "benefit1": "La tua consegna, accessibile a tutti",
-    "benefit2": "Costi pensati per essere più accessibili",
+    "benefit2": "Nessun abbonamento mensile: commissione solo sugli ordini completati",
     "benefit3": "Il tuo logo, i tuoi piatti, i tuoi clienti",
     "businessName": "Nome dell’attività",
     "businessType": "Tipo di attività",
