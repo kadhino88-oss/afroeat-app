@@ -8,16 +8,20 @@ const read = (...p) => fs.readFileSync(path.join(__dirname, '..', ...p), 'utf8')
 test('le client API signale une session refusée par le serveur', () => {
   const src = read('services', 'apiClient.js');
   assert.match(src, /export const setUnauthorizedHandler/);
-  assert.match(src, /Number\(error\?\.status\) === 401/);
-  assert.match(src, /unauthorizedHandler && isSessionRejectedError\(error, token\)/);
+  assert.match(src, /shouldLogoutOnUnauthorized/);
+  assert.match(src, /unauthorizedHandler && isSessionRejectedError\(error, token, url\)/);
 });
 
-test('seul un refus de jeton déconnecte, pas un mot de passe incorrect', () => {
-  const src = read('services', 'apiClient.js');
-  const pattern = new RegExp(src.match(/SESSION_REJECTED_PATTERN = \/(.+)\/i;/)[1], 'i');
-  assert.equal(pattern.test('Token invalide ou expiré.'), true);
-  assert.equal(pattern.test('Utilisateur introuvable.'), true);
-  assert.equal(pattern.test('Mot de passe actuel incorrect.'), false);
+test('tout 401 authentifié déconnecte, sauf routes d\'identifiants', () => {
+  const { shouldLogoutOnUnauthorized: f } = require('../services/apiAuthPolicy');
+  assert.equal(f({ status: 401, token: 't', endpoint: '/orders' }), true);
+  assert.equal(f({ status: 401, token: 't', endpoint: 'https://x.test/api/users/me?x=1' }), true);
+  assert.equal(f({ status: 401, token: null, endpoint: '/orders' }), false);
+  assert.equal(f({ status: 403, token: 't', endpoint: '/orders' }), false);
+  for (const e of ['/users/login', '/users/login/2fa', '/users/forgot-password',
+    '/users/reset-password', '/users/me/password', '/users/verify-identity', '/admin/2fa/disable']) {
+    assert.equal(f({ status: 401, token: 't', endpoint: e }), false, e);
+  }
 });
 
 test('une session refusée déconnecte automatiquement', () => {

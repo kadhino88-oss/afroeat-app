@@ -1,4 +1,8 @@
 import { API_BASE_URL, API_CONFIG } from '../constants/api';
+import {
+  isTokenAllowedForUrl,
+  shouldLogoutOnUnauthorized,
+} from './apiAuthPolicy';
 
 /**
  * =========================================================
@@ -252,12 +256,10 @@ export const setUnauthorizedHandler = (handler) => {
   unauthorizedHandler = typeof handler === 'function' ? handler : null;
 };
 
-const SESSION_REJECTED_PATTERN = /token|jeton|utilisateur introuvable/i;
-
-export const isSessionRejectedError = (error, token) =>
-  Boolean(token) &&
-  Number(error?.status) === 401 &&
-  SESSION_REJECTED_PATTERN.test(String(error?.data?.message || ''));
+// Tout 401 d'une requête authentifiée = session refusée, sauf routes de vérification
+// d'identifiants (login, 2FA, mots de passe) où il signifie « identifiants incorrects ».
+export const isSessionRejectedError = (error, token, endpoint = '') =>
+  shouldLogoutOnUnauthorized({ status: error?.status, token, endpoint });
 
 const request = async (
   method,
@@ -272,6 +274,9 @@ const request = async (
   } = {}
 ) => {
   const url = buildUrl(endpoint);
+  if (normalizeToken(token) && !isTokenAllowedForUrl(url, API_BASE_URL)) {
+    throw new Error("Refus d'envoyer la session à un serveur non autorisé.");
+  }
   const maxRetries = Math.max(0, Math.min(1, Number(retries) || 0));
   let attempt = 0;
 
@@ -330,7 +335,7 @@ const request = async (
         );
       }
 
-      if (unauthorizedHandler && isSessionRejectedError(error, token)) {
+      if (unauthorizedHandler && isSessionRejectedError(error, token, url)) {
         try {
           unauthorizedHandler();
         } catch (handlerError) {
