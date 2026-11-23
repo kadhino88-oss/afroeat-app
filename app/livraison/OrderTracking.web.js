@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import DeliveryMap from '../../components/DeliveryMap';
 import OrderChat from '../../components/OrderChat';
+import { getRouteObjectId } from '../../services/inputGuards';
 import AlcoholIdNotice from '../../components/AlcoholIdNotice';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -58,7 +59,7 @@ export default function OrderTrackingWeb() {
   const { t } = useTranslation();
   const params = useLocalSearchParams();
   const { token, role, isAuthenticated, loading: authLoading } = useAuth() || {};
-  const orderId = Array.isArray(params?.id) ? params.id[0] : params?.id || params?.orderId;
+  const orderId = getRouteObjectId(params?.id) || getRouteObjectId(params?.orderId) || null;
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);

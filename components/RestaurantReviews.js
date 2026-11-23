@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { apiGet } from '../services/apiClient';
+import { API_ENDPOINTS } from '../constants/api';
 import StarRating from './StarRating';
 
 /** Derniers avis clients publiés sur la fiche d'un commerce. */
@@ -12,7 +13,7 @@ export default function RestaurantReviews({ restaurantId }) {
   useEffect(() => {
     if (!restaurantId) return undefined;
     let active = true;
-    apiGet(`/restaurants/${restaurantId}/reviews`)
+    apiGet(API_ENDPOINTS.restaurants.reviews(restaurantId))
       .then((data) => active && setReviews(Array.isArray(data?.reviews) ? data.reviews : []))
       .catch(() => {});
     return () => {

@@ -184,6 +184,7 @@ export const API_ENDPOINTS = {
     nearby:  (params = {}) => `/restaurants/nearby${buildQueryString(params)}`,
     menu:    (restaurantId) => `/restaurants/${safePathParam(restaurantId)}/menu`,
     orders:  (restaurantId) => `/restaurants/${safePathParam(restaurantId)}/orders`,
+    reviews: (restaurantId) => `/restaurants/${safePathParam(restaurantId)}/reviews`,
   },
 
   // ─── Inscription des commerces ─────────────────────────
@@ -223,6 +224,8 @@ export const API_ENDPOINTS = {
     restaurantOrders:(restaurantId) => `/orders/restaurant/${safePathParam(restaurantId)}`,
     deliveryOrders:  '/orders/delivery',
     updateStatus:    (id) => `/orders/${safePathParam(id)}/status`,
+    messages:        (id) => `/orders/${safePathParam(id)}/messages`,
+    review:          (id) => `/orders/${safePathParam(id)}/review`,
     assignDriver:    (id) => `/orders/${safePathParam(id)}/assign-driver`,
     track:           (id) => `/orders/${safePathParam(id)}/tracking`,
     trackingByOrder: (id) => `/orders/${safePathParam(id)}/tracking`,

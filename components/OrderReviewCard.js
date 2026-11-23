@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { apiGet, apiPost } from '../services/apiClient';
+import { API_ENDPOINTS } from '../constants/api';
 import StarRating from './StarRating';
 
 /** Avis après livraison : note du commerce, du livreur (s'il y en a un) et commentaire. */
@@ -16,7 +17,8 @@ export default function OrderReviewCard({ orderId, token, hasCourier }) {
 
   useEffect(() => {
     let active = true;
-    apiGet(`/orders/${orderId}/review`, token)
+    if (!orderId) return undefined;
+    apiGet(API_ENDPOINTS.orders.review(orderId), token)
       .then((data) => active && setExisting(data?.review || null))
       .catch(() => active && setExisting(null));
     return () => {
@@ -33,7 +35,7 @@ export default function OrderReviewCard({ orderId, token, hasCourier }) {
     setError('');
     try {
       const data = await apiPost(
-        `/orders/${orderId}/review`,
+        API_ENDPOINTS.orders.review(orderId),
         {
           restaurantRating,
           ...(hasCourier && courierRating ? { courierRating } : {}),
