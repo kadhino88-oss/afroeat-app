@@ -1277,7 +1277,7 @@
     "registerDriver": {
       "eyebrow": "AFROEAT DELIVERY",
       "title": "Fahrer-Registrierung",
-      "subtitle": "Vervollständige deine Bewerbungsunterlagen. Der Dashboard-Zugang hängt von der Überprüfung deiner Identität, deiner Dokumente und deiner Aktivierung ab.",
+      "subtitle": "Kein Monatsabo für Lieferaufträge. Du wirst pro abgeschlossene Lieferung bezahlt und behältst 100 % Trinkgeld. Nach Prüfung deiner Unterlagen wird dein Zugang freigeschaltet.",
       "documentTypeLabel": "Dokumenttyp",
       "documents": {
         "passeport": "Reisepass",
@@ -1293,8 +1293,6 @@
       "selfieUploadPlaceholder": "Selfie-Link / Upload",
       "payoutAccountLabel": "Auszahlungskonto",
       "payoutPlaceholder": "IBAN / Bankkonto / Karte",
-      "membershipPaymentLabel": "Mitgliedschaftszahlung",
-      "membershipPaymentPlaceholder": "Karte / Zahlungsmethode",
       "validationRequiredTitle": "Verifizierung erforderlich",
       "validationRequiredText": "Dein Antrag bleibt zunächst offen. Nachweise werden vor der Freischaltung später über einen sicheren Ablauf angefordert.",
       "submit": "Meine Fahrer-Unterlagen senden",
@@ -1309,8 +1307,6 @@
       "selfieInvalidBody": "Bitte gib das Verifizierungs-Selfie an.",
       "payoutInvalidTitle": "Ungültiges Auszahlungskonto",
       "payoutInvalidBody": "Bitte gib eine gültige Auszahlungsmethode an.",
-      "membershipInvalidTitle": "Ungültige Mitgliedschaftszahlung",
-      "membershipInvalidBody": "Bitte gib eine gültige Zahlungsmethode für die Mitgliedschaft an.",
       "successTitle": "Fahrerkonto erstellt",
       "successBody": "Deine Unterlagen wurden gesendet. Sie werden nun überprüft.",
       "failedFallback": "Das Fahrerkonto konnte nicht erstellt werden.",
@@ -1391,7 +1387,7 @@
         },
         "livreur": {
           "title": "Fahrerantrag ausstehend",
-          "subtitle": "Deine Fahrerakte wurde empfangen. Die Identitäts- und Mitgliedschaftsprüfung muss vor der Aktivierung abgeschlossen sein.",
+          "subtitle": "Deine Fahrerunterlagen wurden eingereicht. Vor der Freischaltung müssen deine Identität und die erforderlichen Dokumente geprüft werden.",
           "primaryLabel": "Zurück zum Fahrer-Login"
         },
         "admin": {
@@ -2239,7 +2235,7 @@
     "title": "AFROEAT beitreten",
     "intro": "AFROEAT hilft afrikanischen Restaurants, Lebensmittelgeschäften und Läden bei einem eigenen Lieferdienst – für alle zugänglich und auf niedrigere Kosten ausgelegt.",
     "benefit1": "Dein eigener Lieferdienst, für alle zugänglich",
-    "benefit2": "Gebühren, die erschwinglicher sein sollen",
+    "benefit2": "Kein Monatsabo: Provision nur für abgeschlossene Bestellungen",
     "benefit3": "Dein Logo, deine Gerichte, deine Kunden",
     "businessName": "Name des Geschäfts",
     "businessType": "Art des Geschäfts",

@@ -132,7 +132,7 @@ const getRoleConfig = (role) => {
       return {
         title: 'Dossier livreur en attente',
         subtitle:
-          'Ton dossier livreur a bien été reçu. La vérification d’identité et des éléments d’adhésion doit être validée avant activation.',
+          'Ton dossier livreur a bien été reçu. La vérification de ton identité et des documents requis doit être terminée avant l’activation.',
         accent: '#C8331A',
         soft: '#F3E7CA',
         icon: 'bicycle-outline',
