@@ -10,12 +10,12 @@ test('la page d’accueil reste accessible : lien « Accueil » et aucun renvoi 
   assert.doesNotMatch(read('app/index.web.js'), /staffRedirect/);
 });
 
-test('les cartes des commerces n’affichent plus de bloc noir : image du site ou panneau clair avec logo', () => {
+test('les cartes des commerces n’affichent plus de bloc noir ni de grand cadre : le logo seul (PlaceLogo)', () => {
   const cover = read('components/PlaceCover.js');
   assert.match(cover, /place\?\.imageUrl/);
   assert.doesNotMatch(cover, /#0D1C11'\s*}/);
   for (const f of ['app/(tabs)/explore.js', 'app/index.web.js', 'app/(tabs)/index.js']) {
-    assert.match(read(f), /<PlaceCover place=/, f);
+    assert.match(read(f), /<PlaceLogo place=/, f);
   }
 });
 
