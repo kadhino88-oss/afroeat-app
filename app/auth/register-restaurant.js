@@ -16,6 +16,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import FadeInView from '../../components/FadeInView';
+import LegalLinks from '../../components/LegalLinks';
 import { registerRestaurant } from '../../services/authService';
 import { useAuth } from '../../context/AuthContext';
 
@@ -391,6 +392,7 @@ export default function RegisterRestaurantScreen() {
               )}
             </Pressable>
           </View>
+          <LegalLinks />
         </ScrollView>
       </KeyboardAvoidingView>
     </FadeInView>

@@ -20,6 +20,8 @@ const firstParam = (value) => (Array.isArray(value) ? value[0] : value);
 const text = (value) => String(firstParam(value) || '').trim();
 
 const TYPES = ['restaurant', 'grocery', 'shop', 'drinks', 'other'];
+const COUNTRIES = ['france', 'suisse']; // valeurs envoyées à l'API : « France » / « Suisse » (la devise en découle)
+const countryValue = (key) => (key === 'france' ? 'France' : 'Suisse');
 
 const typeFromCategory = (category) => {
   if (category === 'african-grocery') return 'grocery';
@@ -67,6 +69,7 @@ export default function PartnerApplyScreen() {
     contactName: '',
     email: '',
     message: '',
+    country: '',
     consent: false,
   });
   const [sending, setSending] = useState(false);
@@ -78,6 +81,10 @@ export default function PartnerApplyScreen() {
   const submit = async () => {
     if (sending) return;
     setError('');
+    if (!form.country) {
+      setError(t('partnerApply.countryRequired'));
+      return;
+    }
     setSending(true);
     try {
       await submitPartnerApplication({
@@ -173,7 +180,9 @@ export default function PartnerApplyScreen() {
             ) : null}
             <View style={styles.benefitRow}>
               <Ionicons name="card-outline" size={18} color="#084424" />
-              <Text style={styles.benefitText}>{t('partnerApply.payout')}</Text>
+              <Text style={styles.benefitText}>
+                {terms?.offer?.payoutsAutomatic === true ? t('partnerApply.payout') : t('partnerApply.payoutManual')}
+              </Text>
             </View>
             <Text style={styles.offerNote}>{t('partnerApply.offerNote')}</Text>
           </View>
@@ -204,6 +213,25 @@ export default function PartnerApplyScreen() {
           <Field label={t('partnerApply.phone')} value={form.phone} onChangeText={setField('phone')} keyboardType="phone-pad" autoComplete="tel" />
           <Field label={t('partnerApply.address')} value={form.address} onChangeText={setField('address')} />
           <Field label={t('partnerApply.city')} value={form.city} onChangeText={setField('city')} />
+
+          <Text style={styles.label}>{t('partnerApply.country')}</Text>
+          <View style={styles.chips}>
+            {COUNTRIES.map((key) => {
+              const value = countryValue(key);
+              const selected = form.country === value;
+              return (
+                <Pressable
+                  key={key}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected }}
+                  onPress={() => setField('country')(value)}
+                  style={[styles.chip, selected && styles.chipActive]}
+                >
+                  <Text style={[styles.chipText, selected && styles.chipTextActive]}>{t(`partnerApply.country_${key}`)}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
           <Field label={t('partnerApply.website')} value={form.website} onChangeText={setField('website')} keyboardType="url" autoCapitalize="none" />
           <Field label={t('partnerApply.message')} value={form.message} onChangeText={setField('message')} multiline />
 

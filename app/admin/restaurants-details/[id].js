@@ -22,6 +22,7 @@ import {
   getAdminRestaurantById,
   setRestaurantVisibility,
   updateAdminUserStatus,
+  setRestaurantRegion,
 } from '../../../services/adminService';
 import i18n from '../../../i18n';
 
@@ -427,6 +428,7 @@ export default function AdminRestaurantDetailsScreen() {
 
   const [restaurant, setRestaurant] = useState(null);
   const [visibilityBusy, setVisibilityBusy] = useState(false);
+  const [regionBusy, setRegionBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [initialLoaded, setInitialLoaded] = useState(false);
@@ -1144,6 +1146,43 @@ export default function AdminRestaurantDetailsScreen() {
                 : t('admin.restaurantDetails.hideAction')}
             </Text>
           </Pressable>
+        </View>
+
+        <View style={[styles.visibilityCard, { flexWrap: 'wrap' }]}>
+          <View style={{ flex: 1, minWidth: 220 }}>
+            <Text style={styles.visibilityTitle}>{t('admin.restaurantDetails.regionTitle')}</Text>
+            <Text style={styles.visibilityText}>{t('admin.restaurantDetails.regionText')}</Text>
+            <Text style={styles.visibilityText}>
+              {t('admin.restaurantDetails.regionCurrent', {
+                country: restaurant?.country || '—',
+                currency: restaurant?.currency || '—',
+              })}
+            </Text>
+          </View>
+          {['France', 'Suisse'].map((country) => (
+            <Pressable
+              key={country}
+              accessibilityRole="button"
+              accessibilityState={{ selected: restaurant?.country === country }}
+              disabled={regionBusy || restaurant?.country === country}
+              style={[styles.visibilityButton, { minHeight: 44, justifyContent: 'center' }, (regionBusy || restaurant?.country === country) && { opacity: 0.6 }]}
+              onPress={async () => {
+                try {
+                  setRegionBusy(true);
+                  await setRestaurantRegion(restaurantId, country, token);
+                  setRestaurant((current) =>
+                    current ? { ...current, country, currency: country === 'France' ? 'EUR' : 'CHF' } : current
+                  );
+                } catch (error) {
+                  Alert.alert(t('common.error'), error?.message || t('common.error'));
+                } finally {
+                  setRegionBusy(false);
+                }
+              }}
+            >
+              <Text style={styles.visibilityButtonText}>{t(`partnerApply.country_${country.toLowerCase()}`)}</Text>
+            </Pressable>
+          ))}
         </View>
 
         <Pressable

@@ -527,7 +527,10 @@
       "selfDeliveryOff": "Deliveries are handled by AFROEAT couriers.",
       "pickup": "Pickup",
       "pickupHelp": "Customers can order and collect at your counter, with no delivery fee.",
-      "feeFloor": "With an AFROEAT courier, the delivery fee is at least {{amount}} (courier minimum)."
+      "feeFloor": "With an AFROEAT courier, the delivery fee is at least {{amount}} (courier minimum).",
+      "radius": "Delivery radius (km)",
+      "radiusHint": "Customers whose address is farther away cannot order. Leave empty for the standard radius.",
+      "radiusInvalid": "The radius must be between 1 and 100 km."
     },
     "openingHours": {
       "title": "Opening hours",
@@ -1938,7 +1941,10 @@
       "visibleTitle": "Visible to customers",
       "visibleText": "Customers can see this business and order.",
       "showAction": "Make visible",
-      "hideAction": "Hide"
+      "hideAction": "Hide",
+      "regionTitle": "Country and currency",
+      "regionText": "Order and payout currency depend on it. Fix it before the first order.",
+      "regionCurrent": "Current: {{country}} · {{currency}}"
     },
     "driverDetails": {
       "invalidDriverAlert": "Invalid driver.",
@@ -2269,7 +2275,14 @@
     "offerNote": "The full terms are set out in the terms and conditions and confirmed to you before your business is activated.",
     "selfDeliveryRate": "Do your own deliveries? Only {{rate}}% commission, and you keep 100% of the delivery fee.",
     "firstMonth": "First {{days}} days: 0% AFROEAT commission (only {{fee}}% payment fees).",
-    "courierOffer": "Couriers: minimum €{{eur}} / CHF {{chf}} per delivery and 100% of tips."
+    "courierOffer": "Couriers: minimum €{{eur}} / CHF {{chf}} per delivery and 100% of tips.",
+    "country": "Business country",
+    "countryRequired": "Choose your business’s country.",
+    "country_france": "France",
+    "country_suisse": "Switzerland",
+    "payoutManual": "Your earnings are paid out on the schedule AFROEAT confirms before your business is activated (automatic Stripe payouts coming soon).",
+    "courierPayoutAutomatic": "Paid for every delivery completed",
+    "courierPayoutManual": "Paid on the schedule AFROEAT confirms when your account is activated"
   },
   "paymentCards": {
     "noCardTitle": "No saved card",
@@ -2419,5 +2432,12 @@
     "role_livreur": "courier",
     "role_restaurant": "restaurant",
     "role_admin": "AFROEAT"
+  },
+  "legalLinks": {
+    "consent": "By continuing, you accept our",
+    "and": "and our",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "linksTitle": "Legal information"
   }
 }

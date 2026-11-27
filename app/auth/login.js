@@ -16,6 +16,7 @@ import {
 import { router, useLocalSearchParams, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import FadeInView from '../../components/FadeInView';
+import LegalLinks from '../../components/LegalLinks';
 import { isAdminAreaAllowed } from '../../services/adminHost';
 import { useAuth } from '../../context/AuthContext';
 import { loginUser } from '../../services/authService';
@@ -550,6 +551,7 @@ export default function LoginScreen() {
             )}
           </LoginFormContainer>
 
+          <LegalLinks />
         </ScrollView>
       </KeyboardAvoidingView>
     </FadeInView>

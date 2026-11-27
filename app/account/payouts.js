@@ -105,9 +105,14 @@ export default function PayoutsScreen() {
     }
   };
 
+  // « Prêt » = le partenaire a terminé son dossier Stripe, même si la plateforme n'a pas encore ouvert les
+  // versements (sinon l'écran affichait « vérification en cours » pour toujours).
+  const isReady = Boolean(status?.connected || status?.accountReady);
   const statusLabel = status?.connected
     ? t('payouts.statusConnected')
-    : status?.detailsSubmitted
+    : status?.accountReady
+      ? t('payouts.statusPlatformPaused')
+      : status?.detailsSubmitted
       ? t('payouts.statusReview')
       : t('payouts.statusIncomplete');
 
@@ -128,9 +133,9 @@ export default function PayoutsScreen() {
           <>
             <View style={styles.statusRow}>
               <Ionicons
-                name={status?.connected ? 'checkmark-circle' : 'time-outline'}
+                name={isReady ? 'checkmark-circle' : 'time-outline'}
                 size={23}
-                color={status?.connected ? '#084424' : '#C8331A'}
+                color={isReady ? '#084424' : '#C8331A'}
               />
               <Text style={styles.statusText}>{statusLabel}</Text>
             </View>
@@ -143,7 +148,7 @@ export default function PayoutsScreen() {
         )}
       </View>
 
-      {!status?.connected && (
+      {!isReady && (
         <View style={styles.formCard}>
           <Text style={styles.label}>{t('payouts.countryLabel')}</Text>
           <View style={styles.countryRow}>
@@ -172,9 +177,9 @@ export default function PayoutsScreen() {
 
       <Pressable
         accessibilityRole="button"
-        disabled={loading || opening || Boolean(status?.connected)}
+        disabled={loading || opening || Boolean(isReady)}
         onPress={startOnboarding}
-        style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed, (loading || opening || status?.connected) && styles.disabled]}
+        style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed, (loading || opening || isReady) && styles.disabled]}
       >
         {opening ? <ActivityIndicator color="#FFFFFF" /> : <Ionicons name="wallet-outline" size={19} color="#FFFFFF" />}
         <Text style={styles.primaryButtonText}>
@@ -182,7 +187,7 @@ export default function PayoutsScreen() {
         </Text>
       </Pressable>
 
-      {status?.connected && (
+      {isReady && (
         <Pressable accessibilityRole="link" disabled={opening} onPress={openStripeDashboard} style={styles.refreshButton}>
           <Ionicons name="open-outline" size={18} color="#084424" />
           <Text style={styles.refreshText}>{t('payouts.manageButton')}</Text>

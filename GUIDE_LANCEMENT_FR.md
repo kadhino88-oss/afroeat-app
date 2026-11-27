@@ -3,7 +3,7 @@
 ## État actuel
 
 - Le site public est disponible sur `https://afroeat-app.vercel.app` et l’API canonique est `https://afroeat-api-staging.vercel.app/api` (projet Vercel `afroeat-api-staging`, branche `main`). Le nom du projet contient « staging », mais c’est le backend choisi par le propriétaire pour la production.
-- Le contrôle de santé confirme que cette API tourne en environnement Vercel Production et que MongoDB `afroeat_staging` est connecté. Vérifier que cette base contient les comptes attendus avant toute ouverture commerciale ; aucune migration automatique n’a été faite.
+- Le contrôle de santé confirme que cette API tourne en environnement Vercel Production et que MongoDB `afroeatDB` (variable `AFROEAT_MONGO_DB_NAME`) est connecté. L’ancienne base `afroeat_staging` n’est plus lue par la production : ses données (restaurants, menus, partenaires) n’ont pas été migrées automatiquement (voir `docs/ENVIRONNEMENTS.md` du dépôt backend et `scripts/migrate-between-databases.js`, essai à blanc par défaut).
 - Le projet séparé `afroeat-api-test` pointe vers la base `afroeat_test` et sert aux prévisualisations et essais. Ne pas l’utiliser pour les données ou les commandes de production.
 - Les commandes de production et les versements Connect restent désactivés jusqu’à validation de la signature du webhook live, des comptes Connect, des scénarios d’échec et des opérations de livraison.
 - Le rapport précédent mentionne un build Android de production basé sur un ancien commit ; aucun build magasin basé sur la révision web actuellement publiée n’est encore confirmé ici. Un export Expo n’est pas un APK ou un AAB installable.
@@ -18,7 +18,7 @@ Le catalogue et la politique de commission sont configurés par pays et par devi
 
 ## À vérifier avant une bêta publique
 
-1. Vérifier les sauvegardes/restaurations et la supervision de la base actuellement utilisée, `afroeat_staging`, sans modifier les données existantes.
+1. Vérifier les sauvegardes/restaurations et la supervision de la base de production, `afroeatDB`, sans modifier les données existantes.
 2. Vérifier les secrets EAS de production : `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_STRIPE_KEY` et `ANDROID_GOOGLE_MAPS_API_KEY`, puis générer et installer des builds candidats Android/iOS.
 3. Confirmer que `STRIPE_WEBHOOK_SECRET` correspond à `https://afroeat-api-staging.vercel.app/api/payments/webhook`, puis valider la signature avec un événement de test, sans paiement réel.
 4. Les valeurs de pilote actuellement configurées sont 15 % de commission plateforme et 80 % des frais de livraison au livreur sur CHF/EUR, pour CH/FR. Toute autre devise ou zone reste fermée jusqu’à validation locale.

@@ -1,5 +1,5 @@
 {
   "CFBundleDisplayName": "Afroeat",
-  "NSLocationWhenInUseUsageDescription": "Afroeat uses your location while you use the app to find nearby African businesses and track the delivery of your order.",
-  "NSPhotoLibraryUsageDescription": "Afroeat accesses the photos you choose for your profile, logo or dishes."
+  "NSLocationWhenInUseUsageDescription": "Afroeat uses your location while you use the app to find nearby African businesses, track the delivery of your order and, for couriers, share your position during a delivery.",
+  "NSPhotoLibraryUsageDescription": "Afroeat accesses the photos you choose for your profile, logo, dishes or supporting documents."
 }

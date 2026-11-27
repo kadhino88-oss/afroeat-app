@@ -527,7 +527,10 @@
       "selfDeliveryOff": "Les livraisons sont assurées par les livreurs AFROEAT.",
       "pickup": "Vente à emporter",
       "pickupHelp": "Les clients peuvent commander puis venir chercher leur commande, sans frais de livraison.",
-      "feeFloor": "Avec un livreur AFROEAT, les frais de livraison sont d’au moins {{amount}} (minimum garanti au livreur)."
+      "feeFloor": "Avec un livreur AFROEAT, les frais de livraison sont d’au moins {{amount}} (minimum garanti au livreur).",
+      "radius": "Rayon de livraison (km)",
+      "radiusHint": "Les clients dont l’adresse est plus loin ne pourront pas commander. Laissez vide pour le rayon standard.",
+      "radiusInvalid": "Le rayon doit être compris entre 1 et 100 km."
     },
     "openingHours": {
       "title": "Horaires d'ouverture",
@@ -1938,7 +1941,10 @@
       "visibleTitle": "Fiche visible par les clients",
       "visibleText": "Les clients peuvent voir ce commerce et commander.",
       "showAction": "Rendre visible",
-      "hideAction": "Masquer"
+      "hideAction": "Masquer",
+      "regionTitle": "Pays et devise",
+      "regionText": "La devise des commandes et des versements en dépend. À corriger avant la première commande.",
+      "regionCurrent": "Actuel : {{country}} · {{currency}}"
     },
     "driverDetails": {
       "invalidDriverAlert": "Livreur invalide.",
@@ -2269,7 +2275,14 @@
     "offerNote": "Les conditions complètes figurent dans les conditions générales et vous sont confirmées avant l’activation de votre commerce.",
     "selfDeliveryRate": "Vous livrez vous-même ? Seulement {{rate}} % de commission, et vous gardez 100 % des frais de livraison.",
     "firstMonth": "{{days}} premiers jours : 0 % de commission AFROEAT (seuls {{fee}} % de frais de paiement).",
-    "courierOffer": "Livreurs : minimum {{eur}} € / {{chf}} CHF par course et 100 % des pourboires."
+    "courierOffer": "Livreurs : minimum {{eur}} € / {{chf}} CHF par course et 100 % des pourboires.",
+    "country": "Pays du commerce",
+    "countryRequired": "Choisissez le pays de votre commerce.",
+    "country_france": "France",
+    "country_suisse": "Suisse",
+    "payoutManual": "Vos revenus vous sont reversés selon le calendrier confirmé par AFROEAT avant l’activation de votre commerce (versements automatiques Stripe bientôt disponibles).",
+    "courierPayoutAutomatic": "Paiement à chaque course livrée",
+    "courierPayoutManual": "Paiement selon le calendrier confirmé par AFROEAT à l’activation de votre compte"
   },
   "paymentCards": {
     "noCardTitle": "Aucune carte enregistrée",
@@ -2419,5 +2432,12 @@
     "role_livreur": "livreur",
     "role_restaurant": "restaurant",
     "role_admin": "AFROEAT"
+  },
+  "legalLinks": {
+    "consent": "En continuant, vous acceptez nos",
+    "and": "et notre",
+    "terms": "Conditions d’utilisation",
+    "privacy": "Politique de confidentialité",
+    "linksTitle": "Informations légales"
   }
 }

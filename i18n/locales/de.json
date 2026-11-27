@@ -527,7 +527,10 @@
       "selfDeliveryOff": "Die Lieferungen übernehmen AFROEAT-Kuriere.",
       "pickup": "Abholung",
       "pickupHelp": "Kunden können bestellen und an Ihrer Theke abholen, ohne Liefergebühr.",
-      "feeFloor": "Mit einem AFROEAT-Kurier beträgt die Liefergebühr mindestens {{amount}} (Mindestbetrag für den Kurier)."
+      "feeFloor": "Mit einem AFROEAT-Kurier beträgt die Liefergebühr mindestens {{amount}} (Mindestbetrag für den Kurier).",
+      "radius": "Lieferradius (km)",
+      "radiusHint": "Kunden, deren Adresse weiter entfernt ist, können nicht bestellen. Leer lassen für den Standardradius.",
+      "radiusInvalid": "Der Radius muss zwischen 1 und 100 km liegen."
     },
     "openingHours": {
       "title": "Öffnungszeiten",
@@ -1938,7 +1941,10 @@
       "visibleTitle": "Für Kunden sichtbar",
       "visibleText": "Kunden sehen dieses Geschäft und können bestellen.",
       "showAction": "Sichtbar machen",
-      "hideAction": "Ausblenden"
+      "hideAction": "Ausblenden",
+      "regionTitle": "Land und Währung",
+      "regionText": "Die Währung der Bestellungen und Auszahlungen hängt davon ab. Vor der ersten Bestellung korrigieren.",
+      "regionCurrent": "Aktuell: {{country}} · {{currency}}"
     },
     "driverDetails": {
       "invalidDriverAlert": "Ungültiger Fahrer.",
@@ -2269,7 +2275,14 @@
     "offerNote": "Die vollständigen Bedingungen stehen in den AGB und werden Ihnen vor der Aktivierung Ihres Geschäfts bestätigt.",
     "selfDeliveryRate": "Sie liefern selbst? Nur {{rate}} % Kommission, und die Liefergebühr gehört zu 100 % Ihnen.",
     "firstMonth": "Erste {{days}} Tage: 0 % AFROEAT-Kommission (nur {{fee}} % Zahlungsgebühren).",
-    "courierOffer": "Kuriere: mindestens {{eur}} € / {{chf}} CHF pro Lieferung und 100 % der Trinkgelder."
+    "courierOffer": "Kuriere: mindestens {{eur}} € / {{chf}} CHF pro Lieferung und 100 % der Trinkgelder.",
+    "country": "Land des Betriebs",
+    "countryRequired": "Wählen Sie das Land Ihres Betriebs.",
+    "country_france": "Frankreich",
+    "country_suisse": "Schweiz",
+    "payoutManual": "Ihre Einnahmen werden nach dem Zeitplan ausgezahlt, den AFROEAT vor der Aktivierung Ihres Betriebs bestätigt (automatische Stripe-Auszahlungen folgen bald).",
+    "courierPayoutAutomatic": "Bezahlung für jede abgeschlossene Lieferung",
+    "courierPayoutManual": "Bezahlung nach dem Zeitplan, den AFROEAT bei der Aktivierung Ihres Kontos bestätigt"
   },
   "paymentCards": {
     "noCardTitle": "Keine gespeicherte Karte",
@@ -2419,5 +2432,12 @@
     "role_livreur": "Kurier",
     "role_restaurant": "Restaurant",
     "role_admin": "AFROEAT"
+  },
+  "legalLinks": {
+    "consent": "Indem Sie fortfahren, akzeptieren Sie unsere",
+    "and": "und unsere",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzerklärung",
+    "linksTitle": "Rechtliche Hinweise"
   }
 }
