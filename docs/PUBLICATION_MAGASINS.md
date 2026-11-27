@@ -55,7 +55,7 @@ les relecteurs) sont prêts dans [FICHES_MAGASINS.md](FICHES_MAGASINS.md).
 - **Notifications Android** : créer un projet Firebase, puis déposer la clé de compte de service FCM V1
   sur expo.dev → projet → Credentials → Android. Sans elle, l'appli fonctionne mais n'envoie pas de
   notifications sur Android. Sur iOS, EAS crée la clé de notifications lors de la première construction.
-- **Apple Pay** (activé dans `eas.json`) : enregistrer l'identifiant marchand `merchant.com.afroeat`
+- **Apple Pay** (désactivé dans `eas.json` pour la v1 ; à activer seulement après vérification de l’identifiant marchand) : enregistrer l'identifiant marchand `merchant.com.afroeat`
   dans le compte Apple Developer et le certificat associé dans Stripe. Sinon, passer
   `EXPO_PUBLIC_ENABLE_APPLE_PAY` à `false` dans `eas.json` avant la construction iOS.
 - **Envoi automatique** : pour Google, déposer la clé de compte de service Play Console sur expo.dev

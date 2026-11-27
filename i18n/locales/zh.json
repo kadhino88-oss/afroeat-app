@@ -527,7 +527,10 @@
       "selfDeliveryOff": "配送由 AFROEAT 骑手负责。",
       "pickup": "自取",
       "pickupHelp": "顾客可下单后到柜台取餐，免配送费。",
-      "feeFloor": "由 AFROEAT 骑手配送时，配送费至少为 {{amount}}（骑手保底）。"
+      "feeFloor": "由 AFROEAT 骑手配送时，配送费至少为 {{amount}}（骑手保底）。",
+      "radius": "配送半径（公里）",
+      "radiusHint": "地址超出此范围的顾客无法下单。留空则使用标准半径。",
+      "radiusInvalid": "半径必须在 1 到 100 公里之间。"
     },
     "openingHours": {
       "title": "营业时间",
@@ -1938,7 +1941,10 @@
       "visibleTitle": "顾客可见",
       "visibleText": "顾客可以看到该店铺并下单。",
       "showAction": "设为可见",
-      "hideAction": "隐藏"
+      "hideAction": "隐藏",
+      "regionTitle": "国家与币种",
+      "regionText": "订单和结算币种取决于此。请在第一笔订单前更正。",
+      "regionCurrent": "当前：{{country}} · {{currency}}"
     },
     "driverDetails": {
       "invalidDriverAlert": "无效的骑手。",
@@ -2269,7 +2275,14 @@
     "offerNote": "完整条款见服务条款，并会在您的店铺激活前向您确认。",
     "selfDeliveryRate": "自行配送？佣金仅 {{rate}}%，配送费 100% 归您。",
     "firstMonth": "前 {{days}} 天：AFROEAT 0% 佣金（仅收 {{fee}}% 支付手续费）。",
-    "courierOffer": "骑手：每单最低 {{eur}} 欧元 / {{chf}} 瑞郎，小费 100% 归骑手。"
+    "courierOffer": "骑手：每单最低 {{eur}} 欧元 / {{chf}} 瑞郎，小费 100% 归骑手。",
+    "country": "商家所在国家",
+    "countryRequired": "请选择您的商家所在国家。",
+    "country_france": "法国",
+    "country_suisse": "瑞士",
+    "payoutManual": "您的收入将按 AFROEAT 在激活商家前确认的时间表结算（Stripe 自动结算即将推出）。",
+    "courierPayoutAutomatic": "每完成一单配送即付款",
+    "courierPayoutManual": "按 AFROEAT 在激活账户时确认的时间表付款"
   },
   "paymentCards": {
     "noCardTitle": "尚未保存银行卡",
@@ -2419,5 +2432,12 @@
     "role_livreur": "骑手",
     "role_restaurant": "餐厅",
     "role_admin": "AFROEAT"
+  },
+  "legalLinks": {
+    "consent": "继续即表示您接受我们的",
+    "and": "和我们的",
+    "terms": "使用条款",
+    "privacy": "隐私政策",
+    "linksTitle": "法律信息"
   }
 }

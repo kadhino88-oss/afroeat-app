@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { LegalLinkRows } from './LegalLinks';
 
 export default function AccountPrivacyLink() {
   const { t } = useTranslation();
@@ -39,6 +40,7 @@ export default function AccountPrivacyLink() {
       </View>
       <Ionicons name="chevron-forward" size={18} color="#606D5D" />
     </Pressable>
+    <LegalLinkRows />
     </>
   );
 }

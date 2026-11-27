@@ -33,6 +33,29 @@ const tintFor = (name) => {
   return TINTS[hash % TINTS.length];
 };
 
+/**
+ * Logo seul (sans cadre ni panneau de couleur) : le logo du commerce, son icône de site, ou ses initiales.
+ * Utilisé par les cartes compactes de l'annuaire.
+ */
+export function PlaceLogo({ place, size = 84 }) {
+  if (place?.logoUrl || place?.website) {
+    return (
+      <PlaceBrandMark
+        logoUrl={place?.logoUrl}
+        website={place?.website}
+        category={place?.category}
+        size={size}
+        fallbackText={initialsOf(place?.name)}
+      />
+    );
+  }
+  return (
+    <View style={[styles.monogram, styles.monogramBorder, { width: size, height: size, borderRadius: size * 0.28 }]}>
+      <Text style={[styles.monogramText, { fontSize: size * 0.38 }]}>{initialsOf(place?.name)}</Text>
+    </View>
+  );
+}
+
 export default function PlaceCover({ place, style, markSize = 84 }) {
   const [imageFailed, setImageFailed] = useState(false);
   const imageUrl = String(place?.imageUrl || '').trim();
@@ -81,6 +104,7 @@ const styles = StyleSheet.create({
   circleTop: { top: -120, right: -60 },
   circleBottom: { bottom: -140, left: -70 },
   monogram: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF' },
+  monogramBorder: { borderWidth: 1, borderColor: '#F3E7CA' },
   monogramText: { color: '#084424', fontFamily: BrandFonts.display, fontWeight: '700', letterSpacing: 1 },
   markShadow: {
     borderRadius: 24,

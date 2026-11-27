@@ -14,6 +14,10 @@ const SECTIONS = [
     body: [
       "Compte : nom, adresse e-mail, numéro de téléphone, mot de passe (stocké sous forme chiffrée, jamais en clair).",
       "Livraison : adresses de livraison que tu enregistres et, si tu l'autorises, ta position pour trouver les commerces proches.",
+      "Position : avec ton autorisation, et uniquement pendant que tu utilises l'application, pour trouver les commerces proches et suivre ta livraison. Si tu es livreur, ta position est partagée avec AFROEAT, le commerce et le client pendant une course, afin de suivre la livraison ; elle n'est pas suivie en arrière-plan. Tu peux refuser ou retirer cette autorisation dans les réglages de ton téléphone.",
+      "Notifications : si tu les acceptes, nous enregistrons un identifiant de notification de ton appareil (jeton) pour t'envoyer l'avancement de tes commandes ou de tes courses. Il transite par les services de notification d'Expo, d'Apple (APNs) et de Google (FCM). Tu peux les désactiver à tout moment dans les réglages de ton téléphone.",
+      "Photos : uniquement celles que tu choisis toi-même dans ta galerie (profil, logo, plats, documents justificatifs). Nous n'accédons pas au reste de ta galerie et nous n'utilisons pas la caméra.",
+      "Alcool : pour les commandes contenant de l'alcool, nous enregistrons ta confirmation d'avoir 18 ans ou plus ; une pièce d'identité peut être demandée à la livraison.",
       "Commandes : contenu, montant, statut et historique de tes commandes.",
       "Paiement : le paiement est traité par Stripe. Nous ne voyons ni ne stockons ton numéro de carte complet ; nous gardons uniquement une référence de moyen de paiement (marque et quatre derniers chiffres).",
     ],
@@ -37,7 +41,8 @@ const SECTIONS = [
     heading: 'Qui reçoit tes données',
     body: [
       "Le commerce reçoit ce qui est nécessaire pour préparer ta commande (nom, contenu, adresse de livraison, téléphone). Le livreur reçoit l'adresse et le téléphone pour livrer.",
-      "Nos prestataires techniques : hébergement (Vercel), base de données (MongoDB Atlas), paiement (Stripe), cartes et adresses (OpenStreetMap). Ils n'agissent que pour notre compte.",
+      "Nos prestataires techniques : hébergement (Vercel), base de données (MongoDB Atlas), paiement (Stripe), cartes et adresses (OpenStreetMap ; Google Maps sur Android), notifications (Expo, Apple, Google), envoi d'e-mails. Ils n'agissent que pour notre compte.",
+      "Certains de ces prestataires sont situés ou stockent des données hors de Suisse et de l'Union européenne (notamment aux États-Unis). Les transferts s'appuient sur les garanties prévues par la loi (clauses contractuelles types ou décision d'adéquation).",
     ],
   },
   {
@@ -51,6 +56,7 @@ const SECTIONS = [
     body: [
       "Tu peux accéder à tes données, les corriger, demander leur suppression ou t'opposer à leur traitement, conformément à la loi suisse sur la protection des données (nLPD) et au RGPD.",
       "Suppression du compte : dans l'application, ouvre Profil puis Confidentialité et suppression du compte. Tu peux aussi le faire depuis le site web. La suppression est définitive.",
+      "Si tu estimes que tes droits ne sont pas respectés, tu peux t'adresser au Préposé fédéral à la protection des données et à la transparence (PFPDT, Suisse) ou à la CNIL (France).",
     ],
   },
   {
@@ -71,7 +77,7 @@ export default function PrivacyPolicyScreen() {
   return (
     <LegalPage
       title="Politique de confidentialité"
-      updated="9 novembre 2026"
+      updated="27 novembre 2026"
       sections={SECTIONS}
     />
   );

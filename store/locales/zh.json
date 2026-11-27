@@ -1,0 +1,5 @@
+{
+  "CFBundleDisplayName": "Afroeat",
+  "NSLocationWhenInUseUsageDescription": "Afroeat 仅在您使用应用期间使用您的位置，用于查找附近的非洲商家、跟踪订单配送，并在骑手配送期间共享其位置。",
+  "NSPhotoLibraryUsageDescription": "Afroeat 会访问您为个人资料、徽标、菜品或证明文件所选择的照片。"
+}

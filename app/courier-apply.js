@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -13,9 +13,10 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import { Brand, BrandFonts } from '../constants/brand';
-import { submitPartnerApplication } from '../services/partnerApplicationService';
+import { getPartnerTerms, submitPartnerApplication } from '../services/partnerApplicationService';
 
 const VEHICLES = ['Vélo', 'Vélo électrique', 'Scooter', 'Voiture', 'À pied'];
 
@@ -24,6 +25,18 @@ const VEHICLES = ['Vélo', 'Vélo électrique', 'Scooter', 'Voiture', 'À pied']
  * avec lequel le livreur crée lui-même son compte et son mot de passe.
  */
 export default function CourierApplyScreen() {
+  const { t } = useTranslation();
+  const [payoutsAutomatic, setPayoutsAutomatic] = useState(false);
+  // La promesse de paiement automatique ne s'affiche que si l'API a réellement activé les versements.
+  useEffect(() => {
+    let active = true;
+    getPartnerTerms()
+      .then((terms) => active && setPayoutsAutomatic(terms?.offer?.payoutsAutomatic === true))
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -100,7 +113,9 @@ export default function CourierApplyScreen() {
               <Text style={styles.offerLine}>💶 80 % des frais de livraison, minimum garanti 3,50 € / 4 CHF par course</Text>
               <Text style={styles.offerLine}>🙏 100 % des pourboires, sans commission</Text>
               <Text style={styles.offerLine}>📍 Courses proposées près de vous : vous acceptez celles qui vous conviennent</Text>
-              <Text style={styles.offerLine}>⚡ Paiement à chaque course livrée</Text>
+              <Text style={styles.offerLine}>
+                ⚡ {payoutsAutomatic ? t('partnerApply.courierPayoutAutomatic') : t('partnerApply.courierPayoutManual')}
+              </Text>
             </View>
 
             <Text style={styles.label}>Nom et prénom</Text>

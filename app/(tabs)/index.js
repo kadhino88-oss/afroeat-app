@@ -32,7 +32,7 @@ import {
 import { getAllMenuItems } from '../../services/menuService';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
-import PlaceCover from '../../components/PlaceCover';
+import { PlaceLogo } from '../../components/PlaceCover';
 import OwnImage from '../../components/OwnImage';
 import useGridColumns, { MAX_CONTENT_WIDTH } from '../../hooks/use-grid-columns';
 
@@ -869,23 +869,24 @@ export default function HomeScreen() {
           accessibilityLabel={`Ouvrir ${item?.name}`}
           style={({ pressed }) => [
             styles.restaurantCard,
+            isPublicListing && styles.restaurantCardRow,
             pressed && styles.restaurantCardPressed,
           ]}
           onPress={() => handleOpenRestaurant(item)}
         >
+          {isPublicListing ? (
+            // Annuaire : le logo seul, sans grand cadre rectangulaire.
+            <View style={styles.publicLogoWrap}>
+              <PlaceLogo place={item} size={84} />
+            </View>
+          ) : (
           <View style={styles.restaurantImageWrapper}>
-            {isPublicListing ? (
-              <View style={styles.publicBrandPanel}>
-                <PlaceCover place={item} markSize={78} />
-              </View>
-            ) : (
-              <OwnImage
-                uri={item?.image || item?.coverImage}
-                style={styles.restaurantImage}
-                icon="restaurant-outline"
-                iconSize={40}
-              />
-            )}
+            <OwnImage
+              uri={item?.image || item?.coverImage}
+              style={styles.restaurantImage}
+              icon="restaurant-outline"
+              iconSize={40}
+            />
 
             {!isPublicListing && item?.logo ? (
               <View style={styles.cardLogo}>
@@ -928,7 +929,9 @@ export default function HomeScreen() {
             )}
           </View>
 
-          <View style={styles.restaurantContent}>
+          )}
+
+          <View style={[styles.restaurantContent, isPublicListing && styles.restaurantContentRow]}>
             <View style={styles.restaurantHeaderRow}>
               <Text style={styles.restaurantName} numberOfLines={1}>
                 {item?.name}
@@ -1706,6 +1709,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E3DECF'
   },
+
+  // Carte d'annuaire compacte : logo à gauche, texte à droite.
+  restaurantCardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 14,
+    paddingVertical: 14,
+  },
+  publicLogoWrap: { alignItems: 'center', justifyContent: 'center' },
+  restaurantContentRow: { flex: 1, paddingVertical: 0 },
 
   restaurantCardPressed: {
     opacity: 0.92,

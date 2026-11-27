@@ -30,6 +30,7 @@ export default function RestaurantDeliverySettingsScreen() {
   const [restaurant, setRestaurant] = useState(null);
   const [fee, setFee] = useState('');
   const [minimum, setMinimum] = useState('');
+  const [radius, setRadius] = useState('');
   const [selfDelivery, setSelfDelivery] = useState(false);
   const [pickupEnabled, setPickupEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -46,6 +47,7 @@ export default function RestaurantDeliverySettingsScreen() {
           setRestaurant(data);
           setFee(String(data?.deliveryFee ?? 0));
           setMinimum(String(data?.minimumOrderAmount ?? 0));
+          setRadius(data?.deliveryRadiusKm ? String(data.deliveryRadiusKm) : '');
           setSelfDelivery(data?.selfDelivery === true);
           setPickupEnabled(data?.pickupEnabled !== false);
         } catch (error) {
@@ -67,9 +69,19 @@ export default function RestaurantDeliverySettingsScreen() {
       Alert.alert(t('common.error'), t('restaurant.deliverySettings.invalid'));
       return;
     }
+    const radiusText = String(radius).trim().replace(',', '.');
+    const deliveryRadiusKm = radiusText === '' ? null : Number(radiusText);
+    if (deliveryRadiusKm !== null && !(deliveryRadiusKm >= 1 && deliveryRadiusKm <= 100)) {
+      Alert.alert(t('common.error'), t('restaurant.deliverySettings.radiusInvalid'));
+      return;
+    }
     try {
       setSaving(true);
-      const updated = await updateMyRestaurant(restaurant._id, { deliveryFee, minimumOrderAmount, selfDelivery, pickupEnabled }, token);
+      const updated = await updateMyRestaurant(
+        restaurant._id,
+        { deliveryFee, minimumOrderAmount, deliveryRadiusKm, selfDelivery, pickupEnabled },
+        token
+      );
       setRestaurant(updated);
       Alert.alert(t('restaurant.deliverySettings.title'), t('restaurant.deliverySettings.saved'));
     } catch (error) {
@@ -130,6 +142,16 @@ export default function RestaurantDeliverySettingsScreen() {
             {t('restaurant.deliverySettings.minimum')} ({currency})
           </Text>
           <TextInput value={minimum} onChangeText={setMinimum} keyboardType="decimal-pad" style={styles.input} />
+          <Text style={styles.label}>{t('restaurant.deliverySettings.radius')}</Text>
+          <TextInput
+            value={radius}
+            onChangeText={setRadius}
+            keyboardType="decimal-pad"
+            placeholder="10"
+            accessibilityHint={t('restaurant.deliverySettings.radiusHint')}
+            style={styles.input}
+          />
+          <Text style={styles.hint}>{t('restaurant.deliverySettings.radiusHint')}</Text>
           <Pressable
             accessibilityRole="switch"
             accessibilityState={{ checked: selfDelivery }}
@@ -212,6 +234,7 @@ const styles = StyleSheet.create({
   selfRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 16, padding: 14, borderRadius: 14, backgroundColor: '#F2ECE0' },
   selfTitle: { color: '#0D1C11', fontWeight: '800', fontSize: 15 },
   selfHelp: { color: '#606D5D', marginTop: 4, lineHeight: 19 },
+  hint: { color: '#606D5D', marginTop: 6, fontSize: 13, lineHeight: 19 },
   page: { flex: 1, backgroundColor: Brand.background },
   content: { padding: 20, paddingBottom: 60, maxWidth: 560, width: '100%', alignSelf: 'center' },
   back: { width: 42, height: 42, borderRadius: 14, backgroundColor: Brand.card, justifyContent: 'center', alignItems: 'center', marginBottom: 16, borderWidth: 1, borderColor: Brand.border },

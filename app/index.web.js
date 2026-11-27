@@ -19,7 +19,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { getNearbyPlaces } from '../services/placeService';
 import { NEARBY_RADIUS_OPTIONS } from '../services/nearbySearchSettings';
-import PlaceCover from '../components/PlaceCover';
+import { PlaceLogo } from '../components/PlaceCover';
 import DishMarquee from '../components/DishMarquee';
 import { BrandFonts } from '../constants/brand';
 
@@ -404,11 +404,11 @@ export default function WebDiscoveryHome() {
               <View style={[styles.nearbyGrid, compact && styles.nearbyGridCompact]}>
                 {nearby.slice(0, 6).map((place) => (
                   <Pressable key={`${place.source}-${place.id || place.osmId}`} style={({ pressed }) => [styles.placeCard, { width: compact ? '100%' : tablet ? '48.5%' : '31.8%', minWidth: compact ? 0 : 235 }, pressed && styles.offerCardPressed]} onPress={() => openPlace(place)} accessibilityRole="button">
-                    <View style={styles.placeImageWrap}>
-                      <PlaceCover place={place} markSize={72} />
-                      <View style={styles.placeType}><Text style={styles.placeTypeText}>{getCategoryLabel(place)}</Text></View>
+                    <View style={styles.placeLogoWrap}>
+                      <PlaceLogo place={place} size={80} />
                     </View>
                     <View style={styles.placeBody}>
+                      <Text style={styles.placeTypeInline}>{getCategoryLabel(place)}</Text>
                       <Text style={styles.placeName} numberOfLines={1}>{place.name}</Text>
                       <Text style={styles.placeAddress} numberOfLines={1}>{place.city || place.address || place.country || 'Adresse répertoriée'}</Text>
                       {place.distanceKm != null ? <Text style={styles.placeDistance}>{Number(place.distanceKm).toFixed(1)} km</Text> : null}
@@ -595,13 +595,15 @@ const styles = StyleSheet.create({
   distanceChipTextActive: { color: COLORS.cream },
   nearbyGrid: { marginTop: 21, flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
   nearbyGridCompact: { flexDirection: 'column' },
-  placeCard: { width: '31.8%', minWidth: 235, overflow: 'hidden', borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.card },
+  placeCard: { width: '31.8%', minWidth: 235, overflow: 'hidden', borderRadius: 10, borderWidth: 1, borderColor: COLORS.border, backgroundColor: COLORS.card, flexDirection: 'row', alignItems: 'center', paddingLeft: 14, paddingVertical: 12 },
+  placeLogoWrap: { alignItems: 'center', justifyContent: 'center' },
+  placeTypeInline: { color: COLORS.gold, fontSize: 9, fontWeight: '800', marginBottom: 4 },
   placeImageWrap: { height: 145, position: 'relative', backgroundColor: '#F3E7CA' },
   placeImage: { width: '100%', height: '100%' },
   placeFallback: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' },
   placeType: { position: 'absolute', left: 10, bottom: 10, paddingHorizontal: 9, paddingVertical: 6, borderRadius: 5, backgroundColor: COLORS.card },
   placeTypeText: { color: COLORS.ink, fontSize: 9, fontWeight: '800' },
-  placeBody: { padding: 13 },
+  placeBody: { flex: 1, padding: 13 },
   placeName: { color: COLORS.ink, fontFamily: BrandFonts.display, fontSize: 16 },
   placeAddress: { marginTop: 5, color: COLORS.muted, fontSize: 10 },
   placeDistance: { marginTop: 8, color: COLORS.gold, fontSize: 10, fontWeight: '800' },

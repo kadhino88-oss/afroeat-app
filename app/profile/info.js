@@ -131,47 +131,22 @@ const AvatarPicker = ({ user, onUploaded }) => {
     }
   }, [onUploaded, t]);
 
+  // Galerie uniquement : l'application ne déclare pas l'accès à la caméra (aucune autorisation « caméra » dans
+  // le binaire), donc proposer « Prendre une photo » échouerait sur iOS et ferait refuser l'application.
   const handlePickImage = useCallback(async () => {
     const hasPermission = await requestPermission();
     if (!hasPermission) return;
 
-    Alert.alert(
-      t('profile.info.photoSourceTitle'),
-      t('profile.info.photoSourceMessage'),
-      [
-        {
-          text: t('profile.info.takePhoto'),
-          onPress: async () => {
-            const { status } = await ImagePicker.requestCameraPermissionsAsync();
-            if (status !== 'granted') return;
-            const result = await ImagePicker.launchCameraAsync({
-              allowsEditing: true,
-              aspect: [1, 1],
-              quality: 0.7,
-            });
-            if (!result.canceled && result.assets?.[0]) {
-              uploadImage(result.assets[0]);
-            }
-          },
-        },
-        {
-          text: t('profile.info.chooseGallery'),
-          onPress: async () => {
-            const result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              allowsEditing: true,
-              aspect: [1, 1],
-              quality: 0.7,
-            });
-            if (!result.canceled && result.assets?.[0]) {
-              uploadImage(result.assets[0]);
-            }
-          },
-        },
-        { text: t('profile.info.cancel'), style: 'cancel' },
-      ]
-    );
-  }, [requestPermission, t, uploadImage]);
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+    if (!result.canceled && result.assets?.[0]) {
+      uploadImage(result.assets[0]);
+    }
+  }, [requestPermission, uploadImage]);
 
   return (
     <Pressable

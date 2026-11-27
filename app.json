@@ -7,9 +7,9 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "afroeat",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.bkentreprise.afroeat",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
@@ -27,7 +27,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#0B0B0F"
+        "backgroundColor": "#983903"
       },
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -44,7 +44,7 @@
         {
           "locationAlwaysAndWhenInUsePermission": false,
           "locationAlwaysPermission": false,
-          "locationWhenInUsePermission": "Afroeat utilise votre position pendant l’utilisation de l’application pour trouver les commerces africains proches et suivre la livraison de votre commande.",
+          "locationWhenInUsePermission": "Afroeat utilise votre position pendant l’utilisation de l’application pour trouver les commerces africains proches, suivre la livraison de votre commande et, pour les livreurs, partager votre position pendant une course.",
           "isIosBackgroundLocationEnabled": false,
           "isAndroidBackgroundLocationEnabled": false,
           "isAndroidForegroundServiceEnabled": false
@@ -57,7 +57,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Afroeat accède aux photos que vous choisissez pour votre profil, votre logo ou vos plats.",
+          "photosPermission": "Afroeat accède aux photos que vous choisissez pour votre profil, votre logo, vos plats ou vos documents justificatifs.",
           "cameraPermission": false,
           "microphonePermission": false
         }
@@ -65,8 +65,8 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/icon.png",
-          "color": "#0B0B0F"
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#983903"
         }
       ],
       [
@@ -94,7 +94,11 @@
     },
     "locales": {
       "fr": "./store/locales/fr.json",
-      "en": "./store/locales/en.json"
+      "en": "./store/locales/en.json",
+      "de": "./store/locales/de.json",
+      "es": "./store/locales/es.json",
+      "it": "./store/locales/it.json",
+      "zh": "./store/locales/zh.json"
     }
   }
 }

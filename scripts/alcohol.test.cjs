@@ -32,7 +32,7 @@ test('l’admin peut rendre visible ou masquer une fiche commerce', () => {
 });
 
 test('livraison par le restaurant : réglage et boutons « Partir en livraison » / « Remise au client »', () => {
-  assert.match(read('app/restaurant/delivery-settings.js'), /minimumOrderAmount, selfDelivery, pickupEnabled \}/);
+  assert.match(read('app/restaurant/delivery-settings.js'), /minimumOrderAmount, deliveryRadiusKm, selfDelivery, pickupEnabled \}/);
   const src = read('app/restaurant/restaurant-orders-details/[id].js');
   assert.match(src, /const canAssign = !selfDelivery &&/);
   assert.match(src, /runStatusChange\('En livraison'\)/);

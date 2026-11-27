@@ -582,3 +582,11 @@ export const resolveErrorEvent = async (id, token) =>
 // Rendre une fiche commerce visible (ou la masquer) pour les clients.
 export const setRestaurantVisibility = async (restaurantId, isActive, token) =>
   apiPut(API_ENDPOINTS.restaurants.byId(restaurantId), { isActive: Boolean(isActive) }, token);
+
+// Pays et devise d'un commerce (réservé à l'administration côté API) : France → EUR, Suisse → CHF.
+export const setRestaurantRegion = async (restaurantId, country, token) =>
+  apiPut(
+    API_ENDPOINTS.restaurants.byId(restaurantId),
+    { country, currency: country === 'France' ? 'EUR' : 'CHF' },
+    token
+  );
