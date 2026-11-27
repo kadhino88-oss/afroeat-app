@@ -19,7 +19,7 @@
     "check:restaurant-settings": "node --test scripts/restaurant-settings-persistence.test.cjs",
     "check:catalog-business-type": "node --test scripts/catalog-business-type.test.cjs",
     "check:cart-populated-menu-item": "node --test scripts/cart-populated-menu-item.test.cjs",
-    "check:store": "node --test scripts/store-readiness.test.cjs scripts/store-publishing.test.cjs"
+    "check:store": "node --test scripts/store-readiness.test.cjs scripts/store-publishing.test.cjs scripts/place-logo-card.test.cjs"
   },
   "dependencies": {
     "@expo-google-fonts/fraunces": "^0.4.1",

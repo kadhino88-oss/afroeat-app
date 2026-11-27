@@ -17,7 +17,7 @@ import { router, Redirect, useLocalSearchParams } from 'expo-router';
 import * as Location from 'expo-location';
 import FadeInView from '../../components/FadeInView';
 import HomeHeader from '../../components/HomeHeader';
-import PlaceCover from '../../components/PlaceCover';
+import { PlaceLogo } from '../../components/PlaceCover';
 import OwnImage from '../../components/OwnImage';
 import { getAllMenuItems } from '../../services/menuService';
 import { getNearbyPlacesAdaptive } from '../../services/placeService';
@@ -1452,6 +1452,8 @@ function ExploreScreenContent({ routeQuery, routeCategory, routePartners }) {
       const imageUri = getRestaurantImageUri(item);
       // Pas de photo propre au commerce : fond neutre + son logo ou l'icône de sa catégorie.
       const showPlaceholder = !imageUri;
+      // Annuaire ou sans photo propre : carte compacte avec seulement le logo, sans grand cadre rectangulaire.
+      const compactCard = showPlaceholder || isPublicPlace;
       const publicPlaceType = getPublicPlaceTypeLabel(item?.category, t);
 
       return (
@@ -1462,24 +1464,24 @@ function ExploreScreenContent({ routeQuery, routeCategory, routePartners }) {
             styles.card,
             IS_WEB && styles.webCard,
             IS_WEB && hovered && styles.webCardHover,
+            compactCard && styles.cardRow,
             pressed && styles.cardPressed,
           ]}
           onPress={() => handleOpenDirectoryItem(item)}
         >
+          {compactCard ? (
+            <View style={styles.cardLogoWrap}>
+              <PlaceLogo place={item} size={IS_WEB ? 92 : 84} />
+            </View>
+          ) : (
           <View style={[styles.cardImageWrap, IS_WEB && styles.webImageWrap]}>
-            {showPlaceholder || isPublicPlace ? (
-              <View style={[styles.cardImage, IS_WEB && styles.webImage]}>
-                <PlaceCover place={item} markSize={IS_WEB ? 92 : 80} />
-              </View>
-            ) : (
-              <Image
+            <Image
                 source={{ uri: imageUri }}
                 style={[styles.cardImage, IS_WEB && styles.webImage]}
                 contentFit="cover"
                 cachePolicy="memory-disk"
                 transition={180}
               />
-            )}
 
             {!!item?.isFeatured ? (
               <View style={styles.featuredBadge}>
@@ -1496,7 +1498,9 @@ function ExploreScreenContent({ routeQuery, routeCategory, routePartners }) {
             {/* Le visuel (PlaceCover) porte déjà le logo : pas de second badge. */}
           </View>
 
-          <View style={[styles.cardBody, IS_WEB && styles.webCardBody]}>
+          )}
+
+          <View style={[styles.cardBody, IS_WEB && styles.webCardBody, compactCard && styles.cardBodyRow]}>
             <View style={styles.cardTop}>
               <Text style={styles.cardTitle} numberOfLines={1}>
                 {item?.name}
@@ -2076,6 +2080,24 @@ const styles = StyleSheet.create({
 
   cardPressed: {
     opacity: 0.92,
+  },
+
+  // Carte compacte : le logo seul à gauche, le texte à droite (pas de grand cadre rectangulaire).
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 14,
+    paddingVertical: 14,
+  },
+  cardLogoWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardBodyRow: {
+    flex: 1,
+    paddingVertical: 0,
+    paddingLeft: 14,
+    paddingRight: 14,
   },
 
   cardImageWrap: {
